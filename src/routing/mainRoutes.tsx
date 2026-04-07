@@ -1,0 +1,30 @@
+import { Routes, Route } from "react-router-dom";
+import TopBar from "../components/topBar";
+import DashBoard360 from "../pages/dashBoards/360DashBoard";
+import PurchaseModuleRouting from "./purchaseModuleRouting";
+
+function MainRoutes() {
+  return (
+    <div className="flex flex-col w-full h-screen p-5 md:p-8 bg-bgprimary">
+      <div className="shrink-0">
+        <TopBar />
+      </div>
+      <div
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className="flex-1 overflow-y-auto "
+      >
+        <Routes>
+          {/* Dashboard */}
+          <Route path="/360-dashboard" element={<DashBoard360 />} />
+          {/* Purchase Module */}
+          <Route
+            path="/purchase-module/*"
+            element={<PurchaseModuleRouting />}
+          />
+        </Routes>
+      </div>
+    </div>
+  );
+}
+
+export default MainRoutes;

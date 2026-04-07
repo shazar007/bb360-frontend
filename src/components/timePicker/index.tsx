@@ -1,0 +1,76 @@
+import React, { useRef } from "react";
+import { Icon } from "@iconify/react";
+
+type CustomTimePickerProps = {
+  label?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+  name?: string;
+  placeholder?: string;
+};
+
+function formatTime(timeStr?: string) {
+  if (!timeStr) {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+  return timeStr;
+}
+
+export default function CustomTimePicker({
+  label,
+  value,
+  onChange = () => {},
+  required = false,
+  disabled = false,
+  className = "",
+  name,
+  placeholder = "Select time",
+}: CustomTimePickerProps) {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  return (
+    <div className="flex flex-col">
+      {label && (
+        <label className="text-heading1 text-xs mb-1">
+          {label} {required && <span className="text-red-500">*</span>}
+        </label>
+      )}
+
+      <div
+        className="relative cursor-pointer"
+        onClick={() => inputRef.current?.showPicker()}
+      >
+        <input
+          ref={inputRef}
+          type="time"
+          name={name}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required={required}
+          disabled={disabled}
+          className="absolute inset-0 opacity-0 cursor-pointer"
+        />
+        <div
+          className={`w-full h-10 px-4 flex items-center text-xs rounded-md bg-[#ECF0F4] ${className}`}
+        >
+          <div className="flex items-center gap-2">
+            <Icon
+              icon="mdi:clock-outline"
+              width="18"
+              className="text-gray-400"
+            />
+            <span className={!value ? "text-gray-400" : ""}>
+              {formatTime(value)}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
