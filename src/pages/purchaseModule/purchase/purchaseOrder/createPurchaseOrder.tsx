@@ -24,17 +24,17 @@ export default function CreatePurchaseOrder() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Purchase / Purchase Contract
+              Purchase / Purchase Order
             </p>
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="flex items-center w-full gap-2 md:w-auto">
             <button
               onClick={() => {
                 navigate("/purchase-module/purchase/purchase-order");
               }}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
               {" "}
               <Icon icon="ion:play-back-outline" className="text-lg" />
@@ -54,39 +54,21 @@ export default function CreatePurchaseOrder() {
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
-            <p className="font-semibold text-heading1 text-xs">
+            <p className="text-xs font-semibold text-heading1">
               Purchase Order
             </p>
           </div>
-          <div className="p-4 grid grid-cols-4 gap-29.25">
-            <div className="space-y-1.5">
-              <CustomInput label="Transaction Number" placeholder="GENERATE" />
-              <CustomDatePicker label="Transaction Date" />{" "}
-              <CustomSelect label="Vendor" />
-              <CustomSelect label="Payment Terms" />
-            </div>
-            <div className="space-y-1.5">
-              <CustomSelect label="Location" />
-              <CustomSelect label="Memo" />
-              <CustomSelect label="Currency" />
-              <CustomSelect label="End Date" />
-            </div>
-            <div className="space-y-1.5">
-              <CustomSelect label="Exchange Rate" />
-              <CustomSelect label="Status" />
-              <CustomSelect label="Subsidiary" />
-              <CustomSelect label="Reference No" />
-            </div>
-            <div className="space-y-1.5">
-              <CustomSelect label="Department" />
-              <CustomSelect label="Class" />
-              <CustomSelect label="Projects" />
-              <CustomToggles label="Inbound" />
-            </div>
+          <div className="p-4 grid grid-cols-3 gap-y-5 gap-x-29.25">
+            <CustomInput label="Purchase Order" placeholder="GENERATE" />
+            <CustomSelect label="Party Account" />
+            <CustomInput label="Delivery Address" />
+            <CustomDatePicker label="Date" />
+            <CustomSelect label="Party Reference" />
+            <CustomSelect label="Type" />
           </div>
         </div>{" "}
-        <div className="bg-white rounded-2xl mt-3">
-          <div className="flex p-4 md:w-full w-90 overflow-auto items-center gap-8">
+        <div className="mt-3 bg-white rounded-2xl">
+          <div className="flex items-center gap-8 p-4 overflow-auto md:w-full w-90">
             {tabs.map((tab: any, index: number) => (
               <p
                 key={index}
@@ -179,11 +161,11 @@ export default function CreatePurchaseOrder() {
               />
             )}
             {activeTab === "System Information" && (
-              <div className="grid grid-cols-2 items-center p-5 justify-evenly gap-10">
-                <p className="text-xs text-heading text-center">Created By</p>
-                <p className="text-xs text-heading text-center">Modified By</p>
-                <p className="text-xs text-heading text-center">Created Date</p>
-                <p className="text-xs text-heading text-center">
+              <div className="grid items-center grid-cols-2 gap-10 p-5 justify-evenly">
+                <p className="text-xs text-center text-heading">Created By</p>
+                <p className="text-xs text-center text-heading">Modified By</p>
+                <p className="text-xs text-center text-heading">Created Date</p>
+                <p className="text-xs text-center text-heading">
                   Modified Date
                 </p>
               </div>

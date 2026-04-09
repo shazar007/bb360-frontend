@@ -35,8 +35,32 @@ export const navItems: NavItem[] = [
         name: "Classification",
         children: [
           {
-            name: "Classification",
-            path: "/application-setup/classification",
+            name: "Department",
+            path: "/application-setup/classification/department",
+          },
+          {
+            name: "Classes",
+            path: "/application-setup/classification/classes",
+          },
+          {
+            name: "Countries",
+            path: "/application-setup/classification/countries",
+          },
+          {
+            name: "State",
+            path: "/application-setup/classification/state",
+          },
+          {
+            name: "City",
+            path: "/application-setup/classification/city",
+          },
+          {
+            name: "Area Types",
+            path: "/application-setup/classification/area-type",
+          },
+          {
+            name: "Entity Group",
+            path: "/application-setup/classification/entity-group",
           },
         ],
       },
@@ -44,8 +68,21 @@ export const navItems: NavItem[] = [
         name: "Set Up Taxes",
         children: [
           {
-            name: "Set Up Taxes",
-            path: "/application-setup/set-up-taxes",
+            name: "Tex Items",
+            path: "/application-setup/tex-items",
+          },
+        ],
+      },
+      {
+        name: "LOVs Setup",
+        children: [
+          {
+            name: "User List of Values",
+            path: "/application-setup/lovs/user-list-of-values",
+          },
+          {
+            name: "Cost Category",
+            path: "/application-setup/lovs/cost-category",
           },
         ],
       },
@@ -53,8 +90,32 @@ export const navItems: NavItem[] = [
         name: "Distribution Setup",
         children: [
           {
-            name: "Distribution Setup",
-            path: "/application-setup/distribution-setup",
+            name: "Distribution Upload",
+            path: "/application-setup/distribution-setup/distributor-upload",
+          },
+          {
+            name: "Distribution Update",
+            path: "/application-setup/distribution-setup/distributor-update",
+          },
+          {
+            name: "Vehicles",
+            path: "/application-setup/distribution-setup/vehicles",
+          },
+          {
+            name: "Routes",
+            path: "/application-setup/distribution-setup/routes",
+          },
+          {
+            name: "Customers Map View",
+            path: "/application-setup/distribution-setup/customers-map-view",
+          },
+          {
+            name: "Employee Location Routes",
+            path: "/application-setup/distribution-setup/employee-location-routes",
+          },
+          {
+            name: "Fuel Price List",
+            path: "/application-setup/distribution-setup/fuel-price-list",
           },
         ],
       },
@@ -62,8 +123,92 @@ export const navItems: NavItem[] = [
         name: "Data Upload",
         children: [
           {
-            name: "Data Upload",
-            path: "/application-setup/data-upload",
+            name: "Items Upload",
+            path: "/application-setup/data-upload/item-upload",
+          },
+          {
+            name: "Items Update",
+            path: "/application-setup/data-upload/item-update",
+          },
+          {
+            name: "Item Rate Upload",
+            path: "/application-setup/data-upload/item-rate-upload",
+          },
+          {
+            name: "Update Item Rate",
+            path: "/application-setup/data-upload/update-item-rate",
+          },
+          {
+            name: "Item Category Upload",
+            path: "/application-setup/data-upload/item-category-upload",
+          },
+          {
+            name: "Employees upload",
+            path: "/application-setup/data-upload/employees-upload",
+          },
+          {
+            name: "Departments Upload",
+            path: "/application-setup/data-upload/departments-upload",
+          },
+          {
+            name: "Customers Update",
+            path: "/application-setup/data-upload/customers-update",
+          },
+          {
+            name: "Customers Upload",
+            path: "/application-setup/data-upload/customers-upload",
+          },
+          {
+            name: "Inventory Ajustment Upload",
+            path: "/application-setup/data-upload/inventory-adjustment-upload",
+          },
+          {
+            name: "Budget Upload",
+            path: "/application-setup/data-upload/budget-upload",
+          },
+          {
+            name: "Vendor Upload",
+            path: "/application-setup/data-upload/vendor-upload",
+          },
+          {
+            name: "Lovs Values Upload",
+            path: "/application-setup/data-upload/lovs-values-upload",
+          },
+          {
+            name: "Vendors Update ",
+            path: "/application-setup/data-upload/vendors-upload",
+          },
+          {
+            name: "Journal Entry Upload",
+            path: "/application-setup/data-upload/journal-entry-upload",
+          },
+          {
+            name: "Unit Type Upload ",
+            path: "/application-setup/data-upload/unit-type-upload",
+          },
+          {
+            name: "Sale_Order_Temp",
+            path: "/application-setup/data-upload/sales-order-temp",
+          },
+          {
+            name: "City Upload",
+            path: "/application-setup/data-upload/city-upload",
+          },
+          {
+            name: "Area Upload",
+            path: "/application-setup/data-upload/area/upload",
+          },
+          {
+            name: "Employee Advance Upload",
+            path: "/application-setup/data-upload/employee-advance-upload",
+          },
+          {
+            name: "Assets Items Upload",
+            path: "/application-setup/data-upload/assets-items-upload",
+          },
+          {
+            name: "Assets Category Upload",
+            path: "/application-setup/data-upload/assest-category-upload",
           },
         ],
       },
@@ -71,8 +216,20 @@ export const navItems: NavItem[] = [
         name: "Approval Workflow",
         children: [
           {
-            name: "Approval Workflow",
-            path: "/application-setup/approval-workflow",
+            name: "Approval Group",
+            path: "/application-setup/approval-workflow/approval-group",
+          },
+          {
+            name: "Approval Rules",
+            path: "/application-setup/approval-workflow/approval-rules",
+          },
+          {
+            name: "Vacation Rules",
+            path: "/application-setup/approval-workflow/vacation-rules",
+          },
+          {
+            name: "Admin Approvals",
+            path: "/application-setup/approval-workflow/admin/approvals",
           },
         ],
       },
@@ -582,8 +739,8 @@ export const navItems: NavItem[] = [
             path: "/purchase-module/purchase/pending-receive-orders-list",
           },
           {
-            name: "Item Receipt Note",
-            path: "/purchase-module/purchase/item-receipt-note",
+            name: "Receiving Challan",
+            path: "/purchase-module/purchase/receiving-challan",
           },
           {
             name: "Generate Consolidate Vendor Bill",
@@ -751,8 +908,8 @@ export const navItems: NavItem[] = [
             path: "/sales-module/sales/quotation",
           },
           {
-            name: "Sale Order",
-            path: "/sales-module/sales/sale-order",
+            name: "Distributor Invoice",
+            path: "/sale-module/sales/distributor-invoice",
           },
           {
             name: "Pending Delivery Challan",

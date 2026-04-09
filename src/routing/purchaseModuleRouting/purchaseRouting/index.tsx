@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import PurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder";
 import PendingReceiveOrdersList from "../../../pages/purchaseModule/purchase/pendingReceiveOrdersList";
-import ItemReceiptNote from "../../../pages/purchaseModule/purchase/itemReceiptNote";
+import ItemReceiptNote from "../../../pages/purchaseModule/purchase/receivingChallan";
 import GenerateConsolidateVendorBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill";
 import CreateBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill/createBill";
-import CreateReceipt from "../../../pages/purchaseModule/purchase/itemReceiptNote/createReceipt";
+import CreateReceipt from "../../../pages/purchaseModule/purchase/receivingChallan/createReceivingChallan";
 import CreateContract from "../../../pages/purchaseModule/purchase/purchaseContract/createContract";
 import PurchaseContract from "../../../pages/purchaseModule/purchase/purchaseContract";
 import CreatePurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder/createPurchaseOrder";
+import ReceivingChallan from "../../../pages/purchaseModule/purchase/receivingChallan";
+import CreateReceivingChallan from "../../../pages/purchaseModule/purchase/receivingChallan/createReceivingChallan";
 
 export default function PurchaseRouting() {
   return (
@@ -26,10 +28,10 @@ export default function PurchaseRouting() {
         path="/pending-receive-orders-list"
         element={<PendingReceiveOrdersList />}
       />
-      <Route path="/item-receipt-note" element={<ItemReceiptNote />} />
+      <Route path="/receiving-challan" element={<ReceivingChallan />} />
       <Route
-        path="/item-receipt-note/create-receipt"
-        element={<CreateReceipt />}
+        path="/receiving-challan/create"
+        element={<CreateReceivingChallan />}
       />
       <Route
         path="/generate-consolidate-vendor-bill"

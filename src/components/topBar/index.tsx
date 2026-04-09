@@ -2,8 +2,9 @@ import { Icon } from "@iconify/react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/logo.png";
-import Avatar from "../../assets/Avatar.jpg";
+
 import { navItems } from "../../utils/constant";
+import ProfileImage from "../profileImage";
 
 export default function TopBar() {
   const [openMenu, setOpenMenu] = useState<number | null>(null);
@@ -103,7 +104,7 @@ export default function TopBar() {
                 {item.children.map((child: any, i: any) => (
                   <div
                     key={i}
-                    className="relative group overflow-visible"
+                    className="relative overflow-visible group"
                     onMouseEnter={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
                       const submenuWidth = 320;
@@ -185,9 +186,7 @@ export default function TopBar() {
         ))}
       </div>
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 overflow-hidden bg-white rounded-md">
-          <img src={Avatar} className="object-cover w-full h-full rounded-md" />
-        </div>
+        <ProfileImage />
 
         <div className="flex items-center justify-center w-10 h-10 bg-white rounded-md">
           <Icon
@@ -219,6 +218,7 @@ export default function TopBar() {
             alt="logo"
             className="w-auto h-8 mix-blend-multiply"
           />
+
           <button onClick={() => setMobileMenuOpen(false)}>
             <Icon icon="mdi:close" className="text-2xl text-heading1" />
           </button>

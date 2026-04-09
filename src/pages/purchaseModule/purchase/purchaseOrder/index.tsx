@@ -71,13 +71,12 @@ export default function PurchaseOrder() {
               "Edit",
               "View",
               "Report",
-              "Transaction Date",
-              "Vendor",
-              "Transaction Number",
-              "Location",
-              "Status",
-              "Created From",
-              "Document Status",
+              "Purchase Order",
+              "Date",
+              "Party Account",
+              "Party Reference",
+              "Deliver Address",
+              "Type",
             ]}
             data={[
               [
@@ -93,13 +92,12 @@ export default function PurchaseOrder() {
                   icon="ion:print-outline"
                   className="text-lg cursor-pointer text-primary"
                 />,
-                "03-Nov-2025",
-                "Globify Trader Karachi",
-                "PO-0000015",
-                "Head Office 01",
-                "Approved",
-                "RQ0000045",
-                "Pending Purchase Order / RFQ",
+                "PO-000121",
+                "08-Apr-2026",
+                "Punjab Aata",
+                "Rawat-Organic Department",
+                "Main GT Road near Rawat Mor, Rawalpindi",
+                "Local",
               ],
             ]}
           />

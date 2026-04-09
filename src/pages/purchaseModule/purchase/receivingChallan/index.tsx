@@ -3,11 +3,11 @@ import CustomTable from "../../../../components/customTable";
 import Filters from "../../../../components/filter";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function ItemReceiptNote() {
+export default function ReceivingChallan() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const handleCreate = () => {
-    navigate("/purchase-module/purchase/item-receipt-note/create-receipt");
+    navigate("/purchase-module/purchase/receiving-challan/create");
   };
 
   return (
@@ -18,7 +18,7 @@ export default function ItemReceiptNote() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Purchase / Item Receipt Note
+              Purchase / Receiving Challan
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -71,12 +71,11 @@ export default function ItemReceiptNote() {
               "Edit",
               "View",
               "Report",
-              "Transaction Number",
-              "Transaction Date",
-              "To Location",
-              "Transaction Type",
+              "Purchase Order Number",
               "Create Date",
-              "Created From",
+              "Create Date",
+              "Delivery Address",
+              "Transaction Type",
             ]}
             data={[
               [
@@ -92,12 +91,11 @@ export default function ItemReceiptNote() {
                   icon="ion:print-outline"
                   className="text-lg cursor-pointer text-primary"
                 />,
-                "IR-0000015",
-                "03-Nov-2025",
-                "Finish Goods Store",
+                "PO-000121",
+                "07-Apr-2026",
+                "07-Apr-2026",
+                "Main GT Road near Rawat Mor, Rawalpindi",
                 "Item Receipt",
-                "01-Apr-2026",
-                "PO-000117",
               ],
             ]}
           />

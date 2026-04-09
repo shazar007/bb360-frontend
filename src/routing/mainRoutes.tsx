@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import TopBar from "../components/topBar";
 import DashBoard360 from "../pages/dashBoards/360DashBoard";
 import PurchaseModuleRouting from "./purchaseModuleRouting";
+import ApplicationSetupRouting from "./applicationSetupRouting";
+import SaleModuleRouting from "./saleModuleRouting";
 
 function MainRoutes() {
   return (
@@ -18,9 +20,15 @@ function MainRoutes() {
           <Route path="/360-dashboard" element={<DashBoard360 />} />
           {/* Purchase Module */}
           <Route
+            path="/application-setup/*"
+            element={<ApplicationSetupRouting />}
+          />
+          {/* Purchase Module */}
+          <Route
             path="/purchase-module/*"
             element={<PurchaseModuleRouting />}
           />
+          <Route path="/sale-module/*" element={<SaleModuleRouting />} />
         </Routes>
       </div>
     </div>

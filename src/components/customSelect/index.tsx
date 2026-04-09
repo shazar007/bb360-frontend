@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
+import { useEffect, useRef, useState } from "react";
 
 type Option = {
-  label: string;
-  value: string;
+  label: any;
+  value: any;
 };
-
-type CustomDropdownProps = {
+type CustomSelectProps = {
   label?: string;
   options?: Option[];
   value?: string;
   onChange?: (value: string) => void;
+  onBlur?: () => void; // <- add onBlur
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -23,33 +23,31 @@ export default function CustomSelect({
   options = [],
   value,
   onChange = () => {},
+  onBlur = () => {}, // <- default
   placeholder = "Select option",
   required = false,
   disabled = false,
   className = "",
   white = false,
-}: CustomDropdownProps) {
+}: CustomSelectProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const selected = options.find((opt) => opt.value === value);
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (!dropdownRef.current) return;
-
-      if (!dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
+      if (!dropdownRef.current.contains(e.target as Node)) setOpen(false);
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <div className="flex flex-col relative" ref={dropdownRef}>
+    <div className="relative flex flex-col" ref={dropdownRef}>
       {label && (
-        <label className="text-heading1 text-xs mb-1">
+        <label className="mb-1 text-xs text-heading1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -58,28 +56,31 @@ export default function CustomSelect({
           if (disabled || options.length === 0) return;
           setOpen((prev) => !prev);
         }}
+        onBlur={onBlur} // <- pass Formik blur
         className={`flex items-center justify-between h-10 px-4 rounded-md text-xs
-  ${white ? "bg-white" : "bg-[#ECF0F4]"}
-  ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-  ${className}`}
+        ${white ? "bg-white" : "bg-[#ECF0F4]"}
+        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        ${className}`}
       >
         <span className={!selected ? "text-gray-400" : ""}>
           {selected?.label || placeholder}
         </span>
-
         <Icon
           icon="mdi:chevron-down"
           width="18"
-          className={`transition-transform text-heading1/36 ${open ? "rotate-180" : ""}`}
+          className={`transition-transform text-heading1/36 ${
+            open ? "rotate-180" : ""
+          }`}
         />
       </div>
+
       {open && options.length > 0 && (
-        <div className="absolute top-full py-2 mt-1 w-full bg-white shadow-md rounded-md z-50 max-h-48 overflow-auto">
+        <div className="absolute z-50 w-full py-2 mt-1 overflow-auto bg-white rounded-md shadow-md top-full max-h-48">
           {options.map((opt) => (
             <div
               key={opt.value}
               onClick={() => {
-                onChange(opt.value);
+                onChange(opt.value); // <- Formik setFieldValue
                 setOpen(false);
               }}
               className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
