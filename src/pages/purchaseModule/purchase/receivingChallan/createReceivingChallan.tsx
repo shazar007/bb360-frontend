@@ -3,20 +3,9 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
-import { useState } from "react";
 import CustomDatePicker from "../../../../components/datePicker";
 
-const tabs = [
-  "Transaction Lines",
-  "Landed Cost",
-  "Accounting Lines",
-  "Related Transactions",
-  "System Information",
-  "Terms & Conditions",
-  "Attachments",
-];
 export default function CreateReceivingChallan() {
-  const [activeTab, setActiveTab] = useState("Transaction Lines");
   const navigate = useNavigate();
   return (
     <div className="mt-8">
@@ -24,7 +13,7 @@ export default function CreateReceivingChallan() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Purchase / Item Receipt Note
+            Purchase / Receiving Challan
           </p>
         </div>
 
@@ -87,6 +76,7 @@ export default function CreateReceivingChallan() {
               "Ordered Quantity ",
               "Delivered Qty (Challan)",
               "Received Quantity ",
+              "Rejected Quantity ",
               "Reason",
             ]}
             data={[

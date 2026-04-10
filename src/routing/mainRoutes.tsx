@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import TopBar from "../components/topBar";
 import DashBoard360 from "../pages/dashBoards/360DashBoard";
 import PurchaseModuleRouting from "./purchaseModuleRouting";
@@ -17,6 +17,7 @@ function MainRoutes() {
       >
         <Routes>
           {/* Dashboard */}
+          <Route path="/" element={<Navigate to="/360-dashboard" replace />} />
           <Route path="/360-dashboard" element={<DashBoard360 />} />
           {/* Purchase Module */}
           <Route
