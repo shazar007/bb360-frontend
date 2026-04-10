@@ -8,6 +8,7 @@ export default function ProfileImage() {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState(Avatar);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
     const handleClick = (e: any) => {
@@ -29,7 +30,6 @@ export default function ProfileImage() {
   };
 
   const handleLogout = () => {
-    const dispatch = useDispatch();
     Cookies.remove("token");
     dispatch(logout());
     navigate("/");
@@ -57,18 +57,9 @@ export default function ProfileImage() {
           >
             Change Profile Image
           </button>
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full h-10 px-4 py-2 text-xs text-left cursor-pointer hover:bg-gray-100"
-          >
+          <button className="w-full cursor-not-allowed h-10 px-4 py-2 text-xs text-left  hover:bg-gray-100">
             Setting
           </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-            className="hidden"
-          />
           <div className="border-t-[0.5px] border-[#304250]/36"></div>
           <button
             onClick={handleLogout}

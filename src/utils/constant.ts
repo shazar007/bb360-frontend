@@ -239,257 +239,266 @@ export const navItems: NavItem[] = [
     name: "Financial Module",
     icon: "mdi:finance",
     children: [
+      // {
+      //   name: "Financial",
+      //   children: [
+      //     {
+      //       name: "Journal Entries",
+      //       path: "/financial-module/Financial/journal-entries",
+      //     },
+      //     {
+      //       name: "Post Dated Cheque's",
+      //       path: "/financial-module/Financial/post-dated-cheque",
+      //     },
+      //     {
+      //       name: "Recurring Journal",
+      //       path: "/financial-module/Financial/recurring-journal",
+      //     },
+      //     {
+      //       name: "Budgets",
+      //       path: "/financial-module/Financial/budgets",
+      //     },
+      //     {
+      //       name: "Account Closing - Retained Erning Entry",
+      //       path: "/financial-module/Financial/account-closing",
+      //     },
+      //     {
+      //       name: "Run Items Costing",
+      //       path: "/financial-module/Financial/run-items-costing",
+      //     },
+      //     {
+      //       name: "Inward Post Dated Cheque",
+      //       path: "/financial-module/Financial/inward-post-date-cheque",
+      //     },
+      //     {
+      //       name: "Outward Post Dated Cheque",
+      //       path: "/financial-module/Financial/outward-post-date-cheque",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Cash & Banks",
+      //   children: [
+      //     {
+      //       name: "Make Payments",
+      //       path: "/financial-module/cash-banks/make-payments",
+      //     },
+      //     {
+      //       name: "Make Receipt",
+      //       path: "/financial-module/cash-banks/make-receipt",
+      //     },
+      //     {
+      //       name: "Route Wise Cash Recovery",
+      //       path: "/financial-module/cash-banks/route-wise-cash-recovery",
+      //     },
+      //     {
+      //       name: "Employee Advance",
+      //       path: "/financial-module/cash-banks/employee-advance",
+      //     },
+      //     {
+      //       name: "Employee Loans",
+      //       path: "/financial-module/cash-banks/employee-loans",
+      //     },
+      //     {
+      //       name: "Funds Issue",
+      //       path: "/financial-module/cash-banks/funds-issue",
+      //     },
+      //     {
+      //       name: "Fund Receiving",
+      //       path: "/financial-module/cash-banks/funds-receiving",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Accounting Setup",
+      //   children: [
+      //     {
+      //       name: "Currencies",
+      //       path: "/financial-module/accounting-setup/currencies",
+      //     },
+      //     {
+      //       name: "Payment Terms",
+      //       path: "/financial-module/accounting-setup/payment-terms",
+      //     },
+      //     {
+      //       name: "cheque Book",
+      //       path: "/financial-module/accounting-setup/cash-book",
+      //     },
+      //     {
+      //       name: "Accounting Periods",
+      //       path: "/financial-module/accounting-setup/accounting-periods",
+      //     },
+      //     {
+      //       name: "Transaction Accounting Verify",
+      //       path: "/financial-module/accounting-setup/transaction-accounting-verify",
+      //     },
+      //     {
+      //       name: "Merge Account Setup",
+      //       path: "/financial-module/accounting-setup/merge-account-setup",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Fixed Asset",
+      //   children: [
+      //     {
+      //       name: "Fixed Assets Register",
+      //       path: "/financial-module/fixed-asset/fixed-assets-register",
+      //     },
+      //     {
+      //       name: "Asset Category",
+      //       path: "/financial-module/fixed-asset/asset-category",
+      //     },
+      //     {
+      //       name: "Asset Depreciation Calculation",
+      //       path: "/financial-module/fixed-asset/asset-depreciation-calculation",
+      //     },
+      //     {
+      //       name: "Fixed Asset Depreciation",
+      //       path: "/financial-module/fixed-asset/fixed-asset-deprection",
+      //     },
+      //     {
+      //       name: "Disposal of Asset",
+      //       path: "/financial-module/fixed-asset/disposal-of-assets",
+      //     },
+      //     {
+      //       name: "Revaluation of Asset",
+      //       path: "/financial-module/fixed-asset/revaluation-of-assets",
+      //     },
+      //     {
+      //       name: "Asset Ledger",
+      //       path: "/financial-module/fixed-asset/asset-",
+      //     },
+      //     {
+      //       name: "Fixed Asset Detail Report",
+      //       path: "/financial-module/fixed-asset/",
+      //     },
+      //     {
+      //       name: "Fixed Asset Category Report",
+      //       path: "/financial-module/fixed-asset/",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Asset Maintenance",
+      //   children: [
+      //     {
+      //       name: "Maintenance Request",
+      //       path: "/financial-module/asset-maintenance/maintenance-request",
+      //     },
+      //     {
+      //       name: "Supervisior Activity",
+      //       path: "/financial-module/asset-maintenance/supervisior-activity",
+      //     },
+      //     {
+      //       name: "Technician Activity",
+      //       path: "/financial-module/asset-maintenance/technician-activity",
+      //     },
+      //     {
+      //       name: "Vendor Activity",
+      //       path: "/financial-module/asset-maintenance/vendor-activity",
+      //     },
+      //     {
+      //       name: "Maintenance Job Cards",
+      //       path: "/financial-module/asset-maintenance/maintenance-job-cards",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Financial Reports",
+      //   children: [
+      //     {
+      //       name: "Account Ledger",
+      //       path: "/financial-module/financial-reports/account-ledger",
+      //     },
+      //     {
+      //       name: "Cash / Bank Ledger",
+      //       path: "/financial-module/financial-reports/cash-bank-ledger",
+      //     },
+      //     {
+      //       name: "Cash /  Bank Summary",
+      //       path: "/financial-module/financial-reports/cash-bank-summary",
+      //     },
+      //     {
+      //       name: "Cash In Out Details",
+      //       path: "/financial-module/financial-reports/cash-in-out-details",
+      //     },
+      //     {
+      //       name: "Daily Cash Book Report",
+      //       path: "/financial-module/financial-reports/daily-cash-book-report",
+      //     },
+      //     {
+      //       name: "Trial Balance",
+      //       path: "/financial-module/financial-reports/trial-balance",
+      //     },
+      //     {
+      //       name: "Trial Balance",
+      //       path: "/financial-module/financial-reports/trial-balance-2",
+      //     },
+      //     {
+      //       name: "Payment and Receipt Summary",
+      //       path: "/financial-module/financial-reports/payment-receipt-summary",
+      //     },
+      //     {
+      //       name: "Trial Balance Details",
+      //       path: "/financial-module/financial-reports/trial-balance-details",
+      //     },
+      //     {
+      //       name: "Trial Balance Month Wise",
+      //       path: "/financial-module/financial-reports/trial-balance-month-wise",
+      //     },
+      //     {
+      //       name: "Balance Sheet Report",
+      //       path: "/financial-module/financial-reports/balance-sheet-report",
+      //     },
+      //     {
+      //       name: "Cash Flow Statement",
+      //       path: "/financial-module/financial-reports/cash-flow-statement",
+      //     },
+      //     {
+      //       name: "Profit / Loss Statement",
+      //       path: "/financial-module/financial-reports/profit-loss-statement",
+      //     },
+      //     {
+      //       name: "General Journal Report",
+      //       path: "/financial-module/financial-reports/general-journal-report",
+      //     },
+      //     {
+      //       name: "Daily Activity Report",
+      //       path: "/financial-module/financial-reports/daily-activity-report",
+      //     },
+      //     {
+      //       name: "Daily Expense Report",
+      //       path: "/financial-module/financial-reports/daily-expense-report",
+      //     },
+      //     {
+      //       name: "Working Capital Report",
+      //       path: "/financial-module/financial-reports/working-capital-report",
+      //     },
+      //     {
+      //       name: "Daily Expense Summary",
+      //       path: "/financial-module/financial-reports/daily-expense-summary",
+      //     },
+      //     {
+      //       name: "Budget Status Report",
+      //       path: "/financial-module/financial-reports/budget-status-report",
+      //     },
+      //     {
+      //       name: "Accounts Closing Balances",
+      //       path: "/financial-module/financial-reports/accounts-closing-balances",
+      //     },
+      //   ],
+      // },
+      
       {
-        name: "Financial",
-        children: [
-          {
-            name: "Journal Entries",
-            path: "/financial-module/Financial/journal-entries",
-          },
-          {
-            name: "Post Dated Cheque's",
-            path: "/financial-module/Financial/post-dated-cheque",
-          },
-          {
-            name: "Recurring Journal",
-            path: "/financial-module/Financial/recurring-journal",
-          },
-          {
-            name: "Budgets",
-            path: "/financial-module/Financial/budgets",
-          },
-          {
-            name: "Account Closing - Retained Erning Entry",
-            path: "/financial-module/Financial/account-closing",
-          },
-          {
-            name: "Run Items Costing",
-            path: "/financial-module/Financial/run-items-costing",
-          },
-          {
-            name: "Inward Post Dated Cheque",
-            path: "/financial-module/Financial/inward-post-date-cheque",
-          },
-          {
-            name: "Outward Post Dated Cheque",
-            path: "/financial-module/Financial/outward-post-date-cheque",
-          },
-        ],
-      },
-      {
-        name: "Cash & Banks",
-        children: [
-          {
-            name: "Make Payments",
-            path: "/financial-module/cash-banks/make-payments",
-          },
-          {
-            name: "Make Receipt",
-            path: "/financial-module/cash-banks/make-receipt",
-          },
-          {
-            name: "Route Wise Cash Recovery",
-            path: "/financial-module/cash-banks/route-wise-cash-recovery",
-          },
-          {
-            name: "Employee Advance",
-            path: "/financial-module/cash-banks/employee-advance",
-          },
-          {
-            name: "Employee Loans",
-            path: "/financial-module/cash-banks/employee-loans",
-          },
-          {
-            name: "Funds Issue",
-            path: "/financial-module/cash-banks/funds-issue",
-          },
-          {
-            name: "Fund Receiving",
-            path: "/financial-module/cash-banks/funds-receiving",
-          },
-        ],
-      },
-      {
-        name: "Accounting Setup",
-        children: [
-          {
-            name: "Currencies",
-            path: "/financial-module/accounting-setup/currencies",
-          },
-          {
-            name: "Payment Terms",
-            path: "/financial-module/accounting-setup/payment-terms",
-          },
-          {
-            name: "cheque Book",
-            path: "/financial-module/accounting-setup/cash-book",
-          },
-          {
-            name: "Accounting Periods",
-            path: "/financial-module/accounting-setup/accounting-periods",
-          },
-          {
-            name: "Transaction Accounting Verify",
-            path: "/financial-module/accounting-setup/transaction-accounting-verify",
-          },
-          {
-            name: "Merge Account Setup",
-            path: "/financial-module/accounting-setup/merge-account-setup",
-          },
-        ],
-      },
-      {
-        name: "Fixed Asset",
-        children: [
-          {
-            name: "Fixed Assets Register",
-            path: "/financial-module/fixed-asset/fixed-assets-register",
-          },
-          {
-            name: "Asset Category",
-            path: "/financial-module/fixed-asset/asset-category",
-          },
-          {
-            name: "Asset Depreciation Calculation",
-            path: "/financial-module/fixed-asset/asset-depreciation-calculation",
-          },
-          {
-            name: "Fixed Asset Depreciation",
-            path: "/financial-module/fixed-asset/fixed-asset-deprection",
-          },
-          {
-            name: "Disposal of Asset",
-            path: "/financial-module/fixed-asset/disposal-of-assets",
-          },
-          {
-            name: "Revaluation of Asset",
-            path: "/financial-module/fixed-asset/revaluation-of-assets",
-          },
-          {
-            name: "Asset Ledger",
-            path: "/financial-module/fixed-asset/asset-",
-          },
-          {
-            name: "Fixed Asset Detail Report",
-            path: "/financial-module/fixed-asset/",
-          },
-          {
-            name: "Fixed Asset Category Report",
-            path: "/financial-module/fixed-asset/",
-          },
-        ],
-      },
-      {
-        name: "Asset Maintenance",
-        children: [
-          {
-            name: "Maintenance Request",
-            path: "/financial-module/asset-maintenance/maintenance-request",
-          },
-          {
-            name: "Supervisior Activity",
-            path: "/financial-module/asset-maintenance/supervisior-activity",
-          },
-          {
-            name: "Technician Activity",
-            path: "/financial-module/asset-maintenance/technician-activity",
-          },
-          {
-            name: "Vendor Activity",
-            path: "/financial-module/asset-maintenance/vendor-activity",
-          },
-          {
-            name: "Maintenance Job Cards",
-            path: "/financial-module/asset-maintenance/maintenance-job-cards",
-          },
-        ],
-      },
-      {
-        name: "Financial Reports",
-        children: [
-          {
-            name: "Account Ledger",
-            path: "/financial-module/financial-reports/account-ledger",
-          },
-          {
-            name: "Cash / Bank Ledger",
-            path: "/financial-module/financial-reports/cash-bank-ledger",
-          },
-          {
-            name: "Cash /  Bank Summary",
-            path: "/financial-module/financial-reports/cash-bank-summary",
-          },
-          {
-            name: "Cash In Out Details",
-            path: "/financial-module/financial-reports/cash-in-out-details",
-          },
-          {
-            name: "Daily Cash Book Report",
-            path: "/financial-module/financial-reports/daily-cash-book-report",
-          },
-          {
-            name: "Trial Balance",
-            path: "/financial-module/financial-reports/trial-balance",
-          },
-          {
-            name: "Trial Balance",
-            path: "/financial-module/financial-reports/trial-balance-2",
-          },
-          {
-            name: "Payment and Receipt Summary",
-            path: "/financial-module/financial-reports/payment-receipt-summary",
-          },
-          {
-            name: "Trial Balance Details",
-            path: "/financial-module/financial-reports/trial-balance-details",
-          },
-          {
-            name: "Trial Balance Month Wise",
-            path: "/financial-module/financial-reports/trial-balance-month-wise",
-          },
-          {
-            name: "Balance Sheet Report",
-            path: "/financial-module/financial-reports/balance-sheet-report",
-          },
-          {
-            name: "Cash Flow Statement",
-            path: "/financial-module/financial-reports/cash-flow-statement",
-          },
-          {
-            name: "Profit / Loss Statement",
-            path: "/financial-module/financial-reports/profit-loss-statement",
-          },
-          {
-            name: "General Journal Report",
-            path: "/financial-module/financial-reports/general-journal-report",
-          },
-          {
-            name: "Daily Activity Report",
-            path: "/financial-module/financial-reports/daily-activity-report",
-          },
-          {
-            name: "Daily Expense Report",
-            path: "/financial-module/financial-reports/daily-expense-report",
-          },
-          {
-            name: "Working Capital Report",
-            path: "/financial-module/financial-reports/working-capital-report",
-          },
-          {
-            name: "Daily Expense Summary",
-            path: "/financial-module/financial-reports/daily-expense-summary",
-          },
-          {
-            name: "Budget Status Report",
-            path: "/financial-module/financial-reports/budget-status-report",
-          },
-          {
-            name: "Accounts Closing Balances",
-            path: "/financial-module/financial-reports/accounts-closing-balances",
-          },
-        ],
-      },
-    ],
+      name: "Account Ledger",
+      path: "/financial-module/account-ledger",
+    },
+    {
+      name: "Debit / Credit Note",
+      path: "/financial-module/debit-credit-note",
+    },
+  ],
   },
   {
     name: "Inventory Module",

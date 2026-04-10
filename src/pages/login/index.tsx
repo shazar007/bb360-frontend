@@ -9,10 +9,13 @@ import { useDispatch } from "react-redux";
 import { setIsLoggedIn, setToken } from "../../redux/userSlice";
 import PasswordFeild from "../../components/passwordFeild";
 import { LoginvalidationSchema } from "../../utils/validations";
+import { useEffect, useState } from "react";
+import { SyncLoader } from "react-spinners";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading, setIsloading] = useState(false);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -28,6 +31,9 @@ export default function Login() {
       dispatch(setIsLoggedIn(true));
     },
   });
+  useEffect(() => {
+    document.title = "Login — BB-360";
+  }, []);
   return (
     <div className="flex items-center h-screen ">
       <div className="w-0 h-screen md:w-1/2 xl:w-3/4">
@@ -82,9 +88,13 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              className="w-full h-10 mt-8 text-base font-bold text-white rounded-md cursor-pointer bg-secondary"
+              className="flex items-center justify-center w-full h-10 mt-8 text-base font-bold text-white rounded-md cursor-pointer bg-secondary"
             >
-              Sign in
+              {isLoading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                "Sign in"
+              )}
             </button>
           </form>
           <div className="border-t border-[#E5E5E5] mt-8"></div>

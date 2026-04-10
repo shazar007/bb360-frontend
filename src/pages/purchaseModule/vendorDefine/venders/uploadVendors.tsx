@@ -1,9 +1,13 @@
 import CustomTable from "../../../../components/customTable";
 import { Icon } from "@iconify/react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function UploadVendors() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Vendors — BB-360";
+  }, []);
 
   return (
     <div className="mt-8">

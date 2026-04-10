@@ -3,27 +3,31 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomToggles from "../../../../components/custontogles";
 
 const tabs = [
-  "Transaction Lines",
-  "Related Transactions",
+  "Item Lines",
+  "Expense Lines",
+  "Accounting Lines",
+  "Related Transaction",
   "System Information",
-  "Terms & Conditions",
   "Attachments",
 ];
 export default function CreateVendorBill() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [addItem, setAddItem] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Create Bills — BB-360";
+  }, []);
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Purchase / Purchase Order
+            Payable / Vendor Bill
           </p>
         </div>
 
@@ -62,27 +66,27 @@ export default function CreateVendorBill() {
                 label="Transaction Number"
                 placeholder="write the Name"
               />
-              <CustomInput label="Transaction Date" />
+              <CustomSelect label="Transaction Date" />
               <CustomSelect label="Vendor" />
-              <CustomInput label="Location" />
+              <CustomInput label="Memo" />
             </div>
             <div className="space-y-1.5">
-              <CustomInput label="Memo" />
+              <CustomInput label="Discount Total" />
               <CustomInput label="Currency" />
               <CustomSelect label="Exchange Rate" />
-              <CustomInput label="Status" />
+              <CustomInput label="Reference Number" />
             </div>
             <div className="space-y-1.5">
-              <CustomSelect label="Subsidiary" />
+              <CustomSelect label="Status" />
+              <CustomInput label="Subsidiary" />
+              <CustomInput label="Location" />
               <CustomInput label="Department" />
-              <CustomInput label="Class" />
-              <CustomInput label="Payment Terms" />
             </div>
             <div className="space-y-1.5">
-              <CustomSelect label="Reference Number" />
-              <CustomInput label="Expected Delivery Date" />
+              <CustomSelect label="Class" />
+              <CustomInput label="Payment Terms" />
               <CustomInput label="Project" />
-              <CustomToggles label="Inbound" />
+              <CustomToggles label="Apply W.H.T" />
             </div>
           </div>
         </div>
@@ -103,27 +107,8 @@ export default function CreateVendorBill() {
                 </p>
               ))}
             </div>
-            {activeTab === "Transaction Lines" && (
-              <button
-                onClick={() => {
-                  setAddItem(true);
-                }}
-                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                className="bg-secondary text-white h-8.5 w-16 text-xs  cursor-pointer rounded"
-              >
-                Add Row
-              </button>
-            )}{" "}
-            {activeTab === "Attachments" && (
-              <button
-                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                className="bg-secondary text-white h-8.5 w-16 text-xs  cursor-pointer rounded"
-              >
-                Upload
-              </button>
-            )}
           </div>
-          {activeTab === "Transaction Lines" && (
+          {activeTab === "Item Lines" && (
             <CustomTable
               norounded
               headers={[
@@ -141,8 +126,8 @@ export default function CreateVendorBill() {
                 "Tax Code",
                 "Tax Amount",
                 "Gross Amount",
-                "Item Weight",
                 "Memo",
+                "History",
               ]}
               data={[
                 [
@@ -160,6 +145,10 @@ export default function CreateVendorBill() {
                   "-",
                   "-",
                   "-",
+                  <Icon
+                    icon="solar:box-broken"
+                    className="text-lg cursor-pointer text-primary"
+                  />,
                   "-",
                   "-",
                   "-",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
@@ -6,6 +6,9 @@ import { Icon } from "@iconify/react";
 
 export default function CreateVendorType() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Vendors Type — BB-360";
+  }, []);
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">

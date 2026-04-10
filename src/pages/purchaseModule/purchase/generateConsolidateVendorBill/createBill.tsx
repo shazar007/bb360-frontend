@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tabs = [
   "Item Lines",
@@ -16,6 +16,9 @@ const tabs = [
 export default function CreateBill() {
   const [activeTab, setActiveTab] = useState("Item Lines");
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Create Bill — BB-360";
+  }, []);
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
