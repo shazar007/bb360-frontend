@@ -1,9 +1,13 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Venders() {
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Vendors — BB-360";
+  }, []);
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">

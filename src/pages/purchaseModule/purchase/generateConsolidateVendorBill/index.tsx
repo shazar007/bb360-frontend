@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filters from "../../../../components/filter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function GenerateConsolidateVendorBill() {
@@ -12,6 +12,9 @@ export default function GenerateConsolidateVendorBill() {
       "/purchase-module/purchase/generate-consolidate-vendor-bill/create-bill",
     );
   };
+  useEffect(() => {
+    document.title = "Create Bill — BB-360";
+  }, []);
   return (
     <>
       {" "}

@@ -1,8 +1,12 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function VendorBills() {
+  useEffect(() => {
+    document.title = "Create Bills — BB-360";
+  }, []);
   const navigate = useNavigate();
   return (
     <div className="mt-8">

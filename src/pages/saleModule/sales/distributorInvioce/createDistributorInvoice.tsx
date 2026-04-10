@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelect from "../../../../components/customSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTable from "../../../../components/customTable";
 
 const tabs = [
@@ -15,6 +15,9 @@ const tabs = [
 export default function CreateDistributorInvoice() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Distributor Invoice — BB-360";
+  }, []);
   return (
     <>
       <div className="mt-8">

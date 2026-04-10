@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomToggles from "../../../../components/custontogles";
 
 const tabs = [
@@ -18,6 +18,9 @@ export default function CreateVendorBill() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [addItem, setAddItem] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    document.title = "Create Bills — BB-360";
+  }, []);
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">

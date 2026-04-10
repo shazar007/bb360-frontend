@@ -4,6 +4,7 @@ import DashBoard360 from "../pages/dashBoards/360DashBoard";
 import PurchaseModuleRouting from "./purchaseModuleRouting";
 import ApplicationSetupRouting from "./applicationSetupRouting";
 import SaleModuleRouting from "./saleModuleRouting";
+import ProtectedRoute from "./protectedRoutes";
 
 function MainRoutes() {
   return (
@@ -18,18 +19,48 @@ function MainRoutes() {
         <Routes>
           {/* Dashboard */}
           <Route path="/" element={<Navigate to="/360-dashboard" replace />} />
-          <Route path="/360-dashboard" element={<DashBoard360 />} />
-          {/* Purchase Module */}
+          <Route
+            path="/360-dashboard"
+            element={
+              <ProtectedRoute>
+                <DashBoard360 />
+              </ProtectedRoute>
+            }
+          />
+          {/* Application Setup */}
           <Route
             path="/application-setup/*"
-            element={<ApplicationSetupRouting />}
+            element={
+              <ProtectedRoute>
+                <ApplicationSetupRouting />
+              </ProtectedRoute>
+            }
           />
           {/* Purchase Module */}
           <Route
             path="/purchase-module/*"
-            element={<PurchaseModuleRouting />}
+            element={
+              <ProtectedRoute>
+                <PurchaseModuleRouting />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/sale-module/*" element={<SaleModuleRouting />} />
+          <Route
+            path="/sale-module/*"
+            element={
+              <ProtectedRoute>
+                <SaleModuleRouting />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route
+            path="/financial-module/*"
+            element={
+              <ProtectedRoute>
+                <FinancialModule />
+              </ProtectedRoute>
+            }
+          /> */}
         </Routes>
       </div>
     </div>

@@ -1,10 +1,12 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filters from "../../../../components/filter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function PendingReceiveOrdersList() {
   const [open, setOpen] = useState(false);
-
+  useEffect(() => {
+    document.title = "Order List— BB-360";
+  }, []);
   return (
     <>
       {" "}

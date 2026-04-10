@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useEffect } from "react";
 export default function DashBoard360() {
   const dashboardCards = [
     {
@@ -30,7 +31,9 @@ export default function DashBoard360() {
       icon: "qlementine-icons:money-16",
     },
   ];
-
+  useEffect(() => {
+    document.title = "360 Dashboard — BB-360";
+  }, []);
   return (
     <>
       <div className="flex flex-wrap gap-4 mt-8 lg:flex-nowrap">
