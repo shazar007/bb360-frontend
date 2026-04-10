@@ -26,7 +26,7 @@ export default function CustomInput({
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="text-heading1 text-xs font-normal leading-3 mb-1">
+        <label className="mb-1 text-xs font-normal leading-3 text-heading1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -39,7 +39,7 @@ export default function CustomInput({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        className={`placeholder:text-heading1/36 placeholder:text-xs text-xs rounded-md p-4 h-10 w-full focus:outline-none ${
+        className={`placeholder:text-heading1/36 Roboto placeholder:text-xs text-xs rounded-md p-4 h-10 w-full focus:outline-none ${
           white ? "bg-white" : "bg-[#ECF0F4]"
         } ${className}`}
       />

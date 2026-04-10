@@ -5,6 +5,7 @@ import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import { useEffect, useState } from "react";
 import CustomToggles from "../../../../components/custontogles";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Item Lines",
@@ -17,7 +18,7 @@ const tabs = [
 export default function CreateVendorBill() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [addItem, setAddItem] = useState(false);
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigate();
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
@@ -31,13 +32,13 @@ export default function CreateVendorBill() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center w-full gap-2 md:w-auto">
           <button
             onClick={() => {
-              navigate("/purchase-module/vender-define/venders");
+              goTo("/purchase-module/vender-define/venders");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-            className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
+            className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >
             {" "}
             <Icon icon="ion:play-back-outline" className="text-lg" />
@@ -56,7 +57,7 @@ export default function CreateVendorBill() {
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
-            <p className="font-semibold text-heading1 text-xs">
+            <p className="text-xs font-semibold text-heading1">
               Purchase Order Closed
             </p>
           </div>
@@ -90,8 +91,8 @@ export default function CreateVendorBill() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl mt-3 ">
-          <div className="flex justify-between items-center p-4">
+        <div className="mt-3 bg-white rounded-2xl ">
+          <div className="flex items-center justify-between p-4">
             <div className="flex  w-90 md:w-[60%]  overflow-auto items-center gap-8">
               {tabs.map((tab) => (
                 <p
@@ -189,11 +190,11 @@ export default function CreateVendorBill() {
                   System Information
                 </p>
               </div>
-              <div className="grid grid-cols-2 items-center p-5 justify-evenly gap-10">
-                <p className="text-xs text-heading text-center">Created By</p>
-                <p className="text-xs text-heading text-center">Modified By</p>
-                <p className="text-xs text-heading text-center">Created Date</p>
-                <p className="text-xs text-heading text-center">
+              <div className="grid items-center grid-cols-2 gap-10 p-5 justify-evenly">
+                <p className="text-xs text-center text-heading">Created By</p>
+                <p className="text-xs text-center text-heading">Modified By</p>
+                <p className="text-xs text-center text-heading">Created Date</p>
+                <p className="text-xs text-center text-heading">
                   Modified Date
                 </p>
               </div>
@@ -235,20 +236,20 @@ export default function CreateVendorBill() {
           )}
           {addItem && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-              <div className="w-full max-w-170 rounded-2xl bg-white shadow-xl animate-in fade-in zoom-in-95">
-                <div className="flex items-center justify-between border-b p-4">
+              <div className="w-full bg-white shadow-xl max-w-170 rounded-2xl animate-in fade-in zoom-in-95">
+                <div className="flex items-center justify-between p-4 border-b">
                   <h2 className="text-xs font-semibold text-heading1">
                     Search Item
                   </h2>
                   <button
                     onClick={() => setAddItem(false)}
-                    className="text-heading1 text-xl cursor-pointer"
+                    className="text-xl cursor-pointer text-heading1"
                   >
                     ✕
                   </button>
                 </div>
 
-                <div className="mt-4 relative space-y-4 py-4 px-6">
+                <div className="relative px-6 py-4 mt-4 space-y-4">
                   <input
                     type="text"
                     placeholder="Search"
@@ -256,7 +257,7 @@ export default function CreateVendorBill() {
                   />
                   <Icon
                     icon="mynaui:search"
-                    className="text-heading2 absolute top-6 left-9 text-xl placeholder:text-xs placeholder:text-heading2"
+                    className="absolute text-xl text-heading2 top-6 left-9 placeholder:text-xs placeholder:text-heading2"
                   />
                 </div>
                 <div className="pb-3">
