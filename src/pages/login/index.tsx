@@ -11,9 +11,10 @@ import PasswordFeild from "../../components/passwordFeild";
 import { LoginvalidationSchema } from "../../utils/validations";
 import { useEffect, useState } from "react";
 import { SyncLoader } from "react-spinners";
+import { useAppNavigate } from "../../hooks/navigation";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsloading] = useState(false);
   const formik = useFormik({
@@ -26,7 +27,7 @@ export default function Login() {
       const fakeToken = "abc123token";
       dispatch(setToken(fakeToken));
       dispatch(setIsLoggedIn(true));
-      navigate("/360-dashboard");
+      goTo("/360-dashboard");
       console.log("sddddddddd", values);
       dispatch(setIsLoggedIn(true));
     },
@@ -43,7 +44,7 @@ export default function Login() {
         ></div>
       </div>
 
-      <div className="flex flex-col justify-between w-full h-screen p-12 md:w-1/2 xl:w-1/4">
+      <div className="flex flex-col justify-between w-full h-screen p-12 ite md:w-1/2 xl:w-1/4">
         <div>
           <img src={logo} alt="logo" className="mx-auto h-21 w-21" />{" "}
           <p className="text-[20px] font-semibold mt-12 text-[#1A1A1A]">

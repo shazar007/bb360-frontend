@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function DistributorInvoice() {
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigate();
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -46,7 +46,7 @@ export default function DistributorInvoice() {
           </button>
           <button
             onClick={() => {
-              navigate("/sale-module/sales/distributor-invoice/create");
+              goTo("/sale-module/sales/distributor-invoice/create");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"

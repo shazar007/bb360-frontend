@@ -3,17 +3,6 @@ import CustomInput from "../../../../components/customInput";
 import CustomSelect from "../../../../components/customSelect";
 import { ItemValidationSchema } from "../../../../utils/validations";
 
-const uomOptions = [
-  { value: "kg", label: "Kilogram" },
-  { value: "ltr", label: "Liter" },
-  { value: "pcs", label: "Pieces" },
-];
-
-const tpOptions = [
-  { value: 100, label: "100" },
-  { value: 200, label: "200" },
-  { value: 300, label: "300" },
-];
 export default function AddItem({ close, Edit }: any) {
   const formik = useFormik({
     initialValues: {

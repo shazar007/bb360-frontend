@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import { Icon } from "@iconify/react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function CreateVendorType() {
-  const navigate = useNavigate();
+  const { goBack } = useAppNavigate();
   useEffect(() => {
     document.title = "Vendors Type — BB-360";
   }, []);
@@ -19,13 +19,11 @@ export default function CreateVendorType() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 w-full md:w-auto">
+        <div className="flex items-center w-full gap-2 md:w-auto">
           <button
-            onClick={() => {
-              navigate("/purchase-module/vender-define/vender-type");
-            }}
+            onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-            className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
+            className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >
             {" "}
             <Icon icon="ion:play-back-outline" className="text-lg" />
@@ -44,7 +42,7 @@ export default function CreateVendorType() {
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
-            <p className="font-semibold text-heading1 text-xs">
+            <p className="text-xs font-semibold text-heading1">
               Add / Edit Vendor Types
             </p>
           </div>
