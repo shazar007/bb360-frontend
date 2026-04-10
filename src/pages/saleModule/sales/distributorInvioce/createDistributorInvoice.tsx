@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelect from "../../../../components/customSelect";
 import { useEffect, useState } from "react";
 import CustomTable from "../../../../components/customTable";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Transaction Lines",
@@ -14,7 +14,7 @@ const tabs = [
 ];
 export default function CreateDistributorInvoice() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const navigate = useNavigate();
+  const { goBack } = useAppNavigate();
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -31,9 +31,7 @@ export default function CreateDistributorInvoice() {
 
           <div className="flex items-center w-full gap-2 md:w-auto">
             <button
-              onClick={() => {
-                navigate("/sale-module/sales/distributor-invoice");
-              }}
+              onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >

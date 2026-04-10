@@ -1,10 +1,10 @@
 import CustomTable from "../../../../components/customTable";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function UploadVendors() {
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigate();
   useEffect(() => {
     document.title = "Vendors — BB-360";
   }, []);
@@ -38,7 +38,7 @@ export default function UploadVendors() {
           </button>
           <button
             onClick={() => {
-              navigate("/purchase-module/vender-define/venders/upload");
+              goTo("/purchase-module/vender-define/venders/upload");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -57,14 +57,14 @@ export default function UploadVendors() {
           </button>
         </div>
       </div>
-      <div className=" w-full mt-2">
+      <div className="w-full mt-2 ">
         <div className="p-4 bg-[#ECF0F4] rounded-t-2xl">
-          <p className="text-xs text-heading1 font-semibold">Upload Vendor</p>
+          <p className="text-xs font-semibold text-heading1">Upload Vendor</p>
         </div>
-        <div className="bg-white p-9 rounded-b-2xl flex justify-center items-center flex-col gap-2">
+        <div className="flex flex-col items-center justify-center gap-2 bg-white p-9 rounded-b-2xl">
           <Icon
             icon="hugeicons:file-add"
-            className="text-heading1/36 text-5xl"
+            className="text-5xl text-heading1/36"
           />
           <p className="text-xl font-semibold text-heading1">Drag & Drop</p>
           <p className="text-xs font-normal text-heading1/36">
@@ -78,7 +78,7 @@ export default function UploadVendors() {
           </button>
         </div>
       </div>
-      <div className="mt-2 rounded-2xl bg-white">
+      <div className="mt-2 bg-white rounded-2xl">
         <p className="text-xs p-4.5  text-primary font-semibold">
           Vendors Data_Temp
         </p>
