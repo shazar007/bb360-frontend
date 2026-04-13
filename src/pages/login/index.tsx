@@ -4,7 +4,6 @@ import logo from "../../assets/logo.png";
 import berryboostlogo from "../../assets/BerryBoost Logo.jpg";
 import CustomInput from "../../components/customInput";
 import CustomToggles from "../../components/custontogles";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setIsLoggedIn, setToken } from "../../redux/userSlice";
 import PasswordFeild from "../../components/passwordFeild";
@@ -12,24 +11,54 @@ import { LoginvalidationSchema } from "../../utils/validations";
 import { useEffect, useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { useAppNavigate } from "../../hooks/navigation";
+import { UserLogin } from "../../api/userServices";
+import { notifyError, notifySuccess } from "../../components/toast";
 
 export default function Login() {
   const { goTo } = useAppNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsloading] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: LoginvalidationSchema,
-    onSubmit: (values) => {
-      const fakeToken = "abc123token";
-      dispatch(setToken(fakeToken));
-      dispatch(setIsLoggedIn(true));
-      goTo("/360-dashboard");
-      console.log("sddddddddd", values);
-      dispatch(setIsLoggedIn(true));
+
+    onSubmit: async (values) => {
+      if (isLoading) return; // ✅ prevent double click
+
+      try {
+        setIsloading(true);
+
+        const res = await UserLogin(values);
+        const data = res.data;
+
+        // ✅ success toast
+        notifySuccess("Login successful!");
+
+        // ✅ store auth
+        dispatch(setToken(data.token));
+        dispatch(setIsLoggedIn(true));
+
+        // optional: persist token
+        localStorage.setItem("token", data.token);
+
+        // 🚀 redirect immediately (no delay needed)
+        goTo("/360-dashboard");
+      } catch (error: any) {
+        console.log("Login failed", error);
+
+        const message =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong";
+
+        notifyError(message);
+      } finally {
+        setIsloading(false);
+      }
     },
   });
   useEffect(() => {
