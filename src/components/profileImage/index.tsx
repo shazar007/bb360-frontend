@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import Avatar from "../../assets/Avatar.jpg";
+import profile from "../../assets/Avatar.jpg";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/userSlice";
 import Cookies from "js-cookie";
+import { Avatar } from "@mui/material";
+import { UserLogout } from "../../api/userServices";
 export default function ProfileImage() {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState(Avatar);
+  const [image, setImage] = useState(profile);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(() => {
@@ -29,24 +32,31 @@ export default function ProfileImage() {
     }
   };
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    dispatch(logout());
-    navigate("/");
+  const handleLogout = async () => {
+    if (loading) return;
+
+    try {
+      setLoading(true);
+      await UserLogout();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      Cookies.remove("token");
+      dispatch(logout());
+      navigate("/");
+      setLoading(false);
+    }
   };
 
   return (
     <div className="relative profile-menu">
-      <div
-        className="w-10 h-10 overflow-hidden bg-white rounded-md cursor-pointer"
+      <Avatar
         onClick={() => setOpen(!open)}
-      >
-        <img
-          src={image}
-          className="object-cover w-full h-full rounded-md"
-          alt="profile"
-        />
-      </div>
+        src={image}
+        alt="profile"
+        className="rounded-md cursor-pointer"
+        variant="rounded"
+      />
 
       {open && (
         <div className="absolute z-50 w-48 py-2 mt-2 overflow-hidden -translate-x-1/2 bg-white shadow-lg left-1/2 rounded-xl">
@@ -57,7 +67,7 @@ export default function ProfileImage() {
           >
             Change Profile Image
           </button>
-          <button className="w-full cursor-not-allowed h-10 px-4 py-2 text-xs text-left  hover:bg-gray-100">
+          <button className="w-full h-10 px-4 py-2 text-xs text-left cursor-not-allowed hover:bg-gray-100">
             Setting
           </button>
           <div className="border-t-[0.5px] border-[#304250]/36"></div>
@@ -65,7 +75,9 @@ export default function ProfileImage() {
             onClick={handleLogout}
             className="w-full h-10 px-4 py-2 text-xs text-left text-red-500 cursor-pointer hover:bg-gray-100"
           >
-            Logout
+            <button onClick={handleLogout} disabled={loading}>
+              {loading ? "Logging out..." : "Logout"}
+            </button>
           </button>
         </div>
       )}
