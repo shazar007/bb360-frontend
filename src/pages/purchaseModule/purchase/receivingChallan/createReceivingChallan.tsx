@@ -4,9 +4,11 @@ import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function CreateReceivingChallan() {
   const navigate = useNavigate();
+  const { goBack } = useAppNavigate();
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -19,9 +21,7 @@ export default function CreateReceivingChallan() {
 
         <div className="flex items-center w-full gap-2 md:w-auto">
           <button
-            onClick={() => {
-              navigate("/purchase-module/purchase/receiving-challan");
-            }}
+            onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >

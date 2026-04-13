@@ -1,12 +1,11 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function PurchaseQuotation() {
-  const navigate = useNavigate();
-
+const {goTo} = useAppNavigate();
   const handleCreate = () => {
-    navigate("/purchase-module/procurement/create-quotation");
+    goTo("/purchase-module/procurement/create-quotation");
   };
 
   return (

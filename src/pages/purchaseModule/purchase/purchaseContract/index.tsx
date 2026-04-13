@@ -1,11 +1,11 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function PurchaseContract() {
-  const navigate = useNavigate();
+  const {goTo} = useAppNavigate();
   const handleCreate = () => {
-    navigate("/purchase-module/purchase/purchase-contract/create-contract");
+    goTo("/purchase-module/purchase/purchase-contract/create-contract");
   };
   return (
     <div className="mt-8">

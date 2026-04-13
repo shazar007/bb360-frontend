@@ -5,7 +5,7 @@ import PurchaseModuleRouting from "./purchaseModuleRouting";
 import ApplicationSetupRouting from "./applicationSetupRouting";
 import SaleModuleRouting from "./saleModuleRouting";
 import ProtectedRoute from "./protectedRoutes";
-import FinancialModule from "./financialModule";
+import FinancialModuleRouting from "./financialModuleRouting";
 function MainRoutes() {
   return (
     <div className="flex flex-col w-full h-screen p-5 md:p-8 bg-bgprimary">
@@ -57,7 +57,7 @@ function MainRoutes() {
             path="/financial-module/*"
             element={
               <ProtectedRoute>
-                <FinancialModule />
+                <FinancialModuleRouting />
               </ProtectedRoute>
             }
           />

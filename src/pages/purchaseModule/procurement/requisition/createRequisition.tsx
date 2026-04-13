@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import { useState } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Transaction Lines",
@@ -13,7 +13,7 @@ const tabs = [
 ];
 export default function CreateRequisition() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const navigate = useNavigate();
+  const { goBack } = useAppNavigate();
   return (
     <>
       <div className="mt-8">
@@ -27,9 +27,7 @@ export default function CreateRequisition() {
 
           <div className="flex items-center gap-2 w-full md:w-auto">
             <button
-              onClick={() => {
-                navigate("/purchase-module/procurement/requisition");
-              }}
+              onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
             >

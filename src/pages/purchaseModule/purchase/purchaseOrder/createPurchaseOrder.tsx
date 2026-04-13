@@ -6,6 +6,7 @@ import CustomSelect from "../../../../components/customSelect";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import CustomToggles from "../../../../components/custontogles";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Transaction Lines",
@@ -16,7 +17,7 @@ const tabs = [
 ];
 export default function CreatePurchaseOrder() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const navigate = useNavigate();
+  const { goBack } = useAppNavigate();
   return (
     <>
       <div className="mt-8">
@@ -30,9 +31,7 @@ export default function CreatePurchaseOrder() {
 
           <div className="flex items-center w-full gap-2 md:w-auto">
             <button
-              onClick={() => {
-                navigate("/purchase-module/purchase/purchase-order");
-              }}
+              onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >

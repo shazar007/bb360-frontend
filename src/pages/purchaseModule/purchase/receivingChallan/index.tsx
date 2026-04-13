@@ -2,12 +2,13 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filters from "../../../../components/filter";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useAppNavigate } from "../../../../hooks/navigation";
 export default function ReceivingChallan() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
+
+   const {goTo} = useAppNavigate();
   const handleCreate = () => {
-    navigate("/purchase-module/purchase/receiving-challan/create");
+    goTo("/purchase-module/purchase/receiving-challan/create");
   };
 
   return (
