@@ -17,7 +17,6 @@ export default function DistributorUpdate() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ FORM STATE (MISSING FIX)
   const [form, setForm] = useState<any>({
     distributorCode: "",
     distributorName: "",
@@ -39,17 +38,16 @@ export default function DistributorUpdate() {
     queryKey: ["getAllDistributor"],
     queryFn: getAllDistributor,
 
-    staleTime: Infinity, // ✅ never stale automatically
+    staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
 
-    refetchOnWindowFocus: false, // ❌ stop when tab focused
-    refetchOnMount: false, // ❌ stop when page remounts
-    refetchOnReconnect: false, // ❌ stop internet reconnect refetch
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
   const tableData = AllDistributors?.data?.distributors || [];
 
-  // close menu outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -61,7 +59,6 @@ export default function DistributorUpdate() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // toggle menu
   const toggleMenu = (index: number) => {
     setOpenMenuIndex(openMenuIndex === index ? null : index);
   };
@@ -104,7 +101,6 @@ export default function DistributorUpdate() {
     }));
   };
 
-  // ✅ UPDATE API CALL
   const handleSave = async (e: any) => {
     e.preventDefault();
 
@@ -271,10 +267,10 @@ export default function DistributorUpdate() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center h-10 gap-2 px-4 py-2 text-white rounded-md w-25 bg-primary"
+                  className="flex items-center justify-center h-10 gap-2 px-4 py-2 text-white rounded-md w-25 bg-primary"
                 >
                   {loading ? (
-                    <SyncLoader size={16} color="#fff" />
+                    <SyncLoader size={6} color="#fff" />
                   ) : (
                     <>
                       <Icon icon="mynaui:save" />

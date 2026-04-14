@@ -27,12 +27,12 @@ export default function ItemUpdate() {
 
     placeholderData: (prev) => prev,
 
-    staleTime: Infinity, // ✅ never auto stale
+    staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
 
-    refetchOnWindowFocus: false, // ❌ stop focus refetch
-    refetchOnMount: false, // ❌ stop page remount refetch
-    refetchOnReconnect: false, // ❌ stop internet reconnect refetch
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
   const items = AllItems?.data?.items || [];
 
@@ -219,7 +219,7 @@ export default function ItemUpdate() {
               })
               .finally(() => {
                 setSaveLoading(false);
-                setIsEdit(false); // ✅ modal close AFTER API
+                setIsEdit(false);
               });
           }}
         />

@@ -1,15 +1,21 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { addDistributorApi } from "../../../../api/distributorServices";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
+import type { AxiosError } from "axios";
 const STORAGE_KEY = "temp_distributor_upload";
 export default function DistributorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [fileName, setFileName] = useState<string>("");
+  const [fileLoading, setFileLoading] = useState(false);
+  const [saveRow, setSaveRow] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
   const [form, setForm] = useState<any>({
@@ -40,45 +46,53 @@ export default function DistributorUpload() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    if (!form.distributorName) {
-      notifyError("Distributor Name is required");
-      return;
-    }
-
-    const newItem = {
-      ...form,
-      selected: false,
-    };
-
-    setTableData((prev) => {
-      const updated = [...prev];
-
-      if (editIndex !== null) {
-        updated[editIndex] = newItem;
-      } else {
-        updated.push(newItem);
+  const handleSave = async () => {
+    try {
+      if (!form.distributorName) {
+        notifyError("Distributor Name is required");
+        return;
       }
 
-      return updated;
-    });
+      setSaveRow(true); // 🔥 start loading
 
-    setForm({
-      distributorCode: "", // keep but not required
-      distributorName: "",
-      contactNumber: "",
-      address: "",
-      city: "",
-      licenceNumber: "",
-      licenceExpiryDate: "",
-    });
+      const newItem = {
+        ...form,
+        selected: false,
+      };
 
-    setEditIndex(null);
-    setAddDistributor(false);
+      setTableData((prev) => {
+        const updated = [...prev];
 
-    notifySuccess(
-      editIndex !== null ? "Updated Distributor" : "Added Distributor",
-    );
+        if (editIndex !== null) {
+          updated[editIndex] = newItem;
+        } else {
+          updated.push(newItem);
+        }
+
+        return updated;
+      });
+
+      setForm({
+        distributorCode: "",
+        distributorName: "",
+        contactNumber: "",
+        address: "",
+        city: "",
+        licenceNumber: "",
+        licenceExpiryDate: "",
+      });
+
+      setEditIndex(null);
+      setAddDistributor(false);
+
+      notifySuccess(
+        editIndex !== null ? "Updated Distributor" : "Added Distributor",
+      );
+    } catch (err) {
+      notifyError("Something went wrong");
+    } finally {
+      setSaveRow(false); // 🔥 stop loading (IMPORTANT)
+    }
   };
 
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -87,21 +101,20 @@ export default function DistributorUpload() {
     try {
       setUploadLoading(true);
 
-      const validData = tableData.filter(
-        (i) => i.distributorName && i.contactNumber,
-      );
-
       if (!tableData.length) {
         notifyError("No data found");
         return;
       }
 
-      if (!validData.length) {
-        notifyError("No valid data to upload");
-        return;
-      }
+      let successCount = 0;
+      let failCount = 0;
 
-      const requests = validData.map((item) => {
+      for (let item of tableData) {
+        if (!item.distributorName || !item.contactNumber) {
+          failCount++;
+          continue;
+        }
+
         const requestBody = {
           distributorName: item.distributorName,
           contactNumber: item.contactNumber,
@@ -111,36 +124,140 @@ export default function DistributorUpload() {
           licenceExpiryDate: item.licenceExpiryDate,
         };
 
-        return addDistributorApi(requestBody);
-      });
+        try {
+          await addDistributorApi(requestBody);
+          successCount++;
+        } catch (err) {
+          const error = err as AxiosError<any>;
 
-      const results = await Promise.allSettled(requests);
+          console.log("ERROR RESPONSE:", error.response?.data);
 
-      const successCount = results.filter(
-        (r) => r.status === "fulfilled",
-      ).length;
-
-      const failedCount = results.filter((r) => r.status === "rejected").length;
-
-      if (failedCount > 0) {
-        notifyError(`${failedCount} rows failed to upload`);
+          notifyError(error.response?.data?.message || "Upload failed");
+        }
       }
 
       if (successCount > 0) {
-        notifySuccess(`${successCount} rows uploaded successfully`);
+        notifySuccess(`${successCount} uploaded successfully`);
       }
-      if (failedCount === 0) {
+
+      if (failCount > 0) {
+        notifyError(`${failCount} failed`);
+      }
+
+      if (failCount === 0) {
         localStorage.removeItem(STORAGE_KEY);
         setTableData([]);
       }
-    } catch (err: any) {
-      console.log("UPLOAD ERROR:", err);
-      notifyError("Upload failed");
+    } catch (err) {
+      notifyError("Something went wrong");
     } finally {
       setUploadLoading(false);
     }
   };
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    setFileLoading(true);
+    setFileName(file.name);
+
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const data = event.target?.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
+
+        console.log("RAW EXCEL DATA:", jsonData);
+
+        const formatExcelDate = (val: any) => {
+          if (!val) return "";
+
+          if (typeof val === "string" && val.includes("/")) {
+            const [m, d, y] = val.split("/");
+            return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+          }
+
+          if (typeof val === "number") {
+            const excelEpoch = new Date(1899, 11, 30);
+            const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
+            return jsDate.toISOString().split("T")[0];
+          }
+
+          const d = new Date(val);
+          return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
+        };
+
+        const formatted = jsonData.map((row: any) => ({
+          distributorName:
+            row["distributor Name"] ||
+            row["distributorName"] ||
+            row["Distributor Name"] ||
+            "",
+          contactNumber:
+            row["contactNumber"] || row["Contact Number"]
+              ? String(row["contactNumber"])
+              : "",
+          address: row["Address"] || row["address"] || "",
+          city: row["city"] || row["City"] || "",
+          licenceNumber: row["licenceNumber"] || row["Licence Number"] || "",
+          licenceExpiryDate: formatExcelDate(
+            row["licenceExpiryDate"] ||
+              row["licence Expiry Date"] ||
+              row["Licence Expiry Date"],
+          ),
+          selected: false,
+        }));
+
+        console.log("FORMATTED:", formatted);
+
+        setTableData([...formatted]);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
+
+        notifySuccess("File loaded successfully");
+      } catch (err) {
+        notifyError("Invalid file format");
+      } finally {
+        setFileLoading(false);
+      }
+    };
+
+    reader.readAsBinaryString(file);
+  };
+  const handleDownloadTemplate = () => {
+    try {
+      setDownloadLoading(true);
+
+      const template = [
+        {
+          "Distributor Name": "",
+          "Contact Number": "",
+          Address: "",
+          City: "",
+          "Licence Number": "",
+          "Licence Expiry Date": "",
+        },
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(template);
+      const wb = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(wb, ws, "Template");
+
+      XLSX.writeFile(wb, "distributor-template.xlsx");
+
+      notifySuccess("Template downloaded");
+    } catch (err) {
+      notifyError("Failed to download template");
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -165,6 +282,7 @@ export default function DistributorUpload() {
 
             <button
               onClick={handleUpload}
+              disabled={uploadLoading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
@@ -180,12 +298,19 @@ export default function DistributorUpload() {
               )}
             </button>
             <button
+              onClick={handleDownloadTemplate}
+              disabled={downloadLoading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-45"
             >
-              {" "}
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Download Template
+              {downloadLoading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="basil:add-outline" className="text-lg" />
+                  Download Template
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -200,16 +325,34 @@ export default function DistributorUpload() {
               icon="hugeicons:file-add"
               className="text-5xl text-heading1/36"
             />
+
             <p className="text-xl font-semibold text-heading1">Drag & Drop</p>
+
             <p className="text-xs font-normal text-heading1/36">
               Supported formats XLSX
             </p>
-            <button
+            {fileLoading ? (
+              <p className="text-sm font-medium text-primary">
+                Uploading file...
+              </p>
+            ) : fileName ? (
+              <p className="text-sm font-medium text-green-600">
+                Selected: {fileName}
+              </p>
+            ) : null}
+
+            <label
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >
               Choose File
-            </button>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                hidden
+                onChange={handleFileUpload}
+              />
+            </label>
           </div>
         </div>
         <div className="pb-4 mt-2 bg-white rounded-2xl">
@@ -327,8 +470,15 @@ export default function DistributorUpload() {
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
               >
-                <Icon icon="mynaui:save" className="text-xl" />
-                Save
+                {saveRow ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  <>
+                    {" "}
+                    <Icon icon="mynaui:save" className="text-xl" />
+                    Save
+                  </>
+                )}
               </button>
             </div>
           </div>

@@ -43,7 +43,7 @@ export default function CustomTable({
             <tr>
               <td colSpan={headers?.length || 1} className="p-6 text-center">
                 <div className="flex items-center justify-center">
-                  <SyncLoader size={18} color="#3b82f6" />
+                  <SyncLoader size={18} color="#14CCC3" />
                 </div>
               </td>
             </tr>
