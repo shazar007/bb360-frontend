@@ -929,6 +929,10 @@ export const navItems: NavItem[] = [
             name: "Delivery Challan",
             path: "/sale-module/sales/delivery-challan",
           },
+          {
+            name: "Sales Return",
+            path: "/sale-module/sales/sales-return",
+          },
           // {
           //   name: "Generate Consolidate Invoice",
           //   path: "/sales-module/sales/generate-consolidate-invoice",

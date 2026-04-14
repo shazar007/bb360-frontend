@@ -1,9 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-import DistributorInvoice from "../../../pages/saleModule/sales/distributorInvioce";
-import CreateDistributorInvoice from "../../../pages/saleModule/sales/distributorInvioce/createDistributorInvoice";
+import DistributorInvoice from "../../../pages/saleModule/sales/salesInvoice";
+import CreateDistributorInvoice from "../../../pages/saleModule/sales/salesInvoice/createsalesInvoice";
 import DeliveryChallan from "../../../pages/saleModule/sales/deliveryChallan";
-import CreateDeliveryChallan from "../../../pages/saleModule/sales/deliveryChallan/createDeliveryChallan"; 
+import CreateDeliveryChallan from "../../../pages/saleModule/sales/deliveryChallan/createDeliveryChallan";
 
+import SalesReturn from "../../../pages/saleModule/sales/salesReturn"; // index.tsx
+import CreateSalesReturn from "../../../pages/saleModule/sales/salesReturn/createSalesReturn";
 export default function SaleRouting() {
   return (
     <Routes>
@@ -14,12 +16,15 @@ export default function SaleRouting() {
       />
 
       <Route path="/delivery-challan" element={<DeliveryChallan />} />
-
-     
       <Route
         path="/delivery-challan/create"
         element={<CreateDeliveryChallan />}
       />
+
+      
+      <Route path="/sales-return" element={<SalesReturn />} />
+      <Route path="/sales-return/create" element={<CreateSalesReturn />} />
+
     </Routes>
   );
 }
