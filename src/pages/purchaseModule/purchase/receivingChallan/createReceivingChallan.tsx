@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
@@ -7,7 +7,7 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function CreateReceivingChallan() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { goBack } = useAppNavigate();
   return (
     <div className="mt-8">
@@ -19,7 +19,7 @@ export default function CreateReceivingChallan() {
           </p>
         </div>
 
-        <div className="flex items-center w-full gap-2 md:w-auto">
+        <div className="flex flex-wrap items-center w-full gap-2 md:w-auto">
           <button
             onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -29,7 +29,11 @@ export default function CreateReceivingChallan() {
             <Icon icon="ion:play-back-outline" className="text-lg" />
             Back
           </button>
-
+          {/* Print */}
+          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
+            <Icon icon="ion:print-outline" className="w-5 h-5" />
+            Print
+          </button>
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"

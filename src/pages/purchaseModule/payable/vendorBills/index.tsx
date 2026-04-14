@@ -1,20 +1,21 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
+
 import { useEffect } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function VendorBills() {
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
-  const navigate = useNavigate();
+  const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Payable / Vendor Bill
+            Payable / Purchase Invoice
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -28,13 +29,13 @@ export default function VendorBills() {
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
             />
           </div>
-          <button
+          {/* <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
           >
             Action
             <Icon icon="weui:arrow-filled" className="text-lg rotate-90" />
-          </button>
+          </button> */}
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -52,17 +53,12 @@ export default function VendorBills() {
             Reset
           </button>
           <button
-            onClick={() => {
-              navigate(
-                "/purchase-module/payable/vendor-bills/create-vendor-bill",
-              );
-            }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
           >
             {" "}
-            <Icon icon="basil:add-outline" className="text-lg" />
-            Create
+            <Icon icon="streamline-flex:story-post" className="text-lg" />
+            post
           </button>
         </div>
       </div>
@@ -74,22 +70,22 @@ export default function VendorBills() {
             "View",
             "Report",
             "Transaction Date",
-            "Due Date",
+            "Purchase Number",
             "Vendor",
-            "Transaction Number",
-            "Location",
-            "Created From",
-            "Status",
-            "Document Status",
             "Gross Amount",
-            "Pay Amount",
-            "Balance Amount",
+            "Tax Amount",
+            "Amount",
           ]}
           data={[
             [
               <Icon
                 icon="basil:edit-outline"
                 className="text-lg cursor-pointer text-primary"
+                onClick={() =>
+                  goTo(
+                    "/purchase-module/payable/vendor-bills/create-vendor-bill",
+                  )
+                }
               />,
               <Icon
                 icon="hugeicons:view"
@@ -100,17 +96,11 @@ export default function VendorBills() {
                 className="text-lg cursor-pointer text-primary"
               />,
               "03-Nov-2025",
-              "03-Dec-2025",
+              "PO-000121",
               "Globify Trader Karachi",
-              "PO-0000015",
-
-              "Head Office 01",
-              "Approved",
-              "RQ0000045",
-              "Pending item receipt",
-              "RQ0000045",
-              "RQ0000045",
-              "RQ0000045",
+              "45,250",
+              "8,250",
+              "53,450",
             ],
           ]}
         />

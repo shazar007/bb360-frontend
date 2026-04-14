@@ -740,43 +740,43 @@ export const navItems: NavItem[] = [
             name: "Purchase Order",
             path: "/purchase-module/purchase/purchase-order",
           },
-          {
-            name: "Purchase Contract",
-            path: "/purchase-module/purchase/purchase-contract",
-          },
-          {
-            name: "Pending Receive Orders List",
-            path: "/purchase-module/purchase/pending-receive-orders-list",
-          },
+          // {
+          //   name: "Purchase Contract",
+          //   path: "/purchase-module/purchase/purchase-contract",
+          // },
+          // {
+          //   name: "Pending Receive Orders List",
+          //   path: "/purchase-module/purchase/pending-receive-orders-list",
+          // },
           {
             name: "Receiving Challan",
             path: "/purchase-module/purchase/receiving-challan",
           },
-          {
-            name: "Generate Consolidate Vendor Bill",
-            path: "/purchase-module/purchase/generate-consolidate-vendor-bill",
-          },
+          // {
+          //   name: "Generate Consolidate Vendor Bill",
+          //   path: "/purchase-module/purchase/generate-consolidate-vendor-bill",
+          // },
         ],
       },
       {
         name: "Payable",
         children: [
           {
-            name: "Vendor Bills",
+            name: "Purchase Invoice",
             path: "/purchase-module/payable/vendor-bills",
           },
           {
             name: "Pay Bills",
             path: "/purchase-module/payable/pay-bills",
           },
-          {
-            name: "Vendor Credit",
-            path: "/purchase-module/payable/vendor-credit",
-          },
-          {
-            name: "Recurring Vendor Bill",
-            path: "/purchase-module/payable/recurring-vendor-bill",
-          },
+          // {
+          //   name: "Vendor Credit",
+          //   path: "/purchase-module/payable/vendor-credit",
+          // },
+          // {
+          //   name: "Recurring Vendor Bill",
+          //   path: "/purchase-module/payable/recurring-vendor-bill",
+          // },
         ],
       },
       // {
@@ -927,7 +927,7 @@ export const navItems: NavItem[] = [
           // },
           {
             name: "Delivery Challan",
-            path: "/sales-module/sales/delivery-challan",
+            path: "/sale-module/sales/delivery-challan",
           },
           // {
           //   name: "Generate Consolidate Invoice",
