@@ -80,11 +80,6 @@ export default function DistributorUpload() {
       editIndex !== null ? "Updated Distributor" : "Added Distributor",
     );
   };
-  const toggleSelect = (index: number, value: boolean) => {
-    const updated = [...tableData];
-    updated[index].selected = value;
-    setTableData(updated);
-  };
 
   const [uploadLoading, setUploadLoading] = useState(false);
 
@@ -93,15 +88,20 @@ export default function DistributorUpload() {
       setUploadLoading(true);
 
       const validData = tableData.filter(
-        (i) => i.distributorCode && i.distributorName,
+        (i) => i.distributorName && i.contactNumber,
       );
+
+      if (!tableData.length) {
+        notifyError("No data found");
+        return;
+      }
 
       if (!validData.length) {
         notifyError("No valid data to upload");
         return;
       }
 
-      for (const item of validData) {
+      const requests = validData.map((item) => {
         const requestBody = {
           distributorName: item.distributorName,
           contactNumber: item.contactNumber,
@@ -111,18 +111,31 @@ export default function DistributorUpload() {
           licenceExpiryDate: item.licenceExpiryDate,
         };
 
-        console.log("SENDING 👉", requestBody);
+        return addDistributorApi(requestBody);
+      });
 
-        await addDistributorApi(requestBody);
+      const results = await Promise.allSettled(requests);
+
+      const successCount = results.filter(
+        (r) => r.status === "fulfilled",
+      ).length;
+
+      const failedCount = results.filter((r) => r.status === "rejected").length;
+
+      if (failedCount > 0) {
+        notifyError(`${failedCount} rows failed to upload`);
       }
 
-      notifySuccess("Uploaded successfully");
-
-      localStorage.removeItem(STORAGE_KEY);
-      setTableData([]);
+      if (successCount > 0) {
+        notifySuccess(`${successCount} rows uploaded successfully`);
+      }
+      if (failedCount === 0) {
+        localStorage.removeItem(STORAGE_KEY);
+        setTableData([]);
+      }
     } catch (err: any) {
-      console.log("UPLOAD ERROR:", err?.response?.data);
-      notifyError(err?.response?.data?.message || "Upload failed");
+      console.log("UPLOAD ERROR:", err);
+      notifyError("Upload failed");
     } finally {
       setUploadLoading(false);
     }

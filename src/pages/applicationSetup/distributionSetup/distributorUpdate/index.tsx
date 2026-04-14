@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 import CustomTable from "../../../../components/customTable";
-import DistributorModel from "../components/distributorModel";
 import { useQuery } from "@tanstack/react-query";
 import {
   getAllDistributor,
@@ -9,6 +8,8 @@ import {
 } from "../../../../api/distributorServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import CustomInput from "../../../../components/customInput";
+import CustomDatePicker from "../../../../components/datePicker";
 
 export default function DistributorUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -16,18 +17,39 @@ export default function DistributorUpdate() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // ✅ FORM STATE (MISSING FIX)
+  const [form, setForm] = useState<any>({
+    distributorCode: "",
+    distributorName: "",
+    contactNumber: "",
+    address: "",
+    city: "",
+    licenceNumber: "",
+    licenceExpiryDate: "",
+  });
+
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const { data: AllDistributors, refetch } = useQuery({
+  const {
+    data: AllDistributors,
+    refetch,
+    isRefetching,
+    isLoading,
+  } = useQuery({
     queryKey: ["getAllDistributor"],
     queryFn: getAllDistributor,
-    staleTime: 1000 * 60 * 5,
+
+    staleTime: Infinity, // ✅ never stale automatically
     gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
+
+    refetchOnWindowFocus: false, // ❌ stop when tab focused
+    refetchOnMount: false, // ❌ stop when page remounts
+    refetchOnReconnect: false, // ❌ stop internet reconnect refetch
   });
 
   const tableData = AllDistributors?.data?.distributors || [];
 
+  // close menu outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -39,14 +61,24 @@ export default function DistributorUpdate() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // OPEN MENU ONLY
+  // toggle menu
   const toggleMenu = (index: number) => {
     setOpenMenuIndex(openMenuIndex === index ? null : index);
   };
 
-  // OPEN EDIT MODAL
   const handleEdit = (index: number) => {
+    const item = tableData[index];
+
     setSelectedIndex(index);
+    setForm({
+      distributorName: item.distributorName || "",
+      contactNumber: item.contactNumber || "",
+      address: item.address || "",
+      city: item.city || "",
+      licenceNumber: item.licenceNumber || "",
+      licenceExpiryDate: item.licenceExpiryDate || "",
+    });
+
     setIsEdit(true);
     setOpenMenuIndex(null);
   };
@@ -54,10 +86,28 @@ export default function DistributorUpdate() {
   const closeModal = () => {
     setIsEdit(false);
     setSelectedIndex(null);
+    setForm({
+      distributorCode: "",
+      distributorName: "",
+      contactNumber: "",
+      address: "",
+      city: "",
+      licenceNumber: "",
+      licenceExpiryDate: "",
+    });
   };
 
-  // SAVE API CALL
-  const handleSave = async (values: any) => {
+  const handleChange = (name: string, value: any) => {
+    setForm((prev: any) => ({
+      ...prev,
+      [name]: typeof value === "object" ? (value?.target?.value ?? "") : value,
+    }));
+  };
+
+  // ✅ UPDATE API CALL
+  const handleSave = async (e: any) => {
+    e.preventDefault();
+
     try {
       if (selectedIndex === null) return;
 
@@ -66,11 +116,11 @@ export default function DistributorUpdate() {
 
       setLoading(true);
 
-      await updateDistributor(id, values);
+      await updateDistributor(id, form);
 
       notifySuccess("Updated successfully");
 
-      await refetch(); // refresh data
+      await refetch();
       closeModal();
     } catch (err: any) {
       notifyError(err?.response?.data?.message || "Update failed");
@@ -100,6 +150,7 @@ export default function DistributorUpdate() {
 
           <CustomTable
             norounded
+            loading={isLoading}
             height="60vh"
             headers={[
               "Edit",
@@ -123,11 +174,8 @@ export default function DistributorUpdate() {
                 {openMenuIndex === index && (
                   <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
                     <button
-                      className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
-                      onClick={() => {
-                        handleEdit(index);
-                        setIsEdit;
-                      }}
+                      className="w-full px-2 py-1 text-left hover:bg-gray-100"
+                      onClick={() => handleEdit(index)}
                     >
                       Edit
                     </button>
@@ -142,19 +190,102 @@ export default function DistributorUpdate() {
               item.city,
               item.licenceNumber,
               item.licenceExpiryDate,
-              item.licenceStatus,
+              <div
+                className={`px-2 py-1 rounded-sm text-xs  w-fit
+    ${
+      item.licenceStatus === "Good"
+        ? "bg-[#228422]/12 text-[#228422]"
+        : item.licenceStatus === "Near Expiry"
+          ? "bg-[#E6F200]/12 text-[#A89507]"
+          : "bg-red-100 text-red-700"
+    }`}
+              >
+                {item.licenceStatus}
+              </div>,
             ])}
           />
         </div>
       </div>
 
-      {isEdit && selectedIndex !== null && (
-        <DistributorModel
-          close={closeModal}
-          data={tableData[selectedIndex]} // ✅ prefilled
-          onSave={handleSave}
-          loading={loading}
-        />
+      {isEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-xs font-semibold text-heading1">
+                Edit Distributor
+              </h2>
+
+              <button onClick={closeModal} className="text-xl cursor-pointer">
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSave}>
+              <div className="grid grid-cols-2 gap-4 p-6">
+                <CustomInput
+                  label="City"
+                  name="city"
+                  value={form.city}
+                  onChange={(val: any) => handleChange("city", val)}
+                />
+
+                <CustomInput
+                  label="Distributor Name"
+                  name="distributorName"
+                  value={form.distributorName}
+                  onChange={(val: any) => handleChange("distributorName", val)}
+                />
+
+                <CustomInput
+                  label="Licence Number"
+                  name="licenceNumber"
+                  value={form.licenceNumber}
+                  onChange={(val: any) => handleChange("licenceNumber", val)}
+                />
+
+                <CustomInput
+                  label="Contact Number"
+                  name="contactNumber"
+                  value={form.contactNumber}
+                  onChange={(val: any) => handleChange("contactNumber", val)}
+                />
+
+                <CustomDatePicker
+                  label="Licence Expiry Date"
+                  name="licenceExpiryDate"
+                  value={form.licenceExpiryDate}
+                  onChange={(val: any) =>
+                    handleChange("licenceExpiryDate", val)
+                  }
+                />
+
+                <CustomInput
+                  label="Address"
+                  name="address"
+                  value={form.address}
+                  onChange={(val: any) => handleChange("address", val)}
+                />
+              </div>
+
+              <div className="flex justify-end p-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center h-10 gap-2 px-4 py-2 text-white rounded-md w-25 bg-primary"
+                >
+                  {loading ? (
+                    <SyncLoader size={16} color="#fff" />
+                  ) : (
+                    <>
+                      <Icon icon="mynaui:save" />
+                      Save
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </>
   );

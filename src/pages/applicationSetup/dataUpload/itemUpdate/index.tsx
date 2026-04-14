@@ -20,15 +20,20 @@ export default function ItemUpdate() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
   const { data: AllItems, refetch } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
-    placeholderData: (prev) => prev,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-  });
 
+    placeholderData: (prev) => prev,
+
+    staleTime: Infinity, // ✅ never auto stale
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false, // ❌ stop focus refetch
+    refetchOnMount: false, // ❌ stop page remount refetch
+    refetchOnReconnect: false, // ❌ stop internet reconnect refetch
+  });
   const items = AllItems?.data?.items || [];
 
   const handleEdit = (index: number) => {
