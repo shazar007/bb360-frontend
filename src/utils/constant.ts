@@ -86,39 +86,39 @@ export const navItems: NavItem[] = [
       //     },
       //   ],
       // },
-      // {
-      //   name: "Distribution Setup",
-      //   children: [
-      //     {
-      //       name: "Distribution Upload",
-      //       path: "/application-setup/distribution-setup/distributor-upload",
-      //     },
-      //     {
-      //       name: "Distribution Update",
-      //       path: "/application-setup/distribution-setup/distributor-update",
-      //     },
-      //     {
-      //       name: "Vehicles",
-      //       path: "/application-setup/distribution-setup/vehicles",
-      //     },
-      //     {
-      //       name: "Routes",
-      //       path: "/application-setup/distribution-setup/routes",
-      //     },
-      //     {
-      //       name: "Customers Map View",
-      //       path: "/application-setup/distribution-setup/customers-map-view",
-      //     },
-      //     {
-      //       name: "Employee Location Routes",
-      //       path: "/application-setup/distribution-setup/employee-location-routes",
-      //     },
-      //     {
-      //       name: "Fuel Price List",
-      //       path: "/application-setup/distribution-setup/fuel-price-list",
-      //     },
-      //   ],
-      // },
+      {
+        name: "Distribution Setup",
+        children: [
+          {
+            name: "Distribution Upload",
+            path: "/application-setup/distribution-setup/distributor-upload",
+          },
+          {
+            name: "Distribution Update",
+            path: "/application-setup/distribution-setup/distributor-update",
+          },
+          //     {
+          //       name: "Vehicles",
+          //       path: "/application-setup/distribution-setup/vehicles",
+          //     },
+          //     {
+          //       name: "Routes",
+          //       path: "/application-setup/distribution-setup/routes",
+          //     },
+          //     {
+          //       name: "Customers Map View",
+          //       path: "/application-setup/distribution-setup/customers-map-view",
+          //     },
+          //     {
+          //       name: "Employee Location Routes",
+          //       path: "/application-setup/distribution-setup/employee-location-routes",
+          //     },
+          //     {
+          //       name: "Fuel Price List",
+          //       path: "/application-setup/distribution-setup/fuel-price-list",
+          //     },
+        ],
+      },
       {
         name: "Data Upload",
         children: [
@@ -239,255 +239,264 @@ export const navItems: NavItem[] = [
     name: "Financial Module",
     icon: "mdi:finance",
     children: [
+      // {
+      //   name: "Financial",
+      //   children: [
+      //     {
+      //       name: "Journal Entries",
+      //       path: "/financial-module/Financial/journal-entries",
+      //     },
+      //     {
+      //       name: "Post Dated Cheque's",
+      //       path: "/financial-module/Financial/post-dated-cheque",
+      //     },
+      //     {
+      //       name: "Recurring Journal",
+      //       path: "/financial-module/Financial/recurring-journal",
+      //     },
+      //     {
+      //       name: "Budgets",
+      //       path: "/financial-module/Financial/budgets",
+      //     },
+      //     {
+      //       name: "Account Closing - Retained Erning Entry",
+      //       path: "/financial-module/Financial/account-closing",
+      //     },
+      //     {
+      //       name: "Run Items Costing",
+      //       path: "/financial-module/Financial/run-items-costing",
+      //     },
+      //     {
+      //       name: "Inward Post Dated Cheque",
+      //       path: "/financial-module/Financial/inward-post-date-cheque",
+      //     },
+      //     {
+      //       name: "Outward Post Dated Cheque",
+      //       path: "/financial-module/Financial/outward-post-date-cheque",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Cash & Banks",
+      //   children: [
+      //     {
+      //       name: "Make Payments",
+      //       path: "/financial-module/cash-banks/make-payments",
+      //     },
+      //     {
+      //       name: "Make Receipt",
+      //       path: "/financial-module/cash-banks/make-receipt",
+      //     },
+      //     {
+      //       name: "Route Wise Cash Recovery",
+      //       path: "/financial-module/cash-banks/route-wise-cash-recovery",
+      //     },
+      //     {
+      //       name: "Employee Advance",
+      //       path: "/financial-module/cash-banks/employee-advance",
+      //     },
+      //     {
+      //       name: "Employee Loans",
+      //       path: "/financial-module/cash-banks/employee-loans",
+      //     },
+      //     {
+      //       name: "Funds Issue",
+      //       path: "/financial-module/cash-banks/funds-issue",
+      //     },
+      //     {
+      //       name: "Fund Receiving",
+      //       path: "/financial-module/cash-banks/funds-receiving",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Accounting Setup",
+      //   children: [
+      //     {
+      //       name: "Currencies",
+      //       path: "/financial-module/accounting-setup/currencies",
+      //     },
+      //     {
+      //       name: "Payment Terms",
+      //       path: "/financial-module/accounting-setup/payment-terms",
+      //     },
+      //     {
+      //       name: "cheque Book",
+      //       path: "/financial-module/accounting-setup/cash-book",
+      //     },
+      //     {
+      //       name: "Accounting Periods",
+      //       path: "/financial-module/accounting-setup/accounting-periods",
+      //     },
+      //     {
+      //       name: "Transaction Accounting Verify",
+      //       path: "/financial-module/accounting-setup/transaction-accounting-verify",
+      //     },
+      //     {
+      //       name: "Merge Account Setup",
+      //       path: "/financial-module/accounting-setup/merge-account-setup",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Fixed Asset",
+      //   children: [
+      //     {
+      //       name: "Fixed Assets Register",
+      //       path: "/financial-module/fixed-asset/fixed-assets-register",
+      //     },
+      //     {
+      //       name: "Asset Category",
+      //       path: "/financial-module/fixed-asset/asset-category",
+      //     },
+      //     {
+      //       name: "Asset Depreciation Calculation",
+      //       path: "/financial-module/fixed-asset/asset-depreciation-calculation",
+      //     },
+      //     {
+      //       name: "Fixed Asset Depreciation",
+      //       path: "/financial-module/fixed-asset/fixed-asset-deprection",
+      //     },
+      //     {
+      //       name: "Disposal of Asset",
+      //       path: "/financial-module/fixed-asset/disposal-of-assets",
+      //     },
+      //     {
+      //       name: "Revaluation of Asset",
+      //       path: "/financial-module/fixed-asset/revaluation-of-assets",
+      //     },
+      //     {
+      //       name: "Asset Ledger",
+      //       path: "/financial-module/fixed-asset/asset-",
+      //     },
+      //     {
+      //       name: "Fixed Asset Detail Report",
+      //       path: "/financial-module/fixed-asset/",
+      //     },
+      //     {
+      //       name: "Fixed Asset Category Report",
+      //       path: "/financial-module/fixed-asset/",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Asset Maintenance",
+      //   children: [
+      //     {
+      //       name: "Maintenance Request",
+      //       path: "/financial-module/asset-maintenance/maintenance-request",
+      //     },
+      //     {
+      //       name: "Supervisior Activity",
+      //       path: "/financial-module/asset-maintenance/supervisior-activity",
+      //     },
+      //     {
+      //       name: "Technician Activity",
+      //       path: "/financial-module/asset-maintenance/technician-activity",
+      //     },
+      //     {
+      //       name: "Vendor Activity",
+      //       path: "/financial-module/asset-maintenance/vendor-activity",
+      //     },
+      //     {
+      //       name: "Maintenance Job Cards",
+      //       path: "/financial-module/asset-maintenance/maintenance-job-cards",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Financial Reports",
+      //   children: [
+      //     {
+      //       name: "Account Ledger",
+      //       path: "/financial-module/financial-reports/account-ledger",
+      //     },
+      //     {
+      //       name: "Cash / Bank Ledger",
+      //       path: "/financial-module/financial-reports/cash-bank-ledger",
+      //     },
+      //     {
+      //       name: "Cash /  Bank Summary",
+      //       path: "/financial-module/financial-reports/cash-bank-summary",
+      //     },
+      //     {
+      //       name: "Cash In Out Details",
+      //       path: "/financial-module/financial-reports/cash-in-out-details",
+      //     },
+      //     {
+      //       name: "Daily Cash Book Report",
+      //       path: "/financial-module/financial-reports/daily-cash-book-report",
+      //     },
+      //     {
+      //       name: "Trial Balance",
+      //       path: "/financial-module/financial-reports/trial-balance",
+      //     },
+      //     {
+      //       name: "Trial Balance",
+      //       path: "/financial-module/financial-reports/trial-balance-2",
+      //     },
+      //     {
+      //       name: "Payment and Receipt Summary",
+      //       path: "/financial-module/financial-reports/payment-receipt-summary",
+      //     },
+      //     {
+      //       name: "Trial Balance Details",
+      //       path: "/financial-module/financial-reports/trial-balance-details",
+      //     },
+      //     {
+      //       name: "Trial Balance Month Wise",
+      //       path: "/financial-module/financial-reports/trial-balance-month-wise",
+      //     },
+      //     {
+      //       name: "Balance Sheet Report",
+      //       path: "/financial-module/financial-reports/balance-sheet-report",
+      //     },
+      //     {
+      //       name: "Cash Flow Statement",
+      //       path: "/financial-module/financial-reports/cash-flow-statement",
+      //     },
+      //     {
+      //       name: "Profit / Loss Statement",
+      //       path: "/financial-module/financial-reports/profit-loss-statement",
+      //     },
+      //     {
+      //       name: "General Journal Report",
+      //       path: "/financial-module/financial-reports/general-journal-report",
+      //     },
+      //     {
+      //       name: "Daily Activity Report",
+      //       path: "/financial-module/financial-reports/daily-activity-report",
+      //     },
+      //     {
+      //       name: "Daily Expense Report",
+      //       path: "/financial-module/financial-reports/daily-expense-report",
+      //     },
+      //     {
+      //       name: "Working Capital Report",
+      //       path: "/financial-module/financial-reports/working-capital-report",
+      //     },
+      //     {
+      //       name: "Daily Expense Summary",
+      //       path: "/financial-module/financial-reports/daily-expense-summary",
+      //     },
+      //     {
+      //       name: "Budget Status Report",
+      //       path: "/financial-module/financial-reports/budget-status-report",
+      //     },
+      //     {
+      //       name: "Accounts Closing Balances",
+      //       path: "/financial-module/financial-reports/accounts-closing-balances",
+      //     },
+      //   ],
+      // },
+
       {
-        name: "Financial",
-        children: [
-          {
-            name: "Journal Entries",
-            path: "/financial-module/Financial/journal-entries",
-          },
-          {
-            name: "Post Dated Cheque's",
-            path: "/financial-module/Financial/post-dated-cheque",
-          },
-          {
-            name: "Recurring Journal",
-            path: "/financial-module/Financial/recurring-journal",
-          },
-          {
-            name: "Budgets",
-            path: "/financial-module/Financial/budgets",
-          },
-          {
-            name: "Account Closing - Retained Erning Entry",
-            path: "/financial-module/Financial/account-closing",
-          },
-          {
-            name: "Run Items Costing",
-            path: "/financial-module/Financial/run-items-costing",
-          },
-          {
-            name: "Inward Post Dated Cheque",
-            path: "/financial-module/Financial/inward-post-date-cheque",
-          },
-          {
-            name: "Outward Post Dated Cheque",
-            path: "/financial-module/Financial/outward-post-date-cheque",
-          },
-        ],
+        name: "Account Ledger",
+        path: "/financial-module/account-ledger",
       },
       {
-        name: "Cash & Banks",
-        children: [
-          {
-            name: "Make Payments",
-            path: "/financial-module/cash-banks/make-payments",
-          },
-          {
-            name: "Make Receipt",
-            path: "/financial-module/cash-banks/make-receipt",
-          },
-          {
-            name: "Route Wise Cash Recovery",
-            path: "/financial-module/cash-banks/route-wise-cash-recovery",
-          },
-          {
-            name: "Employee Advance",
-            path: "/financial-module/cash-banks/employee-advance",
-          },
-          {
-            name: "Employee Loans",
-            path: "/financial-module/cash-banks/employee-loans",
-          },
-          {
-            name: "Funds Issue",
-            path: "/financial-module/cash-banks/funds-issue",
-          },
-          {
-            name: "Fund Receiving",
-            path: "/financial-module/cash-banks/funds-receiving",
-          },
-        ],
-      },
-      {
-        name: "Accounting Setup",
-        children: [
-          {
-            name: "Currencies",
-            path: "/financial-module/accounting-setup/currencies",
-          },
-          {
-            name: "Payment Terms",
-            path: "/financial-module/accounting-setup/payment-terms",
-          },
-          {
-            name: "cheque Book",
-            path: "/financial-module/accounting-setup/cash-book",
-          },
-          {
-            name: "Accounting Periods",
-            path: "/financial-module/accounting-setup/accounting-periods",
-          },
-          {
-            name: "Transaction Accounting Verify",
-            path: "/financial-module/accounting-setup/transaction-accounting-verify",
-          },
-          {
-            name: "Merge Account Setup",
-            path: "/financial-module/accounting-setup/merge-account-setup",
-          },
-        ],
-      },
-      {
-        name: "Fixed Asset",
-        children: [
-          {
-            name: "Fixed Assets Register",
-            path: "/financial-module/fixed-asset/fixed-assets-register",
-          },
-          {
-            name: "Asset Category",
-            path: "/financial-module/fixed-asset/asset-category",
-          },
-          {
-            name: "Asset Depreciation Calculation",
-            path: "/financial-module/fixed-asset/asset-depreciation-calculation",
-          },
-          {
-            name: "Fixed Asset Depreciation",
-            path: "/financial-module/fixed-asset/fixed-asset-deprection",
-          },
-          {
-            name: "Disposal of Asset",
-            path: "/financial-module/fixed-asset/disposal-of-assets",
-          },
-          {
-            name: "Revaluation of Asset",
-            path: "/financial-module/fixed-asset/revaluation-of-assets",
-          },
-          {
-            name: "Asset Ledger",
-            path: "/financial-module/fixed-asset/asset-",
-          },
-          {
-            name: "Fixed Asset Detail Report",
-            path: "/financial-module/fixed-asset/",
-          },
-          {
-            name: "Fixed Asset Category Report",
-            path: "/financial-module/fixed-asset/",
-          },
-        ],
-      },
-      {
-        name: "Asset Maintenance",
-        children: [
-          {
-            name: "Maintenance Request",
-            path: "/financial-module/asset-maintenance/maintenance-request",
-          },
-          {
-            name: "Supervisior Activity",
-            path: "/financial-module/asset-maintenance/supervisior-activity",
-          },
-          {
-            name: "Technician Activity",
-            path: "/financial-module/asset-maintenance/technician-activity",
-          },
-          {
-            name: "Vendor Activity",
-            path: "/financial-module/asset-maintenance/vendor-activity",
-          },
-          {
-            name: "Maintenance Job Cards",
-            path: "/financial-module/asset-maintenance/maintenance-job-cards",
-          },
-        ],
-      },
-      {
-        name: "Financial Reports",
-        children: [
-          {
-            name: "Account Ledger",
-            path: "/financial-module/financial-reports/account-ledger",
-          },
-          {
-            name: "Cash / Bank Ledger",
-            path: "/financial-module/financial-reports/cash-bank-ledger",
-          },
-          {
-            name: "Cash /  Bank Summary",
-            path: "/financial-module/financial-reports/cash-bank-summary",
-          },
-          {
-            name: "Cash In Out Details",
-            path: "/financial-module/financial-reports/cash-in-out-details",
-          },
-          {
-            name: "Daily Cash Book Report",
-            path: "/financial-module/financial-reports/daily-cash-book-report",
-          },
-          {
-            name: "Trial Balance",
-            path: "/financial-module/financial-reports/trial-balance",
-          },
-          {
-            name: "Trial Balance",
-            path: "/financial-module/financial-reports/trial-balance-2",
-          },
-          {
-            name: "Payment and Receipt Summary",
-            path: "/financial-module/financial-reports/payment-receipt-summary",
-          },
-          {
-            name: "Trial Balance Details",
-            path: "/financial-module/financial-reports/trial-balance-details",
-          },
-          {
-            name: "Trial Balance Month Wise",
-            path: "/financial-module/financial-reports/trial-balance-month-wise",
-          },
-          {
-            name: "Balance Sheet Report",
-            path: "/financial-module/financial-reports/balance-sheet-report",
-          },
-          {
-            name: "Cash Flow Statement",
-            path: "/financial-module/financial-reports/cash-flow-statement",
-          },
-          {
-            name: "Profit / Loss Statement",
-            path: "/financial-module/financial-reports/profit-loss-statement",
-          },
-          {
-            name: "General Journal Report",
-            path: "/financial-module/financial-reports/general-journal-report",
-          },
-          {
-            name: "Daily Activity Report",
-            path: "/financial-module/financial-reports/daily-activity-report",
-          },
-          {
-            name: "Daily Expense Report",
-            path: "/financial-module/financial-reports/daily-expense-report",
-          },
-          {
-            name: "Working Capital Report",
-            path: "/financial-module/financial-reports/working-capital-report",
-          },
-          {
-            name: "Daily Expense Summary",
-            path: "/financial-module/financial-reports/daily-expense-summary",
-          },
-          {
-            name: "Budget Status Report",
-            path: "/financial-module/financial-reports/budget-status-report",
-          },
-          {
-            name: "Accounts Closing Balances",
-            path: "/financial-module/financial-reports/accounts-closing-balances",
-          },
-        ],
+        name: "Debit / Credit Note",
+        path: "/financial-module/debit-credit-note",
       },
     ],
   },
@@ -495,194 +504,195 @@ export const navItems: NavItem[] = [
     name: "Inventory Module",
     icon: "ic:twotone-inventory",
     children: [
-      {
-        name: "Item Setup",
-        children: [
-          {
-            name: "Item",
-            path: "/inventory-module/item-setup/item",
-          },
-          {
-            name: "Item Category",
-            path: "/inventory-module/item-setup/item-category",
-          },
-          {
-            name: "Unit Type",
-            path: "/inventory-module/item-setup/unit-type",
-          },
-          {
-            name: "Item Barcode Generate",
-            path: "/inventory-module/item-setup/item-barcode-generate",
-          },
-          {
-            name: "Price Type",
-            path: "/inventory-module/item-setup/price-type",
-          },
-          {
-            name: "Discount Policies",
-            path: "/inventory-module/item-setup/discount-Policies",
-          },
-          {
-            name: "BINS",
-            path: "/inventory-module/item-setup/bins",
-          },
-        ],
-      },
-      {
-        name: "Inventory Tranasaction",
-        children: [
-          {
-            name: "Inventory Adjustment",
-            path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
-          },
-          {
-            name: "Inventory Transfer",
-            path: "/inventory-module/inventory-tranasaction/inventory-transfer",
-          },
-          {
-            name: "Material Issue Note",
-            path: "/inventory-module/inventory-tranasaction/material-issue-note",
-          },
-          {
-            name: "Material Return Note",
-            path: "/inventory-module/inventory-tranasaction/material-return-note",
-          },
-          {
-            name: "Transfer Order",
-            path: "/inventory-module/inventory-tranasaction/transfer-order",
-          },
-          {
-            name: "Pending Delivery Challan",
-            path: "/inventory-module/inventory-tranasaction/pending-delivery-challan",
-          },
-          {
-            name: "Pending Receive Orders List",
-            path: "/inventory-module/inventory-tranasaction/pending-receive-orders-list",
-          },
-          {
-            name: "Stock Taking",
-            path: "/inventory-module/inventory-tranasaction/stock-taking",
-          },
-          {
-            name: "Update Cost Rate",
-            path: "/inventory-module/inventory-tranasaction/update-cost-rate",
-          },
-          {
-            name: "Update Lot/Batch Balance",
-            path: "/inventory-module/inventory-tranasaction/update-Lot/batch-balance",
-          },
-          {
-            name: "Run Items Costing",
-            path: "/inventory-module/inventory-tranasaction/run-items-costing",
-          },
-        ],
-      },
-      {
-        name: "Gate Pass Reports",
-        children: [
-          {
-            name: "Gate Pass In",
-            path: "/inventory-module/inventory-tranasaction/Gate Pass In",
-          },
-          {
-            name: "Gate Pass Out",
-            path: "/inventory-module/inventory-tranasaction/Gate Pass Out",
-          },
-        ],
-      },
-      {
-        name: "Inventory Reports",
-        children: [
-          {
-            name: "Item Closing As On Date Report",
-            path: "/inventory-module/inventory-tranasaction/item-closing-as-on-date-report",
-          },
-          {
-            name: "Items Ledger",
-            path: "/inventory-module/inventory-tranasaction/items-ledger",
-          },
-          {
-            name: "Stock Movement Report",
-            path: "/inventory-module/inventory-tranasaction/stock-movement-report",
-          },
-          {
-            name: "Stock Aging Report",
-            path: "/inventory-module/inventory-tranasaction/stock-aging-report",
-          },
-          {
-            name: "Store Wise Closing Balance Report",
-            path: "/inventory-module/inventory-tranasaction/store-wise-closing-balance-report",
-          },
-          {
-            name: "Inventory Profit Margin",
-            path: "/inventory-module/inventory-tranasaction/inventory-profit-margin",
-          },
-          {
-            name: "Un Balanced Detail Ledger",
-            path: "/inventory-module/inventory-tranasaction/un-balanced-detail-ledger",
-          },
-          {
-            name: "Items Price List",
-            path: "/inventory-module/inventory-tranasaction/items-price-list",
-          },
-          {
-            name: "Inventory Profit Margin Summary",
-            path: "/inventory-module/inventory-tranasaction/inventory-profit-margin-summary",
-          },
-          {
-            name: "Inventory Transfer",
-            path: "/inventory-module/inventory-tranasaction/inventory-transfer",
-          },
-          {
-            name: "Inventory Adjustment",
-            path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
-          },
-          {
-            name: "Transfer Order",
-            path: "/inventory-module/inventory-tranasaction/transfer-order",
-          },
-          {
-            name: "Minimum Stock Report",
-            path: "/inventory-module/inventory-tranasaction/minimum-stock-report",
-          },
-          {
-            name: "Re Order Level Report",
-            path: "/inventory-module/inventory-tranasaction/re-order-level-report",
-          },
-          {
-            name: "Requisition Report",
-            path: "/inventory-module/inventory-tranasaction/requisition-report",
-          },
-          {
-            name: "Stock Movement Detail Report",
-            path: "/inventory-module/inventory-tranasaction/stock-movement-detail-report",
-          },
-          {
-            name: "Items Detail Ledger",
-            path: "/inventory-module/inventory-tranasaction/items-detail-ledger",
-          },
-          {
-            name: "Material Issue Note Report",
-            path: "/inventory-module/inventory-tranasaction/material-issue-note-report",
-          },
-          {
-            name: "Material Return Note Report",
-            path: "/inventory-module/inventory-tranasaction/material-return-note-report",
-          },
-          {
-            name: "Items Details Closing Report",
-            path: "/inventory-module/inventory-tranasaction/items-details-closing-report",
-          },
-          {
-            name: "Assembly Item Production Report",
-            path: "/inventory-module/inventory-tranasaction/assembly-item-production-report",
-          },
-          {
-            name: "Item Production Report",
-            path: "/inventory-module/inventory-tranasaction/item-production-report",
-          },
-        ],
-      },
+      { name: "No Data Found" },
+      // {
+      //   name: "Item Setup",
+      //   children: [
+      //     {
+      //       name: "Item",
+      //       path: "/inventory-module/item-setup/item",
+      //     },
+      //     {
+      //       name: "Item Category",
+      //       path: "/inventory-module/item-setup/item-category",
+      //     },
+      //     {
+      //       name: "Unit Type",
+      //       path: "/inventory-module/item-setup/unit-type",
+      //     },
+      //     {
+      //       name: "Item Barcode Generate",
+      //       path: "/inventory-module/item-setup/item-barcode-generate",
+      //     },
+      //     {
+      //       name: "Price Type",
+      //       path: "/inventory-module/item-setup/price-type",
+      //     },
+      //     {
+      //       name: "Discount Policies",
+      //       path: "/inventory-module/item-setup/discount-Policies",
+      //     },
+      //     {
+      //       name: "BINS",
+      //       path: "/inventory-module/item-setup/bins",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Inventory Tranasaction",
+      //   children: [
+      //     {
+      //       name: "Inventory Adjustment",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
+      //     },
+      //     {
+      //       name: "Inventory Transfer",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-transfer",
+      //     },
+      //     {
+      //       name: "Material Issue Note",
+      //       path: "/inventory-module/inventory-tranasaction/material-issue-note",
+      //     },
+      //     {
+      //       name: "Material Return Note",
+      //       path: "/inventory-module/inventory-tranasaction/material-return-note",
+      //     },
+      //     {
+      //       name: "Transfer Order",
+      //       path: "/inventory-module/inventory-tranasaction/transfer-order",
+      //     },
+      //     {
+      //       name: "Pending Delivery Challan",
+      //       path: "/inventory-module/inventory-tranasaction/pending-delivery-challan",
+      //     },
+      //     {
+      //       name: "Pending Receive Orders List",
+      //       path: "/inventory-module/inventory-tranasaction/pending-receive-orders-list",
+      //     },
+      //     {
+      //       name: "Stock Taking",
+      //       path: "/inventory-module/inventory-tranasaction/stock-taking",
+      //     },
+      //     {
+      //       name: "Update Cost Rate",
+      //       path: "/inventory-module/inventory-tranasaction/update-cost-rate",
+      //     },
+      //     {
+      //       name: "Update Lot/Batch Balance",
+      //       path: "/inventory-module/inventory-tranasaction/update-Lot/batch-balance",
+      //     },
+      //     {
+      //       name: "Run Items Costing",
+      //       path: "/inventory-module/inventory-tranasaction/run-items-costing",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Gate Pass Reports",
+      //   children: [
+      //     {
+      //       name: "Gate Pass In",
+      //       path: "/inventory-module/inventory-tranasaction/Gate Pass In",
+      //     },
+      //     {
+      //       name: "Gate Pass Out",
+      //       path: "/inventory-module/inventory-tranasaction/Gate Pass Out",
+      //     },
+      //   ],
+      // },
+      // {
+      //   name: "Inventory Reports",
+      //   children: [
+      //     {
+      //       name: "Item Closing As On Date Report",
+      //       path: "/inventory-module/inventory-tranasaction/item-closing-as-on-date-report",
+      //     },
+      //     {
+      //       name: "Items Ledger",
+      //       path: "/inventory-module/inventory-tranasaction/items-ledger",
+      //     },
+      //     {
+      //       name: "Stock Movement Report",
+      //       path: "/inventory-module/inventory-tranasaction/stock-movement-report",
+      //     },
+      //     {
+      //       name: "Stock Aging Report",
+      //       path: "/inventory-module/inventory-tranasaction/stock-aging-report",
+      //     },
+      //     {
+      //       name: "Store Wise Closing Balance Report",
+      //       path: "/inventory-module/inventory-tranasaction/store-wise-closing-balance-report",
+      //     },
+      //     {
+      //       name: "Inventory Profit Margin",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-profit-margin",
+      //     },
+      //     {
+      //       name: "Un Balanced Detail Ledger",
+      //       path: "/inventory-module/inventory-tranasaction/un-balanced-detail-ledger",
+      //     },
+      //     {
+      //       name: "Items Price List",
+      //       path: "/inventory-module/inventory-tranasaction/items-price-list",
+      //     },
+      //     {
+      //       name: "Inventory Profit Margin Summary",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-profit-margin-summary",
+      //     },
+      //     {
+      //       name: "Inventory Transfer",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-transfer",
+      //     },
+      //     {
+      //       name: "Inventory Adjustment",
+      //       path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
+      //     },
+      //     {
+      //       name: "Transfer Order",
+      //       path: "/inventory-module/inventory-tranasaction/transfer-order",
+      //     },
+      //     {
+      //       name: "Minimum Stock Report",
+      //       path: "/inventory-module/inventory-tranasaction/minimum-stock-report",
+      //     },
+      //     {
+      //       name: "Re Order Level Report",
+      //       path: "/inventory-module/inventory-tranasaction/re-order-level-report",
+      //     },
+      //     {
+      //       name: "Requisition Report",
+      //       path: "/inventory-module/inventory-tranasaction/requisition-report",
+      //     },
+      //     {
+      //       name: "Stock Movement Detail Report",
+      //       path: "/inventory-module/inventory-tranasaction/stock-movement-detail-report",
+      //     },
+      //     {
+      //       name: "Items Detail Ledger",
+      //       path: "/inventory-module/inventory-tranasaction/items-detail-ledger",
+      //     },
+      //     {
+      //       name: "Material Issue Note Report",
+      //       path: "/inventory-module/inventory-tranasaction/material-issue-note-report",
+      //     },
+      //     {
+      //       name: "Material Return Note Report",
+      //       path: "/inventory-module/inventory-tranasaction/material-return-note-report",
+      //     },
+      //     {
+      //       name: "Items Details Closing Report",
+      //       path: "/inventory-module/inventory-tranasaction/items-details-closing-report",
+      //     },
+      //     {
+      //       name: "Assembly Item Production Report",
+      //       path: "/inventory-module/inventory-tranasaction/assembly-item-production-report",
+      //     },
+      //     {
+      //       name: "Item Production Report",
+      //       path: "/inventory-module/inventory-tranasaction/item-production-report",
+      //     },
+      //   ],
+      // },
     ],
   },
   {

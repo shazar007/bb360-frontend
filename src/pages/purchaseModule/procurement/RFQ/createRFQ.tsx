@@ -1,11 +1,11 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelect from "../../../../components/customSelect";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import CustomToggles from "../../../../components/custontogles";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Transaction Lines",
@@ -16,7 +16,7 @@ const tabs = [
 ];
 export default function CreateRFQ() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const navigate = useNavigate();
+ const { goBack } = useAppNavigate();
   return (
     <>
       <div className="mt-8">
@@ -30,9 +30,7 @@ export default function CreateRFQ() {
 
           <div className="flex items-center gap-2 w-full md:w-auto">
             <button
-              onClick={() => {
-                navigate("/purchase-module/procurement/rfq");
-              }}
+         onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
             >

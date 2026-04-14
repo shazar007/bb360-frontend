@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import { useEffect, useState } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
   "Classification",
@@ -15,7 +15,8 @@ const tabs = [
 ];
 export default function CreateVendor() {
   const [activeTab, setActiveTab] = useState("Classification");
-  const navigate = useNavigate();
+
+  const { goBack } = useAppNavigate();
   useEffect(() => {
     document.title = "Vendors — BB-360";
   }, []);
@@ -31,9 +32,7 @@ export default function CreateVendor() {
 
         <div className="flex items-center gap-2 w-full md:w-auto">
           <button
-            onClick={() => {
-              navigate("/purchase-module/vender-define/venders");
-            }}
+            onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
           >

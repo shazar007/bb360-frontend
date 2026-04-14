@@ -12,7 +12,7 @@ export const LoginvalidationSchema = Yup.object({
 export const ItemValidationSchema = Yup.object({
   productCode: Yup.string().required("Product Code is required"),
   productName: Yup.string().required("Product Name is required"),
-  itemCategory: Yup.string().required("Item Category is required"),
+  productCategory: Yup.string().required("Product Category is required"),
   uom: Yup.string().required("Unit of Measure is required"),
   tradePrice: Yup.number()
     .typeError("Trade Price must be a number")
@@ -20,17 +20,12 @@ export const ItemValidationSchema = Yup.object({
   mrp: Yup.number()
     .typeError("MRP must be a number")
     .required("MRP is required"),
-  batchNumber: Yup.string().when("Edit", {
-    is: (val: boolean) => val === true, // Type-safe check
-    then: (schema) => schema.required("Batch Number is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-
-  expiryDate: Yup.date().when("Edit", {
-    is: (val: boolean) => val === true,
-    then: (schema) => schema.required("Expiry Date is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  batchNumber: Yup.string()
+    .typeError("Batch Number must be a number")
+    .required("Batch Number is required"),
+  expiryDate: Yup.date()
+    .typeError("Expiry Date must be a number")
+    .required("Expiry Date is required"),
 });
 
 export const DistributorValidationSchema = Yup.object({

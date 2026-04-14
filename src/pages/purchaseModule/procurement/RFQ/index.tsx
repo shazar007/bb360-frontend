@@ -1,9 +1,9 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
-
+import { useAppNavigate } from "../../../../hooks/navigation";
+ 
 export default function RFQ() {
-  const navigate = useNavigate();
+  const {goTo} = useAppNavigate();
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -34,7 +34,7 @@ export default function RFQ() {
 
           <button
             onClick={() => {
-              navigate("/purchase-module/procurement/rfq/create");
+              goTo("/purchase-module/procurement/rfq/create");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"

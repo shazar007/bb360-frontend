@@ -47,7 +47,7 @@ export default function CustomSelect({
   return (
     <div className="relative flex flex-col" ref={dropdownRef}>
       {label && (
-        <label className="mb-1 text-xs text-heading1">
+        <label className="text-xs text-heading1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}

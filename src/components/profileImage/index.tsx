@@ -78,7 +78,7 @@ export default function ProfileImage() {
           >
             <button onClick={handleLogout} disabled={loading}>
               {loading ? (
-                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                <SyncLoader color="#FF0000" size={6} speedMultiplier={0.6} />
               ) : (
                 "Logout"
               )}

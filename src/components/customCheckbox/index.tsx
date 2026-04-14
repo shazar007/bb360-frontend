@@ -1,16 +1,19 @@
-import { useState } from "react";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { Icon } from "@iconify/react";
 
-export default function CustomCheckbox() {
-  const [checked, setChecked] = useState(false);
-
+export default function CustomCheckbox({
+  checked = false,
+  onChange,
+}: {
+  checked?: boolean;
+  onChange: (value: boolean) => void;
+}) {
   return (
     <FormControlLabel
       control={
         <Checkbox
           checked={checked}
-          onChange={(e) => setChecked(e.target.checked)}
+          onChange={(e) => onChange(e.target.checked)}
           icon={
             <div
               style={{
@@ -34,7 +37,7 @@ export default function CustomCheckbox() {
                 color: "#fff",
               }}
             >
-              <Icon icon="fe:check" className="text-white" />
+              <Icon icon="fe:check" />
             </div>
           }
         />

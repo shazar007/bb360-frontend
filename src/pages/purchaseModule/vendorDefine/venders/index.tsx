@@ -1,10 +1,11 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function Venders() {
-  const navigate = useNavigate();
+
+  const {goTo} = useAppNavigate();
   useEffect(() => {
     document.title = "Vendors — BB-360";
   }, []);
@@ -37,7 +38,7 @@ export default function Venders() {
           </button>
           <button
             onClick={() => {
-              navigate("/purchase-module/vender-define/venders/upload");
+              goTo("/purchase-module/vender-define/venders/upload");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -48,7 +49,7 @@ export default function Venders() {
           </button>{" "}
           <button
             onClick={() => {
-              navigate("/purchase-module/vender-define/venders/create");
+              goTo("/purchase-module/vender-define/venders/create");
             }}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"

@@ -2,13 +2,15 @@ import { Icon } from "@iconify/react";
 import Filters from "../../../../components/filter";
 import CustomTable from "../../../../components/customTable";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function PurchaseOrder() {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
+
+  const {goTo} = useAppNavigate();
   const handleCreate = () => {
-    navigate("/purchase-module/purchase/purchase-order/create-order");
+   goTo("/purchase-module/purchase/purchase-order/create-order");
   };
   return (
     <>
