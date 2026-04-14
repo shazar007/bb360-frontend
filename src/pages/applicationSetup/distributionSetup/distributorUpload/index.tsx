@@ -265,7 +265,7 @@ export default function DistributorUpload() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 p-6">
+            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
               <CustomInput
                 label="Distributor Name"
                 name="distributorName"
