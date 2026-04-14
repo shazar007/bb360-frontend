@@ -1,12 +1,73 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 import CustomTable from "../../../../components/customTable";
-import AddItem from "../components/addItem";
+import ItemModel from "../components/ItemModel";
+import { useQuery } from "@tanstack/react-query";
+import {
+  deleteItem,
+  updateItem,
+  getAllItems,
+} from "../../../../api/itemServices";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
 
 export default function ItemUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [confirm, setConfirm] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const { data: AllItems, refetch } = useQuery({
+    queryKey: ["getAllItems"],
+    queryFn: getAllItems,
+    placeholderData: (prev) => prev,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  const items = AllItems?.data?.items || [];
+
+  const handleEdit = (index: number) => {
+    setSelectedIndex(index);
+    setIsEdit(true);
+    setOpenMenuIndex(null);
+  };
+  const handleDeleteClick = (item: any) => {
+    setSelectedId(item._id);
+    setConfirm(true);
+    setOpenMenuIndex(null);
+  };
+  console.log("DELETING ID:", selectedId);
+  const handleDelete = () => {
+    if (!selectedId) {
+      console.log("NO ID FOUND ❌");
+      return;
+    }
+
+    setDeleteLoading(true);
+
+    console.log("DELETING ID:", selectedId);
+
+    deleteItem(selectedId)
+      .then(() => {
+        notifySuccess("Item deleted successfully ✅");
+        refetch();
+      })
+      .catch((err) => {
+        console.log("DELETE ERROR:", err.response?.data);
+        notifyError("Failed to delete item ❌");
+      })
+      .finally(() => {
+        setDeleteLoading(false); // 🔥 stop loading
+        setConfirm(false);
+        setSelectedId(null);
+      });
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -15,11 +76,9 @@ export default function ItemUpdate() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
   return (
     <>
       <div className="mt-8">
@@ -30,6 +89,7 @@ export default function ItemUpdate() {
               Data Upload / Items Update
             </p>
           </div>
+
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative w-full md:w-60">
               <input
@@ -41,28 +101,27 @@ export default function ItemUpdate() {
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
               />
             </div>
-            <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-secondary text-white rounded-md">
-              <Icon icon="mage:filter" />
-              Filters
+
+            <button
+              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
+            >
+              Action
+              <Icon icon="weui:arrow-filled" className="text-lg rotate-90" />
             </button>
           </div>
         </div>
 
         <div className="pb-4 mt-2 bg-white rounded-2xl">
-          <div className="flex justify-between items-center px-4.5 py-2">
+          <div className="flex justify-between items-center px-4.5 py-3">
             <p className="text-xs font-semibold text-primary">Items_List</p>
-            <div className="flex items-center gap-2">
-              <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
-                <Icon icon="proicons:delete" className="text-xl" />
-              </button>
-            </div>
           </div>
+
           <CustomTable
             norounded
             height="60vh"
             headers={[
               "Edit",
-              "Select",
               "Expand",
               "Product Code",
               "Product Name",
@@ -74,60 +133,138 @@ export default function ItemUpdate() {
               "M.R.P",
               "Status",
             ]}
-            data={[
-              [
-                <div className="relative" ref={menuRef}>
-                  <Icon
-                    icon="qlementine-icons:menu-burger-16"
-                    className="text-lg cursor-pointer text-primary"
-                    onClick={() =>
-                      setOpenMenuIndex(openMenuIndex === 0 ? null : 0)
-                    }
-                  />
-
-                  {openMenuIndex === 0 && (
-                    <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-15 top-6">
-                      <button
-                        className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
-                        onClick={() => setIsEdit(true)}
-                      >
-                        Edit Product
-                      </button>
-                      <button
-                        className="w-full px-2 py-1 text-left text-red-600 cursor-pointer hover:bg-gray-100"
-                        onClick={() => setIsEdit(true)}
-                      >
-                        Delete Product
-                      </button>
-                    </div>
-                  )}
-                </div>,
-
+            data={items.map((item: any, index: number) => [
+              <div className="relative">
                 <Icon
-                  icon="fluent:checkbox-checked-16-regular"
+                  icon="qlementine-icons:menu-burger-16"
                   className="text-lg cursor-pointer text-primary"
-                />,
-                <Icon
-                  icon="f7:chevron-right-square"
-                  className="text-lg cursor-pointer text-primary"
-                />,
-                "112060",
-                "Olive Oil",
-                "Staples",
-                "ml",
-                "1926/8",
-                "09-Apr-2027",
-                "2,150",
-                "2,500",
-                <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
-                  <p>Good</p>
-                </div>,
-              ],
-            ]}
+                  onClick={() =>
+                    setOpenMenuIndex(openMenuIndex === index ? null : index)
+                  }
+                />
+
+                {openMenuIndex === index && (
+                  <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
+                    <button
+                      className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleEdit(index)}
+                    >
+                      Edit Product
+                    </button>
+
+                    <button
+                      className="w-full px-2 py-1 text-left text-red-600 cursor-pointer hover:bg-gray-100"
+                      onClick={() => {
+                        handleDeleteClick(item);
+                        setConfirm(true);
+                      }}
+                    >
+                      Delete Product
+                    </button>
+                  </div>
+                )}
+              </div>,
+
+              <Icon
+                icon="f7:chevron-right-square"
+                className="text-lg cursor-pointer text-primary"
+              />,
+
+              item.itemCode,
+              item.itemName,
+              item.itemCategory,
+              item.uom,
+              item.batchNumber,
+              item.expiryDate,
+              item.tradePrice,
+              item.mrp,
+
+              <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
+                Good
+              </div>,
+            ])}
           />
         </div>
       </div>
-      {isEdit && <AddItem close={() => setIsEdit(false)} Edit={true} />}
+
+      {isEdit && selectedIndex !== null && (
+        <ItemModel
+          close={() => setIsEdit(false)}
+          saveLoading={saveLoading}
+          data={items[selectedIndex]}
+          onSave={(values: any) => {
+            const item = items[selectedIndex];
+
+            if (!item?._id) {
+              notifyError("Invalid Item ID ❌");
+              return;
+            }
+
+            const { batchNumber, expiryDate, ...safeValues } = values;
+
+            setSaveLoading(true);
+
+            updateItem(item._id, safeValues)
+              .then(() => {
+                notifySuccess("Item updated successfully ✅");
+                refetch();
+              })
+              .catch((err) => {
+                notifyError(err.response?.data?.message || "Update failed ❌");
+              })
+              .finally(() => {
+                setSaveLoading(false);
+                setIsEdit(false); // ✅ modal close AFTER API
+              });
+          }}
+        />
+      )}
+
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white w-100 rounded-xl b">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                {" "}
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-60">
+              <p className="text-2xl font-semibold text-center">
+                Delete Product
+              </p>
+              <p className="text-center text-heading1 ">
+                Are you sure to delete the product?
+              </p>
+            </div>
+
+            <div className="flex justify-between gap-2 p-4 mt-3">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => {
+                  setConfirm(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                style={{
+                  boxShadow: "0px 1px 12px 0px #0000001F",
+                }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                onClick={handleDelete}
+              >
+                {deleteLoading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "   Delete"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

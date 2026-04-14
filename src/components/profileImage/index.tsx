@@ -6,6 +6,7 @@ import { logout } from "../../redux/userSlice";
 import Cookies from "js-cookie";
 import { Avatar } from "@mui/material";
 import { UserLogout } from "../../api/userServices";
+import { SyncLoader } from "react-spinners";
 export default function ProfileImage() {
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState(profile);
@@ -23,14 +24,14 @@ export default function ProfileImage() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    if (file) {
-      const preview = URL.createObjectURL(file);
-      setImage(preview);
-      console.log("Selected Image:", file);
-    }
-  };
+  // const handleImageChange = (e: any) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const preview = URL.createObjectURL(file);
+  //     setImage(preview);
+  //     console.log("Selected Image:", file);
+  //   }
+  // };
 
   const handleLogout = async () => {
     if (loading) return;
@@ -76,7 +77,11 @@ export default function ProfileImage() {
             className="w-full h-10 px-4 py-2 text-xs text-left text-red-500 cursor-pointer hover:bg-gray-100"
           >
             <button onClick={handleLogout} disabled={loading}>
-              {loading ? "Logging out..." : "Logout"}
+              {loading ? (
+                <SyncLoader color="#FF0000" size={6} speedMultiplier={0.6} />
+              ) : (
+                "Logout"
+              )}
             </button>
           </button>
         </div>

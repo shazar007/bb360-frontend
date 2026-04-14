@@ -50,13 +50,13 @@ export default function CustomDatePicker({
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="text-heading1 text-xs mb-1">
+        <label className="text-xs text-heading1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
 
       <div
-        className={`relative ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
+        className={`relative h-10 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`}
         onClick={() => !disabled && inputRef.current?.showPicker()}
       >
         <input

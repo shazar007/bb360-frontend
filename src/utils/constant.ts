@@ -86,39 +86,39 @@ export const navItems: NavItem[] = [
       //     },
       //   ],
       // },
-      // {
-      //   name: "Distribution Setup",
-      //   children: [
-      //     {
-      //       name: "Distribution Upload",
-      //       path: "/application-setup/distribution-setup/distributor-upload",
-      //     },
-      //     {
-      //       name: "Distribution Update",
-      //       path: "/application-setup/distribution-setup/distributor-update",
-      //     },
-      //     {
-      //       name: "Vehicles",
-      //       path: "/application-setup/distribution-setup/vehicles",
-      //     },
-      //     {
-      //       name: "Routes",
-      //       path: "/application-setup/distribution-setup/routes",
-      //     },
-      //     {
-      //       name: "Customers Map View",
-      //       path: "/application-setup/distribution-setup/customers-map-view",
-      //     },
-      //     {
-      //       name: "Employee Location Routes",
-      //       path: "/application-setup/distribution-setup/employee-location-routes",
-      //     },
-      //     {
-      //       name: "Fuel Price List",
-      //       path: "/application-setup/distribution-setup/fuel-price-list",
-      //     },
-      //   ],
-      // },
+      {
+        name: "Distribution Setup",
+        children: [
+          {
+            name: "Distribution Upload",
+            path: "/application-setup/distribution-setup/distributor-upload",
+          },
+          {
+            name: "Distribution Update",
+            path: "/application-setup/distribution-setup/distributor-update",
+          },
+          //     {
+          //       name: "Vehicles",
+          //       path: "/application-setup/distribution-setup/vehicles",
+          //     },
+          //     {
+          //       name: "Routes",
+          //       path: "/application-setup/distribution-setup/routes",
+          //     },
+          //     {
+          //       name: "Customers Map View",
+          //       path: "/application-setup/distribution-setup/customers-map-view",
+          //     },
+          //     {
+          //       name: "Employee Location Routes",
+          //       path: "/application-setup/distribution-setup/employee-location-routes",
+          //     },
+          //     {
+          //       name: "Fuel Price List",
+          //       path: "/application-setup/distribution-setup/fuel-price-list",
+          //     },
+        ],
+      },
       {
         name: "Data Upload",
         children: [
@@ -489,22 +489,22 @@ export const navItems: NavItem[] = [
       //     },
       //   ],
       // },
-      
+
       {
-      name: "Account Ledger",
-      path: "/financial-module/account-ledger",
-    },
-    {
-      name: "Debit / Credit Note",
-      path: "/financial-module/debit-credit-note",
-    },
-  ],
+        name: "Account Ledger",
+        path: "/financial-module/account-ledger",
+      },
+      {
+        name: "Debit / Credit Note",
+        path: "/financial-module/debit-credit-note",
+      },
+    ],
   },
   {
     name: "Inventory Module",
     icon: "ic:twotone-inventory",
     children: [
-       { name: "No Data Found" },
+      { name: "No Data Found" },
       // {
       //   name: "Item Setup",
       //   children: [

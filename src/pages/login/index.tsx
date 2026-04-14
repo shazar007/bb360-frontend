@@ -27,7 +27,7 @@ export default function Login() {
     validationSchema: LoginvalidationSchema,
 
     onSubmit: async (values) => {
-      if (isLoading) return; // ✅ prevent double click
+      if (isLoading) return;
 
       try {
         setIsloading(true);
@@ -35,17 +35,12 @@ export default function Login() {
         const res = await UserLogin(values);
         const data = res.data;
 
-        // ✅ success toast
         notifySuccess("Login successful!");
-
-        // ✅ store auth
         dispatch(setToken(data.token));
         dispatch(setIsLoggedIn(true));
 
-        // optional: persist token
         localStorage.setItem("token", data.token);
 
-        // 🚀 redirect immediately (no delay needed)
         goTo("/360-dashboard");
       } catch (error: any) {
         console.log("Login failed", error);

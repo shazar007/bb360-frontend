@@ -1,6 +1,5 @@
 import axios from "axios";
-import { store } from "../redux/store";
-import { setIsLoggedIn } from "../redux/userSlice";
+import Cookies from "js-cookie";
 import { notifyError } from "../components/toast";
 import { BASE_URL } from "../api/endPoint";
 
@@ -11,13 +10,18 @@ export const HTTP_CLIENT = axios.create({
 let isSessionExpiredHandled = false;
 
 export const setupInterceptors = (navigate: any) => {
-  // ================= REQUEST INTERCEPTOR =================
+  // ================= REQUEST =================
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
-      const token = store.getState().user?.token;
+      const token = Cookies.get("token"); // ✅ ONLY from cookies
+
+      console.log("TOKEN FROM COOKIE:", token);
 
       if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer ${token}`,
+        };
       }
 
       return config;
@@ -25,19 +29,17 @@ export const setupInterceptors = (navigate: any) => {
     (error: any) => Promise.reject(error),
   );
 
-  // ================= RESPONSE INTERCEPTOR =================
+  // ================= RESPONSE =================
   HTTP_CLIENT.interceptors.response.use(
     (response: any) => response,
     (error: any) => {
       const status = error.response?.status;
-
       const isLogoutCall = error.config?.url?.includes("logout");
 
       if (status === 401 && !isSessionExpiredHandled && !isLogoutCall) {
         isSessionExpiredHandled = true;
 
-        store.dispatch(setIsLoggedIn(false));
-        localStorage.removeItem("token");
+        Cookies.remove("token"); // ❌ remove cookie
 
         notifyError("Session expired. Please login again.");
         navigate("/");

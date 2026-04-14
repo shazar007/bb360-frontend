@@ -1,14 +1,142 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useState } from "react";
-
-import AddItem from "../components/addItem";
+import { useEffect, useState } from "react";
 import CustomCheckbox from "../../../../components/customCheckbox";
-import { useAppNavigate } from "../../../../hooks/navigation";
+import { addItems } from "../../../../api/itemServices";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import CustomInput from "../../../../components/customInput";
+import CustomSelect from "../../../../components/customSelect";
+import CustomDatePicker from "../../../../components/datePicker";
+
+const STORAGE_KEY = "temp_items_upload";
 
 export default function DataUpload() {
   const [addItem, setAddItem] = useState(false);
-  const { goTo } = useAppNavigate();
+  const [confirm, setConfirm] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState<any>({
+    itemName: "",
+    itemCategory: "",
+    uom: "",
+    tp: "",
+    mrp: "",
+    batchNumber: "",
+    expiryDate: "",
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      setTableData(JSON.parse(saved));
+    } else {
+      setTableData([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tableData));
+  }, [tableData]);
+
+  const handleChange = (e: any) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = () => {
+    if (!form.itemName) {
+      notifyError("Please fill required fields");
+      return;
+    }
+
+    const newItem = {
+      ...form,
+      selected: false,
+    };
+
+    setTableData((prev) => {
+      const updated = [...prev];
+
+      if (editIndex !== null) {
+        updated[editIndex] = newItem;
+      } else {
+        updated.push(newItem);
+      }
+
+      return updated;
+    });
+
+    setForm({
+      itemName: "",
+      itemCategory: "",
+      uom: "",
+      tp: "",
+      mrp: "",
+      batchNumber: "",
+      expiryDate: "",
+    });
+
+    setEditIndex(null);
+    setAddItem(false);
+
+    notifySuccess(editIndex !== null ? "Item updated" : "Item added");
+  };
+  const handleDelete = () => {
+    const isAnySelected = tableData.some((item) => item.selected);
+
+    if (!isAnySelected) {
+      notifyError("Please select at least one item first");
+      return;
+    }
+
+    const filtered = tableData.filter((item) => !item.selected);
+    setTableData(filtered);
+    setConfirm(false);
+
+    notifySuccess("Selected items deleted");
+  };
+
+  const toggleSelect = (index: number, value: boolean) => {
+    const updated = [...tableData];
+    updated[index].selected = value;
+    setTableData(updated);
+  };
+
+  const handleUpload = async () => {
+    try {
+      if (!tableData.length) {
+        notifyError("No data to upload");
+        return;
+      }
+
+      setLoading(true); // 🔥 start loading
+
+      const payload = tableData.map((item) => ({
+        itemName: item.itemName?.trim(),
+        itemCategory: item.itemCategory,
+        uom: item.uom,
+        tp: Number(item.tp),
+        mrp: Number(item.mrp),
+        batchNumber: item.batchNumber,
+        expiryDate: item.expiryDate,
+      }));
+
+      console.log("FINAL PAYLOAD:", payload);
+
+      await addItems(payload);
+
+      notifySuccess("Item Uploaded successfully");
+
+      localStorage.removeItem(STORAGE_KEY);
+      setTableData([]);
+    } catch (err: any) {
+      console.log("ERROR RESPONSE:", err.response?.data);
+      notifyError(err.response?.data?.message || "Upload failed");
+    } finally {
+      setLoading(false); // 🔥 stop loading always
+    }
+  };
+
   return (
     <>
       <div className="mt-8">
@@ -16,7 +144,7 @@ export default function DataUpload() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Data Upload / Items Upload
+              Data Upload / Product Update
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -30,17 +158,9 @@ export default function DataUpload() {
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
               />
             </div>
-            {/* <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
-            >
-              Action
-              <Icon icon="weui:arrow-filled" className="text-lg rotate-90" />
-            </button> */}
+
             <button
-              onClick={() => {
-                goTo("/purchase-module/vender-define/venders/upload");
-              }}
+              onClick={handleUpload}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
@@ -60,7 +180,9 @@ export default function DataUpload() {
         </div>
         <div className="w-full mt-2 ">
           <div className="p-4 bg-[#ECF0F4] rounded-t-2xl">
-            <p className="text-xs font-semibold text-heading1">Upload Vendor</p>
+            <p className="text-xs font-semibold text-heading1">
+              Upload Distributor
+            </p>
           </div>
           <div className="flex flex-col items-center justify-center gap-2 bg-white p-9 rounded-b-2xl">
             <Icon
@@ -82,52 +204,186 @@ export default function DataUpload() {
         <div className="pb-4 mt-2 bg-white rounded-2xl">
           <div className="flex justify-between items-center px-4.5 py-2">
             <p className="text-xs font-semibold text-primary">Items_Temp</p>
+
             <div className="flex items-center gap-2">
-              <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
+              <button
+                onClick={() => setConfirm(true)}
+                className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
+              >
                 <Icon icon="proicons:delete" className="text-xl" />
               </button>
+
               <button
-                onClick={() => {
-                  setAddItem(true);
-                }}
+                onClick={() => setAddItem(true)}
                 className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer"
               >
                 Add Row
               </button>
             </div>
           </div>
+
           <CustomTable
             norounded
             height="auto"
             headers={[
               "Edit",
               "Select",
-              "Product Code",
               "Product Name",
               "Item Category",
-              "Units of Measure (UOM)",
-              "T.P",
-              "M.R.P",
+              "Units",
+              "TP",
+              "MRP",
             ]}
-            data={[
-              [
-                <Icon
-                  icon="basil:edit-outline"
-                  className="text-lg cursor-pointer text-primary"
-                />,
-                <CustomCheckbox />,
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-                "-",
-              ],
-            ]}
+            data={tableData.map((item, index) => [
+              <Icon
+                icon="basil:edit-outline"
+                className="text-xl cursor-pointer text-primary"
+                onClick={() => {
+                  setForm(tableData[index]);
+                  setEditIndex(index);
+                  setAddItem(true);
+                }}
+              />,
+
+              <CustomCheckbox
+                checked={item.selected}
+                onChange={(v) => toggleSelect(index, v)}
+              />,
+
+              item.itemName,
+              item.itemCategory,
+              item.uom,
+              item.tp,
+              item.mrp,
+            ])}
           />
         </div>
       </div>
-      {addItem && <AddItem close={() => setAddItem(false)} />}
+
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white w-100 rounded-xl b">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p
+                onClick={() => {
+                  setConfirm(false);
+                  setTableData([]);
+                }}
+                className="cursor-pointer"
+              >
+                {" "}
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-60">
+              <p className="text-2xl font-semibold text-center">
+                Delete Product
+              </p>
+              <p className="text-center text-heading1 ">
+                Are you sure to delete the product?
+              </p>
+            </div>
+
+            <div className="flex justify-between gap-2 p-4 mt-3">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => {
+                  setConfirm(false);
+                  setTableData([]);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                style={{
+                  boxShadow: "0px 1px 12px 0px #0000001F",
+                }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {addItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full p-6 bg-white shadow-xl max-w-250 rounded-2xl">
+            <div className="flex items-center justify-between pb-3 border-b">
+              <h2 className="text-xs font-semibold text-heading1">Add Item</h2>
+
+              <button
+                onClick={() => setAddItem(false)}
+                className="cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <CustomInput
+                label="Batch Name"
+                name="batchNumber"
+                value={form.batchNumber}
+                onChange={handleChange}
+              />
+              <CustomInput
+                label="Item Name"
+                name="itemName"
+                value={form.itemName}
+                onChange={handleChange}
+              />
+              <CustomDatePicker
+                label="Expiry Date"
+                name="expiryDate"
+                value={form.expiryDate}
+                onChange={(v) => setForm({ ...form, expiryDate: v })}
+              />
+              <CustomInput
+                label="Item Category"
+                name="itemCategory"
+                value={form.itemCategory}
+                onChange={handleChange}
+              />
+
+              <CustomInput
+                label="TP"
+                name="tp"
+                value={form.tp}
+                onChange={handleChange}
+              />
+              <CustomSelect
+                label="Units"
+                options={[
+                  { value: "kg", label: "KG" },
+                  { value: "ltr", label: "LTR" },
+                  { value: "pcs", label: "PCS" },
+                ]}
+                value={form.uom}
+                onChange={(v) => setForm({ ...form, uom: v })}
+              />
+              <CustomInput
+                label="MRP"
+                name="mrp"
+                value={form.mrp}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={handleSave}
+                className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
+              >
+                <Icon icon="mynaui:save" className="text-xl" />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
