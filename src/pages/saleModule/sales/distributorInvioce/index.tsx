@@ -14,7 +14,7 @@ export default function DistributorInvoice() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Distributor Invoice
+           Sales Invoice
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">

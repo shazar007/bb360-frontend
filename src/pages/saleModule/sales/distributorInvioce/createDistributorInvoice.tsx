@@ -5,7 +5,7 @@ import CustomSelect from "../../../../components/customSelect";
 import { useEffect, useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
-
+import { addItems } from "../../../../api/itemServices";
 const tabs = [
   "Transaction Lines",
   "Accounting Lines",
@@ -15,6 +15,7 @@ const tabs = [
 export default function CreateDistributorInvoice() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const { goBack } = useAppNavigate();
+  const [addItem, setAddItem] = useState(false);
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -25,7 +26,7 @@ export default function CreateDistributorInvoice() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Distributor Invoice
+              Sales Invoice
             </p>
           </div>
 
@@ -92,7 +93,11 @@ export default function CreateDistributorInvoice() {
                 <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
                   <Icon icon="proicons:delete" className="text-xl" />
                 </button>
-                <button className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer">
+
+                <button
+                  onClick={() => setAddItem(true)}
+                  className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer"
+                >
                   Add Row
                 </button>
               </div>
@@ -166,6 +171,52 @@ export default function CreateDistributorInvoice() {
           </div>
         </div>
       </div>
+      {/* ✅ POPUP MODAL */}
+      {addItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full p-6 bg-white shadow-xl max-w-250 rounded-2xl">
+            <div className="flex items-center justify-between pb-3 border-b">
+              <h2 className="text-xs font-semibold text-heading1">Add Item</h2>
+
+              <button
+                onClick={() => setAddItem(false)}
+                className="cursor-pointer"
+              >
+                ✕
+              </button>
+
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <CustomInput label="Item Name" />
+              <CustomSelect label="UOM"/>
+
+              <CustomInput label="Item Balance" />
+              <CustomInput label="Ordered Quantity" />
+
+              <CustomInput label="MRP" />
+              <CustomInput label="TP" />
+
+              <CustomInput label="Discount %" />
+              <CustomInput label="Gross Amount" />
+
+              <CustomInput label="Tax Amount %" />
+              <CustomInput label="Amount" />
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button
+                // onClick={handleSave}
+                onClick={() => setAddItem(false)}
+                className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
+              >
+                <Icon icon="mynaui:save" className="text-xl" />
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

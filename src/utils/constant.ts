@@ -918,7 +918,7 @@ export const navItems: NavItem[] = [
           //   path: "/sales-module/sales/quotation",
           // },
           {
-            name: "Distributor Invoice",
+            name: "Sales Invoice",
             path: "/sale-module/sales/distributor-invoice",
           },
           // {
