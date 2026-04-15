@@ -87,6 +87,19 @@ export const navItems: NavItem[] = [
       //   ],
       // },
       {
+        name: "Vendor Define",
+        children: [
+          {
+            name: "Vendor Upload",
+            path: "/application-setup/vendor-define/vendor-upload",
+          },
+          {
+            name: "Vendor Update",
+            path: "/application-setup/vendor-define/vendor-update",
+          },
+        ],
+      },
+      {
         name: "Distribution Setup",
         children: [
           {
@@ -97,6 +110,7 @@ export const navItems: NavItem[] = [
             name: "Distribution Update",
             path: "/application-setup/distribution-setup/distributor-update",
           },
+          
           //     {
           //       name: "Vehicles",
           //       path: "/application-setup/distribution-setup/vehicles",
