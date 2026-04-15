@@ -32,7 +32,6 @@ export default function DistributorUpdate() {
   const {
     data: AllDistributors,
     refetch,
-    isRefetching,
     isLoading,
   } = useQuery({
     queryKey: ["getAllDistributor"],

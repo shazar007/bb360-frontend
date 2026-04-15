@@ -53,7 +53,7 @@ export default function DistributorUpload() {
         return;
       }
 
-      setSaveRow(true); // 🔥 start loading
+      setSaveRow(true);
 
       const newItem = {
         ...form,
@@ -91,7 +91,7 @@ export default function DistributorUpload() {
     } catch (err) {
       notifyError("Something went wrong");
     } finally {
-      setSaveRow(false); // 🔥 stop loading (IMPORTANT)
+      setSaveRow(false);
     }
   };
 

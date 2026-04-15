@@ -107,26 +107,21 @@ export default function DataUpload() {
   const formatExcelDate = (val: any) => {
     if (!val) return null;
 
-    // if already ISO
     if (typeof val === "string" && val.includes("-")) {
       return val;
     }
 
-    // MM/DD/YYYY
     if (typeof val === "string" && val.includes("/")) {
       const [month, day, year] = val.split("/");
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     }
 
-    // 🔥 EXCEL SERIAL NUMBER FIX (46142 case)
     if (typeof val === "number") {
-      const excelEpoch = new Date(1899, 11, 30); // Excel base date
+      const excelEpoch = new Date(1899, 11, 30);
       const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
 
       return jsDate.toISOString().split("T")[0];
     }
-
-    // fallback
     const d = new Date(val);
     if (!isNaN(d.getTime())) {
       return d.toISOString().split("T")[0];

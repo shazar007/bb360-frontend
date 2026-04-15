@@ -67,7 +67,7 @@ export default function ItemUpdate() {
         notifyError("Failed to delete item ❌");
       })
       .finally(() => {
-        setDeleteLoading(false); // 🔥 stop loading
+        setDeleteLoading(false);
         setConfirm(false);
         setSelectedId(null);
       });

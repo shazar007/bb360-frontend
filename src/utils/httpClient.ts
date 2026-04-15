@@ -12,7 +12,7 @@ let isSessionExpiredHandled = false;
 export const setupInterceptors = (navigate: any) => {
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
-      const token = Cookies.get("token"); // ✅ ONLY from cookies
+      const token = Cookies.get("token");
 
       console.log("TOKEN FROM COOKIE:", token);
 
@@ -37,7 +37,7 @@ export const setupInterceptors = (navigate: any) => {
       if (status === 401 && !isSessionExpiredHandled && !isLogoutCall) {
         isSessionExpiredHandled = true;
 
-        Cookies.remove("token"); // ❌ remove cookie
+        Cookies.remove("token");
 
         notifyError("Session expired. Please login again.");
         navigate("/");
