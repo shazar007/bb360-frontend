@@ -18,4 +18,8 @@ export const ENDPOINTS = {
   ADD_DISTRIBUTOR: "/distributors",
   GET_ALL_DISTRIBUTOR: "/distributors",
   UPDATE_DISTRIBUTOR: "/distributors",
+  // ------------Distributor-------------
+  ORDER_CREATE: "/purchase-orders",
+  GET_ALL_ORDERS: "/purchase-orders",
+  UPDATE_ORDERS: "/purchase-orders",
 };

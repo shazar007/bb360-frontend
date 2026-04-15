@@ -10,6 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
 import { batch } from "react-redux";
 import { partyAccounts } from "../../../../utils/constant";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import {
+  createPurchaseOrderApi,
+  getAllOrders,
+} from "../../../../api/purchaseOrder";
+import { SyncLoader } from "react-spinners";
 
 const tabs = ["Items Details", "Terms and Conditions", "Summary"];
 export default function CreatePurchaseOrder() {
@@ -20,9 +26,8 @@ export default function CreatePurchaseOrder() {
   const [partyAccount, setPartyAccount] = useState("");
   const [partyReference, setPartyReference] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
-
   const [type, setType] = useState("");
-
+  const [loading, setLoading] = useState(false);
   // console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", tableData)
   const [form, setForm] = useState({
     itemName: "",
@@ -38,13 +43,24 @@ export default function CreatePurchaseOrder() {
   });
   console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", form);
 
-  const { data: AllItems, refetch } = useQuery({
+  const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
+  });
+  const { refetch } = useQuery({
+    queryKey: ["getAllOrder"],
+    queryFn: getAllOrders,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -91,6 +107,57 @@ export default function CreatePurchaseOrder() {
       value: item?._id ?? "",
     })) || [];
   const [createOrder, setCreateOrder] = useState(false);
+
+  const handleSaveOrder = async () => {
+    try {
+      setLoading(true);
+
+      if (!partyAccount) {
+        notifyError("Party Account is required");
+        return;
+      }
+
+      if (!tableData.length) {
+        notifyError("Add at least one item");
+        return;
+      }
+
+      const payload = {
+        partyAccount: "69dcc84be8429accb2a934cc",
+        deliveryAddress: deliveryAddress || "",
+        createdBy: "69ddd6206414a798b9a840ed",
+        discount: 0,
+        tax: 0,
+
+        items: tableData.map((item: any) => ({
+          item: item.itemName,
+          quantity: Number(item.quantity || 0),
+          purchaseRate: Number(item.purchaseRate || 0),
+          unitPrice: Number(item.unitPrice || 0),
+        })),
+      };
+
+      console.log("🚀 FINAL PAYLOAD:", payload);
+
+      await createPurchaseOrderApi(payload);
+
+      notifySuccess("Purchase Order Created Successfully");
+
+      setTableData([]);
+      setPartyAccount("");
+      setPartyReference("");
+      setDeliveryAddress("");
+      setType("");
+
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error: any) {
+      console.error(error);
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      refetch();
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -118,11 +185,18 @@ export default function CreatePurchaseOrder() {
               Print
             </button>
             <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
+              onClick={handleSaveOrder}
+              disabled={loading}
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-60"
             >
-              <Icon icon="mynaui:save" className="text-lg" />
-              Save
+              {loading ? (
+                <SyncLoader size={6} color="#fff" speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="mynaui:save" className="text-xl" />
+                  Save
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -156,10 +230,16 @@ export default function CreatePurchaseOrder() {
                 label="Party Account"
                 placeholder="Select Party"
                 value={partyAccount}
-                onChange={(val) => {
-                  setPartyAccount(val);
+                onChange={(val: any) => {
+                  const selectedValue =
+                    typeof val === "object" ? val?.value : val;
 
-                  const selected = partyAccounts.find((p) => p.value === val);
+                  setPartyAccount(selectedValue);
+
+                  const selected = partyAccounts.find(
+                    (p) => p.value === selectedValue,
+                  );
+
                   setPartyReference(selected?.reference || "");
                 }}
                 options={partyAccounts}
@@ -179,7 +259,7 @@ export default function CreatePurchaseOrder() {
               <CustomInput
                 label="Delivery Address"
                 placeholder="Address"
-                  value={deliveryAddress}
+                value={deliveryAddress}
                 onChange={(e) => setDeliveryAddress(e.target.value)}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
@@ -248,9 +328,15 @@ export default function CreatePurchaseOrder() {
                 "Unit Price",
                 "Amount",
               ]}
-              data={tableData.map((item, index) => [
-                <Icon icon="fluent:checkbox-checked-16-regular" />,
-                <Icon icon="qlementine-icons:menu-burger-16" />,
+              data={tableData.map((item, index: number) => [
+                <Icon
+                  icon="fluent:checkbox-checked-16-regular"
+                  className="text-primary text-xl"
+                />,
+                <Icon
+                  icon="qlementine-icons:menu-burger-16"
+                  className="text-primary text-xl"
+                />,
                 item.itemCode,
                 item.itemName,
                 item.itemCategory,

@@ -1462,17 +1462,20 @@ export const navItems: NavItem[] = [
 export const partyAccounts = [
   {
     label: "ABC Pharma",
-    value: "ABC Pharma",
+    value: "69dcc84be8429accb2a934cc",
+    id: "69dcc84be8429accb2a934cc",
     reference: "Manufacturing Dept",
   },
   {
     label: "XYZ Traders",
-    value: "xyz",
+    value: "69dcc84be8429accb2a934cd",
+    id: "69dcc84be8429accb2a934cd",
     reference: "Sales Dept",
   },
   {
     label: "Al-Fateh Medicine",
-    value: "alfateh",
+    value: "69dcc84be8429accb2a934ce",
+    id: "69dcc84be8429accb2a934ce",
     reference: "Import Dept",
   },
 ];

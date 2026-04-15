@@ -269,7 +269,7 @@ export default function DistributorUpdate() {
                   className="flex items-center justify-center h-10 gap-2 px-4 py-2 text-white rounded-md w-25 bg-primary"
                 >
                   {loading ? (
-                    <SyncLoader size={6} color="#fff" />
+                    <SyncLoader size={6} color="#fff" speedMultiplier={0.6} />
                   ) : (
                     <>
                       <Icon icon="mynaui:save" />
