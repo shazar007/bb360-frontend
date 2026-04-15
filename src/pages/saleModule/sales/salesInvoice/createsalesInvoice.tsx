@@ -84,7 +84,7 @@ export default function CreateSalesInvoice() {
   return (
     <>
       <div className="mt-8">
-        <div className="flex flex-wrap items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
@@ -92,7 +92,7 @@ export default function CreateSalesInvoice() {
             </p>
           </div>
 
-          <div className="flex items-center w-full gap-2 md:w-auto">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
             <button
               onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -117,20 +117,46 @@ export default function CreateSalesInvoice() {
           </div>
         </div>
       </div>
+
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
-          <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
+          <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">
               Create Invoice
             </p>
           </div>
-          <div className="p-4 grid grid-cols-3 gap-y-5 gap-x-29.25">
-            <CustomInput label="Purchase Order" placeholder="GENERATE" />
-            <CustomSelect label="Distributor Name" />
-            <CustomInput label="Contact Number" />
-            <CustomDatePicker label="Invoice Date" />
-            <CustomInput label="Address" />
-            <CustomInput label="Licence Status" />
+
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10">
+            <CustomInput
+              label="Purchase Order"
+              placeholder="To be GENERATE"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
+
+            <CustomSelect
+              label="Distributor Name"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
+
+            <CustomInput
+              label="Contact Number"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
+
+            <CustomDatePicker
+              label="Invoice Date"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
+
+            <CustomInput
+              label="Address"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
+
+            <CustomInput
+              label="Licence Status"
+              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            />
           </div>
         </div>{" "}
         <div className="mt-3 bg-white rounded-2xl">
@@ -349,7 +375,6 @@ export default function CreateSalesInvoice() {
               >
                 <Icon icon="mynaui:save" className="text-xl" />
                 Save
-               
               </button>
             </div>
           </div>

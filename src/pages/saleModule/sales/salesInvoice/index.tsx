@@ -2,9 +2,12 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import SalesInvoiceModel from "./components/salesInvoiceModel";
+import { useState } from "react";
 
 export default function SalesInvoice() {
   const { goTo } = useAppNavigate();
+  const [showMenu, setShowMenu] = useState(false);
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -14,7 +17,7 @@ export default function SalesInvoice() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-           Sales Invoice
+            Sales Invoice
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -83,10 +86,19 @@ export default function SalesInvoice() {
           ]}
           data={[
             [
-              <Icon
-                icon="qlementine-icons:menu-burger-16"
-                className="text-lg cursor-pointer text-primary"
-              />,
+              <div className="relative">
+                <Icon
+                  icon="qlementine-icons:menu-burger-16"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={() => setShowMenu(!showMenu)}
+                />
+
+                {showMenu && (
+                  <div className="absolute top-6 left-0 z-50">
+                    <SalesInvoiceModel />
+                  </div>
+                )}
+              </div>,
 
               <Icon
                 icon="fluent:checkbox-checked-16-regular"
