@@ -1458,3 +1458,21 @@ export const navItems: NavItem[] = [
     ],
   },
 ];
+
+export const partyAccounts = [
+  {
+    label: "ABC Pharma",
+    value: "ABC Pharma",
+    reference: "Manufacturing Dept",
+  },
+  {
+    label: "XYZ Traders",
+    value: "xyz",
+    reference: "Sales Dept",
+  },
+  {
+    label: "Al-Fateh Medicine",
+    value: "alfateh",
+    reference: "Import Dept",
+  },
+];

@@ -14,6 +14,7 @@ export default function CustomTable({
   height,
   norounded,
 }: CustomTableProps) {
+  console.log("🚀 ~ CustomTable ~ data:", data)
   return (
     <div
       style={{ height: height || "40vh" }}
