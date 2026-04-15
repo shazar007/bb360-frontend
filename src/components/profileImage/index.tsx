@@ -24,15 +24,6 @@ export default function ProfileImage() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  // const handleImageChange = (e: any) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const preview = URL.createObjectURL(file);
-  //     setImage(preview);
-  //     console.log("Selected Image:", file);
-  //   }
-  // };
-
   const handleLogout = async () => {
     if (loading) return;
 

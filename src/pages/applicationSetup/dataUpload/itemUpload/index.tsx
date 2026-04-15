@@ -7,12 +7,17 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomInput from "../../../../components/customInput";
 import CustomSelect from "../../../../components/customSelect";
 import CustomDatePicker from "../../../../components/datePicker";
-
+import { SyncLoader } from "react-spinners";
+import type { AxiosError } from "axios";
+import * as XLSX from "xlsx";
 const STORAGE_KEY = "temp_items_upload";
 
 export default function DataUpload() {
   const [addItem, setAddItem] = useState(false);
+  const [fileName, setFileName] = useState<string>("");
+  const [fileLoading, setFileLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -22,7 +27,6 @@ export default function DataUpload() {
     uom: "",
     tp: "",
     mrp: "",
-    batchNumber: "",
     expiryDate: "",
   });
 
@@ -72,7 +76,6 @@ export default function DataUpload() {
       uom: "",
       tp: "",
       mrp: "",
-      batchNumber: "",
       expiryDate: "",
     });
 
@@ -101,7 +104,36 @@ export default function DataUpload() {
     updated[index].selected = value;
     setTableData(updated);
   };
+  const formatExcelDate = (val: any) => {
+    if (!val) return null;
 
+    // if already ISO
+    if (typeof val === "string" && val.includes("-")) {
+      return val;
+    }
+
+    // MM/DD/YYYY
+    if (typeof val === "string" && val.includes("/")) {
+      const [month, day, year] = val.split("/");
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+
+    // 🔥 EXCEL SERIAL NUMBER FIX (46142 case)
+    if (typeof val === "number") {
+      const excelEpoch = new Date(1899, 11, 30); // Excel base date
+      const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
+
+      return jsDate.toISOString().split("T")[0];
+    }
+
+    // fallback
+    const d = new Date(val);
+    if (!isNaN(d.getTime())) {
+      return d.toISOString().split("T")[0];
+    }
+
+    return null;
+  };
   const handleUpload = async () => {
     try {
       if (!tableData.length) {
@@ -109,7 +141,7 @@ export default function DataUpload() {
         return;
       }
 
-      setLoading(true); // 🔥 start loading
+      setLoading(true);
 
       const payload = tableData.map((item) => ({
         itemName: item.itemName?.trim(),
@@ -117,8 +149,7 @@ export default function DataUpload() {
         uom: item.uom,
         tp: Number(item.tp),
         mrp: Number(item.mrp),
-        batchNumber: item.batchNumber,
-        expiryDate: item.expiryDate,
+        expiryDate: formatExcelDate(item.expiryDate),
       }));
 
       console.log("FINAL PAYLOAD:", payload);
@@ -129,14 +160,121 @@ export default function DataUpload() {
 
       localStorage.removeItem(STORAGE_KEY);
       setTableData([]);
-    } catch (err: any) {
-      console.log("ERROR RESPONSE:", err.response?.data);
-      notifyError(err.response?.data?.message || "Upload failed");
+    } catch (err: unknown) {
+      const error = err as AxiosError<any>;
+
+      console.log("ERROR RESPONSE:", error.response?.data);
+
+      notifyError(error.response?.data?.message || "Upload failed");
     } finally {
-      setLoading(false); // 🔥 stop loading always
+      setLoading(false);
     }
   };
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    setFileLoading(true);
+    setFileName(file.name);
+
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const data = event.target?.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
+
+        console.log("RAW EXCEL DATA:", jsonData);
+
+        const formatExcelDate = (val: any) => {
+          if (!val) return "";
+
+          // MM/DD/YYYY
+          if (typeof val === "string" && val.includes("/")) {
+            const [m, d, y] = val.split("/");
+            return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+          }
+
+          // Excel serial date (46142)
+          if (typeof val === "number") {
+            const excelEpoch = new Date(1899, 11, 30);
+            const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
+            return jsDate.toISOString().split("T")[0];
+          }
+
+          // ISO or fallback
+          const d = new Date(val);
+          return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
+        };
+
+        const formatted = jsonData.map((row: any) => ({
+          itemName:
+            row["Item Name"] || row["itemName"] || row["ItemName"] || "",
+          itemCategory: row["Item Category"] || row["itemCategory"] || "",
+          uom: row["Units"] || row["uom"] || "",
+          tp: row["tp"] || "",
+          mrp: row["mrp"] || "",
+          expiryDate: formatExcelDate(row["Expiry Date"] || row["expiryDate"]),
+          selected: false,
+        }));
+
+        console.log("FORMATTED:", formatted);
+
+        setTableData([...formatted]);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
+
+        notifySuccess("File loaded successfully");
+      } catch (err) {
+        notifyError("Invalid file format");
+      } finally {
+        setFileLoading(false);
+      }
+    };
+
+    reader.readAsBinaryString(file);
+  };
+  const formatDisplayDate = (date: string) => {
+    if (!date) return "";
+
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return date;
+
+    return d.toLocaleDateString();
+  };
+  const handleDownloadTemplate = () => {
+    try {
+      setDownloadLoading(true);
+
+      const template = [
+        {
+          "Item Name": "",
+          "Item Category": "",
+          Units: "",
+          tp: "",
+          mrp: "",
+          "Expiry Date": "",
+        },
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(template);
+      const wb = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(wb, ws, "Template");
+
+      XLSX.writeFile(wb, "Items-template.xlsx");
+
+      notifySuccess("Template downloaded");
+    } catch (err) {
+      notifyError("Failed to download template");
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -161,44 +299,77 @@ export default function DataUpload() {
 
             <button
               onClick={handleUpload}
+              disabled={loading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27 disabled:opacity-50"
             >
-              {" "}
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Upload
+              {loading ? (
+                <>
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                </>
+              ) : (
+                <>
+                  <Icon icon="basil:add-outline" className="text-lg" />
+                  Upload
+                </>
+              )}
             </button>
             <button
+              onClick={handleDownloadTemplate}
+              disabled={downloadLoading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-45"
             >
-              {" "}
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Download Template
+              {downloadLoading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="basil:add-outline" className="text-lg" />
+                  Download Template
+                </>
+              )}
             </button>
           </div>
         </div>
         <div className="w-full mt-2 ">
           <div className="p-4 bg-[#ECF0F4] rounded-t-2xl">
-            <p className="text-xs font-semibold text-heading1">
-              Upload Distributor
-            </p>
+            <p className="text-xs font-semibold text-heading1">Upload Items</p>
           </div>
           <div className="flex flex-col items-center justify-center gap-2 bg-white p-9 rounded-b-2xl">
             <Icon
               icon="hugeicons:file-add"
               className="text-5xl text-heading1/36"
             />
+
             <p className="text-xl font-semibold text-heading1">Drag & Drop</p>
+
             <p className="text-xs font-normal text-heading1/36">
               Supported formats XLSX
             </p>
-            <button
+
+            {/* FILE STATUS */}
+            {fileLoading ? (
+              <p className="text-sm font-medium text-primary">
+                Uploading file...
+              </p>
+            ) : fileName ? (
+              <p className="text-sm font-medium text-green-600">
+                Selected: {fileName}
+              </p>
+            ) : null}
+
+            <label
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >
               Choose File
-            </button>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                hidden
+                onChange={handleFileUpload}
+              />
+            </label>
           </div>
         </div>
         <div className="pb-4 mt-2 bg-white rounded-2xl">
@@ -230,6 +401,7 @@ export default function DataUpload() {
               "Select",
               "Product Name",
               "Item Category",
+              "Expiry Date",
               "Units",
               "TP",
               "MRP",
@@ -252,6 +424,7 @@ export default function DataUpload() {
 
               item.itemName,
               item.itemCategory,
+              formatDisplayDate(item.expiryDate),
               item.uom,
               item.tp,
               item.mrp,
@@ -324,12 +497,6 @@ export default function DataUpload() {
             </div>
             <div className="grid grid-cols-2 gap-4 mt-4">
               <CustomInput
-                label="Batch Name"
-                name="batchNumber"
-                value={form.batchNumber}
-                onChange={handleChange}
-              />
-              <CustomInput
                 label="Item Name"
                 name="itemName"
                 value={form.itemName}
@@ -357,9 +524,16 @@ export default function DataUpload() {
               <CustomSelect
                 label="Units"
                 options={[
+                  { value: "ml", label: "ML" },
+                  { value: "l", label: "Litre" },
+                  { value: "g", label: "Gram" },
                   { value: "kg", label: "KG" },
-                  { value: "ltr", label: "LTR" },
                   { value: "pcs", label: "PCS" },
+                  { value: "box", label: "Box" },
+                  { value: "strip", label: "Strip" },
+                  { value: "bottle", label: "Bottle" },
+                  { value: "pack", label: "Pack" },
+                  { value: "dozen", label: "Dozen" },
                 ]}
                 value={form.uom}
                 onChange={(v) => setForm({ ...form, uom: v })}

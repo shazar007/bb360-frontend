@@ -10,7 +10,6 @@ export const HTTP_CLIENT = axios.create({
 let isSessionExpiredHandled = false;
 
 export const setupInterceptors = (navigate: any) => {
-  // ================= REQUEST =================
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
       const token = Cookies.get("token"); // ✅ ONLY from cookies
@@ -29,7 +28,6 @@ export const setupInterceptors = (navigate: any) => {
     (error: any) => Promise.reject(error),
   );
 
-  // ================= RESPONSE =================
   HTTP_CLIENT.interceptors.response.use(
     (response: any) => response,
     (error: any) => {
