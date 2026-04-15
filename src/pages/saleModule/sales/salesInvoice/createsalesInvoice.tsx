@@ -1,13 +1,13 @@
 import { Icon } from "@iconify/react";
-import CustomInput from "../../../../components/customInput";
-import CustomDatePicker from "../../../../components/datePicker";
-import CustomSelect from "../../../../components/customSelect";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getAllItems } from "../../../../api/itemServices";
+import CustomInput from "../../../../components/customInput";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { useQuery } from "@tanstack/react-query";
-import { getAllItems } from "../../../../api/itemServices";
+import { getAllDistributor } from "../../../../api/distributorServices";
+
 const tabs = [
   "Transaction Lines",
   "Accounting Lines",
@@ -19,25 +19,51 @@ export default function CreateSalesInvoice() {
   const { goBack } = useAppNavigate();
   const [addItem, setAddItem] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [selectedDistributor, setSelectedDistributor] = useState("");
+  const [distributorData, setDistributorData] = useState<any>(null);
   const [form, setForm] = useState({
     itemId: "",
     itemName: "",
     itemCode: "",
     uom: "",
     itemBalance: "",
-    orderedQty: "",
+    orderedQty: "1",
     mrp: "",
     tp: "",
     discount: "",
     grossAmount: "",
-    taxPercent: "",
     amount: "",
+    bonus: "",
   });
+
+  const { data: AllDistributors, refetch } = useQuery({
+    queryKey: ["getAllDistributor"],
+    queryFn: getAllDistributor,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  const calculateTP = +form.tp * +form.orderedQty;
+  const discountPercent = +form.discount || 0;
+  const grossAmount = (calculateTP * discountPercent) / 100;
+  const grossAmount_afterDiscount = calculateTP - grossAmount;
+  const finalAmount = grossAmount_afterDiscount;
+  const allDistributors = AllDistributors?.data?.distributors || [];
+
+  const distributorOptions = [
+    { label: "Select Distributor", value: "" },
+    ...allDistributors.map((item:any) => ({
+      label: item.distributorName,
+      value: item._id, // ya distributorCode bhi use kar sakte ho
+    })),
+  ];
 
   const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
   });
+
   const handleSave = () => {
     if (!form.itemId) {
       alert("Please select item");
@@ -57,13 +83,13 @@ export default function CreateSalesInvoice() {
       itemCode: "",
       uom: "",
       itemBalance: "",
-      orderedQty: "",
+      orderedQty: "1",
       mrp: "",
       tp: "",
       discount: "",
       grossAmount: "",
-      taxPercent: "",
       amount: "",
+      bonus: "",
     });
 
     setAddItem(false);
@@ -125,37 +151,43 @@ export default function CreateSalesInvoice() {
               Create Invoice
             </p>
           </div>
-
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-10">
-            <CustomInput
-              label="Purchase Order"
-              placeholder="To be GENERATE"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-            />
-
-            <CustomSelect
+          <div className="p-4 grid grid-cols-3 gap-y-5 gap-x-29.25">
+            <CustomInput label="Invoice Number" placeholder="GENERATE" disabled />
+            <CustomSelectSearch
               label="Distributor Name"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              options={distributorOptions}
+              value={selectedDistributor}
+              onChange={(val) => {
+                setSelectedDistributor(val);
+                const selected = allDistributors.find((d:any) => d._id === val);
+                setDistributorData(selected);
+              }}
             />
-
             <CustomInput
               label="Contact Number"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-            />
-
-            <CustomDatePicker
-              label="Invoice Date"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              disabled
+              value={distributorData?.contactNumber || ""}
             />
 
             <CustomInput
               label="Address"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              disabled
+              value={distributorData?.address || ""}
             />
 
             <CustomInput
               label="Licence Status"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              disabled
+              value={distributorData?.licenceStatus || ""}
+            />
+            <CustomInput
+              label="Distributor Discount"
+              // value={distributorData?.licenceStatus || ""}
+            />
+            <CustomInput
+              label="Tax Amount %"
+              disabled
+              // value={distributorData?.licenceStatus || ""}
             />
           </div>
         </div>{" "}
@@ -206,9 +238,9 @@ export default function CreateSalesInvoice() {
                   "Ordered Quantity ",
                   "M.R.P ",
                   "T.P",
+                  "Bonus",
                   "Discount % ",
                   "Gross Amount",
-                  "Tax Amount %",
                   "Amount",
                 ]}
                 data={tableData.map((item, index) => [
@@ -227,9 +259,9 @@ export default function CreateSalesInvoice() {
                   item.orderedQty || "-",
                   item.mrp || "-",
                   item.tp || "-",
+                  item.bonus || "-",
                   item.discount || "-",
                   item.grossAmount || "-",
-                  item.taxPercent || "-",
                   item.amount || "-",
                 ])}
               />
@@ -295,6 +327,8 @@ export default function CreateSalesInvoice() {
                     itemName: selectedItem?.itemName || "",
                     itemCode: selectedItem?.itemCode || "",
                     uom: selectedItem?.uom || "",
+                    tp: selectedItem?.tp || "",
+                    mrp: selectedItem?.mrp || "",
                   }));
                 }}
               />
@@ -328,7 +362,10 @@ export default function CreateSalesInvoice() {
 
               <CustomInput
                 label="TP"
-                value={form.tp}
+                // value={String(calculateTP)}
+                value={String(form.tp)}
+
+                disabled
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, tp: e.target.value }))
                 }
@@ -344,25 +381,25 @@ export default function CreateSalesInvoice() {
 
               <CustomInput
                 label="Gross Amount"
-                value={form.grossAmount}
+                value={String(grossAmount_afterDiscount)}
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, grossAmount: e.target.value }))
                 }
               />
 
               <CustomInput
-                label="Tax Amount %"
-                value={form.taxPercent}
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, taxPercent: e.target.value }))
-                }
-              />
-
-              <CustomInput
                 label="Amount"
-                value={form.amount}
+                value={String(finalAmount)}
+                disabled
                 onChange={(e) =>
                   setForm((prev) => ({ ...prev, amount: e.target.value }))
+                }
+              />
+              <CustomInput
+                label="Bonus"
+                value={form.bonus}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, bonus: e.target.value }))
                 }
               />
             </div>
