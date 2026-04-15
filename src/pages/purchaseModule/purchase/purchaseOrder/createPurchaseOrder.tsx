@@ -23,6 +23,7 @@ export default function CreatePurchaseOrder() {
   const STORAGE_KEY = "purchase_order_items";
   const [tableData, setTableData] = useState<any[]>([]);
   const [advanceAmount, setAdvanceAmount] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
   const [partyAccount, setPartyAccount] = useState("");
   const [partyReference, setPartyReference] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -131,6 +132,7 @@ export default function CreatePurchaseOrder() {
         discount: 0,
         tax: 0,
         advanceAmount: Number(advanceAmount || 0),
+        totalAmount: Number(totalAmount || 0),
         items: tableData.map((item: any) => ({
           item: item.itemName,
           quantity: Number(item.quantity || 0),
@@ -277,6 +279,12 @@ export default function CreatePurchaseOrder() {
                 value={advanceAmount}
                 onChange={(e) => setAdvanceAmount(e.target.value)}
               />
+              <CustomInput
+                label="Total Amount"
+                placeholder="Enter Total Amount"
+                value={totalAmount}
+                onChange={(e) => setTotalAmount(e.target.value)}
+              />
             </div>
           </div>
         </div>{" "}
@@ -323,8 +331,8 @@ export default function CreatePurchaseOrder() {
                 "Item Description",
                 "Item Category",
                 "UOM",
-                "Batch Number",
-                "Expiry Date",
+                // "Batch Number",
+                // "Expiry Date",
                 "Quantity ",
                 "Purchase Rate",
                 "Unit Price",
