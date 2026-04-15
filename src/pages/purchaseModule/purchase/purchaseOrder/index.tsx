@@ -44,9 +44,7 @@ export default function PurchaseOrder() {
     refetchOnReconnect: false,
   });
   const ordersData = AllOrders?.data?.data || [];
-  console.log(".........me", ordersData);
-  console.log(".......", tableData);
-  const { goTo } = useAppNavigate();
+  const { goTo, goWithState } = useAppNavigate();
   const handleCreate = () => {
     goTo("/purchase-module/purchase/purchase-order/create-order");
   };
@@ -189,7 +187,12 @@ export default function PurchaseOrder() {
               <Icon
                 icon="basil:edit-outline"
                 className="text-lg text-primary cursor-pointer"
-                // onClick={() => handleEdit(item, index)}
+                onClick={() =>
+                  goWithState(
+                    "/purchase-module/purchase/purchase-order/detail",
+                    { item },
+                  )
+                }
               />,
               <div
                 key={`view-${index}`}

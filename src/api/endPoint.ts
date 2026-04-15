@@ -22,4 +22,9 @@ export const ENDPOINTS = {
   ORDER_CREATE: "/purchase-orders",
   GET_ALL_ORDERS: "/purchase-orders",
   UPDATE_ORDERS: "/purchase-orders",
+
+  // ------------purchase Receving-------------
+
+  ALL_PURCHASE_RECEIVING: "/purchase-receiving",
+  UPDATE_PURCHASE_RECEIVING: "/purchase-receiving",
 };

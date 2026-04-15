@@ -765,10 +765,10 @@ export const navItems: NavItem[] = [
             name: "Purchase Invoice",
             path: "/purchase-module/payable/vendor-bills",
           },
-          {
-            name: "Pay Bills",
-            path: "/purchase-module/payable/pay-bills",
-          },
+          // {
+          //   name: "Pay Bills",
+          //   path: "/purchase-module/payable/pay-bills",
+          // },
           // {
           //   name: "Vendor Credit",
           //   path: "/purchase-module/payable/vendor-credit",

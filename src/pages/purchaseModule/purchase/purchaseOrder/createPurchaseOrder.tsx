@@ -8,7 +8,6 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
-import { batch } from "react-redux";
 import { partyAccounts } from "../../../../utils/constant";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import {
@@ -23,6 +22,7 @@ export default function CreatePurchaseOrder() {
   const { goBack } = useAppNavigate();
   const STORAGE_KEY = "purchase_order_items";
   const [tableData, setTableData] = useState<any[]>([]);
+  const [advanceAmount, setAdvanceAmount] = useState("");
   const [partyAccount, setPartyAccount] = useState("");
   const [partyReference, setPartyReference] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -128,7 +128,7 @@ export default function CreatePurchaseOrder() {
         createdBy: "69ddd6206414a798b9a840ed",
         discount: 0,
         tax: 0,
-
+        advanceAmount: Number(advanceAmount || 0),
         items: tableData.map((item: any) => ({
           item: item.itemName,
           quantity: Number(item.quantity || 0),
@@ -261,12 +261,10 @@ export default function CreatePurchaseOrder() {
                 placeholder="Address"
                 value={deliveryAddress}
                 onChange={(e) => setDeliveryAddress(e.target.value)}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
               <CustomSelect
                 label="Type"
                 placeholder="Local/Import"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 options={[
                   { label: "Local", value: "local" },
                   { label: "Import", value: "import" },
@@ -275,7 +273,14 @@ export default function CreatePurchaseOrder() {
                 onChange={(val) => setType(val)}
               />
             </div>
-            <div className="space-y-1.5"></div>
+            <div className="space-y-1.5">
+              <CustomInput
+                label="Advance Amount"
+                placeholder="Enter Advance Amount"
+                value={advanceAmount}
+                onChange={(e) => setAdvanceAmount(e.target.value)}
+              />
+            </div>
           </div>
         </div>{" "}
         <div className="flex items-center p-4 mt-3 bg-white rounded-2xl">
@@ -461,7 +466,9 @@ export default function CreatePurchaseOrder() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xs font-semibold text-heading1">Add Order</h2>
+              <h2 className="text-xs font-semibold text-heading1">
+                Add Purchase Order
+              </h2>
 
               <button
                 onClick={() => {

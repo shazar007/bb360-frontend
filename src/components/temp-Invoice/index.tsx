@@ -41,7 +41,7 @@ export const InvoiceTemplate = forwardRef(({ data }: any, ref: any) => {
             <p className="text-xs mt-1">{data.deliveryAddress}</p>
           </div>
           <div className="text-right text-[#000000] flex flex-col justify-between">
-            <p>INV #{data.poNumber}</p>
+            <p>INV #{data.poNumber || data.prNumber}</p>
             <p className="text-sm font-bold mt-4">
               Date:{" "}
               {dayjs(data.createdAt).isValid()
@@ -74,15 +74,15 @@ export const InvoiceTemplate = forwardRef(({ data }: any, ref: any) => {
                 key={idx}
                 className="border-b text-sm text-black border-gray-100"
               >
-                <td className="py-3">{item.quantity}</td>
                 <td>{item.itemName}</td>
+                <td className="py-3">{item.batchNumber}</td>
                 <td>
                   {" "}
                   {dayjs(item.expiryDate).isValid()
                     ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
                     : "-"}
                 </td>{" "}
-                <td>{item.quantity}</td>
+                <td>{item.quantity || item.orderedQty}</td>
               </tr>
             ))}
           </tbody>
@@ -92,7 +92,8 @@ export const InvoiceTemplate = forwardRef(({ data }: any, ref: any) => {
             <span className="font-bold text-sm">Total</span>
             <span className="font-bold text-sm ">
               {data.items?.reduce(
-                (acc: number, curr: any) => acc + curr.quantity,
+                (acc: number, curr: any) =>
+                  acc + curr.quantity || curr.orderedQty,
                 0,
               )}
             </span>
