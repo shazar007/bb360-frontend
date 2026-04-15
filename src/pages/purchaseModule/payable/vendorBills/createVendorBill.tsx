@@ -1,42 +1,40 @@
 import { Icon } from "@iconify/react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
-import CustomSelect from "../../../../components/customSelect";
+import CustomDatePicker from "../../../../components/datePicker";
 import CustomInput from "../../../../components/customInput";
 import { useEffect, useState } from "react";
-import CustomToggles from "../../../../components/custontogles";
 import { useAppNavigate } from "../../../../hooks/navigation";
+// import CustomToggles from "../../../../components/custontogles";
+// import { useAppNavigate } from "../../../../hooks/navigation";
 
 const tabs = [
-  "Item Lines",
-  "Expense Lines",
+  "Transaction Lines",
   "Accounting Lines",
-  "Related Transaction",
   "System Information",
-  "Attachments",
+  "Terms & Conditions",
 ];
 export default function CreateVendorBill() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const [addItem, setAddItem] = useState(false);
-  const { goTo } = useAppNavigate();
+  // const [addItem, setAddItem] = useState(false);
+  const { goBack } = useAppNavigate();
+  // const { goTo } = useAppNavigate();
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Payable / Vendor Bill
+            Payable / Purchase Invoice
           </p>
         </div>
 
-        <div className="flex items-center w-full gap-2 md:w-auto">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
           <button
-            onClick={() => {
-              goTo("/purchase-module/vender-define/venders");
-            }}
+            onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >
@@ -44,7 +42,16 @@ export default function CreateVendorBill() {
             <Icon icon="ion:play-back-outline" className="text-lg" />
             Back
           </button>
-
+          {/* Print */}
+          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
+            <Icon icon="ion:print-outline" className="w-5 h-5" />
+            Print
+          </button>
+          {/* Post */}
+          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
+            <Icon icon="streamline-flex:story-post" className="w-5 h-5" />
+            Post
+          </button>
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
@@ -54,43 +61,63 @@ export default function CreateVendorBill() {
           </button>
         </div>
       </div>
+
       <div className="mt-3">
-        <div className="bg-white rounded-2xl">
-          <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
-            <p className="text-xs font-semibold text-heading1">
-              Purchase Order Closed
-            </p>
-          </div>
-          <div className="p-4 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 md:gap-6 lg:gap-29.25">
-            <div className="space-y-1.5">
-              <CustomInput
-                label="Transaction Number"
-                placeholder="write the Name"
-              />
-              <CustomSelect label="Transaction Date" />
-              <CustomSelect label="Vendor" />
-              <CustomInput label="Memo" />
+        <div className="bg-[#f6f6f6] rounded-2xl mt-3">
+          <div className="bg-white rounded-2xl mt-2">
+            {/* Header */}
+            <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
+              <p className="text-xs font-semibold text-heading1">Invoice</p>
             </div>
-            <div className="space-y-1.5">
-              <CustomInput label="Discount Total" />
-              <CustomInput label="Currency" />
-              <CustomSelect label="Exchange Rate" />
-              <CustomInput label="Reference Number" />
-            </div>
-            <div className="space-y-1.5">
-              <CustomSelect label="Status" />
-              <CustomInput label="Subsidiary" />
-              <CustomInput label="Location" />
-              <CustomInput label="Department" />
-            </div>
-            <div className="space-y-1.5">
-              <CustomSelect label="Class" />
-              <CustomInput label="Payment Terms" />
-              <CustomInput label="Project" />
-              <CustomToggles label="Apply W.H.T" />
+            {/* Body */}
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-50.25 text-secondary">
+              {/* Column 1 */}
+              <div className="space-y-1.5 ">
+                <CustomInput
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4] "
+                  label="Invoice Number"
+                  placeholder="PO-000121 "
+                  disabled
+                />
+
+                <CustomDatePicker
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                  label="Invoice Date"
+                  value="2026-03-01"
+                  disabled
+                />
+              </div>
+
+              {/* Column 2 */}
+              <div className="space-y-1.5">
+                <CustomInput
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                  label="Vendor Name"
+                  placeholder="Globify Trader Karachi"
+                  disabled
+                />
+
+                <CustomInput
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                  label="Address"
+                  placeholder="Main GT Road near Rawat Mor, Rawalpindi"
+                  disabled
+                />
+              </div>
+
+              {/* Column 3 */}
+              <div className="space-y-1.5">
+                <CustomInput
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                  label="Contact Number"
+                  placeholder="+92 322 2234 254"
+                  disabled
+                />
+              </div>
             </div>
           </div>
         </div>
+
         <div className="mt-3 bg-white rounded-2xl ">
           <div className="flex items-center justify-between p-4">
             <div className="flex  w-90 md:w-[60%]  overflow-auto items-center gap-8">
@@ -109,46 +136,33 @@ export default function CreateVendorBill() {
               ))}
             </div>
           </div>
-          {activeTab === "Item Lines" && (
+          {activeTab === "Transaction Lines" && (
             <CustomTable
               norounded
               headers={[
                 "Select",
                 "Edit",
+                "Item Code",
                 "Item Name",
-                "Item Description",
-                "Item Balance",
                 "UOM",
-                "Quantity ",
+                "Ordered Quantity",
+                "Received Quantity",
                 "Retail Price",
-                "Discount % ",
-                "Unit Price",
-                "Amount",
-                "Tax Code",
-                "Tax Amount",
+                "T.P",
+                "Discount %",
                 "Gross Amount",
-                "Memo",
-                "History",
+                "Tax Amount",
+                "Amount",
               ]}
               data={[
                 [
                   <Icon
                     icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg cursor-pointer text-primary"
+                    className="text-lg text-primary"
                   />,
                   <Icon
                     icon="qlementine-icons:menu-burger-16"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  <Icon
-                    icon="solar:box-broken"
-                    className="text-lg cursor-pointer text-primary"
+                    className="text-lg text-primary"
                   />,
                   "-",
                   "-",
@@ -157,31 +171,20 @@ export default function CreateVendorBill() {
                   "-",
                   "-",
                   "-",
-
+                  "-",
+                  "-",
+                  "-",
                   "-",
                 ],
               ]}
             />
           )}
-          {activeTab === "Related Transactions" && (
-            <>
-              <div>
-                <CustomTable
-                  norounded
-                  headers={[
-                    "Link Type",
-                    "Applied Date Posted",
-                    "Applied Transaction",
-                    "Original Transaction",
-                    "Org Transaction Id",
-                    "Org Transaction Type",
-                  ]}
-                  data={[
-                    ["-", "1200012", "1200012", "Honey 500 GM", "20", "10"],
-                  ]}
-                />
-              </div>
-            </>
+          {activeTab === "Accounting Lines" && (
+            <CustomTable
+              norounded
+              headers={["Date", "Ref Number", "Debit", "Credit", "Balance"]}
+              data={[["-", "-", "-", "-", "-"]]}
+            />
           )}
           {activeTab === "System Information" && (
             <>
@@ -190,85 +193,41 @@ export default function CreateVendorBill() {
                   System Information
                 </p>
               </div>
-              <div className="grid items-center grid-cols-2 gap-10 p-5 justify-evenly">
-                <p className="text-xs text-center text-heading">Created By</p>
-                <p className="text-xs text-center text-heading">Modified By</p>
-                <p className="text-xs text-center text-heading">Created Date</p>
-                <p className="text-xs text-center text-heading">
-                  Modified Date
-                </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-6 text-center">
+                <div>
+                  <p className="text-xs text-heading1">Created By</p>
+                </div>
+                <div>
+                  <p className="text-xs text-heading1">Modified By</p>
+                </div>
+                <div>
+                  <p className="text-xs text-heading1">Created Date</p>
+                </div>
+                <div>
+                  <p className="text-xs text-heading1">Modified Date</p>
+                </div>
               </div>
             </>
           )}
+
           {activeTab === "Terms & Conditions" && (
             <>
+              {/* Header */}
               <div className="bg-[#ECF0F4] p-4">
-                <p className="text-xs font-semibold text-heading1">Comments</p>
+                <p className="text-xs font-semibold text-heading1">
+                  Terms & Condition
+                </p>
               </div>
-            </>
-          )}
-          {activeTab === "Attachments" && (
-            <>
-              <div>
-                <CustomTable
-                  norounded
-                  headers={[
-                    "View",
-                    "Find File Name",
-                    "File Extension",
-                    "File Size",
-                    "Description",
-                  ]}
-                  data={[
-                    [
-                      <Icon
-                        icon="hugeicons:view"
-                        className="text-lg cursor-pointer text-primary"
-                      />,
-                      "1200012",
-                      "Honey 500 GM",
-                      "20",
-                    ],
-                  ]}
+
+              {/* Input Area */}
+              <div className="p-4">
+                <textarea
+                  placeholder="Type Here..."
+                  className="w-full h-32 p-3 text-sm rounded-md bg-[#ECF0F4] focus:outline-none resize-none"
                 />
               </div>
             </>
-          )}
-          {addItem && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-              <div className="w-full bg-white shadow-xl max-w-170 rounded-2xl animate-in fade-in zoom-in-95">
-                <div className="flex items-center justify-between p-4 border-b">
-                  <h2 className="text-xs font-semibold text-heading1">
-                    Search Item
-                  </h2>
-                  <button
-                    onClick={() => setAddItem(false)}
-                    className="text-xl cursor-pointer text-heading1"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <div className="relative px-6 py-4 mt-4 space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    className="w-full rounded-md pr-4 pl-10 py-2 bg-[#ECF0F4] focus:outline-none"
-                  />
-                  <Icon
-                    icon="mynaui:search"
-                    className="absolute text-xl text-heading2 top-6 left-9 placeholder:text-xs placeholder:text-heading2"
-                  />
-                </div>
-                <div className="pb-3">
-                  <CustomTable
-                    norounded
-                    headers={["code", "Item Name"]}
-                    data={[["112026", "Olive Oil Pure Natural - 500ml"]]}
-                  />
-                </div>
-              </div>
-            </div>
           )}
         </div>
       </div>

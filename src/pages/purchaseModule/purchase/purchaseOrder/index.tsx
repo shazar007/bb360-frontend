@@ -8,9 +8,9 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 export default function PurchaseOrder() {
   const [open, setOpen] = useState(false);
 
-  const {goTo} = useAppNavigate();
+  const { goTo } = useAppNavigate();
   const handleCreate = () => {
-   goTo("/purchase-module/purchase/purchase-order/create-order");
+    goTo("/purchase-module/purchase/purchase-order/create-order");
   };
   return (
     <>
@@ -34,13 +34,13 @@ export default function PurchaseOrder() {
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
               />
             </div>
-            <button
+            {/* <button
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
             >
               Action
               <Icon icon="weui:arrow-filled" className="text-lg rotate-90" />
-            </button>
+            </button> */}
             <button
               onClick={() => setOpen(true)}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -62,7 +62,7 @@ export default function PurchaseOrder() {
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-37"
             >
               <Icon icon="basil:add-outline" className="text-lg" />
-              Create RFQ / PO
+              Create
             </button>
           </div>
         </div>
@@ -83,6 +83,11 @@ export default function PurchaseOrder() {
             data={[
               [
                 <Icon
+                  onClick={() =>
+                    goTo(
+                      "/purchase-module/purchase/purchase-order/create-order",
+                    )
+                  }
                   icon="basil:edit-outline"
                   className="text-lg cursor-pointer text-primary"
                 />,
