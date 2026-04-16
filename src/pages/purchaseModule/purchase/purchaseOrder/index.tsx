@@ -173,7 +173,7 @@ export default function PurchaseOrder() {
           <CustomTable
             height="60vh"
             headers={[
-              "Edit",
+              "Details",
               "View",
               "Report",
               "Purchase Order",
