@@ -14,6 +14,11 @@ export const ENDPOINTS = {
   DELETE_ITEM: "/items",
   GET_SINGLE_ITEM: "/items",
 
+  // ------------Vendor-------------
+  // ADD_VENDOR: "/vendors",
+  VENDORS: "/vendors",
+  // UPDATE_VENDOR: "/vendors",
+
   // ------------Distributor-------------
   ADD_DISTRIBUTOR: "/distributors",
   GET_ALL_DISTRIBUTOR: "/distributors",
@@ -22,4 +27,9 @@ export const ENDPOINTS = {
   ORDER_CREATE: "/purchase-orders",
   GET_ALL_ORDERS: "/purchase-orders",
   UPDATE_ORDERS: "/purchase-orders",
+
+  // ------------purchase Receving-------------
+
+  ALL_PURCHASE_RECEIVING: "/purchase-receiving",
+  UPDATE_PURCHASE_RECEIVING: "/purchase-receiving",
 };

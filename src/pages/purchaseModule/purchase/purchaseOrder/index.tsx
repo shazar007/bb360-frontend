@@ -28,7 +28,7 @@ export default function PurchaseOrder() {
     poNumber: "",
     date: "",
     partyAccount: "",
-    partyReference: "",
+    partyCategory: "",
     deliveryAddress: "",
     type: "",
   });
@@ -44,9 +44,8 @@ export default function PurchaseOrder() {
     refetchOnReconnect: false,
   });
   const ordersData = AllOrders?.data?.data || [];
-  console.log(".........me", ordersData);
-  console.log(".......", tableData);
-  const { goTo } = useAppNavigate();
+  console.log("🚀 ~ PurchaseOrder ~ ordersData:", ordersData);
+  const { goTo, goWithState } = useAppNavigate();
   const handleCreate = () => {
     goTo("/purchase-module/purchase/purchase-order/create-order");
   };
@@ -58,7 +57,7 @@ export default function PurchaseOrder() {
       poNumber: item.poNumber || "",
       date: item.date || item.createdAt || "",
       partyAccount: item.partyAccount?._id || "", // ✅ IMPORTANT ID
-      partyReference: item.partyReference || "",
+      partyCategory: item.partyCategory || "",
       deliveryAddress: item.deliveryAddress || "",
       type: item.type || "",
     });
@@ -88,7 +87,7 @@ export default function PurchaseOrder() {
         poNumber: form.poNumber,
         date: form.date,
         partyAccount: form.partyAccount,
-        partyReference: form.partyReference,
+        partyCategory: form.partyCategory,
         deliveryAddress: form.deliveryAddress,
         type: form.type,
         items: tableData.map((item: any) => ({
@@ -104,7 +103,7 @@ export default function PurchaseOrder() {
       notifySuccess("Updated Successfully");
       setOpenModal(false);
       setEditIndex(null);
-      refetch();
+      // refetch();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Update failed");
     }
@@ -175,13 +174,13 @@ export default function PurchaseOrder() {
           <CustomTable
             height="60vh"
             headers={[
-              "Edit",
+              "Details",
               "View",
               "Report",
               "Purchase Order",
               "Date",
               "Party Account",
-              "Party Reference",
+              "Party Category",
               "Deliver Address",
               "Type",
             ]}
@@ -189,7 +188,12 @@ export default function PurchaseOrder() {
               <Icon
                 icon="basil:edit-outline"
                 className="text-lg text-primary cursor-pointer"
-                // onClick={() => handleEdit(item, index)}
+                onClick={() =>
+                  goWithState(
+                    "/purchase-module/purchase/purchase-order/detail",
+                    { item },
+                  )
+                }
               />,
               <div
                 key={`view-${index}`}
@@ -214,8 +218,8 @@ export default function PurchaseOrder() {
               dayjs(item.createdAt).isValid()
                 ? dayjs(item.createdAt).format("DD-MMM-YYYY")
                 : "-",
-              item.partyAccount.distributorName || "-",
-              item.partyReference || "-",
+              item.partyAccount?.vendorName || "-",
+              item.partyCategory || "-",
               item.deliveryAddress || "-",
               item.type || "-",
             ])}

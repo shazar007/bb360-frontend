@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import PurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder";
 import PendingReceiveOrdersList from "../../../pages/purchaseModule/purchase/pendingReceiveOrdersList";
-import ItemReceiptNote from "../../../pages/purchaseModule/purchase/receivingChallan";
 import GenerateConsolidateVendorBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill";
 import CreateBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill/createBill";
 import CreateReceipt from "../../../pages/purchaseModule/purchase/receivingChallan/createReceivingChallan";
@@ -10,6 +9,7 @@ import PurchaseContract from "../../../pages/purchaseModule/purchase/purchaseCon
 import CreatePurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder/createPurchaseOrder";
 import ReceivingChallan from "../../../pages/purchaseModule/purchase/receivingChallan";
 import CreateReceivingChallan from "../../../pages/purchaseModule/purchase/receivingChallan/createReceivingChallan";
+import OrderDetails from "../../../pages/purchaseModule/purchase/purchaseOrder/orderDetails";
 
 export default function PurchaseRouting() {
   return (
@@ -19,6 +19,7 @@ export default function PurchaseRouting() {
         path="/purchase-order/create-order"
         element={<CreatePurchaseOrder />}
       />
+      <Route path="/purchase-order/detail" element={<OrderDetails />} />
       <Route path="/purchase-contract" element={<PurchaseContract />} />
       <Route
         path="/purchase-contract/create-contract"

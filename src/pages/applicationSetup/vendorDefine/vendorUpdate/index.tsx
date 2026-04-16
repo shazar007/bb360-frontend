@@ -2,14 +2,12 @@ import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getAllDistributor,
-  updateDistributor,
-} from "../../../../api/distributorServices";
+import { updateDistributor } from "../../../../api/distributorServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
+import { getAllVendors } from "../../../../api/vendorServices";
 
 export default function VendorUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -31,12 +29,12 @@ export default function VendorUpdate() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const {
-    data: AllDistributors,
+    data: AllVendors,
     refetch,
     isLoading,
   } = useQuery({
-    queryKey: ["getAllDistributor"],
-    queryFn: getAllDistributor,
+    queryKey: ["getAllVendors"],
+    queryFn: getAllVendors,
 
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
@@ -46,7 +44,7 @@ export default function VendorUpdate() {
     refetchOnReconnect: false,
   });
 
-  const tableData = AllDistributors?.data?.distributors || [];
+  const tableData = AllVendors?.data?.vendors || [];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -166,7 +164,7 @@ export default function VendorUpdate() {
               "Contact Number",
               "Address",
               "City",
-              "Licence Number",
+              "Licence Number/Income Tax Number",
               "Licence Expiry Date",
               "Licence Status",
             ]}
@@ -273,7 +271,7 @@ export default function VendorUpdate() {
                 />
 
                 <CustomInput
-                  label="Licence Number"
+                  label="Licence Number/Income Tax Number"
                   name="licenceNumber"
                   value={form.licenceNumber}
                   onChange={(val: any) => handleChange("licenceNumber", val)}
