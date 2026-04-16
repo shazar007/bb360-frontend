@@ -27,23 +27,20 @@ export default function CreatePurchaseOrder() {
   const [partyAccount, setPartyAccount] = useState("");
   const [partyReference, setPartyReference] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  console.log(
-    "🚀 ~ createPurchaseOrder.tsx:29 ~ CreatePurchaseOrder ~ deliveryAddress:",
-    deliveryAddress,
-  );
+  const [taxPercentage, setTaxPercentage] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     itemName: "",
     itemCode: "",
     itemCategory: "",
-    batchNumber: "",
+    // batchNumber: "",
     quantity: "",
     purchaseRate: "",
-    unitPrice: "",
+    // unitPrice: "",
     amount: "",
     uom: "",
-    expiryDate: "",
+    // expiryDate: "",
   });
   console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", form);
 
@@ -92,13 +89,13 @@ export default function CreatePurchaseOrder() {
       itemName: "",
       itemCode: "",
       itemCategory: "",
-      batchNumber: "",
+      // batchNumber: "",
       quantity: "",
       purchaseRate: "",
-      unitPrice: "",
+      // unitPrice: "",
       amount: "",
       uom: "",
-      expiryDate: "",
+      // expiryDate: "",
     });
 
     setCreateOrder(false);
@@ -128,16 +125,15 @@ export default function CreatePurchaseOrder() {
       const payload = {
         partyAccount: "69dcc84be8429accb2a934cc",
         deliveryAddress: deliveryAddress || "",
-        createdBy: "69ddd6206414a798b9a840ed",
-        discount: 0,
-        tax: 0,
+        tax: taxPercentage || "0",
         advanceAmount: Number(advanceAmount || 0),
         totalAmount: Number(totalAmount || 0),
         items: tableData.map((item: any) => ({
           item: item.itemName,
           quantity: Number(item.quantity || 0),
           purchaseRate: Number(item.purchaseRate || 0),
-          unitPrice: Number(item.unitPrice || 0),
+          amount: Number(item.amount || 0),
+          // unitPrice: Number(item.unitPrice || 0),
         })),
       };
 
@@ -223,6 +219,14 @@ export default function CreatePurchaseOrder() {
                 label="Date"
                 value="2026-03-01"
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />
+              <CustomInput
+                label="Tax%"
+                type="number"
+                placeholder="Enter Tax in percentage"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                value={taxPercentage}
+                onChange={(e) => setTaxPercentage(e.target.value)}
               />
             </div>
 
@@ -328,14 +332,14 @@ export default function CreatePurchaseOrder() {
                 "Select",
                 "Edit",
                 "Item Code",
-                "Item Description",
+                "Item Name",
                 "Item Category",
                 "UOM",
                 // "Batch Number",
                 // "Expiry Date",
                 "Quantity ",
                 "Purchase Rate",
-                "Unit Price",
+                // "Unit Price",
                 "Amount",
               ]}
               data={tableData.map((item) => [
@@ -348,14 +352,15 @@ export default function CreatePurchaseOrder() {
                   className="text-primary text-xl"
                 />,
                 item.itemCode,
-                item.itemName,
+                items.find((i: any) => i._id === item.itemName)?.itemName ||
+                  "-",
                 item.itemCategory,
                 item.uom || "-",
-                item.batchNumber || "-",
-                item.expiryDate || "-",
+                // item.batchNumber || "-",
+                // item.expiryDate || "-",
                 item.quantity || "-",
                 item.purchaseRate || "-",
-                item.unitPrice || "-",
+                // item.unitPrice || "-",
                 item.amount || "-",
               ])}
             />
@@ -368,7 +373,7 @@ export default function CreatePurchaseOrder() {
                 "Select",
                 "Edit",
                 "Item Name",
-                "Item Description",
+                "Item Name",
                 "Item Balance",
                 "UOM",
                 "Quantity ",
@@ -486,6 +491,25 @@ export default function CreatePurchaseOrder() {
             </div>
             <form>
               <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+                <CustomSelectSearch
+                  options={itemOptions}
+                  label="Item Name"
+                  value={form.itemName}
+                  placeholder="Enter Product Name"
+                  onChange={(val) => {
+                    console.log("🚀 ~ CreatePurchaseOrder ~ val:", val);
+
+                    const selectedItem = items.find((i: any) => i._id === val);
+
+                    setForm((prev) => ({
+                      ...prev,
+                      itemName: val,
+                      itemCode: selectedItem?.itemCode || "",
+                      itemCategory: selectedItem?.itemCategory || "",
+                      uom: selectedItem?.uom || "",
+                    }));
+                  }}
+                />
                 <CustomInput
                   label="Item Code"
                   disabled
@@ -498,23 +522,7 @@ export default function CreatePurchaseOrder() {
                     }))
                   }
                 />
-                <CustomSelectSearch
-                  options={itemOptions}
-                  label="Item Name"
-                  value={form.itemName}
-                  placeholder="Enter Product Name"
-                  onChange={(val) => {
-                    const selectedItem = items.find((i: any) => i._id === val);
 
-                    setForm((prev) => ({
-                      ...prev,
-                      itemName: val,
-                      itemCode: selectedItem?.itemCode || "",
-                      itemCategory: selectedItem?.itemCategory || "",
-                      uom: selectedItem?.uom || "",
-                    }));
-                  }}
-                />
                 <CustomInput
                   label="Item Category"
                   value={form.itemCategory}
@@ -535,7 +543,7 @@ export default function CreatePurchaseOrder() {
                   }
                 />
 
-                <CustomInput
+                {/* <CustomInput
                   label="Batch Number"
                   placeholder="Enter Batch Number"
                   value={form.batchNumber}
@@ -552,7 +560,7 @@ export default function CreatePurchaseOrder() {
                   onChange={(v) =>
                     setForm((prev) => ({ ...prev, expiryDate: v }))
                   }
-                />
+                /> */}
                 <CustomInput
                   label="Quantity"
                   placeholder="Enter Quantity"
@@ -565,28 +573,38 @@ export default function CreatePurchaseOrder() {
                   label="Purchase Rate"
                   placeholder="Enter Purchase Rate"
                   value={form.purchaseRate}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setForm((prev) => ({
                       ...prev,
                       purchaseRate: e.target.value,
-                    }))
-                  }
+                    }));
+
+                    let subTotal =
+                      Number(form.quantity) * Number(e.target.value);
+                    if (!isNaN(subTotal)) {
+                      setForm((prev) => ({
+                        ...prev,
+                        amount: subTotal.toString(),
+                      }));
+                    }
+                  }}
                 />
-                <CustomInput
+                {/* <CustomInput
                   label="Unit Price"
                   placeholder="Enter Unit Price"
                   value={form.unitPrice}
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, unitPrice: e.target.value }))
                   }
-                />
+                /> */}
                 <CustomInput
                   label="Amount"
                   placeholder="Enter Amount"
                   value={form.amount}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, amount: e.target.value }))
-                  }
+                  // onChange={(e) => {
+
+                  //   }
+                  // }}
                 />
               </div>
 
