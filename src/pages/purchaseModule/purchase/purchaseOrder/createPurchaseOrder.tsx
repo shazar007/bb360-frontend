@@ -26,9 +26,12 @@ export default function CreatePurchaseOrder() {
   const [partyAccount, setPartyAccount] = useState("");
   const [partyReference, setPartyReference] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  console.log(
+    "🚀 ~ createPurchaseOrder.tsx:29 ~ CreatePurchaseOrder ~ deliveryAddress:",
+    deliveryAddress,
+  );
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
-  // console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", tableData)
   const [form, setForm] = useState({
     itemName: "",
     itemCode: "",
@@ -84,7 +87,6 @@ export default function CreatePurchaseOrder() {
       },
     ]);
 
-    // reset form
     setForm({
       itemName: "",
       itemCode: "",
@@ -179,7 +181,6 @@ export default function CreatePurchaseOrder() {
               <Icon icon="ion:play-back-outline" className="text-lg" />
               Back
             </button>
-            {/* Print */}
             <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
@@ -209,7 +210,6 @@ export default function CreatePurchaseOrder() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            {/* Column 1 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Purchase Order"
@@ -224,7 +224,6 @@ export default function CreatePurchaseOrder() {
               />
             </div>
 
-            {/* Column 2 */}
             <div className="space-y-1.5">
               <CustomSelect
                 label="Party Account"
@@ -249,12 +248,10 @@ export default function CreatePurchaseOrder() {
                 label="Party Reference"
                 value={partyReference}
                 options={[{ label: partyReference, value: partyReference }]}
-                // disabled
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
             </div>
 
-            {/* Column 3 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Delivery Address"
@@ -333,7 +330,7 @@ export default function CreatePurchaseOrder() {
                 "Unit Price",
                 "Amount",
               ]}
-              data={tableData.map((item, index: number) => [
+              data={tableData.map((item) => [
                 <Icon
                   icon="fluent:checkbox-checked-16-regular"
                   className="text-primary text-xl"
@@ -377,7 +374,7 @@ export default function CreatePurchaseOrder() {
                 "Item Weight",
                 "Memo",
               ]}
-              data={tableData.map((item, index) => [
+              data={tableData.map((item) => [
                 <Icon icon="fluent:checkbox-checked-16-regular" />,
                 <Icon icon="qlementine-icons:menu-burger-16" />,
                 item.itemName,

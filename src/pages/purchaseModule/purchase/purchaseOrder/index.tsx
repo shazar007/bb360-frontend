@@ -22,8 +22,6 @@ export default function PurchaseOrder() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const printRef = useRef(null);
 
-  // Function to handle printing
-
   const [form, setForm] = useState({
     poNumber: "",
     date: "",
@@ -55,7 +53,7 @@ export default function PurchaseOrder() {
     setForm({
       poNumber: item.poNumber || "",
       date: item.date || item.createdAt || "",
-      partyAccount: item.partyAccount?._id || "", // ✅ IMPORTANT ID
+      partyAccount: item.partyAccount?._id || "",
       partyReference: item.partyReference || "",
       deliveryAddress: item.deliveryAddress || "",
       type: item.type || "",
@@ -116,7 +114,7 @@ export default function PurchaseOrder() {
 
     setTimeout(() => {
       handlePrint();
-    }, 300); // give React time
+    }, 300);
   };
   return (
     <>

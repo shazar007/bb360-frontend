@@ -6,7 +6,6 @@ export default function DeliveryChallan() {
   const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -37,7 +36,6 @@ export default function DeliveryChallan() {
         </div>
       </div>
 
-      {/* Table Section */}
       <div className="mt-2 bg-white rounded-2xl pb-4">
         <CustomTable
           norounded
@@ -59,7 +57,9 @@ export default function DeliveryChallan() {
               <Icon
                 icon="basil:edit-outline"
                 className="text-primary text-lg cursor-pointer"
-                onClick={() => goTo("/sale-module/sales/delivery-challan/create")}
+                onClick={() =>
+                  goTo("/sale-module/sales/delivery-challan/create")
+                }
               />,
               <Icon
                 icon="hugeicons:view"

@@ -2,7 +2,6 @@ import { Icon } from "@iconify/react";
 import { NavLink, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/logo.png";
-
 import { navItems } from "../../utils/constant";
 import ProfileImage from "../profileImage";
 
@@ -71,7 +70,7 @@ export default function TopBar() {
                 <Icon
                   icon="weui:arrow-filled"
                   className={`text-lg transition-transform ${
-                    openMenu === index ? "rotate-180" : "rotate-90"
+                    openMenu === index ? "rotate-270" : "rotate-90"
                   }`}
                 />
               </button>
@@ -216,7 +215,7 @@ export default function TopBar() {
           <img
             src={Logo}
             alt="logo"
-            className="w-auto h-8 mix-blend-multiply"
+            className="w-auto h-12 mix-blend-multiply"
           />
 
           <button onClick={() => setMobileMenuOpen(false)}>
@@ -230,12 +229,18 @@ export default function TopBar() {
               {item.children ? (
                 <button
                   onClick={() => toggleMenu(index)}
-                  className="flex items-center justify-between w-full px-4 py-2 text-heading1 hover:bg-[#ECF0F4] rounded-md"
+                  className={`flex items-center justify-between w-full px-4 py-2  transition ${
+                    isParentActive(item)
+                      ? "text-primary font-semibold"
+                      : "text-heading1 font-normal"
+                  }`}
                 >
                   {item.name}
                   <Icon
                     icon="weui:arrow-filled"
-                    className={`transition-transform text-lf ${openMenu === index ? "rotate-180" : "rotate-90"}`}
+                    className={`transition-transform text-lg ${
+                      openMenu === index ? "rotate-180" : "rotate-90"
+                    }`}
                   />
                 </button>
               ) : (
@@ -257,7 +262,11 @@ export default function TopBar() {
                             onClick={() =>
                               toggleSubMenu(`${index}-${childIndex}`)
                             }
-                            className="flex items-center justify-between w-full px-4 py-2 text-sm text-heading1 hover:bg-[#ECF0F4] rounded-md"
+                            className={`flex items-center justify-between w-full px-4 py-2 text-sm rounded-md transition ${
+                              isParentActive(child)
+                                ? "text-primary font-semibold"
+                                : "text-heading1 font-normal"
+                            }`}
                           >
                             {child.name}
                             <Icon
@@ -266,7 +275,7 @@ export default function TopBar() {
                                 openSubMenu[`${index}-${childIndex}`]
                                   ? "rotate-180"
                                   : "rotate-90"
-                              }`}
+                              } ${isParentActive(child) ? "text-primary" : "text-heading1"}`}
                             />
                           </button>
                           {child.children &&
@@ -277,7 +286,13 @@ export default function TopBar() {
                                     key={subIndex}
                                     to={sub.path || "#"}
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="block px-4 py-2 text-sm text-heading1 hover:bg-[#ECF0F4] rounded-md"
+                                    className={({ isActive }) =>
+                                      `block px-4 py-2 text-sm rounded-md ${
+                                        isActive
+                                          ? "text-primary font-semibold"
+                                          : "text-heading1 font-normal"
+                                      }`
+                                    }
                                   >
                                     {sub.name}
                                   </NavLink>
@@ -289,9 +304,15 @@ export default function TopBar() {
                         <NavLink
                           to={child.path || "#"}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block px-4 py-2 text-sm text-heading1 hover:bg-[#ECF0F4] rounded-md"
+                          className={({ isActive }) =>
+                            `flex items-center justify-between px-4 py-2 text-sm rounded-md ${
+                              isActive
+                                ? "text-primary font-semibold"
+                                : "text-heading1 font-normal"
+                            }`
+                          }
                         >
-                          {child.name}
+                          <span>{child.name}</span>
                         </NavLink>
                       )}
                     </div>

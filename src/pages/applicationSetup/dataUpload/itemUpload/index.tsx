@@ -189,20 +189,15 @@ export default function DataUpload() {
         const formatExcelDate = (val: any) => {
           if (!val) return "";
 
-          // MM/DD/YYYY
           if (typeof val === "string" && val.includes("/")) {
             const [m, d, y] = val.split("/");
             return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
           }
-
-          // Excel serial date (46142)
           if (typeof val === "number") {
             const excelEpoch = new Date(1899, 11, 30);
             const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
             return jsDate.toISOString().split("T")[0];
           }
-
-          // ISO or fallback
           const d = new Date(val);
           return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
         };
@@ -341,8 +336,6 @@ export default function DataUpload() {
             <p className="text-xs font-normal text-heading1/36">
               Supported formats XLSX
             </p>
-
-            {/* FILE STATUS */}
             {fileLoading ? (
               <p className="text-sm font-medium text-primary">
                 Uploading file...

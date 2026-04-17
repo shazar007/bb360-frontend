@@ -30,8 +30,6 @@ export const InvoiceTemplate = forwardRef(({ data }: any, ref: any) => {
             </div>
           </div>
         </div>
-
-        {/* Info Section */}
         <div className="mt-6 flex justify-between">
           <div>
             <p className="font-bold montserrat">RECEIVING TO:</p>

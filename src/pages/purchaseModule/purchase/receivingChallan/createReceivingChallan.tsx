@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-// import { useNavigate } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
@@ -41,8 +40,6 @@ export default function CreateReceivingChallan() {
     updated[editIndex] = editRow;
 
     setRows(updated);
-
-    // 💾 save draft locally
     localStorage.setItem("receiving_challan", JSON.stringify(updated));
 
     setCreateChallan(false);
@@ -81,7 +78,6 @@ export default function CreateReceivingChallan() {
               <Icon icon="ion:play-back-outline" className="text-lg" />
               Back
             </button>
-            {/* Print */}
             <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print

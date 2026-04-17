@@ -1,6 +1,5 @@
 import CustomTable from "../../../../components/customTable";
 import { Icon } from "@iconify/react";
-import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useLocation } from "react-router-dom";
@@ -9,7 +8,18 @@ export default function OrderDetails() {
   const { goBack } = useAppNavigate();
   const location = useLocation();
   const receivedData = location.state?.item;
-  console.log(".................", receivedData);
+
+  console.log(
+    "🚀 ---------------------------------------------------------------------🚀",
+  );
+  console.log(
+    "🚀 ~ orderDetails.tsx:12 ~ OrderDetails ~ receivedData:",
+    receivedData,
+  );
+  console.log(
+    "🚀 ---------------------------------------------------------------------🚀",
+  );
+
   return (
     <>
       <div className="mt-8">
@@ -42,17 +52,15 @@ export default function OrderDetails() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            {/* Column 1 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Purchase Order"
-                value={receivedData.partyReference}
+                value={receivedData.poNumber}
                 placeholder="TO BE GENERATE"
                 disabled
               />
               <CustomInput label="Date" value="2026-03-01" />
             </div>
-            {/* Column 2 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Party Account"
@@ -64,7 +72,6 @@ export default function OrderDetails() {
                 value={receivedData.partyReference}
               />
             </div>
-            {/* Column 3 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Delivery Address"
@@ -80,12 +87,12 @@ export default function OrderDetails() {
               />
             </div>
           </div>
-        </div>{" "}
+        </div>
         <div className="flex items-center p-4 mt-3 bg-white rounded-2xl">
           <div className="flex items-center gap-8 overflow-auto md:w-full w-90">
             <p className="text-sm">Order Details</p>
           </div>
-        </div>{" "}
+        </div>
         <div>
           <CustomTable
             norounded
@@ -103,7 +110,7 @@ export default function OrderDetails() {
               "Unit Price",
               "Amount",
             ]}
-            data={receivedData.items.map((item: any, index: number) => [
+            data={receivedData.items.map((item: any) => [
               <Icon
                 icon="fluent:checkbox-checked-16-regular"
                 className="text-primary text-xl"

@@ -35,7 +35,7 @@ export default function ReceivingChallan() {
 
     setTimeout(() => {
       handlePrint();
-    }, 300); // give React time
+    }, 300);
   };
   return (
     <>
@@ -117,7 +117,6 @@ export default function ReceivingChallan() {
 
               item?.purchaseOrder?.poNumber || "-",
 
-              // ✅ format date
               item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",
