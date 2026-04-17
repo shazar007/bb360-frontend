@@ -8,7 +8,6 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
-// import { partyAccounts } from "../../../../utils/constant";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import {
   createPurchaseOrderApi,
@@ -31,20 +30,15 @@ export default function CreatePurchaseOrder() {
   const [taxPercentage, setTaxPercentage] = useState("");
   const [type, setType] = useState("");
   const [loading, setLoading] = useState(false);
-  // console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", tableData)
   const [form, setForm] = useState({
     itemName: "",
     itemCode: "",
     itemCategory: "",
-    // batchNumber: "",
     quantity: "",
     purchaseRate: "",
-    // unitPrice: "",
     amount: "",
     uom: "",
-    // expiryDate: "",
   });
-  console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", form);
 
   const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
@@ -262,7 +256,6 @@ export default function CreatePurchaseOrder() {
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 value={totalAmount}
                 disabled
-                // onChange={(e) => setTotalAmount(e.target.value)}
               />
             </div>
 

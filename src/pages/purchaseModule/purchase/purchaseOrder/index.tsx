@@ -44,7 +44,6 @@ export default function PurchaseOrder() {
     refetchOnReconnect: false,
   });
   const ordersData = AllOrders?.data?.data || [];
-  console.log("🚀 ~ PurchaseOrder ~ ordersData:", ordersData);
   const { goTo, goWithState } = useAppNavigate();
   const handleCreate = () => {
     goTo("/purchase-module/purchase/purchase-order/create-order");
