@@ -34,15 +34,11 @@ export default function CreatePurchaseOrder() {
     itemName: "",
     itemCode: "",
     itemCategory: "",
-    // batchNumber: "",
     quantity: "",
     purchaseRate: "",
-    // unitPrice: "",
     amount: "",
     uom: "",
-    // expiryDate: "",
   });
-  console.log("🚀 ~ CreatePurchaseOrder ~ tableData:", form);
 
   const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
