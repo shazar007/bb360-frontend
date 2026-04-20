@@ -8,18 +8,6 @@ export default function OrderDetails() {
   const { goBack } = useAppNavigate();
   const location = useLocation();
   const receivedData = location.state?.item;
-
-  console.log(
-    "🚀 ---------------------------------------------------------------------🚀",
-  );
-  console.log(
-    "🚀 ~ orderDetails.tsx:12 ~ OrderDetails ~ receivedData:",
-    receivedData,
-  );
-  console.log(
-    "🚀 ---------------------------------------------------------------------🚀",
-  );
-
   return (
     <>
       <div className="mt-8">
@@ -65,11 +53,11 @@ export default function OrderDetails() {
               <CustomInput
                 label="Party Account"
                 placeholder="Select Party"
-                value={receivedData.partyAccount.distributorName}
+                value={receivedData.partyAccount.vendorName || ""}
               />
               <CustomInput
                 label="Party Reference"
-                value={receivedData.partyReference}
+                value={receivedData.partyAccount.vendorCategory || ""}
               />
             </div>
             <div className="space-y-1.5">
@@ -127,7 +115,7 @@ export default function OrderDetails() {
               // item.expiryDate || "-",
               item.quantity || "-",
               item.purchaseRate || "-",
-              item.unitPrice || "-",
+              // item.unitPrice || "-",
               item.amount || "-",
             ])}
           />

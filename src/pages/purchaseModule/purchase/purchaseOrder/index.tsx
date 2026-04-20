@@ -26,7 +26,7 @@ export default function PurchaseOrder() {
     poNumber: "",
     date: "",
     partyAccount: "",
-    partyReference: "",
+    partyCategory: "",
     deliveryAddress: "",
     type: "",
   });
@@ -53,8 +53,8 @@ export default function PurchaseOrder() {
     setForm({
       poNumber: item.poNumber || "",
       date: item.date || item.createdAt || "",
-      partyAccount: item.partyAccount?._id || "",
-      partyReference: item.partyReference || "",
+      partyAccount: item.partyAccount?._id || "", // ✅ IMPORTANT ID
+      partyCategory: item.partyCategory || "",
       deliveryAddress: item.deliveryAddress || "",
       type: item.type || "",
     });
@@ -84,7 +84,7 @@ export default function PurchaseOrder() {
         poNumber: form.poNumber,
         date: form.date,
         partyAccount: form.partyAccount,
-        partyReference: form.partyReference,
+        partyCategory: form.partyCategory,
         deliveryAddress: form.deliveryAddress,
         type: form.type,
         items: tableData.map((item: any) => ({
@@ -100,7 +100,7 @@ export default function PurchaseOrder() {
       notifySuccess("Updated Successfully");
       setOpenModal(false);
       setEditIndex(null);
-      refetch();
+      // refetch();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Update failed");
     }
@@ -177,7 +177,7 @@ export default function PurchaseOrder() {
               "Purchase Order",
               "Date",
               "Party Account",
-              "Party Reference",
+              "Party Category",
               "Deliver Address",
               "Type",
             ]}
@@ -215,8 +215,8 @@ export default function PurchaseOrder() {
               dayjs(item.createdAt).isValid()
                 ? dayjs(item.createdAt).format("DD-MMM-YYYY")
                 : "-",
-              item.partyAccount.distributorName || "-",
-              item.partyReference || "-",
+              item.partyAccount?.vendorName || "-",
+              item.partyCategory || "-",
               item.deliveryAddress || "-",
               item.type || "-",
             ])}

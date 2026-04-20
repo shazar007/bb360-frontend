@@ -10,6 +10,7 @@ export const HTTP_CLIENT = axios.create({
 let isSessionExpiredHandled = false;
 
 export const setupInterceptors = (navigate: any) => {
+  console.log("TOKEN FROM COOKIE:", Cookies.get("token"));
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
       const token = Cookies.get("token");
@@ -17,10 +18,7 @@ export const setupInterceptors = (navigate: any) => {
       console.log("TOKEN FROM COOKIE:", token);
 
       if (token) {
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        };
+        config.headers.Authorization = `Bearer ${token}`;
       }
 
       return config;

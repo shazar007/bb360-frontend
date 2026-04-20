@@ -8,13 +8,13 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
-import { partyAccounts } from "../../../../utils/constant";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import {
   createPurchaseOrderApi,
   getAllOrders,
 } from "../../../../api/purchaseOrder";
 import { SyncLoader } from "react-spinners";
+import { getAllVendors } from "../../../../api/vendorServices";
 
 const tabs = ["Items Details", "Terms and Conditions", "Summary"];
 export default function CreatePurchaseOrder() {
@@ -25,7 +25,7 @@ export default function CreatePurchaseOrder() {
   const [advanceAmount, setAdvanceAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
   const [partyAccount, setPartyAccount] = useState("");
-  const [partyReference, setPartyReference] = useState("");
+  const [partyCategory, setPartyCategory] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
   const [type, setType] = useState("");
@@ -48,17 +48,32 @@ export default function CreatePurchaseOrder() {
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
-  const { refetch } = useQuery({
-    queryKey: ["getAllOrder"],
-    queryFn: getAllOrders,
+  // const { refetch } = useQuery({
+  //   queryKey: ["getAllOrder"],
+  //   queryFn: getAllOrders,
 
+  //   staleTime: Infinity,
+  //   gcTime: 1000 * 60 * 10,
+
+  //   refetchOnWindowFocus: false,
+  //   refetchOnMount: false,
+  //   refetchOnReconnect: false,
+  // });
+
+  const { data: AllVendors, isLoading } = useQuery({
+    queryKey: ["getAllVendors"],
+    queryFn: getAllVendors,
     staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
   });
+
+  const partyAccounts =
+    AllVendors?.data?.vendors?.map((v: any) => ({
+      label: v.vendorName,
+      value: v._id,
+      id: v._id,
+      category: v.vendorCategory || "",
+    })) || [];
+
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -68,6 +83,20 @@ export default function CreatePurchaseOrder() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tableData));
   }, [tableData]);
+
+  useEffect(() => {
+    const subtotal = tableData.reduce(
+      (sum, item) => sum + Number(item.amount || 0),
+      0,
+    );
+
+    const taxPercent = Number(taxPercentage || 0);
+
+    const taxAmount = (subtotal * taxPercent) / 100;
+
+    setTotalAmount((subtotal + taxAmount).toFixed(2));
+  }, [tableData, taxPercentage]);
+
   const handleAddRow = () => {
     if (!form.itemName) {
       alert("Select item first");
@@ -119,7 +148,8 @@ export default function CreatePurchaseOrder() {
       }
 
       const payload = {
-        partyAccount: "69dcc84be8429accb2a934cc",
+        partyAccount: partyAccount,
+        partyCategory: partyCategory,
         deliveryAddress: deliveryAddress || "",
         tax: taxPercentage || "0",
         advanceAmount: Number(advanceAmount || 0),
@@ -141,7 +171,7 @@ export default function CreatePurchaseOrder() {
 
       setTableData([]);
       setPartyAccount("");
-      setPartyReference("");
+      setPartyCategory("");
       setDeliveryAddress("");
       setType("");
 
@@ -151,7 +181,7 @@ export default function CreatePurchaseOrder() {
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
-      refetch();
+      // refetch();
     }
   };
   return (
@@ -216,13 +246,13 @@ export default function CreatePurchaseOrder() {
                 value="2026-03-01"
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
+
               <CustomInput
-                label="Tax%"
-                type="number"
-                placeholder="Enter Tax in percentage"
+                label="Total Amount"
+                placeholder="Enter Total Amount"
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                value={taxPercentage}
-                onChange={(e) => setTaxPercentage(e.target.value)}
+                value={totalAmount}
+                disabled
               />
             </div>
 
@@ -238,19 +268,27 @@ export default function CreatePurchaseOrder() {
                   setPartyAccount(selectedValue);
 
                   const selected = partyAccounts.find(
-                    (p) => p.value === selectedValue,
+                    (p: any) => p.value === selectedValue,
                   );
+                  console.log("🚀 ~ CreatePurchaseOrder ~ selected:", selected);
 
-                  setPartyReference(selected?.reference || "");
+                  setPartyCategory(selected?.category || "");
                 }}
                 options={partyAccounts}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
-              <CustomSelect
+              {/* <CustomSelect
                 label="Party Reference"
                 value={partyReference}
                 options={[{ label: partyReference, value: partyReference }]}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              /> */}
+              <CustomInput
+                label="Party Category"
+                placeholder="Party Category"
+                value={partyCategory}
+                // onChange={(e) => setDeliveryAddress(e.target.value)}
+                disabled
               />
             </div>
 
@@ -279,11 +317,14 @@ export default function CreatePurchaseOrder() {
                 value={advanceAmount}
                 onChange={(e) => setAdvanceAmount(e.target.value)}
               />
+
               <CustomInput
-                label="Total Amount"
-                placeholder="Enter Total Amount"
-                value={totalAmount}
-                onChange={(e) => setTotalAmount(e.target.value)}
+                label="Tax%"
+                type="number"
+                placeholder="Enter Tax in percentage"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                value={taxPercentage}
+                onChange={(e) => setTaxPercentage(e.target.value)}
               />
             </div>
           </div>

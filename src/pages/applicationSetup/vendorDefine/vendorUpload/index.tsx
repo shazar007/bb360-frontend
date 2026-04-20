@@ -8,6 +8,7 @@ import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
+import { addVendorApi } from "../../../../api/vendorServices";
 const STORAGE_KEY = "temp_distributor_upload";
 export default function VendorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
@@ -111,13 +112,14 @@ export default function VendorUpload() {
       let failCount = 0;
 
       for (let item of tableData) {
-        if (!item.distributorName || !item.contactNumber) {
+        if (!item.vendorName || !item.contactNumber) {
           failCount++;
           continue;
         }
 
         const requestBody = {
-          distributorName: item.distributorName,
+          vendorName: item.vendorName,
+          vendorCategory: item.vendorCategory,
           contactNumber: item.contactNumber,
           address: item.address,
           city: item.city,
@@ -126,7 +128,7 @@ export default function VendorUpload() {
         };
 
         try {
-          await addDistributorApi(requestBody);
+          await addVendorApi(requestBody);
           successCount++;
         } catch (err) {
           const error = err as AxiosError<any>;
@@ -206,7 +208,10 @@ export default function VendorUpload() {
               : "",
           address: row["Address"] || row["address"] || "",
           city: row["city"] || row["City"] || "",
-          licenceNumber: row["licenceNumber"] || row["Licence Number"] || "",
+          licenceNumber:
+            row["licenceNumber"] ||
+            row["Licence Number/Income Tax Number"] ||
+            "",
           licenceExpiryDate: formatExcelDate(
             row["licenceExpiryDate"] ||
               row["licence Expiry Date"] ||
@@ -240,7 +245,7 @@ export default function VendorUpload() {
           "Contact Number": "",
           Address: "",
           City: "",
-          "Licence Number": "",
+          "Licence Number/Income Tax Number": "",
           "Licence Expiry Date": "",
         },
       ];
@@ -356,9 +361,7 @@ export default function VendorUpload() {
         </div>
         <div className="pb-4 mt-2 bg-white rounded-2xl">
           <div className="flex justify-between items-center px-4.5 py-2">
-            <p className="text-xs font-semibold text-primary">
-              Vendor_Temp
-            </p>
+            <p className="text-xs font-semibold text-primary">Vendor_Temp</p>
             <div className="flex items-center gap-2">
               <button
                 // onClick={() => setConfirm(true)}
@@ -382,13 +385,13 @@ export default function VendorUpload() {
             headers={[
               "Edit",
               "Select",
-              "Vendor Code",
+              // "Vendor Code",
               "Vendor Name",
               "Vendor Category",
               "Contact Number",
               "Address",
               "City",
-              "Licence Number",
+              "Licence Number/Income Tax Number",
               "Licence Expiry Date",
               "Licence Status",
             ]}
@@ -406,7 +409,7 @@ export default function VendorUpload() {
                 icon="fluent:checkbox-checked-16-regular"
                 className="text-lg cursor-pointer text-primary"
               />,
-              item.vendorCode || "TO BE GENERATE",
+              // item.vendorCode || "TO BE GENERATE",
               item.vendorName || "-",
               item.vendorCategory || "-",
               item.contactNumber || "-",
@@ -415,7 +418,7 @@ export default function VendorUpload() {
               item.licenceNumber || "-",
               item.licenceExpiryDate || "-",
               <div className="bg-[#FF0000]/12 w-max px-2 py-0.5 rounded-sm text-[#FF0000]">
-                <p>Expired</p>
+                <p>Null</p>
               </div>,
             ])}
           />
@@ -440,12 +443,12 @@ export default function VendorUpload() {
             </div>
 
             <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
-              <CustomInput
+              {/* <CustomInput
                 label="Vendor Code"
                 name="vendorCode"
                 value={form.vendorCode}
                 onChange={handleChange}
-              />
+              /> */}
 
               <CustomInput
                 label="Vendor Name"
@@ -483,7 +486,7 @@ export default function VendorUpload() {
               />
 
               <CustomInput
-                label="Licence Number"
+                label="Licence Number/Income Tax Number"
                 name="licenceNumber"
                 value={form.licenceNumber}
                 onChange={handleChange}
