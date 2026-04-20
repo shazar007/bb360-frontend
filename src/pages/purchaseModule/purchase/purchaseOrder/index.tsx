@@ -22,8 +22,6 @@ export default function PurchaseOrder() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const printRef = useRef(null);
 
-  // Function to handle printing
-
   const [form, setForm] = useState({
     poNumber: "",
     date: "",
@@ -55,7 +53,7 @@ export default function PurchaseOrder() {
     setForm({
       poNumber: item.poNumber || "",
       date: item.date || item.createdAt || "",
-      partyAccount: item.partyAccount?._id || "", // ✅ IMPORTANT ID
+      partyAccount: item.partyAccount?._id || "",
       partyCategory: item.partyCategory || "",
       deliveryAddress: item.deliveryAddress || "",
       type: item.type || "",
@@ -116,7 +114,7 @@ export default function PurchaseOrder() {
 
     setTimeout(() => {
       handlePrint();
-    }, 300); // give React time
+    }, 300);
   };
   return (
     <>
@@ -186,7 +184,7 @@ export default function PurchaseOrder() {
             data={ordersData.map((item: any, index: number) => [
               <Icon
                 icon="basil:edit-outline"
-                className="text-lg text-primary cursor-pointer"
+                className="text-lg cursor-pointer text-primary"
                 onClick={() =>
                   goWithState(
                     "/purchase-module/purchase/purchase-order/detail",
@@ -197,14 +195,14 @@ export default function PurchaseOrder() {
               <div
                 key={`view-${index}`}
                 onClick={() => triggerPrint(item)}
-                className="cursor-pointer flex justify-center"
+                className="flex justify-center cursor-pointer"
               >
                 <Icon icon="hugeicons:view" className="text-lg text-primary" />
               </div>,
 
               <div
                 key={`print-${index}`}
-                className="cursor-pointer flex justify-center"
+                className="flex justify-center cursor-pointer"
                 onClick={() => triggerPrint(item)}
               >
                 <Icon

@@ -117,7 +117,6 @@ export default function ReceivingChallan() {
 
               item?.purchaseOrder?.poNumber || "-",
 
-              // ✅ format date
               item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",

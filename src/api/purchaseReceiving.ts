@@ -6,7 +6,7 @@ export const getAllPurchaseReceiving = () => {
 };
 
 export const updatePurchaseReceiving = (id: string | number, values: any) => {
-  return HTTP_CLIENT.put(
+  return HTTP_CLIENT.post(
     `${ENDPOINTS.UPDATE_PURCHASE_RECEIVING}/${id}`,
     values,
   );

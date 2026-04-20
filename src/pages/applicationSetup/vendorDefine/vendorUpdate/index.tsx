@@ -113,7 +113,6 @@ export default function VendorUpdate() {
 
       setLoading(true);
 
-      // await updateDistributor(id, form); //This will use for Api
       updateDistributor(id, {
         vendorCode: form.vendorCode,
         vendorName: form.vendorName,

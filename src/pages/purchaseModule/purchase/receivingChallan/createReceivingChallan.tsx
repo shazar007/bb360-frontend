@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useGetPurchaseOrderByPoNumber } from "../../../../api/queries";
 import { SyncLoader } from "react-spinners";
 import { notifyError } from "../../../../components/toast";
+import CustomDatePicker from "../../../../components/datePicker";
 
 export default function CreateReceivingChallan() {
   const [createChallan, setCreateChallan] = useState(false);
@@ -43,7 +44,27 @@ export default function CreateReceivingChallan() {
   // const handleIdChange = () => {
   //   refetch(); // manually trigger API
   // };
+  useEffect(() => {
+    if (purchaseOrderData?.items) {
+      const mapped = purchaseOrderData.items.map((item: any) => ({
+        ...item,
 
+        // ✅ FIX ITEM ID SOURCE
+        itemId: item.item?._id || item._id,
+
+        orderedQty: item.quantity,
+
+        // editable fields
+        batchNumber: item.batchNumber || "",
+        expiryDate: item.expiryDate || "",
+        deliveredQty: "",
+        rejectedQty: "",
+        reason: "",
+      }));
+
+      setRows(mapped);
+    }
+  }, [purchaseOrderData]);
   const handleIdChange = async () => {
     if (!poNumber.trim()) {
       notifyError("Enter PO Number");
@@ -71,16 +92,15 @@ export default function CreateReceivingChallan() {
     if (editIndex === null) return;
 
     const updated = [...rows];
-    updated[editIndex] = editRow;
+
+    updated[editIndex] = {
+      ...editRow,
+      deliveredQty: Number(editRow.deliveredQty) || 0,
+      rejectedQty: Number(editRow.rejectedQty) || 0,
+    };
 
     setRows(updated);
-
-    // 💾 save draft locally
-    localStorage.setItem("receiving_challan", JSON.stringify(updated));
-
     setCreateChallan(false);
-    setEditIndex(null);
-    setEditRow(null);
   };
   const handleEdit = (item: any, index: number) => {
     setCreateChallan(true);
@@ -92,6 +112,40 @@ export default function CreateReceivingChallan() {
       ...prev,
       [key]: value,
     }));
+  };
+  const handleSubmit = () => {
+    const payload = {
+      purchaseOrder: purchaseOrderData._id,
+      taxAmount: purchaseOrderData.tax,
+      totalAmount: purchaseOrderData.totalAmount,
+
+      items: rows.map((item: any) => ({
+        item: item.itemId, // ✅ FIXED
+
+        orderedQty: item.orderedQty,
+        deliveredQty: Number(item.deliveredQty) || 0,
+        rejectedQty: Number(item.rejectedQty) || 0,
+        reason: item.reason || "",
+
+        // editable
+        batchNumber: item.batchNumber,
+        expiryDate: item.expiryDate
+          ? new Date(item.expiryDate).toISOString()
+          : null,
+
+        // readonly fields (still sent)
+        itemCode: item.itemCode,
+        itemName: item.itemName,
+        itemCategory: item.itemCategory,
+        uom: item.uom,
+        description: item.description,
+        quantity: item.quantity,
+        purchaseRate: item.purchaseRate,
+        amount: item.amount,
+      })),
+    };
+
+    console.log(payload);
   };
   return (
     <>
@@ -120,6 +174,7 @@ export default function CreateReceivingChallan() {
               Print
             </button>
             <button
+              onClick={handleSubmit}
               type="button"
               className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
             >
@@ -252,26 +307,24 @@ export default function CreateReceivingChallan() {
                 "Reason",
                 "Amount",
               ]}
-              data={purchaseOrderData?.items?.map(
-                (item: any, index: number) => [
-                  <Icon
-                    onClick={() => handleEdit(item, index)}
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                  item.itemCode,
-                  item.itemName,
-                  item.itemCategory,
-                  item.uom,
-                  "",
-                  "",
-                  item.quantity,
-                  "",
-                  "",
-                  "",
-                  item.amount,
-                ],
-              )}
+              data={rows.map((item: any, index: number) => [
+                <Icon
+                  onClick={() => handleEdit(item, index)}
+                  icon="basil:edit-outline"
+                  className="text-lg cursor-pointer text-primary"
+                />,
+                item.itemCode,
+                item.itemName,
+                item.itemCategory,
+                item.uom,
+                item.batchNumber,
+                item.expiryDate,
+                item.orderedQty,
+                item.deliveredQty,
+                item.rejectedQty,
+                item.reason,
+                item.amount,
+              ])}
             />
             ;
           </div>
@@ -318,11 +371,11 @@ export default function CreateReceivingChallan() {
                   value={editRow?.batchNumber || ""}
                   onChange={(e) => handleChange("batchNumber", e.target.value)}
                 />{" "}
-                <CustomInput
+                <CustomDatePicker
                   label="Expiry Date"
                   value={editRow?.expiryDate || ""}
-                  onChange={(e) => handleChange("expiryDate", e.target.value)}
-                />{" "}
+                  onChange={(value) => handleChange("expiryDate", value)}
+                />
                 <CustomInput
                   label="Ordered Quantity"
                   disabled

@@ -38,7 +38,6 @@ export default function CustomSelectSearch({
 
   const selected = options.find((opt) => opt.value === value);
 
-  // 🔍 Filtered options
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(search.toLowerCase()),
   );
@@ -48,14 +47,13 @@ export default function CustomSelectSearch({
       if (!dropdownRef.current) return;
       if (!dropdownRef.current.contains(e.target as Node)) {
         setOpen(false);
-        setSearch(""); // reset search on close
+        setSearch("");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🎯 focus input when open
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -117,7 +115,7 @@ export default function CustomSelectSearch({
                   onClick={() => {
                     onChange(opt.value);
                     setOpen(false);
-                    setSearch(""); // reset after select
+                    setSearch("");
                   }}
                   className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
                 >
