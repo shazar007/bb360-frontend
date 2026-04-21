@@ -21,7 +21,7 @@ export default function ItemUpdate() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const { data: AllItems, refetch } = useQuery({
+  const { data: AllItems, refetch,isLoading} = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
 
@@ -124,6 +124,7 @@ export default function ItemUpdate() {
 
           <CustomTable
             norounded
+            loading={isLoading}
             height="60vh"
             headers={[
               "Edit",

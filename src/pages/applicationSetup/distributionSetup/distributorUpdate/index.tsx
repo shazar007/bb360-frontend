@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllDistributor,
   updateDistributor,
+  deleteDistributor,
 } from "../../../../api/distributorServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
@@ -16,7 +17,9 @@ export default function DistributorUpdate() {
   const [isEdit, setIsEdit] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [confirm, setConfirm] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [form, setForm] = useState<any>({
     distributorCode: "",
     distributorName: "",
@@ -123,7 +126,31 @@ export default function DistributorUpdate() {
       setLoading(false);
     }
   };
+  const handleDeleteClick = (item: any) => {
+    setSelectedId(item._id);
+    setConfirm(true);
+    setOpenMenuIndex(null);
+  };
 
+  const handleDelete = () => {
+    if (!selectedId) return;
+
+    setDeleteLoading(true);
+
+    deleteDistributor(selectedId)
+      .then(() => {
+        notifySuccess("Distributor deleted successfully");
+        refetch();
+      })
+      .catch((err) => {
+        notifyError(err?.response?.data?.message || "Delete failed");
+      })
+      .finally(() => {
+        setDeleteLoading(false);
+        setConfirm(false);
+        setSelectedId(null);
+      });
+  };
   return (
     <>
       <div className="mt-8">
@@ -172,14 +199,14 @@ export default function DistributorUpdate() {
                       className="w-full px-2 py-1 text-left hover:bg-gray-100 cursor-pointer"
                       onClick={() => handleEdit(index)}
                     >
-                      Edit
+                      Edit Distributor
                     </button>
                     {/* ADD THIS */}
                     <button
                       className="w-full px-2 py-1 text-left text-red-500 hover:bg-gray-100 cursor-pointer"
-                      // onClick={() => handleDelete(index)}
+                      onClick={() => handleDeleteClick(item)}
                     >
-                      Delete
+                      Delete Distributor
                     </button>
                   </div>
                 )}
@@ -286,6 +313,46 @@ export default function DistributorUpdate() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white w-100 rounded-xl">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-60">
+              <p className="text-2xl font-semibold text-center">
+                Delete Distributor
+              </p>
+              <p className="text-center text-heading1">
+                Are you sure to delete this distributor?
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 p-4 mt-3">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => setConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                onClick={handleDelete}
+              >
+                {deleteLoading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Delete"
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

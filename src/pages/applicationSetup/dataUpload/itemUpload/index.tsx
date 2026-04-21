@@ -425,13 +425,7 @@ export default function DataUpload() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white w-100 rounded-xl b">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
-              <p
-                onClick={() => {
-                  setConfirm(false);
-                  setTableData([]);
-                }}
-                className="cursor-pointer"
-              >
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
                 ✕
               </p>
@@ -449,10 +443,7 @@ export default function DataUpload() {
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                onClick={() => {
-                  setConfirm(false);
-                  setTableData([]);
-                }}
+                onClick={() => setConfirm(false)}
               >
                 Cancel
               </button>

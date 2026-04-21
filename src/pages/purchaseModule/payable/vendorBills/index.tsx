@@ -57,6 +57,7 @@ export default function VendorBills() {
       </div>
       <div className="mt-2">
         <CustomTable
+        
           height="60vh"
           headers={[
             "Edit",

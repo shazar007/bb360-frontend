@@ -208,9 +208,10 @@ export default function DistributorUpload() {
             row["distributorName"] ||
             row["Distributor Name"] ||
             "",
-          contactNumber:
-            row["contactNumber"] || row["Contact Number"]
-              ? String(row["contactNumber"])
+          contactNumber: row["contactNumber"]
+            ? String(row["contactNumber"])
+            : row["Contact Number"]
+              ? String(row["Contact Number"])
               : "",
           address: row["Address"] || row["address"] || "",
           city: row["city"] || row["City"] || "",
@@ -514,17 +515,14 @@ export default function DistributorUpload() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white w-100 rounded-xl b">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
-              <p
-               onClick={() => setConfirm(false)}
-                className="cursor-pointer"
-              >
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
                 ✕
               </p>
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Distributor 
+                Delete Distributor
               </p>
               <p className="text-center text-heading1 ">
                 Are you sure to delete the Distributor ?

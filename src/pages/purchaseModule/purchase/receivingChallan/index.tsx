@@ -13,7 +13,11 @@ export default function ReceivingChallan() {
   const { goTo, goWithState } = useAppNavigate();
 
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { data: PurchaseReceiving, refetch } = useQuery({
+  const {
+    data: PurchaseReceiving,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseReceiving,
 
@@ -84,6 +88,7 @@ export default function ReceivingChallan() {
         <div className="mt-2">
           <CustomTable
             height="60vh"
+            loading={isLoading}
             headers={[
               "Details",
               "View",

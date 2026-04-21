@@ -18,6 +18,7 @@ export default function VendorUpdate() {
   const [confirm, setConfirm] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  
   const [form, setForm] = useState<any>({
     vendorCode: "",
     vendorName: "",

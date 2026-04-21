@@ -30,7 +30,7 @@ export default function PurchaseOrder() {
     deliveryAddress: "",
     type: "",
   });
-  const { data: AllOrders, refetch } = useQuery({
+  const { data: AllOrders, refetch ,isLoading} = useQuery({
     queryKey: ["getAllOrder"],
     queryFn: getAllOrders,
 
@@ -169,6 +169,7 @@ export default function PurchaseOrder() {
         </div>
         <div className="mt-2">
           <CustomTable
+          loading={isLoading}
             height="60vh"
             headers={[
               "Details",
