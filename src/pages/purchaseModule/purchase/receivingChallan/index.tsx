@@ -88,6 +88,7 @@ export default function ReceivingChallan() {
               "Details",
               "View",
               "Report",
+              "Challan Number",
               "Purchase Order Number",
               "Create Date",
               "Receiving Date",
@@ -115,8 +116,10 @@ export default function ReceivingChallan() {
                 className="text-lg cursor-pointer text-primary"
               />,
 
-              item?.purchaseOrder?.poNumber || "-",
-
+              item?.prNumber || "No PR",
+              item?.purchaseOrder?.poNumber
+                ? item.purchaseOrder.poNumber
+                : "No PO",
               item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",

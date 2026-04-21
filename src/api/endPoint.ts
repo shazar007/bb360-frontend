@@ -16,12 +16,17 @@ export const ENDPOINTS = {
 
   // ------------Vendor-------------
 
-  VENDORS: "/vendors",
+  ADD_VENDORS: "/vendors",
+  GET_ALL_VENDORS: "/vendors",
+  UPDATE_VENDORS: "/vendors",
+  DELETE_VENDORS: "/vendors",
 
   // ------------Distributor-------------
   ADD_DISTRIBUTOR: "/distributors",
   GET_ALL_DISTRIBUTOR: "/distributors",
   UPDATE_DISTRIBUTOR: "/distributors",
+  DELETE_DISTRIBUTOR: "/distributors",
+
   // ------------Distributor-------------
   PURCHASE_ORDER: "/purchase-orders",
 
@@ -30,3 +35,4 @@ export const ENDPOINTS = {
   ALL_PURCHASE_RECEIVING: "/purchase-receiving",
   UPDATE_PURCHASE_RECEIVING: "/purchase-receiving",
 };
+

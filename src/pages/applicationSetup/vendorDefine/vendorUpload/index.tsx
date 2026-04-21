@@ -3,12 +3,13 @@ import CustomTable from "../../../../components/customTable";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-import { addDistributorApi } from "../../../../api/distributorServices";
+// import { addDistributorApi } from "../../../../api/distributorServices";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import { addVendorApi } from "../../../../api/vendorServices";
+import CustomCheckbox from "../../../../components/customCheckbox";
 const STORAGE_KEY = "temp_distributor_upload";
 export default function VendorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
@@ -19,6 +20,7 @@ export default function VendorUpload() {
   const [saveRow, setSaveRow] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [form, setForm] = useState<any>({
     vendorCode: "",
     vendorName: "",
@@ -45,6 +47,11 @@ export default function VendorUpload() {
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  const toggleSelect = (index: number, value: boolean) => {
+    setSelectedRows((prev) =>
+      value ? [...prev, index] : prev.filter((i) => i !== index),
+    );
   };
 
   const handleSave = async () => {
@@ -87,9 +94,7 @@ export default function VendorUpload() {
       setEditIndex(null);
       setAddDistributor(false);
 
-      notifySuccess(
-        editIndex !== null ? "Updated Distributor" : "Added Distributor",
-      );
+      notifySuccess(editIndex !== null ? "Updated Vendor" : "Added Vendor");
     } catch (err) {
       notifyError("Something went wrong");
     } finally {
@@ -100,13 +105,13 @@ export default function VendorUpload() {
   const [uploadLoading, setUploadLoading] = useState(false);
 
   const handleUpload = async () => {
+    if (!tableData.length) {
+      notifyError("No data found");
+      return;
+    }
+
     try {
       setUploadLoading(true);
-
-      if (!tableData.length) {
-        notifyError("No data found");
-        return;
-      }
 
       let successCount = 0;
       let failCount = 0;
@@ -197,14 +202,12 @@ export default function VendorUpload() {
         };
 
         const formatted = jsonData.map((row: any) => ({
-          distributorName:
-            row["distributor Name"] ||
-            row["distributorName"] ||
-            row["Distributor Name"] ||
-            "",
+          vendorName:
+            row["Vendor Name"] || row["vendorName"] || row["vendor name"] || "",
+          vendorCategory: row["Vendor Category"] || row["vendorCategory"] || "",
           contactNumber:
-            row["contactNumber"] || row["Contact Number"]
-              ? String(row["contactNumber"])
+            row["Contact Number"] || row["contactNumber"]
+              ? String(row["Contact Number"] || row["contactNumber"])
               : "",
           address: row["Address"] || row["address"] || "",
           city: row["city"] || row["City"] || "",
@@ -241,7 +244,8 @@ export default function VendorUpload() {
 
       const template = [
         {
-          "Distributor Name": "",
+          "Vendor Name": "",
+          "Vendor Category": "",
           "Contact Number": "",
           Address: "",
           City: "",
@@ -255,7 +259,7 @@ export default function VendorUpload() {
 
       XLSX.utils.book_append_sheet(wb, ws, "Template");
 
-      XLSX.writeFile(wb, "distributor-template.xlsx");
+      XLSX.writeFile(wb, "vendor-template.xlsx");
 
       notifySuccess("Template downloaded");
     } catch (err) {
@@ -364,7 +368,13 @@ export default function VendorUpload() {
             <p className="text-xs font-semibold text-primary">Vendor_Temp</p>
             <div className="flex items-center gap-2">
               <button
-                // onClick={() => setConfirm(true)}
+                onClick={() => {
+                  if (selectedRows.length === 0) {
+                    notifyError("No row selected");
+                    return;
+                  }
+                  setConfirm(true);
+                }}
                 className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
               >
                 <Icon icon="proicons:delete" className="text-xl" />
@@ -405,9 +415,9 @@ export default function VendorUpload() {
                   setAddDistributor(true);
                 }}
               />,
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
+              <CustomCheckbox
+                checked={selectedRows.includes(index)}
+                onChange={(v) => toggleSelect(index, v)}
               />,
               // item.vendorCode || "TO BE GENERATE",
               item.vendorName || "-",
@@ -528,23 +538,16 @@ export default function VendorUpload() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white w-100 rounded-xl b">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
-              <p
-                onClick={() => {
-                  setTableData([]);
-                  setConfirm(false);
-                }}
-                className="cursor-pointer"
-              >
-                {" "}
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 ✕
               </p>
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Product
+                Delete Vendor
               </p>
               <p className="text-center text-heading1 ">
-                Are you sure to delete the product?
+                Are you sure to delete the vendor?
               </p>
             </div>
 
@@ -552,16 +555,21 @@ export default function VendorUpload() {
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                onClick={() => {
-                  setTableData([]);
-                }}
+                onClick={() => setConfirm(false)}
               >
                 Cancel
               </button>
               <button
-                style={{
-                  boxShadow: "0px 1px 12px 0px #0000001F",
+                onClick={() => {
+                  const updated = tableData.filter(
+                    (_, i) => !selectedRows.includes(i),
+                  );
+                  setTableData(updated);
+                  setSelectedRows([]);
+                  setConfirm(false);
+                  notifySuccess(`${selectedRows.length} row(s) deleted`);
                 }}
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
                 className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
               >
                 Delete

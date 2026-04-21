@@ -169,10 +169,17 @@ export default function DistributorUpdate() {
                 {openMenuIndex === index && (
                   <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
                     <button
-                      className="w-full px-2 py-1 text-left hover:bg-gray-100"
+                      className="w-full px-2 py-1 text-left hover:bg-gray-100 cursor-pointer"
                       onClick={() => handleEdit(index)}
                     >
                       Edit
+                    </button>
+                    {/* ADD THIS */}
+                    <button
+                      className="w-full px-2 py-1 text-left text-red-500 hover:bg-gray-100 cursor-pointer"
+                      // onClick={() => handleDelete(index)}
+                    >
+                      Delete
                     </button>
                   </div>
                 )}

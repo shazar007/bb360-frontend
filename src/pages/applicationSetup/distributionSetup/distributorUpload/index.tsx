@@ -8,6 +8,10 @@ import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
+
+import CustomCheckbox from "../../../../components/customCheckbox";
+// import { deleteDistributor } from "../../../../api/distributorServices";
+
 const STORAGE_KEY = "temp_distributor_upload";
 export default function DistributorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
@@ -18,6 +22,7 @@ export default function DistributorUpload() {
   const [saveRow, setSaveRow] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [form, setForm] = useState<any>({
     itemCode: "",
     itemFullName: "",
@@ -45,7 +50,11 @@ export default function DistributorUpload() {
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
+  const toggleSelect = (index: number, value: boolean) => {
+    setSelectedRows((prev) =>
+      value ? [...prev, index] : prev.filter((i) => i !== index),
+    );
+  };
   const handleSave = async () => {
     try {
       if (!form.distributorName) {
@@ -363,6 +372,18 @@ export default function DistributorUpload() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => {
+                  if (selectedRows.length === 0) {
+                    notifyError("No row selected");
+                    return;
+                  }
+                  setConfirm(true);
+                }}
+                className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
+              >
+                <Icon icon="proicons:delete" className="text-xl" />
+              </button>
+              <button
+                onClick={() => {
                   setAddDistributor(true);
                 }}
                 className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer"
@@ -376,6 +397,7 @@ export default function DistributorUpload() {
             height="auto"
             headers={[
               "Edit",
+              "Select",
               "Distributor Name",
               "Contact Number",
               "Address",
@@ -392,6 +414,10 @@ export default function DistributorUpload() {
                   setEditIndex(index);
                   setAddDistributor(true);
                 }}
+              />,
+              <CustomCheckbox
+                checked={selectedRows.includes(index)}
+                onChange={(v) => toggleSelect(index, v)}
               />,
               item.distributorName,
               item.contactNumber,
@@ -489,10 +515,7 @@ export default function DistributorUpload() {
           <div className="bg-white w-100 rounded-xl b">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p
-                onClick={() => {
-                  setTableData([]);
-                  setConfirm(false);
-                }}
+               onClick={() => setConfirm(false)}
                 className="cursor-pointer"
               >
                 {" "}
@@ -501,10 +524,10 @@ export default function DistributorUpload() {
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Product
+                Delete Distributor 
               </p>
               <p className="text-center text-heading1 ">
-                Are you sure to delete the product?
+                Are you sure to delete the Distributor ?
               </p>
             </div>
 
@@ -512,13 +535,20 @@ export default function DistributorUpload() {
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                onClick={() => {
-                  setTableData([]);
-                }}
+                onClick={() => setConfirm(false)}
               >
                 Cancel
               </button>
               <button
+                onClick={() => {
+                  const updated = tableData.filter(
+                    (_, i) => !selectedRows.includes(i),
+                  );
+                  setTableData(updated);
+                  setSelectedRows([]);
+                  setConfirm(false);
+                  notifySuccess(`${selectedRows.length} row(s) deleted`);
+                }}
                 style={{
                   boxShadow: "0px 1px 12px 0px #0000001F",
                 }}

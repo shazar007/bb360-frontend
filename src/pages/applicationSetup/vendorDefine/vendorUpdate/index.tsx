@@ -2,19 +2,22 @@ import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import { useQuery } from "@tanstack/react-query";
-import { updateDistributor } from "../../../../api/distributorServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
+import { updateVendor } from "../../../../api/vendorServices";
 import { getAllVendors } from "../../../../api/vendorServices";
+import { deleteVendor } from "../../../../api/vendorServices";
 
 export default function VendorUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const [confirm, setConfirm] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [form, setForm] = useState<any>({
     vendorCode: "",
     vendorName: "",
@@ -113,9 +116,8 @@ export default function VendorUpdate() {
 
       setLoading(true);
 
-      // await updateDistributor(id, form); //This will use for Api
-      updateDistributor(id, {
-        vendorCode: form.vendorCode,
+      await updateVendor(id, {
+        // vendorCode: form.vendorCode,
         vendorName: form.vendorName,
         vendorCategory: form.vendorCategory,
         contactNumber: form.contactNumber,
@@ -124,8 +126,8 @@ export default function VendorUpdate() {
         licenceNumber: form.licenceNumber,
         licenceExpiryDate: form.licenceExpiryDate,
       });
-      notifySuccess("Updated successfully");
 
+      notifySuccess("Updated successfully");
       await refetch();
       closeModal();
     } catch (err: any) {
@@ -133,6 +135,31 @@ export default function VendorUpdate() {
     } finally {
       setLoading(false);
     }
+  };
+  const handleDeleteClick = (item: any) => {
+    setSelectedId(item._id);
+    setConfirm(true);
+    setOpenMenuIndex(null);
+  };
+
+  const handleDelete = () => {
+    if (!selectedId) return;
+
+    setDeleteLoading(true);
+
+    deleteVendor(selectedId)
+      .then(() => {
+        notifySuccess("Vendor deleted successfully");
+        refetch();
+      })
+      .catch((err) => {
+        notifyError(err?.response?.data?.message || "Delete failed");
+      })
+      .finally(() => {
+        setDeleteLoading(false);
+        setConfirm(false);
+        setSelectedId(null);
+      });
   };
 
   return (
@@ -177,12 +204,21 @@ export default function VendorUpdate() {
                 />
 
                 {openMenuIndex === index && (
-                  <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
+                  <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6 ">
                     <button
-                      className="w-full px-2 py-1 text-left hover:bg-gray-100"
+                      className="w-full px-2 py-1 text-left hover:bg-gray-100 cursor-pointer"
                       onClick={() => handleEdit(index)}
                     >
-                      Edit
+                      Edit Vendor
+                    </button>
+
+                    {/* ADD THIS */}
+                    <button
+                      className="w-full px-2 py-1 text-left text-red-500 hover:bg-gray-100 cursor-pointer"
+                      // onClick={() => handleDelete(index)}
+                      onClick={() => handleDeleteClick(item)}
+                    >
+                      Delete Vendor
                     </button>
                   </div>
                 )}
@@ -233,6 +269,7 @@ export default function VendorUpdate() {
                   name="vendorCode"
                   value={form.vendorCode}
                   onChange={(val: any) => handleChange("vendorCode", val)}
+                  disabled={true}
                 />
 
                 <CustomInput
@@ -304,6 +341,46 @@ export default function VendorUpdate() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white w-100 rounded-xl">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-60">
+              <p className="text-2xl font-semibold text-center">
+                Delete Vendor
+              </p>
+              <p className="text-center text-heading1">
+                Are you sure to delete this vendor?
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 p-4 mt-3">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => setConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                onClick={handleDelete}
+              >
+                {deleteLoading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Delete"
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

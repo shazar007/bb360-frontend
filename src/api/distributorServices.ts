@@ -12,3 +12,6 @@ export const getAllDistributor = () => {
 export const updateDistributor = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.UPDATE_DISTRIBUTOR}/${id}`, values);
 };
+export const deleteDistributor = (id: string | number) => {
+  return HTTP_CLIENT.delete(`${ENDPOINTS.DELETE_DISTRIBUTOR}/${id}`);
+};
