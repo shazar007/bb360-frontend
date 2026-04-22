@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import React, { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
-    <StrictMode>
+    <React.StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <QueryClientProvider client={queryClient}>
@@ -20,6 +20,6 @@ createRoot(document.getElementById("root")!).render(
           </QueryClientProvider>
         </PersistGate>
       </Provider>
-    </StrictMode>
+    </React.StrictMode>
   </BrowserRouter>,
 );

@@ -1,10 +1,12 @@
 import { Icon } from "@iconify/react";
 import type { ReactNode } from "react";
+import { SyncLoader } from "react-spinners";
 
 type CustomTableProps = {
   headers?: ReactNode[];
   data?: ReactNode[][];
   height?: string;
+  loading?: boolean;
   norounded?: boolean;
 };
 
@@ -13,7 +15,9 @@ export default function CustomTable({
   data,
   height,
   norounded,
+  loading,
 }: CustomTableProps) {
+  console.log("🚀 ~ CustomTable ~ data:", data)
   return (
     <div
       style={{ height: height || "40vh" }}
@@ -36,18 +40,37 @@ export default function CustomTable({
         </thead>
 
         <tbody>
-          {data?.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((cell, cellIndex) => (
-                <td
-                  key={cellIndex}
-                  className="p-4 text-sm border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 text-heading1 last:border-r-0"
-                >
-                  {cell}
-                </td>
-              ))}
+          {loading ? (
+            <tr>
+              <td colSpan={headers?.length || 1} className="p-6 text-center">
+                <div className="flex items-center justify-center">
+                  <SyncLoader size={18} color="#14CCC3" />
+                </div>
+              </td>
             </tr>
-          ))}
+          ) : data?.length ? (
+            data.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                {row.map((cell, cellIndex) => (
+                  <td
+                    key={cellIndex}
+                    className="p-4 text-sm border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 text-heading1 last:border-r-0"
+                  >
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={headers?.length || 1}
+                className="p-6 text-center text-gray-400"
+              >
+                No data found
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       <div
@@ -55,7 +78,7 @@ export default function CustomTable({
           norounded ? "rounded-t-0" : "rounded-b-xl"
         }`}
       >
-        <p className="text-sm text-heading2 bg-transparent">1 row selected</p>
+        <p className="text-sm bg-transparent text-heading2">1 row selected</p>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Icon

@@ -8,6 +8,13 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import {
+  createPurchaseOrderApi,
+  getAllOrders,
+} from "../../../../api/purchaseOrder";
+import { SyncLoader } from "react-spinners";
+import { getAllVendors } from "../../../../api/vendorServices";
 
 const tabs = ["Items Details", "Terms and Conditions", "Summary"];
 export default function CreatePurchaseOrder() {
@@ -15,14 +22,25 @@ export default function CreatePurchaseOrder() {
   const { goBack } = useAppNavigate();
   const STORAGE_KEY = "purchase_order_items";
   const [tableData, setTableData] = useState<any[]>([]);
+  const [advanceAmount, setAdvanceAmount] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [partyAccount, setPartyAccount] = useState("");
+  const [partyCategory, setPartyCategory] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [taxPercentage, setTaxPercentage] = useState("");
+  const [type, setType] = useState("");
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     itemName: "",
     itemCode: "",
     itemCategory: "",
+    quantity: "",
+    purchaseRate: "",
+    amount: "",
     uom: "",
-    expiryDate: "",
   });
-  const { data: AllItems, refetch } = useQuery({
+
+  const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
     placeholderData: (prev) => prev,
@@ -30,6 +48,32 @@ export default function CreatePurchaseOrder() {
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
+  // const { refetch } = useQuery({
+  //   queryKey: ["getAllOrder"],
+  //   queryFn: getAllOrders,
+
+  //   staleTime: Infinity,
+  //   gcTime: 1000 * 60 * 10,
+
+  //   refetchOnWindowFocus: false,
+  //   refetchOnMount: false,
+  //   refetchOnReconnect: false,
+  // });
+
+  const { data: AllVendors, isLoading } = useQuery({
+    queryKey: ["getAllVendors"],
+    queryFn: getAllVendors,
+    staleTime: Infinity,
+  });
+
+  const partyAccounts =
+    AllVendors?.data?.vendors?.map((v: any) => ({
+      label: v.vendorName,
+      value: v._id,
+      id: v._id,
+      category: v.vendorCategory || "",
+    })) || [];
+
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
@@ -39,6 +83,20 @@ export default function CreatePurchaseOrder() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tableData));
   }, [tableData]);
+
+  useEffect(() => {
+    const subtotal = tableData.reduce(
+      (sum, item) => sum + Number(item.amount || 0),
+      0,
+    );
+
+    const taxPercent = Number(taxPercentage || 0);
+
+    const taxAmount = (subtotal * taxPercent) / 100;
+
+    setTotalAmount((subtotal + taxAmount).toFixed(2));
+  }, [tableData, taxPercentage]);
+
   const handleAddRow = () => {
     if (!form.itemName) {
       alert("Select item first");
@@ -49,20 +107,20 @@ export default function CreatePurchaseOrder() {
       ...prev,
       {
         ...form,
-        quantity: "",
-        purchaseRate: "",
-        unitPrice: "",
-        amount: "",
       },
     ]);
 
-    // reset form
     setForm({
       itemName: "",
       itemCode: "",
       itemCategory: "",
+      // batchNumber: "",
+      quantity: "",
+      purchaseRate: "",
+      // unitPrice: "",
+      amount: "",
       uom: "",
-      expiryDate: "",
+      // expiryDate: "",
     });
 
     setCreateOrder(false);
@@ -74,6 +132,58 @@ export default function CreatePurchaseOrder() {
       value: item?._id ?? "",
     })) || [];
   const [createOrder, setCreateOrder] = useState(false);
+
+  const handleSaveOrder = async () => {
+    try {
+      setLoading(true);
+
+      if (!partyAccount) {
+        notifyError("Party Account is required");
+        return;
+      }
+
+      if (!tableData.length) {
+        notifyError("Add at least one item");
+        return;
+      }
+
+      const payload = {
+        partyAccount: partyAccount,
+        partyCategory: partyCategory,
+        deliveryAddress: deliveryAddress || "",
+        tax: taxPercentage || "0",
+        advanceAmount: Number(advanceAmount || 0),
+        totalAmount: Number(totalAmount || 0),
+        items: tableData.map((item: any) => ({
+          item: item.itemName,
+          quantity: Number(item.quantity || 0),
+          purchaseRate: Number(item.purchaseRate || 0),
+          amount: Number(item.amount || 0),
+          // unitPrice: Number(item.unitPrice || 0),
+        })),
+      };
+
+      console.log("🚀 FINAL PAYLOAD:", payload);
+
+      await createPurchaseOrderApi(payload);
+
+      notifySuccess("Purchase Order Created Successfully");
+
+      setTableData([]);
+      setPartyAccount("");
+      setPartyCategory("");
+      setDeliveryAddress("");
+      setType("");
+
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error: any) {
+      console.error(error);
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      // refetch();
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -95,17 +205,23 @@ export default function CreatePurchaseOrder() {
               <Icon icon="ion:play-back-outline" className="text-lg" />
               Back
             </button>
-            {/* Print */}
             <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
             </button>
             <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
+              onClick={handleSaveOrder}
+              disabled={loading}
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-60"
             >
-              <Icon icon="mynaui:save" className="text-lg" />
-              Save
+              {loading ? (
+                <SyncLoader size={6} color="#fff" speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="mynaui:save" className="text-xl" />
+                  Save
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -118,7 +234,6 @@ export default function CreatePurchaseOrder() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            {/* Column 1 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Purchase Order"
@@ -131,36 +246,87 @@ export default function CreatePurchaseOrder() {
                 value="2026-03-01"
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
+
+              <CustomInput
+                label="Total Amount"
+                placeholder="Enter Total Amount"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                value={totalAmount}
+                disabled
+              />
             </div>
 
-            {/* Column 2 */}
             <div className="space-y-1.5">
               <CustomSelect
                 label="Party Account"
-                placeholder="Xyz Company"
+                placeholder="Select Party"
+                value={partyAccount}
+                onChange={(val: any) => {
+                  const selectedValue =
+                    typeof val === "object" ? val?.value : val;
+
+                  setPartyAccount(selectedValue);
+
+                  const selected = partyAccounts.find(
+                    (p: any) => p.value === selectedValue,
+                  );
+                  console.log("🚀 ~ CreatePurchaseOrder ~ selected:", selected);
+
+                  setPartyCategory(selected?.category || "");
+                }}
+                options={partyAccounts}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
-              <CustomSelect
+              {/* <CustomSelect
                 label="Party Reference"
-                placeholder="Manufacturing Dep"
+                value={partyReference}
+                options={[{ label: partyReference, value: partyReference }]}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              /> */}
+              <CustomInput
+                label="Party Category"
+                placeholder="Party Category"
+                value={partyCategory}
+                // onChange={(e) => setDeliveryAddress(e.target.value)}
+                disabled
               />
             </div>
 
-            {/* Column 3 */}
             <div className="space-y-1.5">
               <CustomInput
                 label="Delivery Address"
                 placeholder="Address"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
               />
               <CustomSelect
                 label="Type"
                 placeholder="Local/Import"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                options={[
+                  { label: "Local", value: "local" },
+                  { label: "Import", value: "import" },
+                ]}
+                value={type}
+                onChange={(val) => setType(val)}
               />
             </div>
-            <div className="space-y-1.5"></div>
+            <div className="space-y-1.5">
+              <CustomInput
+                label="Advance Amount"
+                placeholder="Enter Advance Amount"
+                value={advanceAmount}
+                onChange={(e) => setAdvanceAmount(e.target.value)}
+              />
+
+              <CustomInput
+                label="Tax%"
+                type="number"
+                placeholder="Enter Tax in percentage"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                value={taxPercentage}
+                onChange={(e) => setTaxPercentage(e.target.value)}
+              />
+            </div>
           </div>
         </div>{" "}
         <div className="flex items-center p-4 mt-3 bg-white rounded-2xl">
@@ -178,27 +344,65 @@ export default function CreatePurchaseOrder() {
                 {tab}
               </p>
             ))}
-            {(activeTab === "Items Details" || activeTab === "") && (
+            {activeTab === "Items Details" && (
               <div className="flex items-center gap-2 ml-auto">
                 {/* <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
                   <Icon icon="proicons:delete" className="text-xl" />
                 </button> */}
-                <button className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer">
+                <button
+                  onClick={() => {
+                    setCreateOrder(true);
+                  }}
+                  className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer"
+                >
                   Add Row
                 </button>
               </div>
             )}
           </div>
-          <button
-            onClick={() => {
-              setCreateOrder(true);
-            }}
-            className="text-xs text-white bg-secondary rounded-md w-18 h-8.5 cursor-pointer"
-          >
-            Add Row
-          </button>
         </div>{" "}
         <div>
+          {activeTab === "Items Details" && (
+            <CustomTable
+              norounded
+              headers={[
+                "Select",
+                "Edit",
+                "Item Code",
+                "Item Name",
+                "Item Category",
+                "UOM",
+                // "Batch Number",
+                // "Expiry Date",
+                "Quantity ",
+                "Purchase Rate",
+                // "Unit Price",
+                "Amount",
+              ]}
+              data={tableData.map((item) => [
+                <Icon
+                  icon="fluent:checkbox-checked-16-regular"
+                  className="text-primary text-xl"
+                />,
+                <Icon
+                  icon="qlementine-icons:menu-burger-16"
+                  className="text-primary text-xl"
+                />,
+                item.itemCode,
+                items.find((i: any) => i._id === item.itemName)?.itemName ||
+                  "-",
+                item.itemCategory,
+                item.uom || "-",
+                // item.batchNumber || "-",
+                // item.expiryDate || "-",
+                item.quantity || "-",
+                item.purchaseRate || "-",
+                // item.unitPrice || "-",
+                item.amount || "-",
+              ])}
+            />
+          )}
+
           {activeTab === "Transaction Lines" && (
             <CustomTable
               norounded
@@ -206,7 +410,7 @@ export default function CreatePurchaseOrder() {
                 "Select",
                 "Edit",
                 "Item Name",
-                "Item Description",
+                "Item Name",
                 "Item Balance",
                 "UOM",
                 "Quantity ",
@@ -220,7 +424,7 @@ export default function CreatePurchaseOrder() {
                 "Item Weight",
                 "Memo",
               ]}
-              data={tableData.map((item, index) => [
+              data={tableData.map((item) => [
                 <Icon icon="fluent:checkbox-checked-16-regular" />,
                 <Icon icon="qlementine-icons:menu-burger-16" />,
                 item.itemName,
@@ -309,7 +513,9 @@ export default function CreatePurchaseOrder() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xs font-semibold text-heading1">Add Order</h2>
+              <h2 className="text-xs font-semibold text-heading1">
+                Add Purchase Order
+              </h2>
 
               <button
                 onClick={() => {
@@ -322,23 +528,14 @@ export default function CreatePurchaseOrder() {
             </div>
             <form>
               <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
-                <CustomInput
-                  label="Item Code"
-                  placeholder="Enter Item Code"
-                  value={form.itemCode}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      itemCode: e.target.value,
-                    }))
-                  }
-                />
                 <CustomSelectSearch
                   options={itemOptions}
                   label="Item Name"
                   value={form.itemName}
                   placeholder="Enter Product Name"
                   onChange={(val) => {
+                    console.log("🚀 ~ CreatePurchaseOrder ~ val:", val);
+
                     const selectedItem = items.find((i: any) => i._id === val);
 
                     setForm((prev) => ({
@@ -351,8 +548,22 @@ export default function CreatePurchaseOrder() {
                   }}
                 />
                 <CustomInput
+                  label="Item Code"
+                  disabled
+                  placeholder="Enter Item Code"
+                  value={form.itemCode}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      itemCode: e.target.value,
+                    }))
+                  }
+                />
+
+                <CustomInput
                   label="Item Category"
                   value={form.itemCategory}
+                  disabled
                   onChange={(e) =>
                     setForm((prev) => ({
                       ...prev,
@@ -363,14 +574,22 @@ export default function CreatePurchaseOrder() {
                 <CustomInput
                   label="UOM"
                   value={form.uom}
+                  disabled
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, uom: e.target.value }))
                   }
                 />
 
-                <CustomInput
+                {/* <CustomInput
                   label="Batch Number"
                   placeholder="Enter Batch Number"
+                  value={form.batchNumber}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      batchNumber: e.target.value,
+                    }))
+                  }
                 />
                 <CustomDatePicker
                   label="Expiry Date"
@@ -378,17 +597,52 @@ export default function CreatePurchaseOrder() {
                   onChange={(v) =>
                     setForm((prev) => ({ ...prev, expiryDate: v }))
                   }
+                /> */}
+                <CustomInput
+                  label="Quantity"
+                  placeholder="Enter Quantity"
+                  value={form.quantity}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, quantity: e.target.value }))
+                  }
                 />
-                <CustomInput label="Quantity" placeholder="Enter Quantity" />
                 <CustomInput
                   label="Purchase Rate"
                   placeholder="Enter Purchase Rate"
+                  value={form.purchaseRate}
+                  onChange={(e) => {
+                    setForm((prev) => ({
+                      ...prev,
+                      purchaseRate: e.target.value,
+                    }));
+
+                    let subTotal =
+                      Number(form.quantity) * Number(e.target.value);
+                    if (!isNaN(subTotal)) {
+                      setForm((prev) => ({
+                        ...prev,
+                        amount: subTotal.toString(),
+                      }));
+                    }
+                  }}
                 />
-                <CustomInput
+                {/* <CustomInput
                   label="Unit Price"
                   placeholder="Enter Unit Price"
+                  value={form.unitPrice}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, unitPrice: e.target.value }))
+                  }
+                /> */}
+                <CustomInput
+                  label="Amount"
+                  placeholder="Enter Amount"
+                  value={form.amount}
+                  // onChange={(e) => {
+
+                  //   }
+                  // }}
                 />
-                <CustomInput label="Amount" placeholder="Enter Amount" />
               </div>
 
               <div className="flex justify-end p-4">

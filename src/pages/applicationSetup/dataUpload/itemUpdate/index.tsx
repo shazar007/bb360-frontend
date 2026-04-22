@@ -20,15 +20,20 @@ export default function ItemUpdate() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const { data: AllItems, refetch } = useQuery({
+
+  const { data: AllItems, refetch,isLoading} = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
-    placeholderData: (prev) => prev,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-  });
 
+    placeholderData: (prev) => prev,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   const items = AllItems?.data?.items || [];
 
   const handleEdit = (index: number) => {
@@ -62,7 +67,7 @@ export default function ItemUpdate() {
         notifyError("Failed to delete item ❌");
       })
       .finally(() => {
-        setDeleteLoading(false); // 🔥 stop loading
+        setDeleteLoading(false);
         setConfirm(false);
         setSelectedId(null);
       });
@@ -119,6 +124,7 @@ export default function ItemUpdate() {
 
           <CustomTable
             norounded
+            loading={isLoading}
             height="60vh"
             headers={[
               "Edit",
@@ -214,7 +220,7 @@ export default function ItemUpdate() {
               })
               .finally(() => {
                 setSaveLoading(false);
-                setIsEdit(false); // ✅ modal close AFTER API
+                setIsEdit(false);
               });
           }}
         />

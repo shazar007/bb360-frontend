@@ -17,7 +17,6 @@ function MainRoutes() {
         className="flex-1 overflow-y-auto "
       >
         <Routes>
-          {/* Dashboard */}
           <Route path="/" element={<Navigate to="/360-dashboard" replace />} />
           <Route
             path="/360-dashboard"
@@ -27,7 +26,6 @@ function MainRoutes() {
               </ProtectedRoute>
             }
           />
-          {/* Application Setup */}
           <Route
             path="/application-setup/*"
             element={
@@ -36,7 +34,6 @@ function MainRoutes() {
               </ProtectedRoute>
             }
           />
-          {/* Purchase Module */}
           <Route
             path="/purchase-module/*"
             element={

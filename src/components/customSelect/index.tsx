@@ -10,7 +10,7 @@ type CustomSelectProps = {
   options?: Option[];
   value?: string;
   onChange?: (value: string) => void;
-  onBlur?: () => void; // <- add onBlur
+  onBlur?: () => void;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -23,7 +23,7 @@ export default function CustomSelect({
   options = [],
   value,
   onChange = () => {},
-  onBlur = () => {}, // <- default
+  onBlur = () => {},
   placeholder = "Select option",
   required = false,
   disabled = false,
@@ -56,7 +56,7 @@ export default function CustomSelect({
           if (disabled || options.length === 0) return;
           setOpen((prev) => !prev);
         }}
-        onBlur={onBlur} // <- pass Formik blur
+        onBlur={onBlur}
         className={`flex items-center justify-between h-10 px-4 rounded-md text-xs
         ${white ? "bg-white" : "bg-[#ECF0F4]"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
@@ -80,7 +80,7 @@ export default function CustomSelect({
             <div
               key={opt.value}
               onClick={() => {
-                onChange(opt.value); // <- Formik setFieldValue
+                onChange(opt.value);
                 setOpen(false);
               }}
               className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"

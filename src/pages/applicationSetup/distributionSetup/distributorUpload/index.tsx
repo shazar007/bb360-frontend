@@ -1,17 +1,28 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { addDistributorApi } from "../../../../api/distributorServices";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
+import type { AxiosError } from "axios";
+
+import CustomCheckbox from "../../../../components/customCheckbox";
+// import { deleteDistributor } from "../../../../api/distributorServices";
+
 const STORAGE_KEY = "temp_distributor_upload";
 export default function DistributorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [fileName, setFileName] = useState<string>("");
+  const [fileLoading, setFileLoading] = useState(false);
+  const [saveRow, setSaveRow] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [form, setForm] = useState<any>({
     itemCode: "",
     itemFullName: "",
@@ -39,51 +50,58 @@ export default function DistributorUpload() {
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
-  const handleSave = () => {
-    if (!form.distributorName) {
-      notifyError("Distributor Name is required");
-      return;
-    }
-
-    const newItem = {
-      ...form,
-      selected: false,
-    };
-
-    setTableData((prev) => {
-      const updated = [...prev];
-
-      if (editIndex !== null) {
-        updated[editIndex] = newItem;
-      } else {
-        updated.push(newItem);
-      }
-
-      return updated;
-    });
-
-    setForm({
-      distributorCode: "", // keep but not required
-      distributorName: "",
-      contactNumber: "",
-      address: "",
-      city: "",
-      licenceNumber: "",
-      licenceExpiryDate: "",
-    });
-
-    setEditIndex(null);
-    setAddDistributor(false);
-
-    notifySuccess(
-      editIndex !== null ? "Updated Distributor" : "Added Distributor",
+  const toggleSelect = (index: number, value: boolean) => {
+    setSelectedRows((prev) =>
+      value ? [...prev, index] : prev.filter((i) => i !== index),
     );
   };
-  const toggleSelect = (index: number, value: boolean) => {
-    const updated = [...tableData];
-    updated[index].selected = value;
-    setTableData(updated);
+  const handleSave = async () => {
+    try {
+      if (!form.distributorName) {
+        notifyError("Distributor Name is required");
+        return;
+      }
+
+      setSaveRow(true);
+
+      const newItem = {
+        ...form,
+        selected: false,
+      };
+
+      setTableData((prev) => {
+        const updated = [...prev];
+
+        if (editIndex !== null) {
+          updated[editIndex] = newItem;
+        } else {
+          updated.push(newItem);
+        }
+
+        return updated;
+      });
+
+      setForm({
+        distributorCode: "",
+        distributorName: "",
+        contactNumber: "",
+        address: "",
+        city: "",
+        licenceNumber: "",
+        licenceExpiryDate: "",
+      });
+
+      setEditIndex(null);
+      setAddDistributor(false);
+
+      notifySuccess(
+        editIndex !== null ? "Updated Distributor" : "Added Distributor",
+      );
+    } catch (err) {
+      notifyError("Something went wrong");
+    } finally {
+      setSaveRow(false);
+    }
   };
 
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -92,16 +110,20 @@ export default function DistributorUpload() {
     try {
       setUploadLoading(true);
 
-      const validData = tableData.filter(
-        (i) => i.distributorCode && i.distributorName,
-      );
-
-      if (!validData.length) {
-        notifyError("No valid data to upload");
+      if (!tableData.length) {
+        notifyError("No data found");
         return;
       }
 
-      for (const item of validData) {
+      let successCount = 0;
+      let failCount = 0;
+
+      for (let item of tableData) {
+        if (!item.distributorName || !item.contactNumber) {
+          failCount++;
+          continue;
+        }
+
         const requestBody = {
           distributorName: item.distributorName,
           contactNumber: item.contactNumber,
@@ -111,23 +133,141 @@ export default function DistributorUpload() {
           licenceExpiryDate: item.licenceExpiryDate,
         };
 
-        console.log("SENDING 👉", requestBody);
+        try {
+          await addDistributorApi(requestBody);
+          successCount++;
+        } catch (err) {
+          const error = err as AxiosError<any>;
 
-        await addDistributorApi(requestBody);
+          console.log("ERROR RESPONSE:", error.response?.data);
+
+          notifyError(error.response?.data?.message || "Upload failed");
+        }
       }
 
-      notifySuccess("Uploaded successfully");
+      if (successCount > 0) {
+        notifySuccess(`${successCount} uploaded successfully`);
+      }
 
-      localStorage.removeItem(STORAGE_KEY);
-      setTableData([]);
-    } catch (err: any) {
-      console.log("UPLOAD ERROR:", err?.response?.data);
-      notifyError(err?.response?.data?.message || "Upload failed");
+      if (failCount > 0) {
+        notifyError(`${failCount} failed`);
+      }
+
+      if (failCount === 0) {
+        localStorage.removeItem(STORAGE_KEY);
+        setTableData([]);
+      }
+    } catch (err) {
+      notifyError("Something went wrong");
     } finally {
       setUploadLoading(false);
     }
   };
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
+    setFileLoading(true);
+    setFileName(file.name);
+
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const data = event.target?.result;
+        const workbook = XLSX.read(data, { type: "binary" });
+
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
+
+        console.log("RAW EXCEL DATA:", jsonData);
+
+        const formatExcelDate = (val: any) => {
+          if (!val) return "";
+
+          if (typeof val === "string" && val.includes("/")) {
+            const [m, d, y] = val.split("/");
+            return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+          }
+
+          if (typeof val === "number") {
+            const excelEpoch = new Date(1899, 11, 30);
+            const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
+            return jsDate.toISOString().split("T")[0];
+          }
+
+          const d = new Date(val);
+          return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
+        };
+
+        const formatted = jsonData.map((row: any) => ({
+          distributorName:
+            row["distributor Name"] ||
+            row["distributorName"] ||
+            row["Distributor Name"] ||
+            "",
+          contactNumber: row["contactNumber"]
+            ? String(row["contactNumber"])
+            : row["Contact Number"]
+              ? String(row["Contact Number"])
+              : "",
+          address: row["Address"] || row["address"] || "",
+          city: row["city"] || row["City"] || "",
+          licenceNumber: row["licenceNumber"] || row["Licence Number"] || "",
+          licenceExpiryDate: formatExcelDate(
+            row["licenceExpiryDate"] ||
+              row["licence Expiry Date"] ||
+              row["Licence Expiry Date"],
+          ),
+          selected: false,
+        }));
+
+        console.log("FORMATTED:", formatted);
+
+        setTableData([...formatted]);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
+
+        notifySuccess("File loaded successfully");
+      } catch (err) {
+        notifyError("Invalid file format");
+      } finally {
+        setFileLoading(false);
+      }
+    };
+
+    reader.readAsBinaryString(file);
+  };
+  const handleDownloadTemplate = () => {
+    try {
+      setDownloadLoading(true);
+
+      const template = [
+        {
+          "Distributor Name": "",
+          "Contact Number": "",
+          Address: "",
+          City: "",
+          "Licence Number": "",
+          "Licence Expiry Date": "",
+        },
+      ];
+
+      const ws = XLSX.utils.json_to_sheet(template);
+      const wb = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(wb, ws, "Template");
+
+      XLSX.writeFile(wb, "distributor-template.xlsx");
+
+      notifySuccess("Template downloaded");
+    } catch (err) {
+      notifyError("Failed to download template");
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -152,6 +292,7 @@ export default function DistributorUpload() {
 
             <button
               onClick={handleUpload}
+              disabled={uploadLoading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
@@ -167,12 +308,19 @@ export default function DistributorUpload() {
               )}
             </button>
             <button
+              onClick={handleDownloadTemplate}
+              disabled={downloadLoading}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-45"
             >
-              {" "}
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Download Template
+              {downloadLoading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="basil:add-outline" className="text-lg" />
+                  Download Template
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -187,16 +335,34 @@ export default function DistributorUpload() {
               icon="hugeicons:file-add"
               className="text-5xl text-heading1/36"
             />
+
             <p className="text-xl font-semibold text-heading1">Drag & Drop</p>
+
             <p className="text-xs font-normal text-heading1/36">
               Supported formats XLSX
             </p>
-            <button
+            {fileLoading ? (
+              <p className="text-sm font-medium text-primary">
+                Uploading file...
+              </p>
+            ) : fileName ? (
+              <p className="text-sm font-medium text-green-600">
+                Selected: {fileName}
+              </p>
+            ) : null}
+
+            <label
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >
               Choose File
-            </button>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                hidden
+                onChange={handleFileUpload}
+              />
+            </label>
           </div>
         </div>
         <div className="pb-4 mt-2 bg-white rounded-2xl">
@@ -205,6 +371,18 @@ export default function DistributorUpload() {
               Distributor_Temp
             </p>
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  if (selectedRows.length === 0) {
+                    notifyError("No row selected");
+                    return;
+                  }
+                  setConfirm(true);
+                }}
+                className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
+              >
+                <Icon icon="proicons:delete" className="text-xl" />
+              </button>
               <button
                 onClick={() => {
                   setAddDistributor(true);
@@ -220,6 +398,7 @@ export default function DistributorUpload() {
             height="auto"
             headers={[
               "Edit",
+              "Select",
               "Distributor Name",
               "Contact Number",
               "Address",
@@ -236,6 +415,10 @@ export default function DistributorUpload() {
                   setEditIndex(index);
                   setAddDistributor(true);
                 }}
+              />,
+              <CustomCheckbox
+                checked={selectedRows.includes(index)}
+                onChange={(v) => toggleSelect(index, v)}
               />,
               item.distributorName,
               item.contactNumber,
@@ -314,8 +497,15 @@ export default function DistributorUpload() {
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
               >
-                <Icon icon="mynaui:save" className="text-xl" />
-                Save
+                {saveRow ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  <>
+                    {" "}
+                    <Icon icon="mynaui:save" className="text-xl" />
+                    Save
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -325,23 +515,17 @@ export default function DistributorUpload() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white w-100 rounded-xl b">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
-              <p
-                onClick={() => {
-                  setTableData([]);
-                  setConfirm(false);
-                }}
-                className="cursor-pointer"
-              >
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
                 ✕
               </p>
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Product
+                Delete Distributor
               </p>
               <p className="text-center text-heading1 ">
-                Are you sure to delete the product?
+                Are you sure to delete the Distributor ?
               </p>
             </div>
 
@@ -349,13 +533,20 @@ export default function DistributorUpload() {
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                onClick={() => {
-                  setTableData([]);
-                }}
+                onClick={() => setConfirm(false)}
               >
                 Cancel
               </button>
               <button
+                onClick={() => {
+                  const updated = tableData.filter(
+                    (_, i) => !selectedRows.includes(i),
+                  );
+                  setTableData(updated);
+                  setSelectedRows([]);
+                  setConfirm(false);
+                  notifySuccess(`${selectedRows.length} row(s) deleted`);
+                }}
                 style={{
                   boxShadow: "0px 1px 12px 0px #0000001F",
                 }}

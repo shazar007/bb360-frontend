@@ -29,13 +29,6 @@ export default function VendorBills() {
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
             />
           </div>
-          {/* <button
-            style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-            className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
-          >
-            Action
-            <Icon icon="weui:arrow-filled" className="text-lg rotate-90" />
-          </button> */}
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -64,6 +57,7 @@ export default function VendorBills() {
       </div>
       <div className="mt-2">
         <CustomTable
+        
           height="60vh"
           headers={[
             "Edit",

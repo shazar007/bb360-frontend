@@ -10,18 +10,15 @@ export const HTTP_CLIENT = axios.create({
 let isSessionExpiredHandled = false;
 
 export const setupInterceptors = (navigate: any) => {
-  // ================= REQUEST =================
+  console.log("TOKEN FROM COOKIE:", Cookies.get("token"));
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
-      const token = Cookies.get("token"); // ✅ ONLY from cookies
+      const token = Cookies.get("token");
 
       console.log("TOKEN FROM COOKIE:", token);
 
       if (token) {
-        config.headers = {
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        };
+        config.headers.Authorization = `Bearer ${token}`;
       }
 
       return config;
@@ -29,7 +26,6 @@ export const setupInterceptors = (navigate: any) => {
     (error: any) => Promise.reject(error),
   );
 
-  // ================= RESPONSE =================
   HTTP_CLIENT.interceptors.response.use(
     (response: any) => response,
     (error: any) => {
@@ -39,7 +35,7 @@ export const setupInterceptors = (navigate: any) => {
       if (status === 401 && !isSessionExpiredHandled && !isLogoutCall) {
         isSessionExpiredHandled = true;
 
-        Cookies.remove("token"); // ❌ remove cookie
+        Cookies.remove("token");
 
         notifyError("Session expired. Please login again.");
         navigate("/");

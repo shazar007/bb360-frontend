@@ -37,8 +37,6 @@ export default function CustomSelectSearch({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const selected = options.find((opt) => opt.value === value);
-
-  // 🔍 Filtered options
   const filteredOptions = options.filter((opt) =>
     opt.label.toLowerCase().includes(search.toLowerCase()),
   );
@@ -48,14 +46,13 @@ export default function CustomSelectSearch({
       if (!dropdownRef.current) return;
       if (!dropdownRef.current.contains(e.target as Node)) {
         setOpen(false);
-        setSearch(""); // reset search on close
+        setSearch("");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // 🎯 focus input when open
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100);
@@ -96,7 +93,6 @@ export default function CustomSelectSearch({
 
       {open && options.length > 0 && (
         <div className="absolute z-50 w-full mt-1 bg-white rounded-md shadow-md top-full">
-          {/* 🔍 Search Input */}
           <div className="p-2 border-b">
             <input
               ref={inputRef}
@@ -108,7 +104,6 @@ export default function CustomSelectSearch({
             />
           </div>
 
-          {/* 📋 Options */}
           <div className="overflow-auto max-h-48">
             {filteredOptions.length > 0 ? (
               filteredOptions.map((opt) => (
@@ -117,7 +112,7 @@ export default function CustomSelectSearch({
                   onClick={() => {
                     onChange(opt.value);
                     setOpen(false);
-                    setSearch(""); // reset after select
+                    setSearch("");
                   }}
                   className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
                 >
