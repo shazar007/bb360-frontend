@@ -5,44 +5,27 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { useEffect, useState } from "react";
 import { useGetPurchaseOrderByPoNumber } from "../../../../api/queries";
 import { SyncLoader } from "react-spinners";
-import { notifyError } from "../../../../components/toast";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import CustomDatePicker from "../../../../components/datePicker";
 
 export default function CreateReceivingChallan() {
   const [createChallan, setCreateChallan] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
+  const [tableItems, setTableItems] = useState<any[]>([]);
   const [poNumber, setPoNumber] = useState("");
-  const [rows, setRows] = useState<any[]>([
-    {
-      id: 1,
-      productCode: "112060",
-      productName: "Punjab Aata",
-      itemCategory: "Raw Material",
-      uom: "Kg",
-      batchNumber: "881525/10",
-      expiryDate: "25-Apr-2027",
-      orderedQty: 500,
-      deliveredQty: 500,
-      receivedQty: 498,
-      rejectedQty: 2,
-      reason: "Damaged",
-    },
-  ]);
 
   const {
     data: order,
     isLoading,
     refetch,
-    error,
+    // error,
   } = useGetPurchaseOrderByPoNumber(poNumber, {
     enabled: false, // 🚨 stops auto API call
     retry: false,
   });
+  
   let purchaseOrderData = (order as any)?.data?.po;
-
-  // const handleIdChange = () => {
-  //   refetch(); // manually trigger API
-  // };
 
   const handleIdChange = async () => {
     if (!poNumber.trim()) {
@@ -61,25 +44,26 @@ export default function CreateReceivingChallan() {
   };
 
   const { goBack } = useAppNavigate();
-  useEffect(() => {
-    const saved = localStorage.getItem("receiving_challan");
-    if (saved) {
-      setRows(JSON.parse(saved));
-    }
-  }, []);
+
   const handleSave = () => {
+  try {
     if (editIndex === null) return;
 
-    const updated = [...rows];
-    updated[editIndex] = editRow;
+    const updated = [...tableItems];
+    updated[editIndex] = { ...updated[editIndex], ...editRow };
 
-    setRows(updated);
+    setTableItems(updated);
     localStorage.setItem("receiving_challan", JSON.stringify(updated));
 
     setCreateChallan(false);
     setEditIndex(null);
     setEditRow(null);
-  };
+    notifySuccess("Challan updated successfully");
+  } catch (err) {
+    notifyError("Something went wrong");
+  }
+};
+
   const handleEdit = (item: any, index: number) => {
     setCreateChallan(true);
     setEditIndex(index);
@@ -91,6 +75,12 @@ export default function CreateReceivingChallan() {
       [key]: value,
     }));
   };
+
+  useEffect(() => {
+    if (purchaseOrderData?.items) {
+      setTableItems(purchaseOrderData.items);
+    }
+  }, [purchaseOrderData]);
   return (
     <>
       <div className="mt-8">
@@ -249,26 +239,26 @@ export default function CreateReceivingChallan() {
                 "Reason",
                 "Amount",
               ]}
-              data={purchaseOrderData?.items?.map(
-                (item: any, index: number) => [
-                  <Icon
-                    onClick={() => handleEdit(item, index)}
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                  item.itemCode,
-                  item.itemName,
-                  item.itemCategory,
-                  item.uom,
-                  "",
-                  "",
-                  item.quantity,
-                  "",
-                  "",
-                  "",
-                  item.amount,
-                ],
-              )}
+              data={tableItems?.map((item: any, index: number) => [
+                <Icon
+                  onClick={() => handleEdit(item, index)}
+                  icon="basil:edit-outline"
+                  className="text-lg cursor-pointer text-primary"
+                />,
+                item.itemCode,
+                item.itemName,
+                item.itemCategory,
+                item.uom,
+                item.batchNumber || "",
+                item.expiryDate
+                  ? new Date(item.expiryDate).toISOString().split("T")[0]
+                  : "",
+                item.quantity,
+                item.deliveredQty || "",
+                item.rejectedQty || "",
+                item.reason || "",
+                item.amount,
+              ])}
             />
             ;
           </div>
@@ -315,10 +305,11 @@ export default function CreateReceivingChallan() {
                   value={editRow?.batchNumber || ""}
                   onChange={(e) => handleChange("batchNumber", e.target.value)}
                 />{" "}
-                <CustomInput
+                <CustomDatePicker
                   label="Expiry Date"
                   value={editRow?.expiryDate || ""}
-                  onChange={(e) => handleChange("expiryDate", e.target.value)}
+                  onChange={(val) => handleChange("expiryDate", val)}
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />{" "}
                 <CustomInput
                   label="Ordered Quantity"
