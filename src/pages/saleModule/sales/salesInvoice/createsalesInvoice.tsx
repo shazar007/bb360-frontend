@@ -335,11 +335,10 @@ export default function CreateSalesInvoice() {
             </div>
 
             <div className="grid grid-cols-2 gap-4 mt-4">
-              <CustomInput label="Item Code" value={form.itemCode} disabled />
-
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
+                placeholder="Select Item"
                 value={form.itemId}
                 onChange={(val) => {
                   const item = items.find((i: any) => i._id === val);
@@ -354,6 +353,7 @@ export default function CreateSalesInvoice() {
                   }));
                 }}
               />
+              <CustomInput label="Item Code" value={form.itemCode} disabled />
 
               <CustomInput label="UOM" value={form.uom} disabled />
 
