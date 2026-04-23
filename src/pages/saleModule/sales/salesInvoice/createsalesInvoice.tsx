@@ -10,6 +10,8 @@ import CustomSelectSearch from "../../../../components/customSelectSearch";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
+
 const tabs = [
   "Transaction Lines",
   "Accounting Lines",
@@ -41,6 +43,7 @@ export default function CreateSalesInvoice() {
   const [addItem, setAddItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [saveRow, setSaveRow] = useState(false);
   const { goBack } = useAppNavigate();
 
   const { data: AllDistributors } = useQuery({
@@ -82,22 +85,33 @@ export default function CreateSalesInvoice() {
     })) || [];
 
   /* ================= SAVE ================= */
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.itemId) {
-      alert("Please select item");
+      notifyError("Please select item");
       return;
     }
 
-    const newItem = {
-      ...form,
-      grossAmount: totalTP,
-      totalAmount: netAmount,
-      amount: netAmount,
-    };
+    try {
+      setSaveRow(true);
 
-    setTableData((prev) => [...prev, newItem]);
-    setForm(initialFormState);
-    setAddItem(false);
+      const newItem = {
+        ...form,
+        grossAmount: totalTP,
+        totalAmount: netAmount,
+        amount: netAmount,
+      };
+
+      setTableData((prev) => [...prev, newItem]);
+
+      setForm(initialFormState);
+      setAddItem(false);
+
+      notifySuccess("Item added successfully");
+    } catch (err) {
+      notifyError("Something went wrong");
+    } finally {
+      setSaveRow(false);
+    }
   };
   const handleDeleteSelected = () => {
     setTableData((prev) => prev.filter((_, i) => !selectedRows.includes(i)));
@@ -149,7 +163,7 @@ export default function CreateSalesInvoice() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Create Invoice</p>
         </div>
-        <div className="p-4 grid grid-cols-4 gap-5">
+        <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-5 ">
           <CustomSelectSearch
             label="Distributor Name"
             options={distributorOptions}
@@ -414,11 +428,19 @@ export default function CreateSalesInvoice() {
             </div>
 
             <div className="flex justify-end mt-4 ">
-              <button
+               <button
                 onClick={handleSave}
-                className="btn-primary cursor-pointer"
+                className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
               >
-                Save
+                {saveRow ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  <>
+                    {" "}
+                    <Icon icon="mynaui:save" className="text-xl" />
+                    Save
+                  </>
+                )}
               </button>
             </div>
           </div>
