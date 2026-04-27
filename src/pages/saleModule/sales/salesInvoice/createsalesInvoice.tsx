@@ -11,6 +11,7 @@ import CustomDatePicker from "../../../../components/datePicker";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import { CreateSalesInvoiceApi } from "../../../../api/sale";
 
 const tabs = [
   "Transaction Lines",
@@ -36,6 +37,7 @@ const initialFormState = {
 
 export default function CreateSalesInvoice() {
   const [form, setForm] = useState(initialFormState);
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [selectedDistributor, setSelectedDistributor] = useState("");
   const [distributorData, setDistributorData] = useState<any>(null);
@@ -43,6 +45,10 @@ export default function CreateSalesInvoice() {
   const [addItem, setAddItem] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [distributorPercentage, setDistributorPercentage] = useState("");
+  const [taxPercentage, setTaxPercentage] = useState("");
+  const [totalAmount, setTotalAmount] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState("");
   const [saveRow, setSaveRow] = useState(false);
   const { goBack } = useAppNavigate();
 
@@ -91,11 +97,21 @@ export default function CreateSalesInvoice() {
       return;
     }
 
+    const orderedQtyNum = Number(form.orderedQty || 0);
+    const itemBalanceNum = Number(form.itemBalance || 0);
+    if (orderedQtyNum > itemBalanceNum) {
+      notifyError("Ordered quantity cannot be greater than item balance");
+      return;
+    }
+
     try {
       setSaveRow(true);
 
       const newItem = {
         ...form,
+        itemBalance: form.itemBalance || "",
+        batchNumber: form.batchNumber || "",
+        expiryDate: form.expiryDate || "",
         grossAmount: totalTP,
         totalAmount: netAmount,
         amount: netAmount,
@@ -113,12 +129,94 @@ export default function CreateSalesInvoice() {
       setSaveRow(false);
     }
   };
+
+  const handleSaveToServer = async () => {
+    try {
+      setLoading(true);
+
+      if (!distributorData) {
+        notifyError("Please select distributor");
+        return;
+      }
+
+      if (!distributorPercentage) {
+        notifyError("Please enter distributor percentage");
+        return;
+      }
+
+      if (!taxPercentage) {
+        notifyError("Please enter tax percentage");
+        return;
+      }
+
+      if (!tableData.length) {
+        notifyError("Add at least one item");
+        return;
+      }
+
+      const payload = {
+        distributor: distributorData._id,
+        distributorPercentage: distributorPercentage,
+        invoiceDate: invoiceDate,
+        taxPct: taxPercentage,
+        totalAmount: totalAmount,
+        // notes: "Valid invoice",
+        items: tableData.map((item: any) => {
+          return {
+            item: item.itemId,
+            orderedQty: Number(item.orderedQty || 0),
+            bonus: Number(item.bonus || 0),
+            discountPct: Number(item.discountPct || 0),
+            tp: Number(item.tp || 0),
+            batchNumber: item.batchNumber || "",
+            expiryDate: item.expiryDate || "",
+          };
+        }),
+      };
+
+      console.log("🚀 FINAL PAYLOAD:", payload);
+
+      await CreateSalesInvoiceApi(payload);
+
+      notifySuccess("Purchase Order Created Successfully");
+
+      setTableData([]);
+      setDistributorData(null);
+      setTaxPercentage("");
+      // setPartyCategory("");
+      // setDeliveryAddress("");
+      // setType("");
+
+      // localStorage.removeItem(STORAGE_KEY);
+    } catch (error: any) {
+      console.error(error);
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+      // refetch();
+    }
+  };
   const handleDeleteSelected = () => {
     setTableData((prev) => prev.filter((_, i) => !selectedRows.includes(i)));
     setSelectedRows([]);
     setConfirmDelete(false);
     notifySuccess(`${selectedRows.length} row(s) deleted`);
   };
+
+  useEffect(() => {
+    const subtotal = tableData.reduce(
+      (sum, item) => sum + Number(item.amount || 0),
+      0,
+    );
+
+    const distributorPercent = Number(distributorPercentage || 0);
+    const taxPercent = Number(taxPercentage || 0);
+
+    const distributorAmount = (subtotal * distributorPercent) / 100;
+    const taxAmount = (subtotal * taxPercent) / 100;
+
+    setTotalAmount((subtotal + distributorAmount + taxAmount).toFixed(2));
+  }, [tableData, distributorPercentage, taxPercentage]);
 
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
@@ -150,9 +248,19 @@ export default function CreateSalesInvoice() {
               Print
             </button>
 
-            <button className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md bg-primary md:w-27 cursor-pointer">
-              <Icon icon="mynaui:save" className="text-lg" />
-              Save
+            <button
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md bg-primary md:w-27 cursor-pointer"
+              onClick={handleSaveToServer}
+              disabled={loading}
+            >
+              {loading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="mynaui:save" className="text-lg" />
+                  Save
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -197,26 +305,26 @@ export default function CreateSalesInvoice() {
 
           <CustomDatePicker
             label="Date"
-            value="2026-03-01"
+            value={invoiceDate}
             className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            onChange={(val) => setInvoiceDate(val)}
           />
 
           <CustomInput
             label="Distributor Percentage"
             className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            value={distributorPercentage}
+            onChange={(e) => setDistributorPercentage(e.target.value)}
           />
 
           <CustomInput
             label="Tax %"
             className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            value={taxPercentage}
+            onChange={(e) => setTaxPercentage(e.target.value)}
           />
 
-          <CustomInput
-            label="Total Amount"
-            placeholder="Enter Total Amount"
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-            // disabled
-          />
+          <CustomInput label="Total Amount" value={totalAmount} disabled />
         </div>
       </div>
 
@@ -356,6 +464,7 @@ export default function CreateSalesInvoice() {
                 value={form.itemId}
                 onChange={(val) => {
                   const item = items.find((i: any) => i._id === val);
+                  console.log("🚀 ~ CreateSalesInvoice ~ item:", item);
                   setForm((prev) => ({
                     ...prev,
                     itemId: val,
@@ -364,6 +473,9 @@ export default function CreateSalesInvoice() {
                     uom: item?.uom || "",
                     tp: item?.tp || "",
                     mrp: item?.mrp || "",
+                    itemBalance: item?.balance || "",
+                    batchNumber: item?.batchNumber || "",
+                    expiryDate: item?.expiryDate || "",
                   }));
                 }}
               />
@@ -382,13 +494,25 @@ export default function CreateSalesInvoice() {
               <CustomInput
                 label="Ordered Quantity"
                 value={form.orderedQty}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, orderedQty: e.target.value }))
-                }
+                onChange={(e) => {
+                  const nextQty = e.target.value;
+                  const nextQtyNum = Number(nextQty || 0);
+                  const itemBalanceNum = Number(form.itemBalance || 0);
+
+                  if (nextQty && nextQtyNum > itemBalanceNum) {
+                    notifyError(
+                      "Ordered quantity cannot be greater than item balance",
+                    );
+                    return;
+                  }
+
+                  setForm((p) => ({ ...p, orderedQty: nextQty }));
+                }}
               />
 
               <CustomInput
                 label="Batch Number"
+                value={form.batchNumber}
                 onChange={(e) =>
                   setForm((p) => ({ ...p, batchNumber: e.target.value }))
                 }
@@ -428,7 +552,7 @@ export default function CreateSalesInvoice() {
             </div>
 
             <div className="flex justify-end mt-4 ">
-               <button
+              <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
               >

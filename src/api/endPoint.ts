@@ -34,5 +34,7 @@ export const ENDPOINTS = {
 
   ALL_PURCHASE_RECEIVING: "/purchase-receiving",
   UPDATE_PURCHASE_RECEIVING: "/purchase-receiving",
-};
 
+  // ------------sales Invoice-------------
+  SALES_INVOICE: "/sales-invoices",
+};

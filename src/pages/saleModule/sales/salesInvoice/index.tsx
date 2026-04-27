@@ -4,10 +4,30 @@ import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import SalesInvoiceModel from "./components/salesInvoiceModel";
 import { useState } from "react";
+import { GetSalesInvoiceApi } from "../../../../api/sale";
+import { useQuery } from "@tanstack/react-query";
 
 export default function SalesInvoice() {
   const { goTo } = useAppNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const {
+    data: SaleInvoices,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["getAllSalesInvoice"],
+    queryFn: GetSalesInvoiceApi,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const saleInvoicesData = SaleInvoices?.data || [];
+  console.log("🚀 ~ SalesInvoice ~ saleInvoicesData:", saleInvoicesData);
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
