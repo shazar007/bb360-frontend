@@ -1,9 +1,28 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { GetSalesInvoiceApi } from "../../../../api/sale";
+import { useQuery } from "@tanstack/react-query";
 
 export default function DeliveryChallan() {
   const { goTo } = useAppNavigate();
+  const {
+    data: SaleInvoices,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["getAllSalesInvoice"],
+    queryFn: GetSalesInvoiceApi,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const saleInvoicesData: any = SaleInvoices?.data || [];
+
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -46,15 +65,14 @@ export default function DeliveryChallan() {
             "Report",
             "Invoice Number",
             "Create Date",
-            "Dispatch Date",
+            // "Dispatch Date",
             "Distributor Name",
             "Contact Number",
             "Delivery Address",
             "Quantity (Pcs)",
           ]}
-          data={[
-            [
-              <Icon
+          data={saleInvoicesData?.map((item:any)=>[
+             <Icon
                 icon="basil:edit-outline"
                 className="text-primary text-lg cursor-pointer"
                 onClick={() =>
@@ -69,15 +87,21 @@ export default function DeliveryChallan() {
                 icon="ion:print-outline"
                 className="text-primary text-lg cursor-pointer"
               />,
-              "PO-000121",
-              "07-Apr-2026",
-              "08-Apr-2026",
-              "Noorsons",
-              "+92 322 1236 123",
-              "Main GT Road near Rawat Mor, Rawalpindi",
-              "136",
-            ],
-          ]}
+              item?.
+            invoiceNumber,
+              item?.createdAt,
+              // item?.dispatchDate,
+              item?.distributorName,
+              item?.
+              contactNumber,
+              item?.
+              address
+,
+              item?.items?.reduce(
+                (sum: number, ite: any) => sum + Number(ite?.orderedQty || 0),
+                0
+              ),
+          ])}
         />
       </div>
     </div>

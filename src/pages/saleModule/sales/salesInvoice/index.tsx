@@ -26,8 +26,8 @@ export default function SalesInvoice() {
     refetchOnReconnect: false,
   });
 
-  const saleInvoicesData = SaleInvoices?.data || [];
-  console.log("🚀 ~ SalesInvoice ~ saleInvoicesData:", saleInvoicesData);
+  const saleInvoicesData: any = SaleInvoices?.data || [];
+  console.log("🚀 ~ SalesInvoice ~ saleInvoicesData.......:", saleInvoicesData);
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -96,45 +96,51 @@ export default function SalesInvoice() {
           headers={[
             "Edit",
             "Select",
+            "Invoice Number",
             "Distributor Code",
             "Distributor Name",
             "Licence Status",
-            "Invoice Number",
-            "Item Description",
+            "Items",
             "Quantity ( Pcs )",
             "Amount",
           ]}
-          data={[
-            [
-              <div className="relative">
-                <Icon
-                  icon="qlementine-icons:menu-burger-16"
-                  className="text-lg cursor-pointer text-primary"
-                  onClick={() => setShowMenu(!showMenu)}
-                />
-
-                {showMenu && (
-                  <div className="absolute top-6 left-0 z-50">
-                    <SalesInvoiceModel />
-                  </div>
-                )}
-              </div>,
-
+          data={saleInvoicesData?.map((item: any) => [
+            <div className="relative">
               <Icon
-                icon="fluent:checkbox-checked-16-regular"
+                icon="qlementine-icons:menu-burger-16"
                 className="text-lg cursor-pointer text-primary"
-              />,
-              "DIS-556",
-              "Noor Sons",
-              <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
-                <p>Good</p>
-              </div>,
-              "INV-000255",
-              "Olive Oil 500ml, Desi Ghee 2Kg, Chia Seeds 500mg",
-              "1,100",
-              "420,256",
-            ],
-          ]}
+                onClick={() => setShowMenu(!showMenu)}
+              />
+
+              {showMenu && (
+                <div className="absolute top-6 left-0 z-50">
+                  <SalesInvoiceModel />
+                </div>
+              )}
+            </div>,
+
+            <Icon
+              icon="fluent:checkbox-checked-16-regular"
+              className="text-lg cursor-pointer text-primary"
+            />,
+            item?.
+            invoiceNumber,
+            item.distributor.distributorCode,
+          
+            item?.distributorName,
+            <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
+              <p>{item?.licenceStatus}</p>
+            </div>,
+
+            item?.items?.map((ite: any) => (
+              <p>{ite?.itemName}</p>
+            )),
+            item?.items?.reduce(
+              (sum: number, ite: any) => sum + Number(ite?.orderedQty || 0),
+              0
+            ),
+            item?.totalAmount,
+          ])}
         />
       </div>
     </div>
