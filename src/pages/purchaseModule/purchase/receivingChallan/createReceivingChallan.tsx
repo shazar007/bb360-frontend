@@ -7,26 +7,38 @@ import { useGetPurchaseOrderByPoNumber } from "../../../../api/queries";
 import { SyncLoader } from "react-spinners";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomDatePicker from "../../../../components/datePicker";
+import {
+  createReceivingChallan,
+  getAllPurchaseReceiving,
+} from "../../../../api/purchaseReceiving";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CreateReceivingChallan() {
+  const [loading, setLoading] = useState(false);
   const [createChallan, setCreateChallan] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
   const [tableItems, setTableItems] = useState<any[]>([]);
   const [poNumber, setPoNumber] = useState("");
 
-  const {
-    data: order,
-    isLoading,
-    refetch,
-    // error,
-  } = useGetPurchaseOrderByPoNumber(poNumber, {
-    enabled: false, // 🚨 stops auto API call
+  const { refetch } = useQuery({
+    queryKey: ["getAllOrder"],
+    queryFn: getAllPurchaseReceiving,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const { data: order, isLoading } = useGetPurchaseOrderByPoNumber(poNumber, {
+    enabled: false,
     retry: false,
   });
-  
-  let purchaseOrderData = (order as any)?.data?.po;
 
+  let purchaseOrderData = (order as any)?.data?.po;
+  createReceivingChallan;
   const handleIdChange = async () => {
     if (!poNumber.trim()) {
       notifyError("Enter PO Number");
@@ -44,25 +56,26 @@ export default function CreateReceivingChallan() {
   };
 
   const { goBack } = useAppNavigate();
-
   const handleSave = () => {
-  try {
     if (editIndex === null) return;
 
     const updated = [...tableItems];
-    updated[editIndex] = { ...updated[editIndex], ...editRow };
+
+    updated[editIndex] = {
+      ...updated[editIndex],
+      ...editRow,
+
+      deliveredQty: Number(editRow?.deliveredQty || 0),
+      rejectedQty: Number(editRow?.rejectedQty || 0),
+      reason: editRow?.reason?.trim() || "N/A",
+    };
 
     setTableItems(updated);
-    localStorage.setItem("receiving_challan", JSON.stringify(updated));
 
     setCreateChallan(false);
     setEditIndex(null);
     setEditRow(null);
-    notifySuccess("Challan updated successfully");
-  } catch (err) {
-    notifyError("Something went wrong");
-  }
-};
+  };
 
   const handleEdit = (item: any, index: number) => {
     setCreateChallan(true);
@@ -81,6 +94,52 @@ export default function CreateReceivingChallan() {
       setTableItems(purchaseOrderData.items);
     }
   }, [purchaseOrderData]);
+
+  const handleSaveInvoice = async () => {
+    try {
+      if (!purchaseOrderData) {
+        notifyError("No Purchase Order Data Found");
+        return;
+      }
+
+      setLoading(true);
+
+      const payload = {
+        purchaseOrder: String(purchaseOrderData?._id || purchaseOrderData?.id),
+        taxAmount: Number(purchaseOrderData?.tax || 0),
+        totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+        status: "completed",
+
+        items: tableItems.map((item: any) => ({
+          item: String(item?.item?._id || item?.item),
+          itemCode: item?.itemCode || "",
+          itemName: item?.itemName || "",
+          itemCategory: item?.itemCategory || "",
+          uom: item?.uom || "",
+          batchNumber: item?.batchNumber || "",
+          expiryDate: item?.expiryDate || null,
+          orderedQty: Number(item?.orderedQty || item?.quantity || 0),
+          deliveredQty: Number(item?.deliveredQty || 0),
+          rejectedQty: Number(item?.rejectedQty || 0),
+          purchaseRate: item?.purchaseRate || "",
+          reason: item?.reason?.trim() || "N/A",
+          amount: Number(item?.amount || 0),
+        })),
+      };
+
+      await createReceivingChallan(payload);
+
+      notifySuccess("Receiving Challan Created Successfully");
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || "Failed to save receiving challan";
+
+      notifyError(message);
+    } finally {
+      setLoading(false);
+      refetch();
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -88,7 +147,7 @@ export default function CreateReceivingChallan() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Purchase / Receiving Challan
+              Purchase / Receiving Challan Create
             </p>
           </div>
 
@@ -107,11 +166,19 @@ export default function CreateReceivingChallan() {
               Print
             </button>
             <button
-              type="button"
-              className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
+              onClick={handleSaveInvoice}
+              disabled={loading}
+              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-60"
             >
-              <Icon icon="mynaui:save" className="text-xl" />
-              Save
+              {loading ? (
+                <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="mynaui:save" className="text-lg" />
+                  Save
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -139,7 +206,7 @@ export default function CreateReceivingChallan() {
 
                   <button
                     onClick={handleIdChange}
-                    className="flex items-center justify-center px-3 h-10 text-xs text-white bg-secondary rounded-md cursor-pointer min-w-[80px] mt-4"
+                    className="flex items-center justify-center h-10 px-3 mt-4 text-xs text-white rounded-md cursor-pointer bg-secondary min-w-20"
                   >
                     {isLoading ? (
                       <SyncLoader
@@ -233,6 +300,7 @@ export default function CreateReceivingChallan() {
                 "UOM",
                 "Batch Number",
                 "Expiry Date",
+                "Purchase Rate",
                 "Ordered Quantity",
                 "Delivered Qty",
                 "Rejected/Less Quantity",
@@ -253,6 +321,7 @@ export default function CreateReceivingChallan() {
                 item.expiryDate
                   ? new Date(item.expiryDate).toISOString().split("T")[0]
                   : "",
+                item.purchaseRate,
                 item.quantity,
                 item.deliveredQty || "",
                 item.rejectedQty || "",
@@ -260,7 +329,6 @@ export default function CreateReceivingChallan() {
                 item.amount,
               ])}
             />
-            ;
           </div>
         </div>
       </div>

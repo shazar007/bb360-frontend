@@ -163,8 +163,6 @@ export default function CreatePurchaseOrder() {
         })),
       };
 
-      console.log("🚀 FINAL PAYLOAD:", payload);
-
       await createPurchaseOrderApi(payload);
 
       notifySuccess("Purchase Order Created Successfully");
@@ -270,7 +268,6 @@ export default function CreatePurchaseOrder() {
                   const selected = partyAccounts.find(
                     (p: any) => p.value === selectedValue,
                   );
-                  console.log("🚀 ~ CreatePurchaseOrder ~ selected:", selected);
 
                   setPartyCategory(selected?.category || "");
                 }}
@@ -382,11 +379,11 @@ export default function CreatePurchaseOrder() {
               data={tableData.map((item) => [
                 <Icon
                   icon="fluent:checkbox-checked-16-regular"
-                  className="text-primary text-xl"
+                  className="text-xl text-primary"
                 />,
                 <Icon
                   icon="qlementine-icons:menu-burger-16"
-                  className="text-primary text-xl"
+                  className="text-xl text-primary"
                 />,
                 item.itemCode,
                 items.find((i: any) => i._id === item.itemName)?.itemName ||
@@ -534,8 +531,6 @@ export default function CreatePurchaseOrder() {
                   value={form.itemName}
                   placeholder="Enter Product Name"
                   onChange={(val) => {
-                    console.log("🚀 ~ CreatePurchaseOrder ~ val:", val);
-
                     const selectedItem = items.find((i: any) => i._id === val);
 
                     setForm((prev) => ({

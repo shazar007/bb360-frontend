@@ -3,11 +3,26 @@ import CustomTable from "../../../../components/customTable";
 
 import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPurchaseInvoice } from "../../../../api/purchaseInvoice";
 
 export default function VendorBills() {
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
+  const { data: AllInvoice } = useQuery({
+    queryKey: ["getAllOrder"],
+    queryFn: getAllPurchaseInvoice,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const allInvoices = AllInvoice?.data?.data;
   const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
@@ -46,18 +61,20 @@ export default function VendorBills() {
             Reset
           </button>
           <button
+            onClick={() =>
+              goTo("/purchase-module/payable/vendor-bills/create-vendor-bill")
+            }
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
           >
             {" "}
             <Icon icon="streamline-flex:story-post" className="text-lg" />
-            post
+            Create
           </button>
         </div>
       </div>
       <div className="mt-2">
         <CustomTable
-        
           height="60vh"
           headers={[
             "Edit",
@@ -66,37 +83,33 @@ export default function VendorBills() {
             "Transaction Date",
             "Purchase Number",
             "Vendor",
-            "Gross Amount",
+
             "Tax Amount",
             "Amount",
           ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-                onClick={() =>
-                  goTo(
-                    "/purchase-module/payable/vendor-bills/create-vendor-bill",
-                  )
-                }
-              />,
-              <Icon
-                icon="hugeicons:view"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              <Icon
-                icon="ion:print-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              "03-Nov-2025",
-              "PO-000121",
-              "Globify Trader Karachi",
-              "45,250",
-              "8,250",
-              "53,450",
-            ],
-          ]}
+          data={allInvoices.map((item: any, index: number) => [
+            <Icon
+              icon="basil:edit-outline"
+              className="text-lg cursor-pointer text-primary"
+              onClick={() =>
+                goTo("/purchase-module/payable/vendor-bills/create-vendor-bill")
+              }
+            />,
+            <Icon
+              icon="hugeicons:view"
+              className="text-lg cursor-pointer text-primary"
+            />,
+            <Icon
+              icon="ion:print-outline"
+              className="text-lg cursor-pointer text-primary"
+            />,
+            item.date,
+            item.purchaseOrder.poNumber,
+            item.partyAccount.vendorName,
+
+            item.taxAmount,
+            item.totalAmount,
+          ])}
         />
       </div>
     </div>

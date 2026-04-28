@@ -10,11 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function SalesInvoice() {
   const { goTo } = useAppNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const {
-    data: SaleInvoices,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const { data: SaleInvoices } = useQuery({
     queryKey: ["getAllSalesInvoice"],
     queryFn: GetSalesInvoiceApi,
 
@@ -27,7 +23,6 @@ export default function SalesInvoice() {
   });
 
   const saleInvoicesData: any = SaleInvoices?.data || [];
-  console.log("🚀 ~ SalesInvoice ~ saleInvoicesData.......:", saleInvoicesData);
   useEffect(() => {
     document.title = "Distributor Invoice — BB-360";
   }, []);
@@ -115,7 +110,7 @@ export default function SalesInvoice() {
               />
 
               {showMenu && (
-                <div className="absolute top-6 left-0 z-50">
+                <div className="absolute left-0 z-50 top-6">
                   <SalesInvoiceModel />
                 </div>
               )}
@@ -125,21 +120,18 @@ export default function SalesInvoice() {
               icon="fluent:checkbox-checked-16-regular"
               className="text-lg cursor-pointer text-primary"
             />,
-            item?.
-            invoiceNumber,
+            item?.invoiceNumber,
             item.distributor.distributorCode,
-          
+
             item?.distributorName,
             <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
               <p>{item?.licenceStatus}</p>
             </div>,
 
-            item?.items?.map((ite: any) => (
-              <p>{ite?.itemName}</p>
-            )),
+            item?.items?.map((ite: any) => <p>{ite?.itemName}</p>),
             item?.items?.reduce(
               (sum: number, ite: any) => sum + Number(ite?.orderedQty || 0),
-              0
+              0,
             ),
             item?.totalAmount,
           ])}

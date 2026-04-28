@@ -174,8 +174,6 @@ export default function CreateSalesInvoice() {
         }),
       };
 
-      console.log("🚀 FINAL PAYLOAD:", payload);
-
       await CreateSalesInvoiceApi(payload);
 
       notifySuccess("Purchase Order Created Successfully");
@@ -234,22 +232,22 @@ export default function CreateSalesInvoice() {
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+          <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
             <button
               onClick={goBack}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md bg-secondary md:w-27 cursor-pointer"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
               <Icon icon="ion:play-back-outline" className="text-lg" />
               Back
             </button>
 
-            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 shadow cursor-pointer">
+            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer text-heading1">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
             </button>
 
             <button
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md bg-primary md:w-27 cursor-pointer"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
               onClick={handleSaveToServer}
               disabled={loading}
             >
@@ -271,7 +269,7 @@ export default function CreateSalesInvoice() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Create Invoice</p>
         </div>
-        <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-5 ">
+        <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-4 ">
           <CustomSelectSearch
             label="Distributor Name"
             options={distributorOptions}
@@ -347,7 +345,7 @@ export default function CreateSalesInvoice() {
             activeTab === "Accounting Lines") && (
             <div className="flex items-center gap-2 ml-auto ">
               <button
-                className="h-8 w-8 bg-red-500 text-white rounded-md flex items-center justify-center cursor-pointer"
+                className="flex items-center justify-center w-8 h-8 text-white bg-red-500 rounded-md cursor-pointer"
                 onClick={() => {
                   if (selectedRows.length === 0) {
                     notifyError("No row selected");
@@ -361,7 +359,7 @@ export default function CreateSalesInvoice() {
 
               <button
                 onClick={() => setAddItem(true)}
-                className="text-xs text-white bg-secondary rounded-md px-3 h-8 cursor-pointer"
+                className="h-8 px-3 text-xs text-white rounded-md cursor-pointer bg-secondary"
               >
                 Add Row
               </button>
@@ -444,12 +442,12 @@ export default function CreateSalesInvoice() {
 
       {/* MODAL */}
       {addItem && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-          <div className="bg-white w-full max-w-2xl p-6 rounded-xl">
-            <div className="flex justify-between border-b pb-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-2xl p-6 bg-white rounded-xl">
+            <div className="flex justify-between pb-2 border-b">
               <h2 className="text-sm font-semibold ">Add Item</h2>
               <button
-                className=" cursor-pointer"
+                className="cursor-pointer "
                 onClick={() => setAddItem(false)}
               >
                 ✕
@@ -464,7 +462,6 @@ export default function CreateSalesInvoice() {
                 value={form.itemId}
                 onChange={(val) => {
                   const item = items.find((i: any) => i._id === val);
-                  console.log("🚀 ~ CreateSalesInvoice ~ item:", item);
                   setForm((prev) => ({
                     ...prev,
                     itemId: val,
@@ -585,7 +582,7 @@ export default function CreateSalesInvoice() {
             </div>
             <div className="p-4 mx-auto w-72">
               <p className="text-2xl font-semibold text-center">Delete item</p>
-              <p className="text-center text-heading1 mt-1">
+              <p className="mt-1 text-center text-heading1">
                 Are you sure you want to delete {selectedRows.length} selected
                 Item?
               </p>
