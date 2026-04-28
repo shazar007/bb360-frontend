@@ -15,7 +15,7 @@ export default function ReceivingChallan() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const {
     data: PurchaseReceiving,
-    refetch,
+
     isLoading,
   } = useQuery({
     queryKey: ["getAllOrder"],
@@ -29,7 +29,7 @@ export default function ReceivingChallan() {
     refetchOnReconnect: false,
   });
   const AllPurchaseReceiving = PurchaseReceiving?.data?.data || [];
-  console.log(".........me", AllPurchaseReceiving);
+
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: "Invoice",
@@ -94,7 +94,7 @@ export default function ReceivingChallan() {
               "View",
               "Report",
               "Challan Number",
-              "Purchase Order Number",
+              // "Purchase Order Number",
               "Create Date",
               "Receiving Date",
               "Delivery Address",
@@ -122,9 +122,9 @@ export default function ReceivingChallan() {
               />,
 
               item?.prNumber || "No PR",
-              item?.purchaseOrder?.poNumber
-                ? item.purchaseOrder.poNumber
-                : "No PO",
+              // item?.purchaseOrder?.poNumber
+              //   ? item.purchaseOrder.poNumber
+              //   : "No PO",
               item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",

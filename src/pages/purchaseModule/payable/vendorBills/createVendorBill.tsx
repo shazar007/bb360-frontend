@@ -1,12 +1,16 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import CustomDatePicker from "../../../../components/datePicker";
 import CustomInput from "../../../../components/customInput";
 import { useEffect, useState } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { useGetPurchaseOrderByPoNumber } from "../../../../api/queries";
+import { useGetPurchaseRecevingPoNumber } from "../../../../api/queries";
 import { SyncLoader } from "react-spinners";
-import { notifyError } from "../../../../components/toast";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import {
+  createPurchaseInvoice,
+  getAllPurchaseInvoice,
+} from "../../../../api/purchaseInvoice";
+import { useQuery } from "@tanstack/react-query";
 
 const tabs = [
   "Transaction Lines",
@@ -18,26 +22,40 @@ const tabs = [
 export default function CreateVendorBill() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const { goBack } = useAppNavigate();
-
+  const [loading, setLoading] = useState(false);
   const [poNumber, setPoNumber] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
   const [createModal, setCreateModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
-
+  const [tableItems, setTableItems] = useState<any[]>([]);
   const {
     data: order,
     isLoading,
     refetch,
-  } = useGetPurchaseOrderByPoNumber(poNumber, {
+  } = useGetPurchaseRecevingPoNumber(poNumber, {
     enabled: false,
     retry: false,
   });
-
-  const purchaseOrderData = (order as any)?.data?.po;
-
+  const purchaseOrderData = (order as any)?.data?.pr;
   useEffect(() => {
-    document.title = "Create Bills — BB-360";
+    if (purchaseOrderData?.items) {
+      setTableItems(purchaseOrderData.items);
+    }
+  }, [purchaseOrderData]);
+
+  const { refetch: allPurchaseInvoice } = useQuery({
+    queryKey: ["getAllOrder"],
+    queryFn: getAllPurchaseInvoice,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  useEffect(() => {
+    document.title = "Purchase Invoice — BB-360";
   }, []);
 
   const handleSearch = async () => {
@@ -54,12 +72,6 @@ export default function CreateVendorBill() {
 
       notifyError(message);
       return;
-    }
-
-    const po = (res.data as any)?.data?.po;
-
-    if (po?.date) {
-      setInvoiceDate(new Date(po.date).toISOString().split("T")[0]);
     }
   };
 
@@ -85,7 +97,63 @@ export default function CreateVendorBill() {
     setEditIndex(null);
     setEditRow(null);
   };
+  const formatDate = (date: string) => {
+    if (!date) return "";
 
+    const d = new Date(date);
+
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = d.toLocaleString("en-US", { month: "short" });
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
+  const handleSavePurchaseInvoice = async () => {
+    try {
+      if (!purchaseOrderData) {
+        notifyError("No Purchase Order Data Found");
+        return;
+      }
+
+      setLoading(true);
+
+      const payload = {
+        purchaseReceiving: String(
+          purchaseOrderData?._id || purchaseOrderData?.id,
+        ),
+        invoiceDate: purchaseOrderData.date,
+
+        vendorPercentage: Number(purchaseOrderData?.vendorPercentage || 0),
+        taxPct: Number(purchaseOrderData?.taxAmount || 0),
+        totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+
+        items: (tableItems || []).map((item: any) => ({
+          item: String(item?.item?._id || item?.item),
+
+          orderedQty: Number(item?.orderedQty || item?.quantity || 0),
+          receivedQty: Number(item?.receivedQty || item?.deliveredQty || 0),
+
+          retailPrice: Number(item?.retailPrice || 0),
+          tp: Number(item?.tp || 0),
+
+          discountPct: Number(item?.discountPct || item?.discount || 0),
+
+          grossAmount: Number(item?.grossAmount || 0),
+          taxAmount: Number(item?.taxAmount || 0),
+          amount: Number(item?.amount || 0),
+        })),
+      };
+
+      await createPurchaseInvoice(payload);
+
+      notifySuccess("Purchase Invoice Created Successfully");
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Failed to save invoice");
+    } finally {
+      setLoading(false);
+      allPurchaseInvoice;
+    }
+  };
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -96,7 +164,7 @@ export default function CreateVendorBill() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <button
             onClick={goBack}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -117,29 +185,36 @@ export default function CreateVendorBill() {
           </button>
 
           <button
+            onClick={handleSavePurchaseInvoice}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
           >
-            <Icon icon="mynaui:save" className="text-lg" />
-            Save
+            {loading ? (
+              <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
+            ) : (
+              <>
+                <Icon icon="mynaui:save" className="text-lg" />
+                Save
+              </>
+            )}
           </button>
         </div>
       </div>
 
       <div className="mt-3">
-        <div className="bg-[#f6f6f6] rounded-2xl mt-3">
-          <div className="bg-white rounded-2xl mt-2">
+        <div className="mt-3 bg-bgprimary rounded-2xl">
+          <div className="mt-2 bg-white rounded-2xl">
             <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
               <p className="text-xs font-semibold text-heading1">Invoice</p>
             </div>
 
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-30.25 text-secondary">
               <div className="space-y-1.5">
-                <div className="flex gap-2 items-end">
+                <div className="flex items-end gap-2">
                   <div className="flex-1">
                     <CustomInput
                       className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                      label="Purchase Order"
+                      label="Purchase Receving"
                       value={poNumber}
                       onChange={(e: any) => setPoNumber(e.target.value)}
                     />
@@ -147,7 +222,7 @@ export default function CreateVendorBill() {
 
                   <button
                     onClick={handleSearch}
-                    className="h-10 px-4 bg-secondary text-white rounded-md cursor-pointer text-xs"
+                    className="h-10 px-4 text-xs text-white rounded-md cursor-pointer bg-secondary"
                   >
                     {isLoading ? (
                       <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
@@ -157,26 +232,30 @@ export default function CreateVendorBill() {
                   </button>
                 </div>
 
-                <CustomDatePicker
+                <CustomInput
+                  label="Order Date"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  label="Invoice Date"
-                  value={invoiceDate}
-                  onChange={(val: any) => setInvoiceDate(val)}
+                  value={
+                    purchaseOrderData?.date
+                      ? new Date(purchaseOrderData.date).toLocaleDateString()
+                      : ""
+                  }
+                  disabled
                 />
               </div>
 
               <div className="space-y-1.5">
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  label="Vendor Name"
+                  label="Party Account"
                   value={purchaseOrderData?.partyAccount?.vendorName || ""}
                   disabled
                 />
 
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  label="Address"
-                  value={purchaseOrderData?.deliveryAddress || ""}
+                  label="Party Categroy"
+                  value={purchaseOrderData?.partyCategory || "-"}
                   disabled
                 />
               </div>
@@ -184,26 +263,26 @@ export default function CreateVendorBill() {
               <div className="space-y-1.5">
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  label="Contact Number"
-                  value={
-                    purchaseOrderData?.partyAccount?.phone ||
-                    purchaseOrderData?.partyAccount?.mobile ||
-                    purchaseOrderData?.partyAccount?.contactNumber ||
-                    purchaseOrderData?.partyAccount?.contact ||
-                    ""
-                  }
+                  label="Delivery Address"
+                  value={purchaseOrderData?.deliveryAddress}
                   disabled
                 />
 
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  label="Tax Percentage"
-                  value={purchaseOrderData?.tax || ""}
+                  label="Type"
+                  value={purchaseOrderData?.type || ""}
                   disabled
                 />
               </div>
 
               <div className="space-y-1.5">
+                <CustomInput
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                  label="Tax%"
+                  value={purchaseOrderData?.taxAmount || ""}
+                  disabled
+                />{" "}
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Total Amount"
@@ -241,14 +320,13 @@ export default function CreateVendorBill() {
                 "Edit",
                 "Item Code",
                 "Item Name",
+                "Item Catgory",
                 "UOM",
+                "Batch Number",
+                "Expiry Date",
                 "Ordered Quantity",
-                "Received Quantity",
-                "Retail Price",
-                "T.P",
-                "Discount %",
-                "Gross Amount",
-                "Tax Amount",
+                "Delivered Qty",
+                "Purchase Rate",
                 "Amount",
               ]}
               data={
@@ -257,18 +335,17 @@ export default function CreateVendorBill() {
                       <Icon
                         onClick={() => handleEdit(item, index)}
                         icon="qlementine-icons:menu-burger-16"
-                        className="text-lg text-primary cursor-pointer"
+                        className="text-lg cursor-pointer text-primary"
                       />,
                       item.itemCode,
                       item.itemName,
+                      item.itemCategory,
                       item.uom,
-                      item.quantity,
-                      item.receivedQty || "",
-                      item.retailPrice || "",
-                      item.tp || "",
-                      item.discount || "",
-                      item.grossAmount || "",
-                      item.taxAmount || "",
+                      item.batchNumber,
+                      formatDate(item.expiryDate),
+                      item.orderedQty || "",
+                      item.deliveredQty || "",
+                      item.purchaseRate || "",
                       item.amount,
                     ])
                   : []
@@ -292,7 +369,7 @@ export default function CreateVendorBill() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-6 text-center">
+              <div className="grid grid-cols-1 gap-10 p-6 text-center md:grid-cols-2">
                 <div>
                   <p className="text-xs text-heading1">Created By</p>
                 </div>
@@ -330,7 +407,7 @@ export default function CreateVendorBill() {
 
       {createModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-250 rounded-2xl bg-white shadow-xl">
+          <div className="w-full bg-white shadow-xl max-w-250 rounded-2xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Edit Purchase Invoice
@@ -345,8 +422,16 @@ export default function CreateVendorBill() {
             </div>
 
             <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
-              <CustomInput label="Item Code" value={editRow?.itemCode} disabled />
-              <CustomInput label="Item Name" value={editRow?.itemName} disabled />
+              <CustomInput
+                label="Item Code"
+                value={editRow?.itemCode}
+                disabled
+              />
+              <CustomInput
+                label="Item Name"
+                value={editRow?.itemName}
+                disabled
+              />
               <CustomInput label="UOM" value={editRow?.uom} disabled />
               <CustomInput
                 label="Ordered Quantity"

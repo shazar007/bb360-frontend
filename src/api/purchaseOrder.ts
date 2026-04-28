@@ -10,8 +10,13 @@ export const getAllOrders = () => {
 };
 
 export const getPurchaseOrderByPoNumber = (poNumber: string | number) => {
-  console.log("🚀 ~ getPurchaseOrderByPoNumber ~ poNumber:", poNumber);
-  return HTTP_CLIENT.get(`${ENDPOINTS.PURCHASE_ORDER}/po-Number/${poNumber}`);
+  const token = localStorage.getItem("token");
+
+  return HTTP_CLIENT.get(`${ENDPOINTS.PURCHASE_ORDER}/po-Number/${poNumber}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const updatePurchaseOrder = (id: string | number, values: any) => {
