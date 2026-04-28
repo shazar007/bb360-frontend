@@ -3,9 +3,11 @@ import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { GetSalesInvoiceApi } from "../../../../api/sale";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 export default function DeliveryChallan() {
   const { goTo } = useAppNavigate();
+  const navigate = useNavigate();
   const {
     data: SaleInvoices,
     refetch,
@@ -22,6 +24,10 @@ export default function DeliveryChallan() {
     refetchOnReconnect: false,
   });
   const saleInvoicesData: any = SaleInvoices?.data || [];
+
+  const goWithState = (path: any, state = {}) => {
+    navigate(path, { state });
+  };
 
   return (
     <div className="mt-8">
@@ -76,7 +82,7 @@ export default function DeliveryChallan() {
                 icon="basil:edit-outline"
                 className="text-primary text-lg cursor-pointer"
                 onClick={() =>
-                  goTo("/sale-module/sales/delivery-challan/create")
+                  goWithState("/sale-module/sales/delivery-challan/create", { item })
                 }
               />,
               <Icon

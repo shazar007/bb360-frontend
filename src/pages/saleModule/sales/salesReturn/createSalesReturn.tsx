@@ -8,15 +8,17 @@ import { useEffect, useState } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
+import { getAllDistributor } from "../../../../api/distributorServices";
 
 export default function CreateSalesReturn() {
   const { goBack } = useAppNavigate();
- const { goTo } = useAppNavigate();
+  const { goTo } = useAppNavigate();
   const [addItem, setAddItem] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
-
+  const [selectedDistributor, setSelectedDistributor] = useState("");
+  const [distributorData, setDistributorData] = useState<any>(null);
   const [form, setForm] = useState({
     itemId: "",
     itemName: "",
@@ -24,6 +26,7 @@ export default function CreateSalesReturn() {
     itemCategory: "",
     uom: "",
     batchNumber: "",
+    expiryDate: "",
     returnedQty: "",
     taxAmount: "",
     amount: "",
@@ -61,11 +64,29 @@ export default function CreateSalesReturn() {
       itemCategory: "",
       uom: "",
       batchNumber: "",
+      expiryDate: "",
       returnedQty: "",
       taxAmount: "",
       amount: "",
     });
   };
+  
+  const { data: AllDistributors } = useQuery({
+    queryKey: ["getAllDistributor"],
+    queryFn: getAllDistributor,
+    staleTime: 1000 * 60 * 5,
+  });
+
+
+  const allDistributors = AllDistributors?.data?.distributors || [];
+
+  const distributorOptions = [
+    { label: "Select Distributor", value: "" },
+    ...allDistributors.map((item: any) => ({
+      label: item.distributorName,
+      value: item._id,
+    })),
+  ];
 
   return (
     <>
@@ -124,7 +145,7 @@ export default function CreateSalesReturn() {
                   label="Sales Return Order"
                   placeholder="TO BE GENERATE"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  // disabled
+                // disabled
                 />
                 <CustomDatePicker
                   label="Date"
@@ -135,14 +156,20 @@ export default function CreateSalesReturn() {
 
               {/* COLUMN 2 */}
               <div className="space-y-1.5">
-                <CustomSelect
-                  label="Distributor Name"
-                  placeholder="-"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
+               
+                <CustomSelectSearch
+            label="Distributor Name"
+            options={distributorOptions}
+            value={selectedDistributor}
+            onChange={(val) => {
+              setSelectedDistributor(val);
+              const selected = allDistributors.find((d: any) => d._id === val);
+              setDistributorData(selected);
+            }}
+          />
                 <CustomInput
                   label="Contact Number"
-                  placeholder="autofill"
+                  placeholder="03204567890"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
@@ -154,8 +181,9 @@ export default function CreateSalesReturn() {
                   placeholder="Damage/Expired/No Sale"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
+
                 <CustomSelect
-                  label="Restock"
+                  label="Retuen Total"
                   placeholder="Yes/No"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
@@ -163,13 +191,30 @@ export default function CreateSalesReturn() {
 
               {/* COLUMN 4 → DESCRIPTION ONLY */}
               <div className="space-y-1.5">
+
+                <CustomSelect
+                  label="Restock"
+                  placeholder="Yes/No"
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                />
+                 <CustomInput
+                  label="Tax %"
+                  placeholder="50"
+                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                />
+
+                <div className="space-y-1.5">
                 <CustomInput
                   label="Description"
                   placeholder="Write here..."
-                  className="w-full h-24 px-3 rounded-md bg-[#ECF0F4]"
+                  // className="w-full h-24 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
+
+              </div>
+               
             </div>
+            
           </div>
         </div>
 
@@ -196,7 +241,7 @@ export default function CreateSalesReturn() {
               "Item Category",
               "UOM",
               "Batch Number",
-              "Check Batch Number",
+              "Expiry Date",
               "Returned Quantity",
               "Tax Amount",
               "Amount",
@@ -205,26 +250,26 @@ export default function CreateSalesReturn() {
               tableData.length === 0
                 ? []
                 : tableData.map((item) => [
-                    <Icon
-                      icon="fluent:checkbox-checked-16-regular"
-                      className="text-lg text-primary"
-                    />,
-                    <Icon
-                      icon="qlementine-icons:menu-burger-16"
-                      className="text-lg text-primary"
-                    />,
-                    item.itemCode,
-                    item.itemName,
-                    item.itemCategory,
-                    item.uom,
-                    item.batchNumber,
-                    <span className="text-green-600 bg-green-100 px-2 rounded">
-                      Matched
-                    </span>,
-                    item.returnedQty,
-                    item.taxAmount,
-                    item.amount,
-                  ])
+                  <Icon
+                    icon="fluent:checkbox-checked-16-regular"
+                    className="text-lg text-primary"
+                  />,
+                  <Icon
+                    icon="qlementine-icons:menu-burger-16"
+                    className="text-lg text-primary"
+                  />,
+                  item.itemCode,
+                  item.itemName,
+                  item.itemCategory,
+                  item.uom,
+                  item.batchNumber,
+                  <span className="text-green-600 bg-green-100 px-2 rounded">
+                    Matched
+                  </span>,
+                  item.returnedQty,
+                  item.taxAmount,
+                  item.amount,
+                ])
             }
           />
         </div>
@@ -280,6 +325,13 @@ export default function CreateSalesReturn() {
                 value={form.batchNumber}
                 onChange={(e) =>
                   setForm({ ...form, batchNumber: e.target.value })
+                }
+              />
+               <CustomInput
+                label="Expiry Date"
+                value={form.expiryDate}
+                onChange={(e) =>
+                  setForm({ ...form, expiryDate: e.target.value })
                 }
               />
 

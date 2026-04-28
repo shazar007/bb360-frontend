@@ -93,6 +93,8 @@ export default function SalesInvoice() {
         <CustomTable
           norounded
           height="60vh"
+          loading={isLoading}
+
           headers={[
             "Edit",
             "Select",

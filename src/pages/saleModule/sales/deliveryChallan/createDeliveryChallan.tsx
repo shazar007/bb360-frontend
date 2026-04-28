@@ -4,9 +4,13 @@ import CustomSelect from "../../../../components/customSelect";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useLocation } from "react-router-dom";
 
 export default function CreateDeliveryChallan() {
   const { goBack } = useAppNavigate();
+  const location = useLocation();
+  const receivedData = location.state?.item;
+  // console.log("🚀 ~ CreateDeliveryChallan ~ receivedData:", receivedData);
 
   return (
     <div className="mt-8">
