@@ -46,18 +46,20 @@ export default function VendorBills() {
             Reset
           </button>
           <button
+            onClick={() =>
+              goTo("/purchase-module/payable/vendor-bills/create-vendor-bill")
+            }
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
           >
             {" "}
             <Icon icon="streamline-flex:story-post" className="text-lg" />
-            post
+            Create
           </button>
         </div>
       </div>
       <div className="mt-2">
         <CustomTable
-        
           height="60vh"
           headers={[
             "Edit",
