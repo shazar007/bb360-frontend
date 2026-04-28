@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPurchaseInvoice } from "../../../../api/purchaseInvoice";
+import dayjs from "dayjs";
 
 export default function VendorBills() {
   useEffect(() => {
@@ -22,7 +23,8 @@ export default function VendorBills() {
     refetchOnReconnect: false,
   });
 
-  const allInvoices = AllInvoice?.data?.data;
+  const allInvoices = AllInvoice?.data?.data ?? [];
+  console.log("🚀 ~ allInvoices:", allInvoices);
   const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
@@ -83,11 +85,10 @@ export default function VendorBills() {
             "Transaction Date",
             "Purchase Number",
             "Vendor",
-
             "Tax Amount",
             "Amount",
           ]}
-          data={allInvoices.map((item: any, index: number) => [
+          data={(allInvoices ?? []).map((item: any) => [
             <Icon
               icon="basil:edit-outline"
               className="text-lg cursor-pointer text-primary"
@@ -95,20 +96,26 @@ export default function VendorBills() {
                 goTo("/purchase-module/payable/vendor-bills/create-vendor-bill")
               }
             />,
+
             <Icon
               icon="hugeicons:view"
               className="text-lg cursor-pointer text-primary"
             />,
+
             <Icon
               icon="ion:print-outline"
               className="text-lg cursor-pointer text-primary"
             />,
-            item.date,
-            item.purchaseOrder.poNumber,
-            item.partyAccount.vendorName,
 
-            item.taxAmount,
-            item.totalAmount,
+            dayjs(item?.transactionDate || item?.date).format("YYYY-MM-DD"),
+
+            item?.poNumber || "-",
+
+            item?.vendorName || "-",
+
+            item?.taxAmount ?? 0,
+
+            item?.totalAmount ?? 0,
           ])}
         />
       </div>

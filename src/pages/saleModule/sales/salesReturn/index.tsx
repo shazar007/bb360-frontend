@@ -70,8 +70,6 @@ export default function SalesReturn() {
       <div className="pb-4 mt-2 bg-white rounded-2xl">
         <div className="flex justify-between items-center px-4.5 py-2">
           <p className="text-xs font-semibold text-primary">Sales_List</p>
-
-          
         </div>
 
         <CustomTable
@@ -85,7 +83,7 @@ export default function SalesReturn() {
             "Distributor Name",
             "Licence Status",
             "Item Description",
-            "Quantity ( Pcs )",
+            "Quantity (Pcs)",
             "Amount",
           ]}
           data={[

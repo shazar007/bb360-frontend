@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 export default function SalesInvoice() {
   const { goTo } = useAppNavigate();
   const [showMenu, setShowMenu] = useState(false);
-  const { data: SaleInvoices } = useQuery({
+  const { data: SaleInvoices, isLoading } = useQuery({
     queryKey: ["getAllSalesInvoice"],
     queryFn: GetSalesInvoiceApi,
 
@@ -89,7 +89,6 @@ export default function SalesInvoice() {
           norounded
           height="60vh"
           loading={isLoading}
-
           headers={[
             "Edit",
             "Select",
@@ -98,7 +97,7 @@ export default function SalesInvoice() {
             "Distributor Name",
             "Licence Status",
             "Items",
-            "Quantity ( Pcs )",
+            "Quantity (Pcs)",
             "Amount",
           ]}
           data={saleInvoicesData?.map((item: any) => [
