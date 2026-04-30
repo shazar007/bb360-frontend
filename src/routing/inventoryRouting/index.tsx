@@ -10,6 +10,14 @@ export default function InventoryRouting() {
   return (
     <Routes>
       <Route path="/inventory-adjustment" element={<InventoryAdjustment />} />
+      <Route
+        path="/inventory-adjustment/create"
+        element={<InventoryAdjustment />}
+      />{" "}
+      <Route
+        path="/inventory-adjustment/upload"
+        element={<InventoryAdjustment />}
+      />
       <Route path="/inventory-transfer" element={<InventoryTransfer />} />
       <Route path="/material-issue-note" element={<MaterialIssueNote />} />
       <Route path="/transfer-orders" element={<TransferOrders />} />
