@@ -8,24 +8,14 @@ export const ENDPOINTS = {
   TOKEN_REFRESH: "/user/refresh-token",
 
   // ------------Products-------------
-  ADD_ITEM: "/items",
-  GET_ALL_ITEM: "/items",
-  UPDATE_ITEM: "/items",
-  DELETE_ITEM: "/items",
-  GET_SINGLE_ITEM: "/items",
+  ITEMS: "/items",
 
   // ------------Vendor-------------
 
-  ADD_VENDORS: "/vendors",
-  GET_ALL_VENDORS: "/vendors",
-  UPDATE_VENDORS: "/vendors",
-  DELETE_VENDORS: "/vendors",
+  VENDORS: "/vendors",
 
   // ------------Distributor-------------
-  ADD_DISTRIBUTOR: "/distributors",
-  GET_ALL_DISTRIBUTOR: "/distributors",
-  UPDATE_DISTRIBUTOR: "/distributors",
-  DELETE_DISTRIBUTOR: "/distributors",
+  DISTRIBUTOR: "/distributors",
 
   // ------------Distributor-------------
   PURCHASE_ORDER: "/purchase-orders",
@@ -36,6 +26,8 @@ export const ENDPOINTS = {
 
   // ------------sales Invoice-------------
   SALES_INVOICE: "/sales-invoices",
-  // ------------purchase Invoice-------------
+
   PURCHASE_INVOICE: "/purchase-invoices",
+  // ------------Sale Retrun-------------
+  SALES_RETURN: "/sales-returns",
 };

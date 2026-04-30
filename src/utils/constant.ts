@@ -110,7 +110,7 @@ export const navItems: NavItem[] = [
             name: "Distribution Update",
             path: "/application-setup/distribution-setup/distributor-update",
           },
-          
+
           //     {
           //       name: "Vehicles",
           //       path: "/application-setup/distribution-setup/vehicles",
@@ -518,195 +518,30 @@ export const navItems: NavItem[] = [
     name: "Inventory Module",
     icon: "ic:twotone-inventory",
     children: [
-      { name: "No Data Found" },
-      // {
-      //   name: "Item Setup",
-      //   children: [
-      //     {
-      //       name: "Item",
-      //       path: "/inventory-module/item-setup/item",
-      //     },
-      //     {
-      //       name: "Item Category",
-      //       path: "/inventory-module/item-setup/item-category",
-      //     },
-      //     {
-      //       name: "Unit Type",
-      //       path: "/inventory-module/item-setup/unit-type",
-      //     },
-      //     {
-      //       name: "Item Barcode Generate",
-      //       path: "/inventory-module/item-setup/item-barcode-generate",
-      //     },
-      //     {
-      //       name: "Price Type",
-      //       path: "/inventory-module/item-setup/price-type",
-      //     },
-      //     {
-      //       name: "Discount Policies",
-      //       path: "/inventory-module/item-setup/discount-Policies",
-      //     },
-      //     {
-      //       name: "BINS",
-      //       path: "/inventory-module/item-setup/bins",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Inventory Tranasaction",
-      //   children: [
-      //     {
-      //       name: "Inventory Adjustment",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
-      //     },
-      //     {
-      //       name: "Inventory Transfer",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-transfer",
-      //     },
-      //     {
-      //       name: "Material Issue Note",
-      //       path: "/inventory-module/inventory-tranasaction/material-issue-note",
-      //     },
-      //     {
-      //       name: "Material Return Note",
-      //       path: "/inventory-module/inventory-tranasaction/material-return-note",
-      //     },
-      //     {
-      //       name: "Transfer Order",
-      //       path: "/inventory-module/inventory-tranasaction/transfer-order",
-      //     },
-      //     {
-      //       name: "Pending Delivery Challan",
-      //       path: "/inventory-module/inventory-tranasaction/pending-delivery-challan",
-      //     },
-      //     {
-      //       name: "Pending Receive Orders List",
-      //       path: "/inventory-module/inventory-tranasaction/pending-receive-orders-list",
-      //     },
-      //     {
-      //       name: "Stock Taking",
-      //       path: "/inventory-module/inventory-tranasaction/stock-taking",
-      //     },
-      //     {
-      //       name: "Update Cost Rate",
-      //       path: "/inventory-module/inventory-tranasaction/update-cost-rate",
-      //     },
-      //     {
-      //       name: "Update Lot/Batch Balance",
-      //       path: "/inventory-module/inventory-tranasaction/update-Lot/batch-balance",
-      //     },
-      //     {
-      //       name: "Run Items Costing",
-      //       path: "/inventory-module/inventory-tranasaction/run-items-costing",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Gate Pass Reports",
-      //   children: [
-      //     {
-      //       name: "Gate Pass In",
-      //       path: "/inventory-module/inventory-tranasaction/Gate Pass In",
-      //     },
-      //     {
-      //       name: "Gate Pass Out",
-      //       path: "/inventory-module/inventory-tranasaction/Gate Pass Out",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Inventory Reports",
-      //   children: [
-      //     {
-      //       name: "Item Closing As On Date Report",
-      //       path: "/inventory-module/inventory-tranasaction/item-closing-as-on-date-report",
-      //     },
-      //     {
-      //       name: "Items Ledger",
-      //       path: "/inventory-module/inventory-tranasaction/items-ledger",
-      //     },
-      //     {
-      //       name: "Stock Movement Report",
-      //       path: "/inventory-module/inventory-tranasaction/stock-movement-report",
-      //     },
-      //     {
-      //       name: "Stock Aging Report",
-      //       path: "/inventory-module/inventory-tranasaction/stock-aging-report",
-      //     },
-      //     {
-      //       name: "Store Wise Closing Balance Report",
-      //       path: "/inventory-module/inventory-tranasaction/store-wise-closing-balance-report",
-      //     },
-      //     {
-      //       name: "Inventory Profit Margin",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-profit-margin",
-      //     },
-      //     {
-      //       name: "Un Balanced Detail Ledger",
-      //       path: "/inventory-module/inventory-tranasaction/un-balanced-detail-ledger",
-      //     },
-      //     {
-      //       name: "Items Price List",
-      //       path: "/inventory-module/inventory-tranasaction/items-price-list",
-      //     },
-      //     {
-      //       name: "Inventory Profit Margin Summary",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-profit-margin-summary",
-      //     },
-      //     {
-      //       name: "Inventory Transfer",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-transfer",
-      //     },
-      //     {
-      //       name: "Inventory Adjustment",
-      //       path: "/inventory-module/inventory-tranasaction/inventory-adjustment",
-      //     },
-      //     {
-      //       name: "Transfer Order",
-      //       path: "/inventory-module/inventory-tranasaction/transfer-order",
-      //     },
-      //     {
-      //       name: "Minimum Stock Report",
-      //       path: "/inventory-module/inventory-tranasaction/minimum-stock-report",
-      //     },
-      //     {
-      //       name: "Re Order Level Report",
-      //       path: "/inventory-module/inventory-tranasaction/re-order-level-report",
-      //     },
-      //     {
-      //       name: "Requisition Report",
-      //       path: "/inventory-module/inventory-tranasaction/requisition-report",
-      //     },
-      //     {
-      //       name: "Stock Movement Detail Report",
-      //       path: "/inventory-module/inventory-tranasaction/stock-movement-detail-report",
-      //     },
-      //     {
-      //       name: "Items Detail Ledger",
-      //       path: "/inventory-module/inventory-tranasaction/items-detail-ledger",
-      //     },
-      //     {
-      //       name: "Material Issue Note Report",
-      //       path: "/inventory-module/inventory-tranasaction/material-issue-note-report",
-      //     },
-      //     {
-      //       name: "Material Return Note Report",
-      //       path: "/inventory-module/inventory-tranasaction/material-return-note-report",
-      //     },
-      //     {
-      //       name: "Items Details Closing Report",
-      //       path: "/inventory-module/inventory-tranasaction/items-details-closing-report",
-      //     },
-      //     {
-      //       name: "Assembly Item Production Report",
-      //       path: "/inventory-module/inventory-tranasaction/assembly-item-production-report",
-      //     },
-      //     {
-      //       name: "Item Production Report",
-      //       path: "/inventory-module/inventory-tranasaction/item-production-report",
-      //     },
-      //   ],
-      // },
+      {
+        name: "Inventory Adjustment",
+        path: "/inventory/inventory-adjustment",
+      },
+      {
+        name: "Inventory Transfer",
+        path: "/inventory/inventory-transfer",
+      },
+      {
+        name: "Material Issue Note",
+        path: "/inventory/material-issue-note",
+      },
+      {
+        name: "Material Return Note",
+        path: "/inventory/material-return-note",
+      },
+      {
+        name: "Transfer Orders",
+        path: "/inventory/transfer-orders",
+      },
+      {
+        name: "Stock Taking",
+        path: "/inventory/stock-taking",
+      },
     ],
   },
   {

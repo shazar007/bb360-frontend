@@ -1,18 +1,34 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import CustomCheckbox from "../../../../components/customCheckbox";
+import { useQuery } from "@tanstack/react-query";
+import { getAllSalesReturns } from "../../../../api/saleRetrun";
 
 export default function SalesReturn() {
   const { goTo } = useAppNavigate();
-
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const { data: saleRetrun, isLoading } = useQuery({
+    queryKey: ["getAllSalesReturns"],
+    queryFn: getAllSalesReturns,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const allSalesReturns = saleRetrun?.data?.data || [];
   useEffect(() => {
     document.title = "Sales Return — BB-360";
   }, []);
-
+  const toggleSelect = (id: string, checked: boolean) => {
+    setSelectedRows((prev) =>
+      checked ? [...prev, id] : prev.filter((i) => i !== id),
+    );
+  };
   return (
     <div className="mt-8">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -20,9 +36,7 @@ export default function SalesReturn() {
             Sales Return
           </p>
         </div>
-
         <div className="flex flex-wrap items-center gap-2">
-          {/* SEARCH */}
           <div className="relative w-full md:w-60">
             <input
               placeholder="Search Distributors..."
@@ -33,8 +47,6 @@ export default function SalesReturn() {
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
             />
           </div>
-
-          {/* FILTER */}
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -42,8 +54,6 @@ export default function SalesReturn() {
             <Icon icon="mage:filter" className="text-lg" />
             Filters
           </button>
-
-          {/* RESET */}
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
@@ -51,8 +61,6 @@ export default function SalesReturn() {
             <Icon icon="ion:refresh-outline" className="text-lg" />
             Reset
           </button>
-
-          {/* CREATE */}
           <button
             onClick={() => {
               goTo("/sale-module/sales/sales-return/create");
@@ -65,15 +73,13 @@ export default function SalesReturn() {
           </button>
         </div>
       </div>
-
-      {/* TABLE */}
       <div className="pb-4 mt-2 bg-white rounded-2xl">
         <div className="flex justify-between items-center px-4.5 py-2">
           <p className="text-xs font-semibold text-primary">Sales_List</p>
         </div>
-
         <CustomTable
           norounded
+          loading={isLoading}
           height="60vh"
           headers={[
             "Edit",
@@ -86,46 +92,30 @@ export default function SalesReturn() {
             "Quantity (Pcs)",
             "Amount",
           ]}
-          data={[
-            [
+          data={allSalesReturns.map((saleReturn: any) => {
+            const item = saleReturn?.items?.[0];
+            return [
               <Icon
                 icon="qlementine-icons:menu-burger-16"
                 className="text-lg cursor-pointer text-primary"
               />,
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
+              <CustomCheckbox
+                checked={selectedRows.includes(saleReturn._id)}
+                onChange={(checked: boolean) =>
+                  toggleSelect(saleReturn._id, checked)
+                }
               />,
-              "INV-000255",
-              "DIS-556",
-              "Noor Sons",
+              saleReturn.invoiceNumber,
+              saleReturn.distributorCode,
+              saleReturn.distributorName,
               <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
-                <p>Good</p>
+                <p>{saleReturn.status}</p>
               </div>,
-              "Olive Oil 500ml, Desi Ghee 2Kg, Chia Seeds 500mg",
-              "1,100",
-              "420,256",
-            ],
-            [
-              <Icon
-                icon="qlementine-icons:menu-burger-16"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              "INV-0002360",
-              "DIS-662",
-              "Al Ghani Traders",
-              <div className="bg-[#F4E7A1]/40 w-max px-2 py-0.5 rounded-sm text-[#9C8A00]">
-                <p>Near Expiry</p>
-              </div>,
-              "Shakar 500gm, Instant Talbina 1Kg, Chia Seeds 500mg",
-              "840",
-              "378,256",
-            ],
-          ]}
+              saleReturn.description,
+              item?.returnQty || 0,
+              item?.amount || 0,
+            ];
+          })}
         />
       </div>
     </div>

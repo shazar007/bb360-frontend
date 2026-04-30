@@ -64,6 +64,7 @@ export default function DeliveryChallan() {
       <div className="mt-2 bg-white rounded-2xl pb-4">
         <CustomTable
           norounded
+          loading={isLoading}
           height="60vh"
           headers={[
             "Edit",
@@ -77,36 +78,34 @@ export default function DeliveryChallan() {
             "Delivery Address",
             "Quantity (Pcs)",
           ]}
-          data={saleInvoicesData?.map((item:any)=>[
-             <Icon
-                icon="basil:edit-outline"
-                className="text-primary text-lg cursor-pointer"
-                onClick={() =>
-                  goWithState("/sale-module/sales/delivery-challan/create", { item })
-                }
-              />,
-              <Icon
-                icon="hugeicons:view"
-                className="text-primary text-lg cursor-pointer"
-              />,
-              <Icon
-                icon="ion:print-outline"
-                className="text-primary text-lg cursor-pointer"
-              />,
-              item?.
-            invoiceNumber,
-              item?.createdAt,
-              // item?.dispatchDate,
-              item?.distributorName,
-              item?.
-              contactNumber,
-              item?.
-              address
-,
-              item?.items?.reduce(
-                (sum: number, ite: any) => sum + Number(ite?.orderedQty || 0),
-                0
-              ),
+          data={saleInvoicesData?.map((item: any) => [
+            <Icon
+              icon="basil:edit-outline"
+              className="text-primary text-lg cursor-pointer"
+              onClick={() =>
+                goWithState("/sale-module/sales/delivery-challan/create", {
+                  item,
+                })
+              }
+            />,
+            <Icon
+              icon="hugeicons:view"
+              className="text-primary text-lg cursor-pointer"
+            />,
+            <Icon
+              icon="ion:print-outline"
+              className="text-primary text-lg cursor-pointer"
+            />,
+            item?.invoiceNumber,
+            item?.createdAt,
+            // item?.dispatchDate,
+            item?.distributorName,
+            item?.contactNumber,
+            item?.address,
+            item?.items?.reduce(
+              (sum: number, ite: any) => sum + Number(ite?.orderedQty || 0),
+              0,
+            ),
           ])}
         />
       </div>

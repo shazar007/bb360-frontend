@@ -11,7 +11,7 @@ export default function VendorBills() {
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
-  const { data: AllInvoice } = useQuery({
+  const { data: AllInvoice, isLoading } = useQuery({
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseInvoice,
 
@@ -77,6 +77,7 @@ export default function VendorBills() {
       </div>
       <div className="mt-2">
         <CustomTable
+          loading={isLoading}
           height="60vh"
           headers={[
             "Edit",

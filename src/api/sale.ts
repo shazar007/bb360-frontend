@@ -16,3 +16,9 @@ export const GetSalesInvoiceByIdApi = (id: string) => {
 export const UpdateSalesInvoiceApi = (id: string, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.SALES_INVOICE}/${id}`, values);
 };
+
+export const GetSalesInvoiceByInvoiceNo = (invoiceNo: string) => {
+  return HTTP_CLIENT.get(
+    `${ENDPOINTS.SALES_INVOICE}/by-invoiceNumber/${invoiceNo}`,
+  );
+};

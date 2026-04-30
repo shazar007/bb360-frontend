@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CustomDatePickerProps = {
   label?: string;
@@ -36,7 +36,9 @@ export default function CustomDatePicker({
 }: CustomDatePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [internalValue, setInternalValue] = useState(value || "");
-
+  useEffect(() => {
+    setInternalValue(value || "");
+  }, [value]);
   const handleChange = (val: string) => {
     setInternalValue(val);
     onChange(val);

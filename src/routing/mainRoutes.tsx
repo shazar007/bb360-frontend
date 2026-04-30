@@ -6,6 +6,7 @@ import ApplicationSetupRouting from "./applicationSetupRouting";
 import SaleModuleRouting from "./saleModuleRouting";
 import ProtectedRoute from "./protectedRoutes";
 import FinancialModuleRouting from "./financialModuleRouting";
+import InventoryRouting from "./inventoryRouting";
 function MainRoutes() {
   return (
     <div className="flex flex-col w-full h-screen p-5 md:p-8 bg-bgprimary">
@@ -55,6 +56,14 @@ function MainRoutes() {
             element={
               <ProtectedRoute>
                 <FinancialModuleRouting />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inventory/*"
+            element={
+              <ProtectedRoute>
+                <InventoryRouting />
               </ProtectedRoute>
             }
           />
