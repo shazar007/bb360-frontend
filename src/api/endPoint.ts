@@ -33,4 +33,7 @@ export const ENDPOINTS = {
 
   // --------------inventory Adjustments-------------
   INVENTORY_ADJUSTMENT: "/inventory-adjustments",
+
+  // --------------inventory Transfers-------------
+  INVENTORY_TRANSFERS: "/inventory-transfers",
 };

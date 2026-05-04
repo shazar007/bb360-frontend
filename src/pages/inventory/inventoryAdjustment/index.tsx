@@ -15,7 +15,7 @@ export default function InventoryAdjustment() {
   const [confirm, setConfirm] = useState(false);
   const [deleteItem, setDeleteItem] = useState<any>(null);
   const { goTo } = useAppNavigate();
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["getAllInventoryAdjustments"],
     queryFn: getAllInventoryAdjustments,
 
@@ -62,6 +62,82 @@ export default function InventoryAdjustment() {
 
     setConfirm(false);
     setDeleteItem(null);
+    refetch();
+  };
+  const handlePrint = (item: any) => {
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print Inventory Adjustment</title>
+        <style>
+         table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+              }
+
+              th, td {
+                border: 1px solid #000;
+                padding: 8px;
+                text-align: left;
+              }
+
+              th {
+                background: #f2f2f2;
+              }
+        </style>
+      </head>
+      <body>
+        <h2>Inventory Adjustment</h2>
+
+        <div class="row"><b>Transaction Number:</b> ${item.transactionNumber || "-"}</div>
+        <div class="row"><b>Date:</b> ${item.transactionDate || "-"}</div>
+        <div class="row"><b>Created From:</b> ${item.createdFrom || "-"}</div>
+        <div class="row"><b>Transaction Name:</b> ${item.transactionName || "-"}</div>
+        <div class="row"><b>Status:</b> ${item.status || "-"}</div>
+        <div class="row"><b>Notes:</b> ${item.notes || "-"}</div>
+
+         <table>
+            <thead>
+            <tr>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>UOM</th>
+              <th>Quantity</th>
+              <th>Adjusted</th>
+            </tr>
+          </thead>
+          <tbody>
+        
+            ${(item.items || [])
+              .map(
+                (i: any) => `
+                <tr>
+                  <td>${i.itemCode || "-"}</td>
+                  <td>${i.itemName || "-"}</td>
+                  <td>${i.uom || "-"}</td>
+                  <td>${i.quantity || "-"}</td>
+                  <td>${i.quantityAdjusted || "-"}</td>
+                </tr>
+              `,
+              )
+              .join("")}
+          </tbody>
+        </table>
+
+        <script>
+          window.print();
+          window.onafterprint = () => window.close();
+        </script>
+      </body>
+    </html>
+  `);
+
+    printWindow.document.close();
   };
   return (
     <>
@@ -102,11 +178,10 @@ export default function InventoryAdjustment() {
           </div>
         </div>
 
-        <div className="bg-bgprimary]  rounded-2xl mt-3">
+        <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
               height="700px"
-              norounded
               headers={[
                 "Edit",
                 "View",
@@ -160,10 +235,12 @@ export default function InventoryAdjustment() {
                 <Icon
                   icon="hugeicons:view"
                   className="text-lg cursor-pointer text-primary"
+                  onClick={() => handlePrint(item)}
                 />,
 
                 <Icon
                   icon="ion:print-outline"
+                  onClick={() => handlePrint(item)}
                   className="text-lg cursor-pointer text-primary"
                 />,
 
