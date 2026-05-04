@@ -22,7 +22,7 @@ export default function CreateDeliveryChallan() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <button
             onClick={goBack}
             className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"

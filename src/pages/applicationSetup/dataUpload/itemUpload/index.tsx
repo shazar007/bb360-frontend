@@ -21,7 +21,7 @@ export default function DataUpload() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  
+
   const [form, setForm] = useState<any>({
     itemName: "",
     itemCategory: "",

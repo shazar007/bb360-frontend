@@ -30,4 +30,7 @@ export const ENDPOINTS = {
   PURCHASE_INVOICE: "/purchase-invoices",
   // ------------Sale Retrun-------------
   SALES_RETURN: "/sales-returns",
+
+  // --------------inventory Adjustments-------------
+  INVENTORY_ADJUSTMENT: "/inventory-adjustments",
 };
