@@ -21,10 +21,8 @@ export default function SaleRouting() {
         element={<CreateDeliveryChallan />}
       />
 
-      
       <Route path="/sales-return" element={<SalesReturn />} />
       <Route path="/sales-return/create" element={<CreateSalesReturn />} />
-
     </Routes>
   );
 }

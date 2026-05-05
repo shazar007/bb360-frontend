@@ -169,10 +169,10 @@ export default function StockTaking() {
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Material Return Note
+                Delete Stock Taking
               </p>
               <p className="text-center text-heading1 ">
-                Are you sure to delete the Material Return Note?
+                Are you sure to delete the Stock Taking?
               </p>
             </div>
 

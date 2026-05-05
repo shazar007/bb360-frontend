@@ -11,7 +11,8 @@ import CustomSelectSearch from "../../../components/customSelectSearch";
 import { getAllItems } from "../../../api/itemServices";
 import { useQuery } from "@tanstack/react-query";
 import CustomSelect from "../../../components/customSelect";
-import { getAllMaterialIssueNotes } from "../../../api/inventoryServices";
+import { addMaterialIssueNote } from "../../../api/inventoryServices";
+import { useQueryClient } from "@tanstack/react-query";
 
 const rowInitialForm = {
   itemCode: "",
@@ -30,6 +31,7 @@ const headerInitialForm = {
 };
 
 export default function MaterialIssueNoteCreate() {
+  const queryClient = useQueryClient();
   const { goBack } = useAppNavigate();
   const [issueNoteCreate, setIssueNoteCreate] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -110,20 +112,19 @@ export default function MaterialIssueNoteCreate() {
     };
 
     console.log("Final Payload:", payload);
+    await addMaterialIssueNote(payload);
 
     setTimeout(() => {
       setSaveLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["getAllMaterialIssueNotes"],
+      });
       notifySuccess("Material Issue Note Saved Successfully");
 
       goBack();
-      refetch();
     }, 1500);
   };
-  const { refetch } = useQuery({
-    queryKey: ["getAllMaterialIssueNotes"],
-    queryFn: getAllMaterialIssueNotes,
-    enabled: false,
-  });
+
   return (
     <>
       <div className="mt-8">

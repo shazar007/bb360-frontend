@@ -3,8 +3,12 @@ import VenderDefine from "./vendorDefineRouting";
 import ProcurementRouting from "./procurementRouting";
 import PurchaseRouting from "./purchaseRouting";
 import PayableRouting from "./payableRouting";
+import { useEffect } from "react";
 
 export default function PurchaseModuleRouting() {
+  useEffect(() => {
+    document.title = "Purchase Module — BB-360";
+  }, []);
   return (
     <Routes>
       <Route path="vender-define/*" element={<VenderDefine />} />

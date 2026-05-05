@@ -31,19 +31,20 @@ export default function InventoryAdjustmentCreate() {
   const { goBack } = useAppNavigate();
 
   const [saveRow, setSaveRow] = useState(false);
-  const [form, setForm] = useState({
-    transactionNumber: "",
-    createdFrom: "",
-    status: "",
-    transactionDate: "",
-    transactionName: "",
-
+  const [rowForm, setRowForm] = useState({
     item: "",
     itemCode: "",
     itemName: "",
     uom: "",
     quantity: "",
     quantityAdjusted: "",
+  });
+  const [form, setForm] = useState({
+    transactionNumber: "",
+    createdFrom: "",
+    status: "",
+    transactionDate: "",
+    transactionName: "",
   });
   useEffect(() => {
     const stored = localStorage.getItem("inventoryAdjustment");
@@ -60,19 +61,14 @@ export default function InventoryAdjustmentCreate() {
     localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
   };
   const handleSave = () => {
-    if (!form.itemCode || !form.quantity) {
+    if (!rowForm.itemCode || !rowForm.quantity) {
       return notifyError("Please fill required fields");
     }
 
     setSaveRow(true);
 
     const newRow = {
-      item: form.item,
-      itemCode: form.itemCode,
-      itemName: form.itemName,
-      uom: form.uom,
-      quantity: form.quantity,
-      quantityAdjusted: form.quantityAdjusted,
+      ...rowForm,
       selected: false,
     };
 
@@ -90,12 +86,8 @@ export default function InventoryAdjustmentCreate() {
       setTableData(updated);
       localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
 
-      setForm({
-        transactionNumber: "",
-        createdFrom: "",
-        status: "",
-        transactionDate: "",
-        transactionName: "",
+      // ✅ ONLY reset modal form
+      setRowForm({
         item: "",
         itemCode: "",
         itemName: "",
@@ -136,10 +128,14 @@ export default function InventoryAdjustmentCreate() {
       label: item?.itemName ?? "",
       value: item?._id ?? "",
     })) || [];
-
   const handleSubmit = async () => {
     if (tableData.length === 0) {
       notifyError("Add at least one item");
+      return;
+    }
+
+    if (!form.transactionName || !form.transactionDate) {
+      notifyError("Please fill required fields");
       return;
     }
 
@@ -159,29 +155,26 @@ export default function InventoryAdjustmentCreate() {
       };
 
       await addInventoryAdjustment(payload);
+
       notifySuccess("Saved successfully");
-      goBack();
+
+      // ✅ reset only main form
       setForm({
         transactionNumber: "",
         createdFrom: "",
         status: "",
         transactionDate: "",
         transactionName: "",
-        item: "",
-        itemCode: "",
-        itemName: "",
-        uom: "",
-        quantity: "",
-        quantityAdjusted: "",
       });
 
       setTableData([]);
       localStorage.removeItem("inventoryAdjustment");
+
+      goBack(); // ✅ only once
     } catch (error) {
       notifyError("Something went wrong");
     } finally {
       setLoading(false);
-      goBack();
       refetch();
     }
   };
@@ -356,11 +349,11 @@ export default function InventoryAdjustmentCreate() {
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
-                value={form.item}
+                value={rowForm.item}
                 onChange={(val) => {
                   const selectedItem = items.find((i: any) => i._id === val);
 
-                  setForm((prev) => ({
+                  setRowForm((prev) => ({
                     ...prev,
                     item: val,
                     itemName: selectedItem?.itemName || "",
@@ -371,20 +364,15 @@ export default function InventoryAdjustmentCreate() {
                 }}
               />
 
-              <CustomInput
-                label="UOM"
-                value={form.uom}
-                disabled
-                onChange={(e: any) => setForm({ ...form, uom: e.target.value })}
-              />
+              <CustomInput label="UOM" value={rowForm.uom} disabled />
 
-              <CustomInput label="Quantity" value={form.quantity} disabled />
+              <CustomInput label="Quantity" value={rowForm.quantity} disabled />
 
               <CustomInput
                 label="Quantity Adjusted"
-                value={form.quantityAdjusted}
+                value={rowForm.quantityAdjusted}
                 onChange={(e: any) =>
-                  setForm({ ...form, quantityAdjusted: e.target.value })
+                  setRowForm({ ...rowForm, quantityAdjusted: e.target.value })
                 }
               />
             </div>

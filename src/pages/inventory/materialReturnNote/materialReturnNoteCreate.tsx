@@ -237,14 +237,14 @@ export default function MaterialReturnNoteCreate() {
               <div className="flex items-center gap-2 ml-auto w-full sm:w-auto justify-end">
                 <button
                   onClick={handleDeleteSelected}
-                  className="flex items-center justify-center w-8 h-8 text-white bg-red-500 rounded-md"
+                  className="flex items-center justify-center cursor-pointer w-8 h-8 text-white bg-red-500 rounded-md"
                 >
                   <Icon icon="proicons:delete" />
                 </button>
 
                 <button
                   onClick={() => setRetrunNoteCreate(true)}
-                  className="h-8 px-3 text-xs sm:text-sm text-white rounded-md bg-secondary"
+                  className="h-8 px-3 text-xs sm:text-sm cursor-pointer text-white rounded-md bg-secondary"
                 >
                   Add Row
                 </button>
