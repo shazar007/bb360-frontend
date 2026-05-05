@@ -63,13 +63,13 @@ export default function AccountLedger() {
               />
             </div>
 
-            <div className="space-y-1.5">
+            {/* <div className="space-y-1.5">
               <CustomSelect
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Date Filter"
                 placeholder="This Week"
               />
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -85,26 +85,29 @@ export default function AccountLedger() {
               norounded
               headers={[
                 "Date",
+                "Voucher No.",
                 "Ref #",
-                "Description",
+                "Account Name/Description",
                 "Debit",
                 "Credit",
-                "Closing Balance",
+                "Balance",
               ]}
               data={[
                 [
                   "10-Apr-2026",
+                  "JV-000001",
                   "INV-2258",
                   "Item Receipt",
                   "420,256",
-                  "420,256",
+                  "",
                   "1,420,256",
                 ],
                 [
                   "12-Apr-2026",
+                  "JV-000002",
                   "0000215",
                   "Received the foc stock for eid",
-                  "420,256",
+                  "",
                   "420,256",
                   "2,520,256",
                 ],
