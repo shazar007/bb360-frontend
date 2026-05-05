@@ -40,16 +40,16 @@ export default function OrderDetails() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
-                label="Purchase Order"
+                label="Purchase Order "
                 value={receivedData.poNumber}
                 placeholder="TO BE GENERATE"
                 disabled
               />
               <CustomInput label="Date" value="2026-03-01" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Party Account"
                 placeholder="Select Party"
@@ -60,7 +60,7 @@ export default function OrderDetails() {
                 value={receivedData.partyAccount.vendorCategory || ""}
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Delivery Address"
                 placeholder="Address"
@@ -68,7 +68,7 @@ export default function OrderDetails() {
               />
               <CustomInput label="Type" value={receivedData.type} />
             </div>{" "}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Advance Payment"
                 value={receivedData.advanceAmount}
@@ -101,11 +101,11 @@ export default function OrderDetails() {
             data={receivedData.items.map((item: any) => [
               <Icon
                 icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-xl"
+                className="text-xl text-primary"
               />,
               <Icon
                 icon="qlementine-icons:menu-burger-16"
-                className="text-primary text-xl"
+                className="text-xl text-primary"
               />,
               item.itemCode,
               item.itemName,

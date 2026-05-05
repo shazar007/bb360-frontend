@@ -86,7 +86,6 @@ export default function InventoryAdjustmentCreate() {
       setTableData(updated);
       localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
 
-      // ✅ ONLY reset modal form
       setRowForm({
         item: "",
         itemCode: "",
@@ -158,7 +157,6 @@ export default function InventoryAdjustmentCreate() {
 
       notifySuccess("Saved successfully");
 
-      // ✅ reset only main form
       setForm({
         transactionNumber: "",
         createdFrom: "",
@@ -170,7 +168,7 @@ export default function InventoryAdjustmentCreate() {
       setTableData([]);
       localStorage.removeItem("inventoryAdjustment");
 
-      goBack(); // ✅ only once
+      goBack();
     } catch (error) {
       notifyError("Something went wrong");
     } finally {
@@ -188,7 +186,7 @@ export default function InventoryAdjustmentCreate() {
               Inventory Adjustment / Create
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+          <div className="flex flex-wrap items-center justify-end w-full gap-2 md:w-auto">
             <button
               onClick={goBack}
               className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary rounded-md text-white cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
@@ -224,7 +222,7 @@ export default function InventoryAdjustmentCreate() {
           </div>
           <div className="bg-white rounded-b-2xl">
             {" "}
-            <div className="grid grid-cols-1 md:grid-cols-2 p-4 lg:grid-cols-4 gap-y-4 gap-x-20">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-20">
               <CustomInput
                 label="Created From"
                 placeholder="Enter Created From"
@@ -345,7 +343,7 @@ export default function InventoryAdjustmentCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:p-8  p-4">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"

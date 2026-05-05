@@ -12,9 +12,7 @@ export default function SalesInvoiceModel({
   onDelete,
 }: Props) {
   return (
-    <div className=" rounded-2xl shadow-md w-56 overflow-hidden bg-white">
-      
-      {/* Add Row */}
+    <div className="w-56 overflow-hidden bg-white shadow-md  rounded-2xl">
       <button
         onClick={onAdd}
         className="flex items-center justify-between w-full px-4 py-3 text-sm text-heading1 hover:bg-gray-200"
@@ -23,7 +21,6 @@ export default function SalesInvoiceModel({
         <Icon icon="material-symbols:add-rounded" className="text-lg" />
       </button>
 
-      {/* Update Row */}
       <button
         onClick={onUpdate}
         className="flex items-center justify-between w-full px-4 py-3 text-sm text-heading1 hover:bg-gray-200"
@@ -32,10 +29,8 @@ export default function SalesInvoiceModel({
         <Icon icon="octicon:duplicate-16" className="text-lg" />
       </button>
 
-      {/* Divider */}
       <div className="border-t border-gray-300" />
 
-      {/* Delete Row */}
       <button
         onClick={onDelete}
         className="flex items-center justify-between w-full px-4 py-3 text-sm text-heading1 hover:bg-gray-200"
@@ -43,7 +38,6 @@ export default function SalesInvoiceModel({
         Delete Row
         <Icon icon="material-symbols:delete-outline" className="text-lg" />
       </button>
-
     </div>
   );
 }

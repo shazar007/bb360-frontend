@@ -234,17 +234,17 @@ export default function MaterialReturnNoteCreate() {
               ))}
             </div>
             {activeTab === "Transaction Lines" && (
-              <div className="flex items-center gap-2 ml-auto w-full sm:w-auto justify-end">
+              <div className="flex items-center justify-end w-full gap-2 ml-auto sm:w-auto">
                 <button
                   onClick={handleDeleteSelected}
-                  className="flex items-center justify-center cursor-pointer w-8 h-8 text-white bg-red-500 rounded-md"
+                  className="flex items-center justify-center w-8 h-8 text-white bg-red-500 rounded-md cursor-pointer"
                 >
                   <Icon icon="proicons:delete" />
                 </button>
 
                 <button
                   onClick={() => setRetrunNoteCreate(true)}
-                  className="h-8 px-3 text-xs sm:text-sm cursor-pointer text-white rounded-md bg-secondary"
+                  className="h-8 px-3 text-xs text-white rounded-md cursor-pointer sm:text-sm bg-secondary"
                 >
                   Add Row
                 </button>
@@ -267,7 +267,7 @@ export default function MaterialReturnNoteCreate() {
                 data={tableData.map((item, index) => [
                   <Icon
                     icon="basil:edit-outline"
-                    className="text-lg sm:text-xl cursor-pointer text-primary"
+                    className="text-lg cursor-pointer sm:text-xl text-primary"
                     onClick={() => {
                       setRowForm(item);
                       setEditIndex(index);
@@ -297,7 +297,7 @@ export default function MaterialReturnNoteCreate() {
             </div>
           )}
           {activeTab === "System Information" && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 text-xs sm:text-sm text-center sm:text-left">
+            <div className="grid grid-cols-1 gap-4 p-4 text-xs text-center sm:grid-cols-2 sm:text-sm sm:text-left">
               <p>Created By</p>
               <p>Modified By</p>
               <p>Created Date</p>
@@ -307,7 +307,7 @@ export default function MaterialReturnNoteCreate() {
         </div>
       </div>{" "}
       {retrunNoteCreate && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-5 border-b">
               <h2 className="text-sm font-bold">Material Return Note</h2>
@@ -319,7 +319,7 @@ export default function MaterialReturnNoteCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:p-8  p-4">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Search Item"
@@ -357,10 +357,10 @@ export default function MaterialReturnNoteCreate() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 p-5 cursor-pointer rounded-b-2xl">
+            <div className="flex justify-end gap-3 p-5 rounded-b-2xl">
               <button
                 onClick={handleAddRowToTable}
-                className="flex items-center gap-2 px-6 py-2 text-white rounded-md bg-primary"
+                className="flex items-center gap-2 px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
               >
                 <Icon icon="mynaui:save" /> Add to List
               </button>

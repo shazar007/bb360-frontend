@@ -16,15 +16,13 @@ export default function ItemModel({ close, data, onSave, saveLoading }: any) {
     },
 
     onSubmit: (values) => {
-      console.log("SUBMIT 🔥", values);
-
       if (onSave) onSave(values);
     },
   });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-white rounded-xl">
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl">
         <div className="flex items-center justify-between px-6 py-3 pb-3 border-b">
           <h2 className="text-xs font-semibold text-heading1">Edit Item</h2>
 

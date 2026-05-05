@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 
 type CustomDatePickerProps = {
@@ -12,16 +13,6 @@ type CustomDatePickerProps = {
   white?: boolean;
   placeholder?: string;
 };
-
-function formatDate(dateStr?: string) {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
 
 export default function CustomDatePicker({
   label,
@@ -84,7 +75,9 @@ export default function CustomDatePicker({
               className="text-gray-400"
             />
             <span className={!internalValue ? "text-gray-400" : ""}>
-              {internalValue ? formatDate(internalValue) : placeholder}
+              {internalValue && dayjs(internalValue).isValid()
+                ? dayjs(internalValue).format("DD-MMM-YYYY")
+                : placeholder}
             </span>
           </div>
           {internalValue && !disabled && (

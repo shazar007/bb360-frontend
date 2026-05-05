@@ -10,7 +10,6 @@ export default function CreateDeliveryChallan() {
   const { goBack } = useAppNavigate();
   const location = useLocation();
   const receivedData = location.state?.item;
-  // console.log("🚀 ~ CreateDeliveryChallan ~ receivedData:", receivedData);
 
   return (
     <div className="mt-8">

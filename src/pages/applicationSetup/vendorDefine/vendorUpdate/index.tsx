@@ -9,6 +9,7 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { updateVendor } from "../../../../api/vendorServices";
 import { getAllVendors } from "../../../../api/vendorServices";
 import { deleteVendor } from "../../../../api/vendorServices";
+import dayjs from "dayjs";
 
 export default function VendorUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -18,7 +19,7 @@ export default function VendorUpdate() {
   const [confirm, setConfirm] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  
+
   const [form, setForm] = useState<any>({
     vendorCode: "",
     vendorName: "",
@@ -207,15 +208,14 @@ export default function VendorUpdate() {
                 {openMenuIndex === index && (
                   <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6 ">
                     <button
-                      className="w-full px-2 py-1 text-left hover:bg-gray-100 cursor-pointer"
+                      className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
                       onClick={() => handleEdit(index)}
                     >
                       Edit Vendor
                     </button>
 
-                    {/* ADD THIS */}
                     <button
-                      className="w-full px-2 py-1 text-left text-red-500 hover:bg-gray-100 cursor-pointer"
+                      className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
                       // onClick={() => handleDelete(index)}
                       onClick={() => handleDeleteClick(item)}
                     >
@@ -232,7 +232,9 @@ export default function VendorUpdate() {
               item.address,
               item.city,
               item.licenceNumber,
-              item.licenceExpiryDate,
+              item.licenceExpiryDate
+                ? dayjs(item.licenceExpiryDate).format("DD-MMM-YYYY")
+                : "-",
               <div
                 className={`px-2 py-1 rounded-sm text-xs  w-fit
     ${
@@ -347,8 +349,8 @@ export default function VendorUpdate() {
       )}
 
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 ✕

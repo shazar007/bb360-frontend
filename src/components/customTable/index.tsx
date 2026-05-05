@@ -49,7 +49,7 @@ export default function CustomTable({
             </tr>
           ) : data?.length ? (
             data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+              <tr key={rowIndex} className="hover:bg-bgprimary ">
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}

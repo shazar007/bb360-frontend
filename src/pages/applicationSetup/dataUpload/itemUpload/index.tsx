@@ -10,6 +10,8 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import * as XLSX from "xlsx";
+import dayjs from "dayjs";
+
 const STORAGE_KEY = "temp_items_upload";
 
 export default function DataUpload() {
@@ -133,7 +135,7 @@ export default function DataUpload() {
   const handleUpload = async () => {
     try {
       if (!tableData.length) {
-        notifyError("No data to upload");
+        notifyError("Please add row before uploading item data");
         return;
       }
 
@@ -229,14 +231,7 @@ export default function DataUpload() {
 
     reader.readAsBinaryString(file);
   };
-  const formatDisplayDate = (date: string) => {
-    if (!date) return "";
 
-    const d = new Date(date);
-    if (isNaN(d.getTime())) return date;
-
-    return d.toLocaleDateString();
-  };
   const handleDownloadTemplate = () => {
     try {
       setDownloadLoading(true);
@@ -367,7 +362,15 @@ export default function DataUpload() {
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setConfirm(true)}
+                onClick={() => {
+                  const isAnySelected = tableData.some((item) => item.selected);
+
+                  if (!isAnySelected) {
+                    return notifyError("Please select at least one item first");
+                  }
+
+                  setConfirm(true);
+                }}
                 className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
               >
                 <Icon icon="proicons:delete" className="text-xl" />
@@ -413,7 +416,9 @@ export default function DataUpload() {
 
               item.itemName,
               item.itemCategory,
-              formatDisplayDate(item.expiryDate),
+              dayjs(item.expiryDate).isValid()
+                ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                : "-",
               item.uom,
               item.tp,
               item.mrp,
@@ -423,8 +428,8 @@ export default function DataUpload() {
       </div>
 
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
@@ -488,42 +493,55 @@ export default function DataUpload() {
                 value={form.expiryDate}
                 onChange={(v) => setForm({ ...form, expiryDate: v })}
               />
-              <CustomInput
-                label="Item Category"
-                name="itemCategory"
-                value={form.itemCategory}
-                onChange={handleChange}
-              />
-
-              <CustomInput
-                label="TP"
-                name="tp"
-                value={form.tp}
-                onChange={handleChange}
-              />
               <CustomSelect
-                label="Units"
+                label="Item Category"
                 options={[
-                  { value: "ml", label: "ML" },
-                  { value: "l", label: "Litre" },
-                  { value: "g", label: "Gram" },
-                  { value: "kg", label: "KG" },
-                  { value: "pcs", label: "PCS" },
-                  { value: "box", label: "Box" },
-                  { value: "strip", label: "Strip" },
-                  { value: "bottle", label: "Bottle" },
-                  { value: "pack", label: "Pack" },
-                  { value: "dozen", label: "Dozen" },
+                  { value: "RAW_MATERIAL", label: "Raw Material" },
+                  { value: "FINISHED_GOOD", label: "Finished Good" },
                 ]}
-                value={form.uom}
-                onChange={(v) => setForm({ ...form, uom: v })}
+                value={form.itemCategory}
+                onChange={(val: any) =>
+                  setForm((prev: any) => ({
+                    ...prev,
+                    itemCategory: val?.value || val,
+                  }))
+                }
               />
-              <CustomInput
-                label="MRP"
-                name="mrp"
-                value={form.mrp}
-                onChange={handleChange}
-              />
+              {form.itemCategory !== "RAW_MATERIAL" && (
+                <CustomInput
+                  label="TP"
+                  name="tp"
+                  value={form.tp}
+                  onChange={handleChange}
+                />
+              )}{" "}
+              {form.itemCategory !== "RAW_MATERIAL" && (
+                <CustomSelect
+                  label="Units"
+                  options={[
+                    { value: "ml", label: "ML" },
+                    { value: "l", label: "Litre" },
+                    { value: "g", label: "Gram" },
+                    { value: "kg", label: "KG" },
+                    { value: "pcs", label: "PCS" },
+                    { value: "box", label: "Box" },
+                    { value: "strip", label: "Strip" },
+                    { value: "bottle", label: "Bottle" },
+                    { value: "pack", label: "Pack" },
+                    { value: "dozen", label: "Dozen" },
+                  ]}
+                  value={form.uom}
+                  onChange={(v) => setForm({ ...form, uom: v })}
+                />
+              )}{" "}
+              {form.itemCategory !== "RAW_MATERIAL" && (
+                <CustomInput
+                  label="MRP"
+                  name="mrp"
+                  value={form.mrp}
+                  onChange={handleChange}
+                />
+              )}
             </div>
 
             <div className="flex justify-end mt-4">

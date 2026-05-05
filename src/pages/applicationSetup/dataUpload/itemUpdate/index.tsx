@@ -10,6 +10,7 @@ import {
 } from "../../../../api/itemServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import dayjs from "dayjs";
 
 export default function ItemUpdate() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
@@ -21,7 +22,11 @@ export default function ItemUpdate() {
   const [saveLoading, setSaveLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const { data: AllItems, refetch,isLoading} = useQuery({
+  const {
+    data: AllItems,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
 
@@ -181,7 +186,9 @@ export default function ItemUpdate() {
               item.itemCategory,
               item.uom,
               item.batchNumber,
-              item.expiryDate,
+              item.expiryDate
+                ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                : "-",
               item.tradePrice,
               item.mrp,
 
@@ -227,8 +234,8 @@ export default function ItemUpdate() {
       )}
 
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}

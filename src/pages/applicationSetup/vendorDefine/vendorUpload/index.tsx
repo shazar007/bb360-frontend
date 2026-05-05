@@ -9,6 +9,7 @@ import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import { addVendorApi } from "../../../../api/vendorServices";
 import CustomCheckbox from "../../../../components/customCheckbox";
+import dayjs from "dayjs";
 const STORAGE_KEY = "temp_distributor_upload";
 export default function VendorUpload() {
   const [addDistributor, setAddDistributor] = useState(false);
@@ -105,7 +106,7 @@ export default function VendorUpload() {
 
   const handleUpload = async () => {
     if (!tableData.length) {
-      notifyError("No data found");
+      notifyError("Please add row before uploading vendor data");
       return;
     }
 
@@ -136,9 +137,6 @@ export default function VendorUpload() {
           successCount++;
         } catch (err) {
           const error = err as AxiosError<any>;
-
-          console.log("ERROR RESPONSE:", error.response?.data);
-
           notifyError(error.response?.data?.message || "Upload failed");
         }
       }
@@ -369,8 +367,9 @@ export default function VendorUpload() {
               <button
                 onClick={() => {
                   if (selectedRows.length === 0) {
-                    notifyError("No row selected");
-                    return;
+                    return notifyError(
+                      "Please select at least one Vendor first",
+                    );
                   }
                   setConfirm(true);
                 }}
@@ -425,7 +424,9 @@ export default function VendorUpload() {
               item.address || "-",
               item.city || "-",
               item.licenceNumber || "-",
-              item.licenceExpiryDate || "-",
+              item.licenceExpiryDate
+                ? dayjs(item.licenceExpiryDate).format("DD-MMM-YYYY")
+                : "-",
               <div className="bg-[#FF0000]/12 w-max px-2 py-0.5 rounded-sm text-[#FF0000]">
                 <p>Null</p>
               </div>,
@@ -534,8 +535,8 @@ export default function VendorUpload() {
         </div>
       )}
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-xl rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 ✕

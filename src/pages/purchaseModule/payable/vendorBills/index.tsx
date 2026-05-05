@@ -24,7 +24,6 @@ export default function VendorBills() {
   });
 
   const allInvoices = AllInvoice?.data?.data ?? [];
-  console.log("🚀 ~ allInvoices:", allInvoices);
   const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
@@ -108,7 +107,7 @@ export default function VendorBills() {
               className="text-lg cursor-pointer text-primary"
             />,
 
-            dayjs(item?.transactionDate || item?.date).format("YYYY-MM-DD"),
+            dayjs(item?.transactionDate || item?.date).format("YYYY-MMM-DD"),
 
             item?.poNumber || "-",
 

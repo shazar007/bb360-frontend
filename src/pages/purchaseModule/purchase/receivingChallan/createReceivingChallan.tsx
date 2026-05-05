@@ -190,7 +190,7 @@ export default function CreateReceivingChallan() {
               </p>
             </div>
             <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div className="flex-1">
                     <CustomInput
@@ -231,7 +231,7 @@ export default function CreateReceivingChallan() {
                   disabled
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Party Account"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
@@ -253,7 +253,7 @@ export default function CreateReceivingChallan() {
                   disabled
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Delivery Address"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
@@ -269,7 +269,7 @@ export default function CreateReceivingChallan() {
                   disabled
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Tax%"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"

@@ -123,7 +123,7 @@ export default function MaterialReturnNote() {
         <div class="info-section">
           <div>
             <div class="row"><b>Transaction No:</b> ${item.transactionNumber || "-"}</div>
-            <div class="row"><b>Date:</b> ${item.transactionDate ? dayjs(item.transactionDate).format("DD MMM YYYY") : "-"}</div>
+            <div class="row"><b>Date:</b> ${item.transactionDate ? dayjs(item.transactionDate).format("DD-MMM-YYYY") : "-"}</div>
             <div class="row"><b>Status:</b> ${item.status || "-"}</div>
           </div>
 
@@ -173,7 +173,7 @@ export default function MaterialReturnNote() {
   return (
     <>
       <div className="mt-8">
-        <div className="flex flex-wrap md:gap-0 gap-2 items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2 md:gap-0">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
@@ -277,7 +277,7 @@ export default function MaterialReturnNote() {
                 item?.transactionNumber || "-",
 
                 item.transactionDate
-                  ? dayjs(item.transactionDate).format("DD MMM YYYY")
+                  ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
                   : "-",
                 item?.createdFrom || "-",
                 item?.transactionName || "-",
@@ -288,8 +288,8 @@ export default function MaterialReturnNote() {
         </div>
       </div>
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}

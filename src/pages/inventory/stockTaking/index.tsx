@@ -146,7 +146,7 @@ export default function StockTaking() {
                 item?.transactionNumber || "-",
 
                 item.transactionDate
-                  ? dayjs(item.transactionDate).format("DD MMM YYYY")
+                  ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
                   : "-",
                 item?.fromLocation || "-",
                 item?.toLocation || "-",
@@ -159,8 +159,8 @@ export default function StockTaking() {
         </div>
       </div>
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}

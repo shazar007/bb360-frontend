@@ -193,8 +193,7 @@ export default function InventoryTransferCreate() {
           </div>
 
           <div className="bg-white rounded-b-2xl">
-            {" "}
-            <div className="grid grid-cols-1 md:grid-cols-2 p-4 lg:grid-cols-4 gap-y-4 gap-x-20">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 lg:grid-cols-4 gap-y-4 gap-x-20">
               <CustomInput
                 label="Created From"
                 placeholder="Enter Created From"
@@ -274,10 +273,10 @@ export default function InventoryTransferCreate() {
               ))}
             </div>
             {activeTab === "Transaction Lines" && (
-              <div className="flex items-center gap-2 ml-auto w-full sm:w-auto justify-end">
+              <div className="flex items-center justify-end w-full gap-2 ml-auto sm:w-auto">
                 <button
                   onClick={deleteSelectedRows}
-                  className="flex items-center cursor-pointer justify-center w-8 h-8 text-white bg-red-500 rounded-md"
+                  className="flex items-center justify-center w-8 h-8 text-white bg-red-500 rounded-md cursor-pointer"
                 >
                   <Icon icon="proicons:delete" />
                 </button>
@@ -288,7 +287,7 @@ export default function InventoryTransferCreate() {
                     setEditIndex(null);
                     setOpenModal(true);
                   }}
-                  className="h-8 px-3 text-xs cursor-pointer sm:text-sm text-white rounded-md bg-secondary"
+                  className="h-8 px-3 text-xs text-white rounded-md cursor-pointer sm:text-sm bg-secondary"
                 >
                   Add Row
                 </button>
@@ -341,7 +340,7 @@ export default function InventoryTransferCreate() {
       </div>
 
       {openModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 px-6 border-b">
               <h2 className="text-xs font-semibold text-heading1">
@@ -356,7 +355,7 @@ export default function InventoryTransferCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:p-8  p-4">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
               <CustomSelectSearch
                 options={itemOptions}
                 value={rowForm.item}

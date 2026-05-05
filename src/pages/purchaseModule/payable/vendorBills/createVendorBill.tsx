@@ -11,6 +11,7 @@ import {
   getAllPurchaseInvoice,
 } from "../../../../api/purchaseInvoice";
 import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
 const tabs = [
   "Transaction Lines",
@@ -97,17 +98,7 @@ export default function CreateVendorBill() {
     setEditIndex(null);
     setEditRow(null);
   };
-  const formatDate = (date: string) => {
-    if (!date) return "";
 
-    const d = new Date(date);
-
-    const day = String(d.getDate()).padStart(2, "0");
-    const month = d.toLocaleString("en-US", { month: "short" });
-    const year = d.getFullYear();
-
-    return `${day}-${month}-${year}`;
-  };
   const handleSavePurchaseInvoice = async () => {
     try {
       if (!purchaseOrderData) {
@@ -209,7 +200,7 @@ export default function CreateVendorBill() {
             </div>
 
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-30.25 text-secondary">
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
                     <CustomInput
@@ -244,7 +235,7 @@ export default function CreateVendorBill() {
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Party Account"
@@ -260,7 +251,7 @@ export default function CreateVendorBill() {
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Delivery Address"
@@ -276,7 +267,7 @@ export default function CreateVendorBill() {
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Tax%"
@@ -342,7 +333,9 @@ export default function CreateVendorBill() {
                       item.itemCategory,
                       item.uom,
                       item.batchNumber,
-                      formatDate(item.expiryDate),
+                      dayjs(item.expiryDate).isValid()
+                        ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                        : "-",
                       item.orderedQty || "",
                       item.deliveredQty || "",
                       item.purchaseRate || "",

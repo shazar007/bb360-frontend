@@ -248,7 +248,7 @@ export default function CreateSalesReturn() {
               </p>
             </div>
             <div className="grid grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
                     <CustomInput
@@ -274,13 +274,13 @@ export default function CreateSalesReturn() {
                   disabled
                   value={
                     InvoiceData?.createdAt
-                      ? dayjs(InvoiceData.createdAt).format("YYYY-MM-DD")
+                      ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
                       : ""
                   }
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Distributor Name"
                   disabled
@@ -293,7 +293,7 @@ export default function CreateSalesReturn() {
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomSelect
                   label="Condition Check"
                   value={conditionCheck}
@@ -309,7 +309,7 @@ export default function CreateSalesReturn() {
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomSelect
                   label="Restock"
                   placeholder="Yes/No"
@@ -326,7 +326,7 @@ export default function CreateSalesReturn() {
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Discount"
                   value={discount}
@@ -409,8 +409,8 @@ export default function CreateSalesReturn() {
       </div>
 
       {addItem && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
-          <div className="w-full p-6 bg-white max-w-250 rounded-2xl">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full p-6 bg-white shadow-xl max-w-250 rounded-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-heading2">
               <h2 className="text-xs font-semibold text-heading1">
                 Item Entry
@@ -463,7 +463,7 @@ export default function CreateSalesReturn() {
                 label="Expiry Date"
                 value={
                   form.expiryDate
-                    ? dayjs(form.expiryDate).format("YYYY-MM-DD")
+                    ? dayjs(form.expiryDate).format("YYYY-MMM-DD")
                     : ""
                 }
                 disabled

@@ -98,7 +98,7 @@ export default function TopBar() {
             {item.children && openMenu === index && (
               <div
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-                className="absolute left-0 z-50 py-2 mt-2 bg-white rounded-md w-80"
+                className="absolute left-0 z-50 py-2 mt-2 bg-white rounded-md w-60"
               >
                 {item.children.map((child: any, i: any) => (
                   <div
@@ -119,7 +119,7 @@ export default function TopBar() {
                   >
                     {child.children ? (
                       <div
-                        className={`flex items-center justify-between px-3 py-2 cursor-pointer 
+                        className={`flex items-center text-sm justify-between px-3 py-2 cursor-pointer 
                             ${
                               isParentActive(child)
                                 ? "bg-secondary text-white"
@@ -151,7 +151,7 @@ export default function TopBar() {
                     )}
                     {child?.children && (
                       <div
-                        className={`absolute top-0 invisible py-2 transition-all duration-200 max-h-103 overflow-scroll bg-white rounded-md shadow-md opacity-0 max-w-80 min-w-70
+                        className={`absolute top-0 invisible py-2 transition-all duration-200 max-h-103 overflow-scroll bg-white rounded-md shadow-md opacity-0 max-w-60 min-w-60
                           ${submenuDirection[i] === "left" ? "right-full" : "left-full"}
                           group-hover:visible group-hover:opacity-100`}
                         style={{
@@ -165,7 +165,7 @@ export default function TopBar() {
                             to={sub.path}
                             onClick={() => setOpenMenu(null)}
                             className={({ isActive }) =>
-                              `block px-3 py-2 className="text-sm text-heading1 font-normal  ${
+                              `block px-3 py-2 text-sm text-heading1 font-normal  ${
                                 isActive
                                   ? "bg-secondary text-white "
                                   : "bg-white hover:bg-[#ECF0F4]  "

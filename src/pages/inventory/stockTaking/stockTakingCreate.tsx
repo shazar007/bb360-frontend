@@ -259,7 +259,7 @@ export default function StockTakingCreate() {
         </div>
       </div>{" "}
       {stockTrackCreate && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-sm font-bold">Stock Taking</h2>
@@ -309,10 +309,10 @@ export default function StockTakingCreate() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 p-4 cursor-pointer rounded-b-2xl">
+            <div className="flex justify-end gap-3 p-4 rounded-b-2xl">
               <button
                 onClick={handleAddRowToTable}
-                className="flex items-center gap-2 px-6 py-2 text-white rounded-md bg-primary"
+                className="flex items-center gap-2 px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
               >
                 <Icon icon="mynaui:save" /> Add to List
               </button>

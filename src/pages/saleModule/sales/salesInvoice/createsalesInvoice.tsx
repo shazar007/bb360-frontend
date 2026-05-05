@@ -58,7 +58,6 @@ export default function CreateSalesInvoice() {
     staleTime: 1000 * 60 * 5,
   });
 
-  /* ================= CALCULATIONS ================= */
   const qty = +form.orderedQty || 0;
   const tp = +form.tp || 0;
   const discount = +form.discount || 0;
@@ -90,7 +89,6 @@ export default function CreateSalesInvoice() {
       value: item._id,
     })) || [];
 
-  /* ================= SAVE ================= */
   const handleSave = async () => {
     if (!form.itemId) {
       notifyError("Please select item");
@@ -222,7 +220,6 @@ export default function CreateSalesInvoice() {
 
   return (
     <>
-      {/* HEADER */}
       <div className="mt-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
@@ -264,7 +261,6 @@ export default function CreateSalesInvoice() {
         </div>
       </div>
 
-      {/* DISTRIBUTOR SECTION */}
       <div className="mt-3 bg-white rounded-2xl">
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Create Invoice</p>
@@ -326,7 +322,6 @@ export default function CreateSalesInvoice() {
         </div>
       </div>
 
-      {/* TABS + TABLE */}
       <div className="mt-3 bg-white rounded-2xl">
         <div className="flex items-center gap-8 p-4 overflow-auto">
           {tabs.map((tab) => (
@@ -367,7 +362,6 @@ export default function CreateSalesInvoice() {
           )}
         </div>
 
-        {/* TABLE CONTENT */}
         {activeTab === "Transaction Lines" && (
           <CustomTable
             norounded
@@ -440,11 +434,10 @@ export default function CreateSalesInvoice() {
         )}
       </div>
 
-      {/* MODAL */}
       {addItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-2xl p-6 bg-white rounded-xl">
-            <div className="flex justify-between pb-2 border-b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="flex justify-between p-4 border-b">
               <h2 className="text-sm font-semibold ">Add Item</h2>
               <button
                 className="cursor-pointer "
@@ -454,7 +447,7 @@ export default function CreateSalesInvoice() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-2 gap-4 p-4 mt-4">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
@@ -548,7 +541,7 @@ export default function CreateSalesInvoice() {
               <CustomInput label="Amount" value={String(netAmount)} disabled />
             </div>
 
-            <div className="flex justify-end mt-4 ">
+            <div className="flex justify-end p-4 mt-4 ">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
@@ -568,10 +561,9 @@ export default function CreateSalesInvoice() {
         </div>
       )}
 
-      {/* ✅ NEW: CONFIRM DELETE MODAL */}
       {confirmDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p
                 onClick={() => setConfirmDelete(false)}

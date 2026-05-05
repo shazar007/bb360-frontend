@@ -189,7 +189,7 @@ export default function CreatePurchaseOrder() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Purchase / Purchase Order
+              Purchase / Purchase OrderAS
             </p>
           </div>
 
@@ -232,7 +232,7 @@ export default function CreatePurchaseOrder() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Purchase Order"
                 placeholder="TO BE GENERATE"
@@ -254,7 +254,7 @@ export default function CreatePurchaseOrder() {
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect
                 label="Party Account"
                 placeholder="Select Party"
@@ -289,7 +289,7 @@ export default function CreatePurchaseOrder() {
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Delivery Address"
                 placeholder="Address"
@@ -307,7 +307,7 @@ export default function CreatePurchaseOrder() {
                 onChange={(val) => setType(val)}
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput
                 label="Advance Amount"
                 placeholder="Enter Advance Amount"

@@ -25,11 +25,11 @@ export default function CreateRequisition() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
+          <div className="flex items-center w-full gap-2 md:w-auto">
             <button
               onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-secondary rounded-md cursor-pointer md:w-27 text-white"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
               {" "}
               <Icon icon="ion:play-back-outline" className="text-lg" />
@@ -49,33 +49,33 @@ export default function CreateRequisition() {
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
-            <p className="font-semibold text-heading1 text-xs">
+            <p className="text-xs font-semibold text-heading1">
               Create Requisition
             </p>
           </div>
           <div className="p-4 grid grid-cols-4 gap-29.25">
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput label="Transaction Number" placeholder="GENERATE" />
               <CustomSelect label="Transaction Date" />{" "}
               <CustomSelect label="Department" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect label="Class" />
               <CustomSelect label="Reference No" />
               <CustomSelect label="Memo" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect label="Status" />
               <CustomSelect label="Subsidiary" />
               <CustomSelect label="From Location" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect label="Project" />
             </div>
           </div>
         </div>{" "}
-        <div className="bg-white rounded-2xl mt-3">
-          <div className="flex p-4 md:w-full w-90 overflow-auto items-center gap-8">
+        <div className="mt-3 bg-white rounded-2xl">
+          <div className="flex items-center gap-8 p-4 overflow-auto md:w-full w-90">
             {tabs.map((tab: any, index: number) => (
               <p
                 key={index}
@@ -152,15 +152,15 @@ export default function CreateRequisition() {
               />
             )}
             {activeTab === "System Information" && (
-              <div className="grid grid-cols-2 p-6 justify-around items-center gap-10">
-                <p className="text-xs text-heading1 text-center">Created By</p>
-                <p className="text-xs text-heading1 text-center">Modified By</p>
+              <div className="grid items-center justify-around grid-cols-2 gap-10 p-6">
+                <p className="text-xs text-center text-heading1">Created By</p>
+                <p className="text-xs text-center text-heading1">Modified By</p>
 
-                <p className="text-xs text-heading1 text-center">
+                <p className="text-xs text-center text-heading1">
                   Created Date
                 </p>
 
-                <p className="text-xs text-heading1 text-center">
+                <p className="text-xs text-center text-heading1">
                   Modified Date
                 </p>
               </div>

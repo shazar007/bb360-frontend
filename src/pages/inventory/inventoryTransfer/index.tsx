@@ -30,7 +30,6 @@ export default function InventoryTransfer() {
   });
 
   const allInventoryTransfer = data?.data?.transfers || [];
-  console.log("🚀 ~ allInventoryTransfer:", allInventoryTransfer);
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: deleteInventoryTransfer,
@@ -116,7 +115,7 @@ export default function InventoryTransfer() {
         <div class="row"><b>Transaction Number:</b> ${item.transactionNumber || "-"}</div>
         <div class="row"><b>Date:</b> ${
           item.transactionDate
-            ? dayjs(item.transactionDate).format("DD MMM YYYY")
+            ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
             : "-"
         }</div>
         <div class="row"><b>Created From:</b> ${item.createdFrom || "-"}</div>
@@ -262,7 +261,7 @@ export default function InventoryTransfer() {
                 item?.transactionNumber || "-",
 
                 item.transactionDate
-                  ? dayjs(item.transactionDate).format("DD MMM YYYY")
+                  ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
                   : "-",
                 item?.createdFrom || "-",
                 item?.transactionName || "-",
@@ -273,8 +272,8 @@ export default function InventoryTransfer() {
         </div>
       </div>
       {confirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white w-100 rounded-xl b">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
