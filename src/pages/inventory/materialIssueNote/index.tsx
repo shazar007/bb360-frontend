@@ -258,7 +258,7 @@ export default function MaterialIssueNote() {
       </div>{" "}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white shadow-xl w-100 rounded-xl rounded-2xl">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
@@ -274,7 +274,7 @@ export default function MaterialIssueNote() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

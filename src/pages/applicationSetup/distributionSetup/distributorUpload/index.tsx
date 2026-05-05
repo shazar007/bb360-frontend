@@ -8,7 +8,6 @@ import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
-
 import CustomCheckbox from "../../../../components/customCheckbox";
 import dayjs from "dayjs";
 // import { deleteDistributor } from "../../../../api/distributorServices";
@@ -62,9 +61,7 @@ export default function DistributorUpload() {
         notifyError("Distributor Name is required");
         return;
       }
-
       setSaveRow(true);
-
       const newItem = {
         ...form,
         selected: false,
@@ -167,32 +164,24 @@ export default function DistributorUpload() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setFileLoading(true);
     setFileName(file.name);
-
     const reader = new FileReader();
-
     reader.onload = (event) => {
       try {
         const data = event.target?.result;
         const workbook = XLSX.read(data, { type: "binary" });
-
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-
         const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
-
         console.log("RAW EXCEL DATA:", jsonData);
 
         const formatExcelDate = (val: any) => {
           if (!val) return "";
-
           if (typeof val === "string" && val.includes("/")) {
             const [m, d, y] = val.split("/");
             return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
           }
-
           if (typeof val === "number") {
             const excelEpoch = new Date(1899, 11, 30);
             const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
@@ -202,7 +191,6 @@ export default function DistributorUpload() {
           const d = new Date(val);
           return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
         };
-
         const formatted = jsonData.map((row: any) => ({
           distributorName:
             row["distributor Name"] ||
@@ -224,12 +212,9 @@ export default function DistributorUpload() {
           ),
           selected: false,
         }));
-
         console.log("FORMATTED:", formatted);
-
         setTableData([...formatted]);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
-
         notifySuccess("File loaded successfully");
       } catch (err) {
         notifyError("Invalid file format");
@@ -237,13 +222,11 @@ export default function DistributorUpload() {
         setFileLoading(false);
       }
     };
-
     reader.readAsBinaryString(file);
   };
   const handleDownloadTemplate = () => {
     try {
       setDownloadLoading(true);
-
       const template = [
         {
           "Distributor Name": "",
@@ -254,14 +237,10 @@ export default function DistributorUpload() {
           "Licence Expiry Date": "",
         },
       ];
-
       const ws = XLSX.utils.json_to_sheet(template);
       const wb = XLSX.utils.book_new();
-
       XLSX.utils.book_append_sheet(wb, ws, "Template");
-
       XLSX.writeFile(wb, "distributor-template.xlsx");
-
       notifySuccess("Template downloaded");
     } catch (err) {
       notifyError("Failed to download template");
@@ -297,12 +276,10 @@ export default function DistributorUpload() {
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
-              {" "}
               {uploadLoading ? (
                 <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
               ) : (
                 <>
-                  {" "}
                   <Icon icon="basil:add-outline" className="text-lg" />{" "}
                   Upload{" "}
                 </>
@@ -452,7 +429,7 @@ export default function DistributorUpload() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
               <CustomInput
                 label="Distributor Name"
                 name="distributorName"
@@ -496,7 +473,7 @@ export default function DistributorUpload() {
               />
             </div>
 
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
@@ -517,7 +494,7 @@ export default function DistributorUpload() {
       )}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white shadow-xl w-100 rounded-xl rounded-2xl">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 {" "}
@@ -533,7 +510,7 @@ export default function DistributorUpload() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

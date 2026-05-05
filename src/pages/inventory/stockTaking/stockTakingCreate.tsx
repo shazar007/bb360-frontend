@@ -309,7 +309,7 @@ export default function StockTakingCreate() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 p-4 rounded-b-2xl">
+            <div className="flex justify-end gap-3 p-4 pt-0 rounded-b-2xl">
               <button
                 onClick={handleAddRowToTable}
                 className="flex items-center gap-2 px-6 py-2 text-white rounded-md cursor-pointer bg-primary"

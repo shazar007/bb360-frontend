@@ -69,7 +69,7 @@ export default function DistributorModel({
         </div>
 
         <form onSubmit={formik.handleSubmit}>
-          <div className="grid grid-cols-2 gap-4 p-6">
+          <div className="grid grid-cols-2 gap-4 p-4">
             <CustomInput
               label="Distributor Code"
               name="distributorCode"
@@ -136,7 +136,7 @@ export default function DistributorModel({
             />
           </div>
 
-          <div className="flex justify-end p-4">
+          <div className="flex justify-end p-4 pt-0">
             <button
               type="submit"
               className="flex items-center gap-1 px-4 py-2 text-white rounded-md bg-primary"

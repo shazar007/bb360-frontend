@@ -58,25 +58,25 @@ export default function CreateVendor() {
             </p>
           </div>
           <div className="p-4 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 md:gap-6 lg:gap-29.25">
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput label="Name" placeholder="write the Name" />
               <CustomInput label="Company / Person" />
               <CustomSelect label="Vendor Type" />
               <CustomInput label="Area" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomInput label="Payment Terms" />
               <CustomInput label="Payable Accounts" />
               <CustomSelect label="Vendor Status" />
               <CustomInput label="Bill Address" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect label="City" />
               <CustomInput label="State" />
               <CustomInput label="Location" />
               <CustomInput label="Department" />
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <CustomSelect label="Class" />
               <CustomInput label="Phone Number" />
               <CustomInput label="Ship Address" />

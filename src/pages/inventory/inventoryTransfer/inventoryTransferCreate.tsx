@@ -113,13 +113,13 @@ export default function InventoryTransferCreate() {
       setRowForm(rowInitialForm);
       setEditIndex(null);
       refetch();
-      notifySuccess("Created successfully");
+      notifySuccess("Inventory Transfer is Created successfully");
       goBack();
     },
 
     onError: () => {
       setLoading(false);
-      notifyError("Create failed");
+      notifyError("Inventory Transfer is Create failed");
     },
   });
 
@@ -342,7 +342,7 @@ export default function InventoryTransferCreate() {
       {openModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
-            <div className="flex items-center justify-between p-4 px-6 border-b">
+            <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Inventory Transfer Create
               </h2>
@@ -355,7 +355,7 @@ export default function InventoryTransferCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2">
               <CustomSelectSearch
                 options={itemOptions}
                 value={rowForm.item}
@@ -399,7 +399,7 @@ export default function InventoryTransferCreate() {
               />
             </div>
 
-            <div className="flex justify-end pb-6 pr-6 mt-4">
+            <div className="flex justify-end p-4 pt-0 ">
               <button
                 onClick={handleSaveRow}
                 className="px-4 py-2 text-white rounded-md cursor-pointer bg-primary"

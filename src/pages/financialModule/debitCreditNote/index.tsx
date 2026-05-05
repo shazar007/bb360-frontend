@@ -53,7 +53,7 @@ export default function DebitCreditNote() {
               />
             </div>
 
-            <div className="space-y-1.5 ">
+            <div className="space-y-2">
               <CustomSelect
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="A/C Type"

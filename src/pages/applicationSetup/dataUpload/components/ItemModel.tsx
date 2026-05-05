@@ -23,7 +23,7 @@ export default function ItemModel({ close, data, onSave, saveLoading }: any) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl">
-        <div className="flex items-center justify-between px-6 py-3 pb-3 border-b">
+        <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-xs font-semibold text-heading1">Edit Item</h2>
 
           <button onClick={close} className="cursor-pointer">
@@ -66,7 +66,7 @@ export default function ItemModel({ close, data, onSave, saveLoading }: any) {
             />
           </div>
 
-          <div className="flex justify-end p-4">
+          <div className="flex justify-end p-4 pt-0">
             <button
               type="submit"
               disabled={saveLoading}

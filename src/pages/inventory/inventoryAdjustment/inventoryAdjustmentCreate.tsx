@@ -343,7 +343,7 @@ export default function InventoryAdjustmentCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 ">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
@@ -364,7 +364,7 @@ export default function InventoryAdjustmentCreate() {
 
               <CustomInput label="UOM" value={rowForm.uom} disabled />
 
-              <CustomInput label="Quantity" value={rowForm.quantity} disabled />
+              <CustomInput label="Quantity" value={rowForm.quantity} />
 
               <CustomInput
                 label="Quantity Adjusted"
@@ -375,7 +375,7 @@ export default function InventoryAdjustmentCreate() {
               />
             </div>
 
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"

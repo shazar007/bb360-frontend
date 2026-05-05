@@ -52,7 +52,7 @@ export default function CreateDeliveryChallan() {
             </div>
 
             <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Purchase Order"
                   placeholder="PO-000121"
@@ -66,7 +66,7 @@ export default function CreateDeliveryChallan() {
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomSelect
                   label="Party Account"
                   placeholder="Noorsons"
@@ -79,7 +79,7 @@ export default function CreateDeliveryChallan() {
                 />
               </div>
 
-              <div className="space-y-1.5">
+              <div className="space-y-2">
                 <CustomInput
                   label="Contact Number"
                   placeholder="+92 322 1235 225"
@@ -91,7 +91,7 @@ export default function CreateDeliveryChallan() {
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
-              <div className="space-y-1.5"></div>
+              <div className="space-y-2"></div>
             </div>
           </div>
         </div>

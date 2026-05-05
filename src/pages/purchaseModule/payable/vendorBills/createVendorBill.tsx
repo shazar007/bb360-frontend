@@ -414,7 +414,7 @@ export default function CreateVendorBill() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
               <CustomInput
                 label="Item Code"
                 value={editRow?.itemCode}
@@ -471,7 +471,7 @@ export default function CreateVendorBill() {
               <CustomInput label="Amount" value={editRow?.amount} disabled />
             </div>
 
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"

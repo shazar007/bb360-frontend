@@ -251,7 +251,7 @@ export default function ItemUpdate() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

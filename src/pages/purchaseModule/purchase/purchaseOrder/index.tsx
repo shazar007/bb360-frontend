@@ -246,7 +246,7 @@ export default function PurchaseOrder() {
                 ✕
               </button>
             </div>
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
               <CustomInput
                 label="PO Number"
                 value={form.poNumber}
@@ -274,7 +274,7 @@ export default function PurchaseOrder() {
                 placeholder="Enter Delivery Address"
               />
             </div>
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 type="button"
                 onClick={handleSave}

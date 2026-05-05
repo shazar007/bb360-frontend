@@ -189,7 +189,7 @@ export default function CreatePurchaseOrder() {
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
             <p className="text-base font-semibold md:text-lg text-heading1">
-              Purchase / Purchase OrderAS
+              Purchase / Purchase Order
             </p>
           </div>
 
@@ -524,7 +524,7 @@ export default function CreatePurchaseOrder() {
               </button>
             </div>
             <form>
-              <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+              <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
                 <CustomSelectSearch
                   options={itemOptions}
                   label="Item Name"
@@ -640,7 +640,7 @@ export default function CreatePurchaseOrder() {
                 />
               </div>
 
-              <div className="flex justify-end p-4">
+              <div className="flex justify-end p-4 pt-0">
                 <button
                   type="button"
                   onClick={handleAddRow}

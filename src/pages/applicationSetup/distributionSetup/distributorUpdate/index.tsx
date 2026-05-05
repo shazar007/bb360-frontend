@@ -253,7 +253,7 @@ export default function DistributorUpdate() {
             </div>
 
             <form onSubmit={handleSave}>
-              <div className="grid grid-cols-2 gap-4 p-6">
+              <div className="grid grid-cols-2 gap-4 p-4">
                 <CustomInput
                   label="City"
                   name="city"
@@ -299,7 +299,7 @@ export default function DistributorUpdate() {
                 />
               </div>
 
-              <div className="flex justify-end p-4">
+              <div className="flex justify-end p-4 pt-0">
                 <button
                   type="submit"
                   disabled={loading}
@@ -336,7 +336,7 @@ export default function DistributorUpdate() {
                 Are you sure to delete this distributor?
               </p>
             </div>
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

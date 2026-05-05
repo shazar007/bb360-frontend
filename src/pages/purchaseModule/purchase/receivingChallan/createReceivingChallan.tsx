@@ -351,7 +351,7 @@ export default function CreateReceivingChallan() {
             </div>{" "}
             <form>
               {" "}
-              <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+              <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
                 <CustomInput
                   label="Item Code"
                   disabled
@@ -400,7 +400,7 @@ export default function CreateReceivingChallan() {
                   onChange={(e) => handleChange("reason", e.target.value)}
                 />{" "}
               </div>
-              <div className="flex justify-end p-4">
+              <div className="flex justify-end p-4 pt-0">
                 <button
                   onClick={handleSave}
                   type="button"

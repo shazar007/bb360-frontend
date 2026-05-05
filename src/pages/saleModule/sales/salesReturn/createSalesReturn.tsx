@@ -410,8 +410,8 @@ export default function CreateSalesReturn() {
 
       {addItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full p-6 bg-white shadow-xl max-w-250 rounded-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-heading2">
+          <div className="w-full bg-white shadow-xl max-w-250 rounded-2xl">
+            <div className="flex items-center justify-between p-4 border-b border-heading2">
               <h2 className="text-xs font-semibold text-heading1">
                 Item Entry
               </h2>
@@ -425,7 +425,7 @@ export default function CreateSalesReturn() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-2 gap-4 p-4">
               <CustomSelectSearch
                 options={items.map((item: any) => ({
                   label: item.itemName,
@@ -488,7 +488,7 @@ export default function CreateSalesReturn() {
               <CustomInput label="Amount" value={form.amount} />
             </div>
 
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleAddRow}
                 className="px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
@@ -503,7 +503,7 @@ export default function CreateSalesReturn() {
       {showPostModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-md bg-white shadow-xl rounded-2xl">
-            <div className="flex items-center justify-end p-3 border-b border-[#E5E7EB]">
+            <div className="flex items-center justify-end p-4 border-b border-[#E5E7EB]">
               <button
                 onClick={() => setShowPostModal(false)}
                 className="text-lg cursor-pointer text-heading1"
@@ -512,7 +512,7 @@ export default function CreateSalesReturn() {
               </button>
             </div>
 
-            <div className="px-6 py-6 text-center">
+            <div className="p-4 text-center">
               <h2 className="mb-2 text-lg font-semibold text-heading1">
                 Post to ledger
               </h2>
@@ -521,7 +521,7 @@ export default function CreateSalesReturn() {
               </p>
             </div>
 
-            <div className="flex items-center justify-between gap-4 px-6 pb-6">
+            <div className="flex items-center justify-between gap-4 p-4 pt-0">
               <button
                 onClick={() => setShowPostModal(false)}
                 className="px-5 py-2 rounded-md bg-[#F3F4F6] text-heading1 shadow-sm cursor-pointer"

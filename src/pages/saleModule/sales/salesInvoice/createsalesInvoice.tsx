@@ -447,7 +447,7 @@ export default function CreateSalesInvoice() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 p-4 mt-4">
+            <div className="grid grid-cols-2 gap-4 p-4">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
@@ -541,7 +541,7 @@ export default function CreateSalesInvoice() {
               <CustomInput label="Amount" value={String(netAmount)} disabled />
             </div>
 
-            <div className="flex justify-end p-4 mt-4 ">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
@@ -579,7 +579,7 @@ export default function CreateSalesInvoice() {
                 Item?
               </p>
             </div>
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

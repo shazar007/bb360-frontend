@@ -452,7 +452,7 @@ export default function VendorUpload() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
               {/* <CustomInput
                 label="Vendor Code"
                 name="vendorCode"
@@ -515,7 +515,7 @@ export default function VendorUpload() {
               />
             </div>
 
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"
@@ -536,7 +536,7 @@ export default function VendorUpload() {
       )}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="bg-white shadow-xl w-100 rounded-xl rounded-2xl">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
                 ✕
@@ -551,7 +551,7 @@ export default function VendorUpload() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}

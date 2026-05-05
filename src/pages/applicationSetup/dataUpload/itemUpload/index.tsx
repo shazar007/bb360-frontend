@@ -445,7 +445,7 @@ export default function DataUpload() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 p-4 mt-3">
+            <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -469,8 +469,8 @@ export default function DataUpload() {
 
       {addItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full p-6 bg-white shadow-xl max-w-250 rounded-2xl">
-            <div className="flex items-center justify-between pb-3 border-b">
+          <div className="w-full bg-white shadow-xl max-w-250 rounded-2xl">
+            <div className="flex items-center justify-between p-4 pb-3 border-b">
               <h2 className="text-xs font-semibold text-heading1">Add Item</h2>
 
               <button
@@ -480,7 +480,7 @@ export default function DataUpload() {
                 ✕
               </button>
             </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
+            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
               <CustomInput
                 label="Item Name"
                 name="itemName"
@@ -544,7 +544,7 @@ export default function DataUpload() {
               )}
             </div>
 
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end p-4 pt-0 ">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"

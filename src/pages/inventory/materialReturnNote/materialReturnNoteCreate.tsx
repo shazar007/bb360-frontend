@@ -309,7 +309,7 @@ export default function MaterialReturnNoteCreate() {
       {retrunNoteCreate && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
-            <div className="flex items-center justify-between p-5 border-b">
+            <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-sm font-bold">Material Return Note</h2>
               <button
                 className="cursor-pointer"
@@ -319,7 +319,7 @@ export default function MaterialReturnNoteCreate() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 md:p-8">
+            <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 ">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Search Item"
@@ -357,7 +357,7 @@ export default function MaterialReturnNoteCreate() {
               />
             </div>
 
-            <div className="flex justify-end gap-3 p-5 rounded-b-2xl">
+            <div className="flex justify-end gap-3 p-4 pt-0 rounded-b-2xl">
               <button
                 onClick={handleAddRowToTable}
                 className="flex items-center gap-2 px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
