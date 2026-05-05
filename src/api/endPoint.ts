@@ -36,4 +36,10 @@ export const ENDPOINTS = {
 
   // --------------inventory Transfers-------------
   INVENTORY_TRANSFERS: "/inventory-transfers",
+
+  // --------------inventory Material-Issue-Notes-------------
+  MATERIAL_ISSUE_NOTES: "/material-issue-notes",
+
+  // --------------inventory Material-Return-Notes-------------
+  MATERIAL_RETURN_NOTES: "/material-return-notes",
 };

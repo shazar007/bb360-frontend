@@ -19,6 +19,7 @@ import {
 export default function InventoryAdjustmentCreate() {
   const [addInventoryAdjustmentModel, setAddInventoryAdjustment] =
     useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
 
   const { refetch } = useQuery({
     queryKey: ["getAllInventoryAdjustments"],
@@ -59,8 +60,14 @@ export default function InventoryAdjustmentCreate() {
     localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
   };
   const handleSave = () => {
+    if (!form.itemCode || !form.quantity) {
+      return notifyError("Please fill required fields");
+    }
+
+    setSaveRow(true);
+
     const newRow = {
-      item: form.item, // ✅ ITEM ID (IMPORTANT)
+      item: form.item,
       itemCode: form.itemCode,
       itemName: form.itemName,
       uom: form.uom,
@@ -69,26 +76,37 @@ export default function InventoryAdjustmentCreate() {
       selected: false,
     };
 
-    const updated = [...tableData, newRow];
+    let updated;
 
-    setTableData(updated);
-    localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
+    if (editIndex !== null) {
+      updated = [...tableData];
+      updated[editIndex] = newRow;
+      setEditIndex(null);
+    } else {
+      updated = [...tableData, newRow];
+    }
 
-    setForm({
-      transactionNumber: "",
-      createdFrom: "",
-      status: "",
-      transactionDate: "",
-      transactionName: "",
-      item: "",
-      itemCode: "",
-      itemName: "",
-      uom: "",
-      quantity: "",
-      quantityAdjusted: "",
-    });
+    setTimeout(() => {
+      setTableData(updated);
+      localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
 
-    setAddInventoryAdjustment(false);
+      setForm({
+        transactionNumber: "",
+        createdFrom: "",
+        status: "",
+        transactionDate: "",
+        transactionName: "",
+        item: "",
+        itemCode: "",
+        itemName: "",
+        uom: "",
+        quantity: "",
+        quantityAdjusted: "",
+      });
+
+      setAddInventoryAdjustment(false);
+      setSaveRow(false);
+    }, 500);
   };
   const handleDeleteSelected = () => {
     const hasSelected = tableData.some((item) => item.selected);
@@ -141,9 +159,8 @@ export default function InventoryAdjustmentCreate() {
       };
 
       await addInventoryAdjustment(payload);
-
       notifySuccess("Saved successfully");
-
+      goBack();
       setForm({
         transactionNumber: "",
         createdFrom: "",
@@ -158,7 +175,7 @@ export default function InventoryAdjustmentCreate() {
         quantityAdjusted: "",
       });
 
-      setTableData([]); // clear table
+      setTableData([]);
       localStorage.removeItem("inventoryAdjustment");
     } catch (error) {
       notifyError("Something went wrong");
@@ -178,7 +195,7 @@ export default function InventoryAdjustmentCreate() {
               Inventory Adjustment / Create
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end">
             <button
               onClick={goBack}
               className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary rounded-md text-white cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
@@ -214,7 +231,7 @@ export default function InventoryAdjustmentCreate() {
           </div>
           <div className="bg-white rounded-b-2xl">
             {" "}
-            <div className="grid grid-cols-4 p-6 gap-y-4 gap-x-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 p-4 lg:grid-cols-4 gap-y-4 gap-x-20">
               <CustomInput
                 label="Created From"
                 placeholder="Enter Created From"
@@ -234,7 +251,7 @@ export default function InventoryAdjustmentCreate() {
                 onChange={(val: any) =>
                   setForm((prev) => ({
                     ...prev,
-                    status: val?.value || val, // supports both string & object
+                    status: val?.value || val,
                   }))
                 }
               />
@@ -298,9 +315,13 @@ export default function InventoryAdjustmentCreate() {
             data={tableData.map((item, index) => [
               <Icon
                 icon="basil:edit-outline"
-                className="text-xl cursor-pointer text-primary"
+                className="text-lg cursor-pointer text-primary"
+                onClick={() => {
+                  setForm(item);
+                  setEditIndex(index);
+                  setAddInventoryAdjustment(true);
+                }}
               />,
-
               <CustomCheckbox
                 checked={item.selected}
                 onChange={(v) => toggleSelect(index, v)}
@@ -317,8 +338,7 @@ export default function InventoryAdjustmentCreate() {
       </div>
       {addInventoryAdjustmentModel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
-            {/* Header */}
+          <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Inventory Adjustment Create
@@ -331,7 +351,8 @@ export default function InventoryAdjustmentCreate() {
                 ✕
               </button>
             </div>
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:p-8  p-4">
               <CustomSelectSearch
                 options={itemOptions}
                 label="Item Name"
@@ -341,7 +362,7 @@ export default function InventoryAdjustmentCreate() {
 
                   setForm((prev) => ({
                     ...prev,
-                    item: val, // ✅ ID (important for API)
+                    item: val,
                     itemName: selectedItem?.itemName || "",
                     itemCode: selectedItem?.itemCode || "",
                     uom: selectedItem?.uom || "",

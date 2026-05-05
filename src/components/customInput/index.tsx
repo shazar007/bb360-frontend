@@ -2,7 +2,7 @@ type CustomInputProps = {
   label?: string;
   placeholder?: string;
   type?: string;
-  value?: string;
+  value?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   required?: boolean;

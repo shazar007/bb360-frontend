@@ -9,13 +9,14 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { notifyError, notifySuccess } from "../../../components/toast";
+import { SyncLoader } from "react-spinners";
 
 export default function InventoryAdjustment() {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [deleteItem, setDeleteItem] = useState<any>(null);
   const { goTo } = useAppNavigate();
-  const { data, refetch } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["getAllInventoryAdjustments"],
     queryFn: getAllInventoryAdjustments,
 
@@ -49,6 +50,9 @@ export default function InventoryAdjustment() {
       queryClient.invalidateQueries({
         queryKey: ["getAllInventoryAdjustments"],
       });
+
+      setConfirm(false);
+      setDeleteItem(null);
     },
 
     onError: () => {
@@ -59,10 +63,6 @@ export default function InventoryAdjustment() {
     if (!deleteItem) return;
 
     deleteMutation.mutate(deleteItem._id);
-
-    setConfirm(false);
-    setDeleteItem(null);
-    refetch();
   };
   const handlePrint = (item: any) => {
     const printWindow = window.open("", "_blank");
@@ -139,6 +139,7 @@ export default function InventoryAdjustment() {
 
     printWindow.document.close();
   };
+  const isDeleting = deleteMutation.isPending;
   return (
     <>
       <div className="mt-8">
@@ -181,6 +182,7 @@ export default function InventoryAdjustment() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
+              loading={isLoading}
               height="700px"
               headers={[
                 "Edit",
@@ -286,10 +288,15 @@ export default function InventoryAdjustment() {
                 style={{
                   boxShadow: "0px 1px 12px 0px #0000001F",
                 }}
-                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000] flex items-center justify-center"
                 onClick={handleDelete}
+                disabled={isDeleting}
               >
-                Delete
+                {isDeleting ? (
+                  <SyncLoader size={8} color="#ffffff" />
+                ) : (
+                  "Delete"
+                )}
               </button>
             </div>
           </div>

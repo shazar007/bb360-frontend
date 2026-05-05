@@ -3,7 +3,6 @@ import CustomTable from "../../../../components/customTable";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-// import { addDistributorApi } from "../../../../api/distributorServices";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";

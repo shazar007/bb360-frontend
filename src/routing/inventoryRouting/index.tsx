@@ -9,6 +9,8 @@ import InventoryAdjustmentCreate from "../../pages/inventory/inventoryAdjustment
 import InventoryTransferCreate from "../../pages/inventory/inventoryTransfer/inventoryTransferCreate";
 import MaterialIssueNoteCreate from "../../pages/inventory/materialIssueNote/materialIssueNoteCreate";
 import MaterialReturnNoteCreate from "../../pages/inventory/materialReturnNote/materialReturnNoteCreate";
+import StockTakingCreate from "../../pages/inventory/stockTaking/stockTakingCreate";
+import TransferOrdersCreate from "../../pages/inventory/transferOrders/transferOrdersCreate";
 
 export default function InventoryRouting() {
   return (
@@ -19,27 +21,35 @@ export default function InventoryRouting() {
         element={<InventoryAdjustmentCreate />}
       />{" "}
       <Route path="/inventory-transfer" element={<InventoryTransfer />} />
-      <Route path="/inventory-transfer/create" element={<InventoryTransferCreate />} />
-
+      <Route
+        path="/inventory-transfer/create"
+        element={<InventoryTransferCreate />}
+      />
       <Route path="/material-issue-note" element={<MaterialIssueNote />} />
       <Route
         path="/material-issue-note/create"
         element={<MaterialIssueNoteCreate />}
       />
-      <Route path="/material-issue-note/create" element={<MaterialIssueNoteCreate />} />
-
+      <Route
+        path="/material-issue-note/create"
+        element={<MaterialIssueNoteCreate />}
+      />
       <Route path="/material-return-note" element={<MaterialReturnNote />} />
-      <Route path="/material-return-note/create" element={<MaterialReturnNoteCreate />} />
-
-     
-
-
+      <Route
+        path="/material-return-note/create"
+        element={<MaterialReturnNoteCreate />}
+      />
       <Route path="/transfer-orders" element={<TransferOrders />} />
+      <Route
+        path="/transfer-orders/create"
+        element={<TransferOrdersCreate />}
+      />
       <Route
         path="/material-return-note/create"
         element={<MaterialReturnNoteCreate />}
       />
       <Route path="/stock-taking" element={<StockTaking />} />
+      <Route path="/stock-taking/create" element={<StockTakingCreate />} />
     </Routes>
   );
 }
