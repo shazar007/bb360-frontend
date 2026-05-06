@@ -20,3 +20,7 @@ export const updateItem = (id: string | number, values: any) => {
 export const deleteItem = (id: string | number) => {
   return HTTP_CLIENT.delete(`${ENDPOINTS.ITEMS}/${id}`);
 };
+
+export const getAllItemsbyCategory = (category: string) => {
+  return HTTP_CLIENT.get(`${ENDPOINTS.ITEMS}/${category}`);
+};

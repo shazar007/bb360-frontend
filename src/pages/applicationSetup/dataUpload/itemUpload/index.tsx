@@ -11,6 +11,7 @@ import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import * as XLSX from "xlsx";
 import dayjs from "dayjs";
+import { useQueryClient } from "@tanstack/react-query";
 
 const STORAGE_KEY = "temp_items_upload";
 
@@ -23,7 +24,7 @@ export default function DataUpload() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [tableData, setTableData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-
+  const queryClient = useQueryClient();
   const [form, setForm] = useState<any>({
     itemName: "",
     itemCategory: "",
@@ -155,6 +156,8 @@ export default function DataUpload() {
       await addItems(payload);
 
       notifySuccess("Item Uploaded successfully");
+
+      queryClient.invalidateQueries({ queryKey: ["getAllItems"] });
 
       localStorage.removeItem(STORAGE_KEY);
       setTableData([]);
@@ -395,34 +398,40 @@ export default function DataUpload() {
               "Item Category",
               "Expiry Date",
               "Units",
-              "TP",
-              "MRP",
+              ...(tableData.some((item) => item.itemCategory !== "RAW_MATERIAL")
+                ? ["TP", "MRP"]
+                : []),
             ]}
-            data={tableData.map((item, index) => [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-xl cursor-pointer text-primary"
-                onClick={() => {
-                  setForm(tableData[index]);
-                  setEditIndex(index);
-                  setAddItem(true);
-                }}
-              />,
+            data={tableData.map((item, index) => {
+              const baseRow = [
+                <Icon
+                  icon="basil:edit-outline"
+                  className="text-xl cursor-pointer text-primary"
+                  onClick={() => {
+                    setForm(tableData[index]);
+                    setEditIndex(index);
+                    setAddItem(true);
+                  }}
+                />,
+                <CustomCheckbox
+                  checked={item.selected}
+                  onChange={(v) => toggleSelect(index, v)}
+                />,
+                item.itemName,
+                item.itemCategory,
+                dayjs(item.expiryDate).isValid()
+                  ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                  : "-",
+                item.uom,
+              ];
 
-              <CustomCheckbox
-                checked={item.selected}
-                onChange={(v) => toggleSelect(index, v)}
-              />,
+              // Only push TP & MRP if NOT RAW_MATERIAL
+              if (item.itemCategory !== "RAW_MATERIAL") {
+                baseRow.push(item.tp, item.mrp);
+              }
 
-              item.itemName,
-              item.itemCategory,
-              dayjs(item.expiryDate).isValid()
-                ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
-                : "-",
-              item.uom,
-              item.tp,
-              item.mrp,
-            ])}
+              return baseRow;
+            })}
           />
         </div>
       </div>
@@ -497,7 +506,7 @@ export default function DataUpload() {
                 label="Item Category"
                 options={[
                   { value: "RAW_MATERIAL", label: "Raw Material" },
-                  { value: "FINISHED_GOOD", label: "Finished Good" },
+                  { value: "FINISHED_GOODS", label: "Finished Goods" },
                 ]}
                 value={form.itemCategory}
                 onChange={(val: any) =>
@@ -515,25 +524,23 @@ export default function DataUpload() {
                   onChange={handleChange}
                 />
               )}{" "}
-              {form.itemCategory !== "RAW_MATERIAL" && (
-                <CustomSelect
-                  label="Units"
-                  options={[
-                    { value: "ml", label: "ML" },
-                    { value: "l", label: "Litre" },
-                    { value: "g", label: "Gram" },
-                    { value: "kg", label: "KG" },
-                    { value: "pcs", label: "PCS" },
-                    { value: "box", label: "Box" },
-                    { value: "strip", label: "Strip" },
-                    { value: "bottle", label: "Bottle" },
-                    { value: "pack", label: "Pack" },
-                    { value: "dozen", label: "Dozen" },
-                  ]}
-                  value={form.uom}
-                  onChange={(v) => setForm({ ...form, uom: v })}
-                />
-              )}{" "}
+              <CustomSelect
+                label="Units"
+                options={[
+                  { value: "ml", label: "ML" },
+                  { value: "l", label: "Litre" },
+                  { value: "g", label: "Gram" },
+                  { value: "kg", label: "KG" },
+                  { value: "pcs", label: "PCS" },
+                  { value: "box", label: "Box" },
+                  { value: "strip", label: "Strip" },
+                  { value: "bottle", label: "Bottle" },
+                  { value: "pack", label: "Pack" },
+                  { value: "dozen", label: "Dozen" },
+                ]}
+                value={form.uom}
+                onChange={(v) => setForm({ ...form, uom: v })}
+              />
               {form.itemCategory !== "RAW_MATERIAL" && (
                 <CustomInput
                   label="MRP"

@@ -436,7 +436,7 @@ export default function CreateSalesInvoice() {
 
       {addItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-250 mx-2 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+          <div className="w-full max-w-250 mx-2 max-h-[90vh]  rounded-2xl bg-white shadow-xl">
             <div className="flex justify-between p-4 border-b">
               <h2 className="text-sm font-semibold ">Add Item</h2>
               <button

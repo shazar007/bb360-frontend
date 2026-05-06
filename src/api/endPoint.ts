@@ -11,7 +11,6 @@ export const ENDPOINTS = {
   ITEMS: "/items",
 
   // ------------Vendor-------------
-
   VENDORS: "/vendors",
 
   // ------------Distributor-------------
@@ -20,26 +19,32 @@ export const ENDPOINTS = {
   // ------------Distributor-------------
   PURCHASE_ORDER: "/purchase-orders",
 
-  // ------------purchase Receving-------------
-
+  // ------------Purchase Receving-------------
   PURCHASE_RECEIVING: "/purchase-receiving",
 
-  // ------------sales Invoice-------------
+  // ------------Sales Invoice-------------
   SALES_INVOICE: "/sales-invoices",
 
+  // ------------Purchase Invoice-------------
   PURCHASE_INVOICE: "/purchase-invoices",
+
   // ------------Sale Retrun-------------
   SALES_RETURN: "/sales-returns",
 
-  // --------------inventory Adjustments-------------
+  // --------------Inventory Adjustments-------------
   INVENTORY_ADJUSTMENT: "/inventory-adjustments",
 
-  // --------------inventory Transfers-------------
+  // --------------Inventory Transfers-------------
   INVENTORY_TRANSFERS: "/inventory-transfers",
 
-  // --------------inventory Material-Issue-Notes-------------
+  // --------------Inventory Material-Issue-Notes-------------
   MATERIAL_ISSUE_NOTES: "/material-issue-notes",
 
-  // --------------inventory Material-Return-Notes-------------
+  // --------------Inventory Material-Return-Notes-------------
   MATERIAL_RETURN_NOTES: "/material-return-notes",
+
+  // --------------Inventory Transfer Orders-------------
+  TRANSFER_ORDERS: "/transfer-orders",
+  // --------------Inventory Stock Taking-------------
+  STOCK_TAKING: "/stock-taking",
 };

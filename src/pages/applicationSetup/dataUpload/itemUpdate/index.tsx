@@ -181,16 +181,16 @@ export default function ItemUpdate() {
                 className="text-lg cursor-pointer text-primary"
               />,
 
-              item.itemCode,
-              item.itemName,
-              item.itemCategory,
-              item.uom,
-              item.batchNumber,
+              item.itemCode || "-",
+              item.itemName || "-",
+              item.itemCategory || "-",
+              item.uom || "-",
+              item.batchNumber || "-",
               item.expiryDate
                 ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
                 : "-",
-              item.tradePrice,
-              item.mrp,
+              item.tradePrice || "-",
+              item.mrp || "-",
 
               <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
                 Good

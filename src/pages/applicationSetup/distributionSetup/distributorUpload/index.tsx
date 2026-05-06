@@ -313,9 +313,7 @@ export default function DistributorUpload() {
               icon="hugeicons:file-add"
               className="text-5xl text-heading1/36"
             />
-
             <p className="text-xl font-semibold text-heading1">Drag & Drop</p>
-
             <p className="text-xs font-normal text-heading1/36">
               Supported formats XLSX
             </p>
@@ -328,7 +326,6 @@ export default function DistributorUpload() {
                 Selected: {fileName}
               </p>
             ) : null}
-
             <label
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
