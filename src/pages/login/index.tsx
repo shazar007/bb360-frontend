@@ -18,7 +18,6 @@ export default function Login() {
   const { goTo } = useAppNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsloading] = useState(false);
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -28,28 +27,21 @@ export default function Login() {
 
     onSubmit: async (values) => {
       if (isLoading) return;
-
       try {
         setIsloading(true);
-
         const res = await UserLogin(values);
         const data = res.data;
-
         notifySuccess("Login successful!");
         dispatch(setToken(data.token));
         dispatch(setIsLoggedIn(true));
-
         localStorage.setItem("token", data.token);
-
         goTo("/360-dashboard");
       } catch (error: any) {
         console.log("Login failed", error);
-
         const message =
           error?.response?.data?.message ||
           error?.message ||
           "Something went wrong";
-
         notifyError(message);
       } finally {
         setIsloading(false);

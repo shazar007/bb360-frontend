@@ -10,7 +10,7 @@ import { useReactToPrint } from "react-to-print";
 export default function ReceivingChallan() {
   const [open, setOpen] = useState(false);
   const printRef = useRef(null);
-  const { goTo, goWithState } = useAppNavigate();
+  const { goTo } = useAppNavigate();
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const {
@@ -21,14 +21,12 @@ export default function ReceivingChallan() {
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseReceiving,
 
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
   const AllPurchaseReceiving = PurchaseReceiving?.data?.data || [];
+  console.log("🚀 ~ AllPurchaseReceiving:", AllPurchaseReceiving);
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -94,7 +92,7 @@ export default function ReceivingChallan() {
               "View",
               "Report",
               "Challan Number",
-              // "Purchase Order Number",
+              "Purchase Order Number",
               "Create Date",
               "Receiving Date",
               "Delivery Address",
@@ -121,10 +119,8 @@ export default function ReceivingChallan() {
                 className="text-lg cursor-pointer text-primary"
               />,
 
-              item?.prNumber || "No PR",
-              // item?.purchaseOrder?.poNumber
-              //   ? item.purchaseOrder.poNumber
-              //   : "No PO",
+              item?.prNumber || "-",
+              item?.purchaseOrder?.poNumber || "-",
               item.createdAt
                 ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                     day: "2-digit",

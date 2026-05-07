@@ -6,12 +6,8 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { useGetPurchaseRecevingPoNumber } from "../../../../api/queries";
 import { SyncLoader } from "react-spinners";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-import {
-  createPurchaseInvoice,
-  getAllPurchaseInvoice,
-} from "../../../../api/purchaseInvoice";
-import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
+import { createPurchaseInvoice } from "../../../../api/purchaseInvoice";
+import { useQueryClient } from "@tanstack/react-query";
 
 const tabs = [
   "Transaction Lines",
@@ -28,6 +24,7 @@ export default function CreateVendorBill() {
   const [createModal, setCreateModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
+  const queryClient = useQueryClient();
   const [tableItems, setTableItems] = useState<any[]>([]);
   const {
     data: order,
@@ -37,24 +34,13 @@ export default function CreateVendorBill() {
     enabled: false,
     retry: false,
   });
-  const purchaseOrderData = (order as any)?.data?.pr;
+  const purchaseOrderData = (order as any)?.data;
   useEffect(() => {
     if (purchaseOrderData?.items) {
       setTableItems(purchaseOrderData.items);
     }
   }, [purchaseOrderData]);
 
-  const { refetch: allPurchaseInvoice } = useQuery({
-    queryKey: ["getAllOrder"],
-    queryFn: getAllPurchaseInvoice,
-
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
   useEffect(() => {
     document.title = "Purchase Invoice — BB-360";
   }, []);
@@ -67,7 +53,7 @@ export default function CreateVendorBill() {
 
     const res = await refetch();
 
-    if (res.error) {
+    if (res.status === "error") {
       const message =
         (res.error as any)?.response?.data?.message || "Something went wrong";
 
@@ -98,7 +84,16 @@ export default function CreateVendorBill() {
     setEditIndex(null);
     setEditRow(null);
   };
+  const formatDate = (date: string) => {
+    if (!date) return "";
 
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = d.toLocaleString("en-US", { month: "short" });
+    const year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+  };
   const handleSavePurchaseInvoice = async () => {
     try {
       if (!purchaseOrderData) {
@@ -109,40 +104,28 @@ export default function CreateVendorBill() {
       setLoading(true);
 
       const payload = {
-        purchaseReceiving: String(
-          purchaseOrderData?._id || purchaseOrderData?.id,
-        ),
-        invoiceDate: purchaseOrderData.date,
-
-        vendorPercentage: Number(purchaseOrderData?.vendorPercentage || 0),
-        taxPct: Number(purchaseOrderData?.taxAmount || 0),
-        totalAmount: Number(purchaseOrderData?.totalAmount || 0),
-
-        items: (tableItems || []).map((item: any) => ({
-          item: String(item?.item?._id || item?.item),
-
-          orderedQty: Number(item?.orderedQty || item?.quantity || 0),
-          receivedQty: Number(item?.receivedQty || item?.deliveredQty || 0),
-
-          retailPrice: Number(item?.retailPrice || 0),
-          tp: Number(item?.tp || 0),
-
-          discountPct: Number(item?.discountPct || item?.discount || 0),
-
-          grossAmount: Number(item?.grossAmount || 0),
-          taxAmount: Number(item?.taxAmount || 0),
-          amount: Number(item?.amount || 0),
-        })),
+        purchaseReceiving: purchaseOrderData?._id
+          ? String(purchaseOrderData._id)
+          : "",
+        invoiceDate: purchaseOrderData?.date || "",
       };
 
       await createPurchaseInvoice(payload);
 
       notifySuccess("Purchase Invoice Created Successfully");
+
+      setPoNumber("");
+      setTableItems([]);
+      setEditRow(null);
+      setEditIndex(null);
+
+      queryClient.invalidateQueries({ queryKey: ["getAllOrder"] });
+
+      goBack();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Failed to save invoice");
     } finally {
       setLoading(false);
-      allPurchaseInvoice;
     }
   };
   return (
@@ -199,7 +182,7 @@ export default function CreateVendorBill() {
               <p className="text-xs font-semibold text-heading1">Invoice</p>
             </div>
 
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-30.25 text-secondary">
+            <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 lg:gap-30.25 text-secondary">
               <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
@@ -224,7 +207,7 @@ export default function CreateVendorBill() {
                 </div>
 
                 <CustomInput
-                  label="Order Date"
+                  label="Invoice Date"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.date
@@ -246,7 +229,7 @@ export default function CreateVendorBill() {
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Party Categroy"
-                  value={purchaseOrderData?.partyCategory || "-"}
+                  value={purchaseOrderData?.partyAccount?.vendorCategory || "-"}
                   disabled
                 />
               </div>
@@ -271,13 +254,13 @@ export default function CreateVendorBill() {
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Tax%"
-                  value={purchaseOrderData?.taxAmount || ""}
+                  value={purchaseOrderData?.taxPercentage || "0"}
                   disabled
                 />{" "}
                 <CustomInput
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Total Amount"
-                  value={purchaseOrderData?.totalAmount || ""}
+                  value={purchaseOrderData?.totalAmount || "0"}
                   disabled
                 />
               </div>
@@ -333,9 +316,7 @@ export default function CreateVendorBill() {
                       item.itemCategory,
                       item.uom,
                       item.batchNumber,
-                      dayjs(item.expiryDate).isValid()
-                        ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
-                        : "-",
+                      formatDate(item.expiryDate),
                       item.orderedQty || "",
                       item.deliveredQty || "",
                       item.purchaseRate || "",
@@ -414,7 +395,7 @@ export default function CreateVendorBill() {
               </button>
             </div>
 
-            <div className="grid grid-cols-2 p-4 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
               <CustomInput
                 label="Item Code"
                 value={editRow?.itemCode}
@@ -428,50 +409,26 @@ export default function CreateVendorBill() {
               <CustomInput label="UOM" value={editRow?.uom} disabled />
               <CustomInput
                 label="Ordered Quantity"
-                value={editRow?.quantity}
+                value={editRow?.orderedQty}
                 disabled
               />
 
               <CustomInput
-                label="Received Quantity"
-                value={editRow?.receivedQty || ""}
-                onChange={(e) => handleChange("receivedQty", e.target.value)}
+                label="Delivered Quantity"
+                value={editRow?.deliveredQty || ""}
+                onChange={(e) => handleChange("deliveredQty", e.target.value)}
               />
 
               <CustomInput
-                label="Retail Price"
-                value={editRow?.retailPrice || ""}
-                onChange={(e) => handleChange("retailPrice", e.target.value)}
-              />
-
-              <CustomInput
-                label="T.P"
-                value={editRow?.tp || ""}
-                onChange={(e) => handleChange("tp", e.target.value)}
-              />
-
-              <CustomInput
-                label="Discount %"
-                value={editRow?.discount || ""}
-                onChange={(e) => handleChange("discount", e.target.value)}
-              />
-
-              <CustomInput
-                label="Gross Amount"
-                value={editRow?.grossAmount || ""}
-                onChange={(e) => handleChange("grossAmount", e.target.value)}
-              />
-
-              <CustomInput
-                label="Tax Amount"
-                value={editRow?.taxAmount || ""}
-                onChange={(e) => handleChange("taxAmount", e.target.value)}
+                label="Purchase Rate"
+                value={editRow?.purchaseRate || ""}
+                onChange={(e) => handleChange("purchaseRate", e.target.value)}
               />
 
               <CustomInput label="Amount" value={editRow?.amount} disabled />
             </div>
 
-            <div className="flex justify-end p-4 pt-0">
+            <div className="flex justify-end p-4">
               <button
                 onClick={handleSave}
                 className="h-10 text-sm flex justify-center items-center gap-1 text-white rounded-md cursor-pointer bg-primary w-27.5"

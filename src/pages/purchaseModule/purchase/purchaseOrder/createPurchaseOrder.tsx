@@ -6,15 +6,13 @@ import { useEffect, useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-import {
-  createPurchaseOrderApi,
-  getAllOrders,
-} from "../../../../api/purchaseOrder";
+
 import { SyncLoader } from "react-spinners";
 import { getAllVendors } from "../../../../api/vendorServices";
+import { createPurchaseOrderApi } from "../../../../api/purchaseOrder";
 
 const tabs = ["Items Details", "Terms and Conditions", "Summary"];
 export default function CreatePurchaseOrder() {
@@ -39,7 +37,7 @@ export default function CreatePurchaseOrder() {
     amount: "",
     uom: "",
   });
-
+  const queryClient = useQueryClient();
   const { data: AllItems } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
@@ -48,19 +46,7 @@ export default function CreatePurchaseOrder() {
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
-  // const { refetch } = useQuery({
-  //   queryKey: ["getAllOrder"],
-  //   queryFn: getAllOrders,
-
-  //   staleTime: Infinity,
-  //   gcTime: 1000 * 60 * 10,
-
-  //   refetchOnWindowFocus: false,
-  //   refetchOnMount: false,
-  //   refetchOnReconnect: false,
-  // });
-
-  const { data: AllVendors, isLoading } = useQuery({
+  const { data: AllVendors } = useQuery({
     queryKey: ["getAllVendors"],
     queryFn: getAllVendors,
     staleTime: Infinity,
@@ -114,13 +100,10 @@ export default function CreatePurchaseOrder() {
       itemName: "",
       itemCode: "",
       itemCategory: "",
-      // batchNumber: "",
       quantity: "",
       purchaseRate: "",
-      // unitPrice: "",
       amount: "",
       uom: "",
-      // expiryDate: "",
     });
 
     setCreateOrder(false);
@@ -151,20 +134,19 @@ export default function CreatePurchaseOrder() {
         partyAccount: partyAccount,
         partyCategory: partyCategory,
         deliveryAddress: deliveryAddress || "",
-        tax: taxPercentage || "0",
+        taxPercentage: taxPercentage || "0",
         advanceAmount: Number(advanceAmount || 0),
         totalAmount: Number(totalAmount || 0),
+        type: type || "",
         items: tableData.map((item: any) => ({
           item: item.itemName,
           quantity: Number(item.quantity || 0),
           purchaseRate: Number(item.purchaseRate || 0),
           amount: Number(item.amount || 0),
-          // unitPrice: Number(item.unitPrice || 0),
         })),
       };
 
       await createPurchaseOrderApi(payload);
-
       notifySuccess("Purchase Order Created Successfully");
 
       setTableData([]);
@@ -174,12 +156,13 @@ export default function CreatePurchaseOrder() {
       setType("");
 
       localStorage.removeItem(STORAGE_KEY);
+      queryClient.invalidateQueries({ queryKey: ["getAllOrder"] });
+      goBack();
     } catch (error: any) {
       console.error(error);
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
-      // refetch();
     }
   };
   return (
@@ -232,29 +215,7 @@ export default function CreatePurchaseOrder() {
             </p>
           </div>
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
-            <div className="space-y-2">
-              <CustomInput
-                label="Purchase Order"
-                placeholder="TO BE GENERATE"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                disabled
-              />
-              <CustomDatePicker
-                label="Date"
-                value="2026-03-01"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-              />
-
-              <CustomInput
-                label="Total Amount"
-                placeholder="Enter Total Amount"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                value={totalAmount}
-                disabled
-              />
-            </div>
-
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <CustomSelect
                 label="Party Account"
                 placeholder="Select Party"
@@ -274,28 +235,20 @@ export default function CreatePurchaseOrder() {
                 options={partyAccounts}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
-              {/* <CustomSelect
-                label="Party Reference"
-                value={partyReference}
-                options={[{ label: partyReference, value: partyReference }]}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-              /> */}
+
               <CustomInput
                 label="Party Category"
                 placeholder="Party Category"
                 value={partyCategory}
-                // onChange={(e) => setDeliveryAddress(e.target.value)}
                 disabled
               />
             </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                label="Delivery Address"
-                placeholder="Address"
-                value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
-              />
+            <div className="space-y-1.5">
+              <CustomDatePicker
+                label="Date"
+                value="2026-03-01"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />{" "}
               <CustomSelect
                 label="Type"
                 placeholder="Local/Import"
@@ -307,7 +260,22 @@ export default function CreatePurchaseOrder() {
                 onChange={(val) => setType(val)}
               />
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-1.5">
+              <CustomInput
+                label="Delivery Address"
+                placeholder="Address"
+                value={deliveryAddress}
+                onChange={(e) => setDeliveryAddress(e.target.value)}
+              />{" "}
+              <CustomInput
+                label="Tax %"
+                placeholder="Address"
+                value={taxPercentage}
+                onChange={(e) => setTaxPercentage(e.target.value)}
+              />
+            </div>
+            <div className="space-y-1.5">
               <CustomInput
                 label="Advance Amount"
                 placeholder="Enter Advance Amount"
@@ -316,12 +284,11 @@ export default function CreatePurchaseOrder() {
               />
 
               <CustomInput
-                label="Tax%"
-                type="number"
-                placeholder="Enter Tax in percentage"
+                label="Total Amount"
+                placeholder="Enter Total Amount"
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                value={taxPercentage}
-                onChange={(e) => setTaxPercentage(e.target.value)}
+                value={totalAmount}
+                disabled
               />
             </div>
           </div>
@@ -343,9 +310,9 @@ export default function CreatePurchaseOrder() {
             ))}
             {activeTab === "Items Details" && (
               <div className="flex items-center gap-2 ml-auto">
-                {/* <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
+                <button className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center">
                   <Icon icon="proicons:delete" className="text-xl" />
-                </button> */}
+                </button>
                 <button
                   onClick={() => {
                     setCreateOrder(true);
@@ -369,11 +336,10 @@ export default function CreatePurchaseOrder() {
                 "Item Name",
                 "Item Category",
                 "UOM",
-                // "Batch Number",
-                // "Expiry Date",
+
                 "Quantity ",
                 "Purchase Rate",
-                // "Unit Price",
+
                 "Amount",
               ]}
               data={tableData.map((item) => [
@@ -390,11 +356,10 @@ export default function CreatePurchaseOrder() {
                   "-",
                 item.itemCategory,
                 item.uom || "-",
-                // item.batchNumber || "-",
-                // item.expiryDate || "-",
+
                 item.quantity || "-",
                 item.purchaseRate || "-",
-                // item.unitPrice || "-",
+
                 item.amount || "-",
               ])}
             />
@@ -575,24 +540,6 @@ export default function CreatePurchaseOrder() {
                   }
                 />
 
-                {/* <CustomInput
-                  label="Batch Number"
-                  placeholder="Enter Batch Number"
-                  value={form.batchNumber}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      batchNumber: e.target.value,
-                    }))
-                  }
-                />
-                <CustomDatePicker
-                  label="Expiry Date"
-                  value={form.expiryDate}
-                  onChange={(v) =>
-                    setForm((prev) => ({ ...prev, expiryDate: v }))
-                  }
-                /> */}
                 <CustomInput
                   label="Quantity"
                   placeholder="Enter Quantity"
@@ -621,22 +568,11 @@ export default function CreatePurchaseOrder() {
                     }
                   }}
                 />
-                {/* <CustomInput
-                  label="Unit Price"
-                  placeholder="Enter Unit Price"
-                  value={form.unitPrice}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, unitPrice: e.target.value }))
-                  }
-                /> */}
+
                 <CustomInput
                   label="Amount"
                   placeholder="Enter Amount"
                   value={form.amount}
-                  // onChange={(e) => {
-
-                  //   }
-                  // }}
                 />
               </div>
 
