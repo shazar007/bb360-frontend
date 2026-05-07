@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-
 import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -11,20 +10,17 @@ export default function VendorBills() {
   useEffect(() => {
     document.title = "Create Bills — BB-360";
   }, []);
+
   const { data: AllInvoice, isLoading } = useQuery({
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseInvoice,
-
-    staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const allInvoices = AllInvoice?.data?.data ?? [];
-  console.log("🚀 ~ allInvoices:", allInvoices);
   const { goTo } = useAppNavigate();
   return (
     <div className="mt-8">
@@ -50,15 +46,13 @@ export default function VendorBills() {
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >
-            {" "}
             <Icon icon="mage:filter" className="text-lg" />
             Filters
-          </button>{" "}
+          </button>
           <button
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
           >
-            {" "}
             <Icon icon="ion:refresh-outline" className="text-lg" />
             Reset
           </button>
@@ -69,7 +63,6 @@ export default function VendorBills() {
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
           >
-            {" "}
             <Icon icon="streamline-flex:story-post" className="text-lg" />
             Create
           </button>
@@ -84,7 +77,7 @@ export default function VendorBills() {
             "View",
             "Report",
             "Transaction Date",
-            "Purchase Number",
+            "Invoice Number",
             "Vendor",
             "Tax Amount",
             "Amount",
@@ -109,13 +102,9 @@ export default function VendorBills() {
             />,
 
             dayjs(item?.transactionDate || item?.date).format("YYYY-MM-DD"),
-
-            item?.poNumber || "-",
-
-            item?.vendorName || "-",
-
+            item?.invoiceNumber || "-",
+            item?.partyAccount?.vendorName || "-",
             item?.taxAmount ?? 0,
-
             item?.totalAmount ?? 0,
           ])}
         />

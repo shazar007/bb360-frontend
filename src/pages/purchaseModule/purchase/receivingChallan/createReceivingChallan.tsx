@@ -25,14 +25,15 @@ export default function CreateReceivingChallan() {
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseReceiving,
 
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    staleTime: 0, // 👈 IMPORTANT
+    refetchOnMount: true, // 👈 IMPORTANT
+    refetchOnWindowFocus: true,
   });
-  const { data: order, isLoading } = useGetPurchaseOrderByPoNumber(poNumber, {
+  const {
+    data: order,
+    isLoading,
+    refetch: reloadPoNumber,
+  } = useGetPurchaseOrderByPoNumber(poNumber, {
     enabled: false,
     retry: false,
   });
@@ -45,7 +46,7 @@ export default function CreateReceivingChallan() {
       return;
     }
 
-    const res = await refetch();
+    const res = await reloadPoNumber();
 
     if (res.error) {
       const message =
@@ -90,12 +91,13 @@ export default function CreateReceivingChallan() {
   };
 
   useEffect(() => {
-    if (purchaseOrderData?.items) {
+    if (purchaseOrderData?.items && tableItems.length === 0) {
       setTableItems(purchaseOrderData.items);
     }
   }, [purchaseOrderData]);
-
   const handleSaveInvoice = async () => {
+    if (loading) return; // ✅ prevent multiple calls
+
     try {
       if (!purchaseOrderData) {
         notifyError("No Purchase Order Data Found");
@@ -106,10 +108,9 @@ export default function CreateReceivingChallan() {
 
       const payload = {
         purchaseOrder: String(purchaseOrderData?._id || purchaseOrderData?.id),
-        taxAmount: Number(purchaseOrderData?.tax || 0),
+        taxPercentage: Number(purchaseOrderData?.tax || 0),
         totalAmount: Number(purchaseOrderData?.totalAmount || 0),
         status: "completed",
-
         items: tableItems.map((item: any) => ({
           item: String(item?.item?._id || item?.item),
           itemCode: item?.itemCode || "",
@@ -130,6 +131,9 @@ export default function CreateReceivingChallan() {
       await createReceivingChallan(payload);
 
       notifySuccess("Receiving Challan Created Successfully");
+
+      await refetch();
+      goBack();
     } catch (error: any) {
       const message =
         error?.response?.data?.message || "Failed to save receiving challan";
@@ -137,7 +141,6 @@ export default function CreateReceivingChallan() {
       notifyError(message);
     } finally {
       setLoading(false);
-      refetch();
     }
   };
   return (
@@ -273,7 +276,9 @@ export default function CreateReceivingChallan() {
                 <CustomInput
                   label="Tax%"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  value={purchaseOrderData ? purchaseOrderData.tax : ""}
+                  value={
+                    purchaseOrderData ? purchaseOrderData.taxPercentage : ""
+                  }
                   disabled
                 />
                 <CustomInput

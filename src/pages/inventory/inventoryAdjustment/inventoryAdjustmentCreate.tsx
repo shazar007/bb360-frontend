@@ -60,7 +60,7 @@ export default function InventoryAdjustmentCreate() {
   };
   const handleSave = () => {
     const newRow = {
-      item: form.item, // ✅ ITEM ID (IMPORTANT)
+      item: form.item,
       itemCode: form.itemCode,
       itemName: form.itemName,
       uom: form.uom,

@@ -38,12 +38,9 @@ export default function PurchaseOrder() {
     queryKey: ["getAllOrder"],
     queryFn: getAllOrders,
 
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
+    staleTime: 0, // 👈 IMPORTANT
+    refetchOnMount: true, // 👈 IMPORTANT
+    refetchOnWindowFocus: true,
   });
   const ordersData = AllOrders?.data?.data || [];
   const { goTo, goWithState } = useAppNavigate();
@@ -161,7 +158,7 @@ export default function PurchaseOrder() {
             <button
               onClick={handleCreate}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-37"
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >
               <Icon icon="basil:add-outline" className="text-lg" />
               Create
