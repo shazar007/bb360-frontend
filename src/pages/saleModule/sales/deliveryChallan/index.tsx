@@ -4,15 +4,12 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { GetSalesInvoiceApi } from "../../../../api/sale";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 export default function DeliveryChallan() {
   const { goTo } = useAppNavigate();
   const navigate = useNavigate();
-  const {
-    data: SaleInvoices,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const { data: SaleInvoices, isLoading } = useQuery({
     queryKey: ["getAllSalesInvoice"],
     queryFn: GetSalesInvoiceApi,
 
@@ -24,6 +21,7 @@ export default function DeliveryChallan() {
     refetchOnReconnect: false,
   });
   const saleInvoicesData: any = SaleInvoices?.data || [];
+  console.log("🚀 ~ saleInvoicesData:", saleInvoicesData);
 
   const goWithState = (path: any, state = {}) => {
     navigate(path, { state });
@@ -97,7 +95,7 @@ export default function DeliveryChallan() {
               className="text-primary text-lg cursor-pointer"
             />,
             item?.invoiceNumber,
-            item?.createdAt,
+            dayjs(item?.createdAt).format("DD-MMM-YYYY"),
             // item?.dispatchDate,
             item?.distributorName,
             item?.contactNumber,

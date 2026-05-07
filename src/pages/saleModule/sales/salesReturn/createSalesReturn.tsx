@@ -247,7 +247,7 @@ export default function CreateSalesReturn() {
                 Enter Sales_Return
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-10 p-4 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
+            <div className="grid grid-cols-1 gap-2 md:gap-y-2 md:gap-x-10  p-4 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
               <div className="space-y-2">
                 <div className="flex items-end gap-2">
                   <div className="flex-1">

@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import { Icon } from "@iconify/react";
+import type { Dayjs } from "dayjs";
 
 type CustomTimePickerProps = {
   label?: string;
-  value?: string;
+  value?: string | Dayjs | null;
   onChange?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
@@ -12,14 +13,19 @@ type CustomTimePickerProps = {
   placeholder?: string;
 };
 
-function formatTime(timeStr?: string) {
-  if (!timeStr) {
+function formatTime(time?: string | Dayjs | null) {
+  if (!time) {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, "0");
     const minutes = now.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
-  return timeStr;
+
+  if (typeof time === "string") {
+    return time;
+  }
+
+  return time.format("HH:mm");
 }
 
 export default function CustomTimePicker({
@@ -50,7 +56,13 @@ export default function CustomTimePicker({
           ref={inputRef}
           type="time"
           name={name}
-          value={value}
+          value={
+            typeof value === "string"
+              ? value
+              : value
+                ? value.format("HH:mm")
+                : ""
+          }
           onChange={(e) => onChange(e.target.value)}
           required={required}
           disabled={disabled}

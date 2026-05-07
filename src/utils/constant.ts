@@ -1085,229 +1085,26 @@ export const navItems: NavItem[] = [
     name: "HR Module",
     icon: "streamline-freehand:human-resources-hierarchy",
     children: [
-      { name: "No Data Found" },
-      // {
-      //   name: "HR Setup",
-      //   children: [
-      //     {
-      //       name: "Employee",
-      //       path: "/hr-module/hr-setup/employee",
-      //     },
-      //     {
-      //       name: "Work Calendar",
-      //       path: "/hr-module/hr-setup/work-calendar",
-      //     },
-      //     {
-      //       name: "Define Employee Salary",
-      //       path: "/hr-module/hr-setup/define-employee-salary",
-      //     },
-      //     {
-      //       name: "Employee Types",
-      //       path: "/hr-module/hr-setup/employee-types",
-      //     },
-      //     {
-      //       name: "Employee Grades",
-      //       path: "/hr-module/hr-setup/employee-grades",
-      //     },
-      //     {
-      //       name: "Employee Jobs",
-      //       path: "/hr-module/hr-setup/employee-jobs",
-      //     },
-      //     {
-      //       name: "Employee Designation",
-      //       path: "/hr-module/hr-setup/employee-designation",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Employee Performance",
-      //   children: [
-      //     {
-      //       name: "Employee Performance Criteria",
-      //       path: "/hr-module/employee-performance/employee-performance-criteria",
-      //     },
-      //     {
-      //       name: "Employee Performance Evalution",
-      //       path: "/hr-module/employee-performance/employee-performance-evalution",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Employee Leave & Expense",
-      //   children: [
-      //     {
-      //       name: "Employee Leave Application",
-      //       path: "/hr-module/employee-leave-expense/employee-leave-application",
-      //     },
-      //     {
-      //       name: "CPL Leave Approval",
-      //       path: "/hr-module/employee-leave-expense/cpl-leave-approval",
-      //     },
-      //     {
-      //       name: "Employee Expense Claim",
-      //       path: "/hr-module/employee-leave-expense/employee-expense-claim",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Attendance Setup",
-      //   children: [
-      //     {
-      //       name: "Define Attendance Holidays",
-      //       path: "/hr-module/attendance-setup/define-attendance-holidays",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "HR-Attendance",
-      //   children: [
-      //     {
-      //       name: "HR & Payroll Dashboard",
-      //       path: "/hr-module/hr-attendance/hr-payroll-dashboard",
-      //     },
-      //     {
-      //       name: "Time Attendance Machine Data",
-      //       path: "/hr-module/hr-attendance/time-attendance-machine-data",
-      //     },
-      //     {
-      //       name: "Time Attendance Register",
-      //       path: "/hr-module/hr-attendance/time-attendance-register",
-      //     },
-      //     {
-      //       name: "Accrual Plan Balance",
-      //       path: "/hr-module/ahr-attendance/accrual-plan-balance",
-      //     },
-      //     {
-      //       name: "Overtime Approval",
-      //       path: "/hr-module/hr-attendance/overtime-approval",
-      //     },
-      //     {
-      //       name: "Outdoor Duty",
-      //       path: "/hr-module/hr-attendance/outdoor-duty",
-      //     },
-      //     {
-      //       name: "Late Deduction",
-      //       path: "/hr-module/hr-attendance/late-deduction",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Employee Attendance Reports",
-      //   children: [
-      //     {
-      //       name: "Time Attendance Summary",
-      //       path: "/hr-module/employee-attendance-reports/time-attendance-summary",
-      //     },
-      //     {
-      //       name: "Employee Attendance Register",
-      //       path: "/hr-module/employee-attendance-reports/employee-attendance-register",
-      //     },
-      //     {
-      //       name: "Employee Register Detail Report",
-      //       path: "/hr-module/employee-attendance-reports/employee-register-detail-report",
-      //     },
-      //     {
-      //       name: "Employee Overtime Report",
-      //       path: "/hr-module/employee-attendance-reports/employee-overtime-report",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Payroll Setup",
-      //   children: [
-      //     {
-      //       name: "Employee Pay Elements",
-      //       path: "/hr-module/payroll-setup/employee-pay-elements",
-      //     },
-      //     {
-      //       name: "Loan Deduction Setup",
-      //       path: "/hr-module/payroll-setup/loan-deduction-setup",
-      //     },
-      //     {
-      //       name: "Pay Element Entries Upload",
-      //       path: "/hr-module/payroll-setup/pay-element-entries-upload",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Payroll Process",
-      //   children: [
-      //     {
-      //       name: "Item Closing As On Date Report",
-      //       path: "/hr-module/payroll-process",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Employee Payroll Reports",
-      //   children: [
-      //     {
-      //       name: "Employee Salary Sheet",
-      //       path: "/hr-module/employee-payroll-reports/employee-salary-sheet",
-      //     },
-      //     {
-      //       name: "Salary Slip",
-      //       path: "/hr-module/employee-payroll-reports/salary-slip",
-      //     },
-      //     {
-      //       name: "Employees Closing Report",
-      //       path: "/hr-module/employee-payroll-reports/employees-closing-report",
-      //     },
-      //     {
-      //       name: "Employees Ledger",
-      //       path: "/hr-module/employee-payroll-reports/employees-ledger",
-      //     },
-      //     {
-      //       name: "Employee Advance Report",
-      //       path: "/hr-module/employee-payroll-reports/employee-advance-report",
-      //     },
-      //     {
-      //       name: "Employee Laon Summary",
-      //       path: "/hr-module/employee-payroll-reports/employee-laon-summary",
-      //     },
-      //     {
-      //       name: "Employee Laon & Advance Summary Reports",
-      //       path: "/hr-module/employee-payroll-reports/employee-laon-advance-summary-reports",
-      //     },
-      //   ],
-      // },
-      // {
-      //   name: "Employee Reports",
-      //   children: [
-      //     {
-      //       name: "Department Wise Employee Summary",
-      //       path: "/hr-module/employee-reports/department-wise-employee-summary",
-      //     },
-      //     {
-      //       name: "Employee Card",
-      //       path: "/hr-module/employee-reports/employee-card",
-      //     },
-      //     {
-      //       name: "Uploaded Documents Status",
-      //       path: "/hr-module/employee-reports/uploaded-documents-status",
-      //     },
-      //     {
-      //       name: "Provident Fund Contribution Report",
-      //       path: "/hr-module/employee-reports/provident-fund-contribution-report",
-      //     },
-      //     {
-      //       name: "Department wise Attendance",
-      //       path: "/hr-module/employee-reports/department-wise-attendance",
-      //     },
-      //     {
-      //       name: "Daily Attendance Register",
-      //       path: "/hr-module/employee-reports/daily-attendance-register",
-      //     },
-      //     {
-      //       name: "Employee Late Arrival Report",
-      //       path: "/hr-module/employee-reports/employee-late-arrival-report",
-      //     },
-      //     {
-      //       name: "Salary Increment report",
-      //       path: "/hr-module/employee-reports/salary-increment-report",
-      //     },
-      //   ],
-      // },
+      {
+        name: "Attendance",
+        path: "/hr-module/attendance",
+      },
+      {
+        name: "Leaves",
+        path: "/hr-module/leaves",
+      },
+      {
+        name: "Event",
+        path: "/hr-module/events",
+      },
+      {
+        name: "Payroll",
+        path: "/hr-module/payroll",
+      },
+      {
+        name: "Setting",
+        path: "/hr-module/setting",
+      },
     ],
   },
 ];
