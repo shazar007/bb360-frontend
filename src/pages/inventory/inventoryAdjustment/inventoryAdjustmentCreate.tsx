@@ -158,7 +158,7 @@ export default function InventoryAdjustmentCreate() {
         quantityAdjusted: "",
       });
 
-      setTableData([]); // clear table
+      setTableData([]);
       localStorage.removeItem("inventoryAdjustment");
     } catch (error) {
       notifyError("Something went wrong");
@@ -234,7 +234,7 @@ export default function InventoryAdjustmentCreate() {
                 onChange={(val: any) =>
                   setForm((prev) => ({
                     ...prev,
-                    status: val?.value || val, // supports both string & object
+                    status: val?.value || val,
                   }))
                 }
               />
@@ -341,7 +341,7 @@ export default function InventoryAdjustmentCreate() {
 
                   setForm((prev) => ({
                     ...prev,
-                    item: val, // ✅ ID (important for API)
+                    item: val,
                     itemName: selectedItem?.itemName || "",
                     itemCode: selectedItem?.itemCode || "",
                     uom: selectedItem?.uom || "",

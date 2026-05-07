@@ -25,8 +25,8 @@ export default function CreateReceivingChallan() {
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseReceiving,
 
-    staleTime: 0, // 👈 IMPORTANT
-    refetchOnMount: true, // 👈 IMPORTANT
+    staleTime: 0,
+    refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
   const {
@@ -96,7 +96,7 @@ export default function CreateReceivingChallan() {
     }
   }, [purchaseOrderData]);
   const handleSaveInvoice = async () => {
-    if (loading) return; // ✅ prevent multiple calls
+    if (loading) return;
 
     try {
       if (!purchaseOrderData) {

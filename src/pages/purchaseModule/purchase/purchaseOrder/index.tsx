@@ -32,14 +32,14 @@ export default function PurchaseOrder() {
   });
   const {
     data: AllOrders,
-    refetch,
+
     isLoading,
   } = useQuery({
     queryKey: ["getAllOrder"],
     queryFn: getAllOrders,
 
-    staleTime: 0, // 👈 IMPORTANT
-    refetchOnMount: true, // 👈 IMPORTANT
+    staleTime: 0,
+    refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
   const ordersData = AllOrders?.data?.data || [];
@@ -54,7 +54,7 @@ export default function PurchaseOrder() {
     setForm({
       poNumber: item.poNumber || "",
       date: item.date || item.createdAt || "",
-      partyAccount: item.partyAccount?._id || "", // ✅ IMPORTANT ID
+      partyAccount: item.partyAccount?._id || "",
       partyCategory: item.partyCategory || "",
       deliveryAddress: item.deliveryAddress || "",
       type: item.type || "",

@@ -407,8 +407,8 @@ export default function CreateSalesInvoice() {
               item.uom,
               item.itemBalance || "-",
               item.orderedQty || "-",
-              item.batchNumber || "-", // ← Batch Number
-              item.expiryDate || "-", // ← Expiry Date
+              item.batchNumber || "-",
+              item.expiryDate || "-",
               item.tp || "-",
               item.discount || "-",
               item.bonus || "-",

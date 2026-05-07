@@ -2,11 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import DataUploadRouting from "./dataUploadRouting";
 import DistributionSetupRoutes from "./distributionSetupRoutes";
 import VendorDefineRouting from "./vendorDefineRouting";
-import { useEffect } from "react";
+
 export default function ApplicationSetupRouting() {
-  useEffect(() => {
-    document.title = "Application Setup — BB-360";
-  }, []);
   return (
     <Routes>
       <Route path="/data-upload/*" element={<DataUploadRouting />} />

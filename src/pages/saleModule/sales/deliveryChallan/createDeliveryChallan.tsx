@@ -43,7 +43,7 @@ export default function CreateDeliveryChallan() {
         </div>
       </div>
 
-      <div className="bg-[#f6f6f6] rounded-2xl mt-3">
+      <div className="bg-bgprimary rounded-2xl mt-3">
         <div className="mt-3">
           <div className="bg-white rounded-2xl">
             <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">

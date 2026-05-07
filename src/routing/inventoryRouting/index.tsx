@@ -9,12 +9,8 @@ import InventoryAdjustmentCreate from "../../pages/inventory/inventoryAdjustment
 import InventoryTransferCreate from "../../pages/inventory/inventoryTransfer/inventoryTransferCreate";
 import MaterialIssueNoteCreate from "../../pages/inventory/materialIssueNote/materialIssueNoteCreate";
 import MaterialReturnNoteCreate from "../../pages/inventory/materialReturnNote/materialReturnNoteCreate";
-import { useEffect } from "react";
 
 export default function InventoryRouting() {
-  useEffect(() => {
-    document.title = "Inventory — BB-360";
-  }, []);
   return (
     <Routes>
       <Route path="/inventory-adjustment" element={<InventoryAdjustment />} />

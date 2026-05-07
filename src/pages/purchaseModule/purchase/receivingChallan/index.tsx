@@ -10,7 +10,7 @@ import { useReactToPrint } from "react-to-print";
 export default function ReceivingChallan() {
   const [open, setOpen] = useState(false);
   const printRef = useRef(null);
-  const { goTo, goWithState } = useAppNavigate();
+  const { goTo } = useAppNavigate();
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const {
@@ -21,8 +21,8 @@ export default function ReceivingChallan() {
     queryKey: ["getAllOrder"],
     queryFn: getAllPurchaseReceiving,
 
-    staleTime: 0, // 👈 IMPORTANT
-    refetchOnMount: true, // 👈 IMPORTANT
+    staleTime: 0,
+    refetchOnMount: true,
     refetchOnWindowFocus: true,
   });
   const AllPurchaseReceiving = PurchaseReceiving?.data?.data || [];
