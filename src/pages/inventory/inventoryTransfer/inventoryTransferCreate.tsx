@@ -13,7 +13,7 @@ import {
 } from "../../../api/inventoryServices";
 import { SyncLoader } from "react-spinners";
 import CustomSelectSearch from "../../../components/customSelectSearch";
-import { getAllItems } from "../../../api/itemServices";
+import { getItemByCategory } from "../../../api/itemServices";
 import CustomCheckbox from "../../../components/customCheckbox";
 
 const tabs = ["Transaction Lines", "Accounting Lines", "System Information"];
@@ -124,8 +124,9 @@ export default function InventoryTransferCreate() {
   });
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getAllItems"],
-    queryFn: getAllItems,
+    queryKey: ["getItemByCategory", "raw"],
+    queryFn: () => getItemByCategory("raw"),
+    placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,

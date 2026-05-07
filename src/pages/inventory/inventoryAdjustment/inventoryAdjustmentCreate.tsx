@@ -9,7 +9,7 @@ import { useAppNavigate } from "../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../components/toast";
 import CustomSelect from "../../../components/customSelect";
 import { useQuery } from "@tanstack/react-query";
-import { getAllItems } from "../../../api/itemServices";
+import { getItemByCategory } from "../../../api/itemServices";
 import CustomSelectSearch from "../../../components/customSelectSearch";
 import {
   addInventoryAdjustment,
@@ -114,8 +114,8 @@ export default function InventoryAdjustmentCreate() {
   };
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getAllItems"],
-    queryFn: getAllItems,
+    queryKey: ["getItemByCategory", "raw"],
+    queryFn: () => getItemByCategory("raw"),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,

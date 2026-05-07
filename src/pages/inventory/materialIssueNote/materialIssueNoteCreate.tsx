@@ -8,7 +8,7 @@ import CustomDatePicker from "../../../components/datePicker";
 import { useAppNavigate } from "../../../hooks/navigation";
 import { notifySuccess, notifyError } from "../../../components/toast";
 import CustomSelectSearch from "../../../components/customSelectSearch";
-import { getAllItems } from "../../../api/itemServices";
+import { getItemByCategory } from "../../../api/itemServices";
 import { useQuery } from "@tanstack/react-query";
 import CustomSelect from "../../../components/customSelect";
 import { addMaterialIssueNote } from "../../../api/inventoryServices";
@@ -43,9 +43,11 @@ export default function MaterialIssueNoteCreate() {
   const [rowForm, setRowForm] = useState(rowInitialForm);
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getAllItems"],
-    queryFn: getAllItems,
+    queryKey: ["getItemByCategory", "raw"],
+    queryFn: () => getItemByCategory("raw"),
+    placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
 
