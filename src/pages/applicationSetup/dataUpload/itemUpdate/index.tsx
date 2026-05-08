@@ -11,8 +11,10 @@ import {
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import dayjs from "dayjs";
+import { useNavigate } from "react-router-dom";
 
 export default function ItemUpdate() {
+  const navigate = useNavigate();
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
@@ -138,66 +140,72 @@ export default function ItemUpdate() {
               "Product Name",
               "Item Category",
               "Units of Measure (UOM)",
-              "Batch Number",
-              "Expiry Date",
+
               "T.P",
               "M.R.P",
               "Status",
             ]}
             data={items.map((item: any, index: number) => {
-              console.log("🚀 ~ ItemUpdate ~ item:", item)
+              console.log("🚀 ~ ItemUpdate ~ item:", item);
               return [
-              <div className="relative">
+                <div className="relative">
+                  <Icon
+                    icon="qlementine-icons:menu-burger-16"
+                    className="text-lg cursor-pointer text-primary"
+                    onClick={() =>
+                      setOpenMenuIndex(openMenuIndex === index ? null : index)
+                    }
+                  />
+
+                  {openMenuIndex === index && (
+                    <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
+                      <button
+                        className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
+                        onClick={() => handleEdit(index)}
+                      >
+                        Edit Product
+                      </button>
+
+                      <button
+                        className="w-full px-2 py-1 text-left text-red-600 cursor-pointer hover:bg-gray-100"
+                        onClick={() => {
+                          handleDeleteClick(item);
+                          setConfirm(true);
+                        }}
+                      >
+                        Delete Product
+                      </button>
+                    </div>
+                  )}
+                </div>,
+
                 <Icon
-                  icon="qlementine-icons:menu-burger-16"
+                  icon="f7:chevron-right-square"
                   className="text-lg cursor-pointer text-primary"
                   onClick={() =>
-                    setOpenMenuIndex(openMenuIndex === index ? null : index)
+                    navigate("/application-setup/data-upload/item-details", {
+                      state: {
+                        rowData: item,
+                      },
+                    })
                   }
-                />
+                />,
 
-                {openMenuIndex === index && (
-                  <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
-                    <button
-                      className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
-                      onClick={() => handleEdit(index)}
-                    >
-                      Edit Product
-                    </button>
+                item.itemCode || "-",
+                item.itemName || "-",
+                item.itemCategory || "-",
+                item.uom || "-",
+                // item.batchNumber || "-",
+                // item.expiryDate
+                //   ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                //   : "-",
+                item.tp || "-",
+                item.mrp || "-",
 
-                    <button
-                      className="w-full px-2 py-1 text-left text-red-600 cursor-pointer hover:bg-gray-100"
-                      onClick={() => {
-                        handleDeleteClick(item);
-                        setConfirm(true);
-                      }}
-                    >
-                      Delete Product
-                    </button>
-                  </div>
-                )}
-              </div>,
-
-              <Icon
-                icon="f7:chevron-right-square"
-                className="text-lg cursor-pointer text-primary"
-              />,
-
-              item.itemCode || "-",
-              item.itemName || "-",
-              item.itemCategory || "-",
-              item.uom || "-",
-              item.batchNumber || "-",
-              item.expiryDate
-                ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
-                : "-",
-              item.tp || "-",
-              item.mrp || "-",
-
-              <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
-                Good
-              </div>,
-            ];
+                <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
+                  Good
+                </div>,
+              ];
             })}
           />
         </div>
