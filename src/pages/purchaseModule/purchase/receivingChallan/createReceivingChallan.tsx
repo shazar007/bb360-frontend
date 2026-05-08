@@ -91,7 +91,6 @@ export default function CreateReceivingChallan() {
         [key]: value,
       };
 
-      // Auto calculate rejected qty
       if (key === "deliveredQty") {
         updatedRow.rejectedQty =
           Number(updatedRow.quantity || 0) - Number(value || 0);
@@ -116,6 +115,38 @@ export default function CreateReceivingChallan() {
   }, [purchaseOrderData]);
   const handleSaveInvoice = async () => {
     if (loading) return;
+
+    if (!receivingDate) {
+      notifyError("Receiving Date is required");
+      return;
+    }
+    if (!editRow?.batchNumber?.trim()) {
+      notifyError("Batch Number is required");
+      return;
+    }
+
+    if (!editRow?.expiryDate) {
+      notifyError("Expiry Date is required");
+      return;
+    }
+
+    if (!tableItems.length) {
+      notifyError("No items available");
+      return;
+    }
+
+    const invalidItem = tableItems.find((item: any) => {
+      return (
+        item.deliveredQty === "" ||
+        item.deliveredQty === null ||
+        item.deliveredQty === undefined
+      );
+    });
+
+    if (invalidItem) {
+      notifyError("Please fill Delivered Quantity for all items");
+      return;
+    }
 
     try {
       if (!purchaseOrderData) {
@@ -151,7 +182,6 @@ export default function CreateReceivingChallan() {
       };
 
       await createReceivingChallan(payload);
-      // console.log("🚀 ~ payload:", payload);
 
       notifySuccess("Receiving Challan Created Successfully");
 
@@ -216,7 +246,7 @@ export default function CreateReceivingChallan() {
                 Item Receipt
               </p>
             </div>
-            <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
+            <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-29.25">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div className="flex-1">

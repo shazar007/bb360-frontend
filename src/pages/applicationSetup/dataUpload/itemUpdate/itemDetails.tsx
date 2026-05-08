@@ -7,7 +7,7 @@ export default function ItemDetails() {
   const location = useLocation();
 
   const { rowData } = (location.state as { rowData: any }) || {};
-  console.log("🚀 ~ rowData:", rowData);
+  console.log("🚀 ~ rowData:", rowData?.batches);
 
   return (
     <div className="mt-8">
@@ -59,7 +59,7 @@ export default function ItemDetails() {
       <div className="mt-3 bg-white rounded-2xl">
         <div>
           {" "}
-          <p className="text-xs p-3 px-4 cursor-pointer text-primary">
+          <p className="p-3 px-4 text-xs cursor-pointer text-primary">
             {" "}
             Products Batches
           </p>
@@ -68,11 +68,18 @@ export default function ItemDetails() {
           norounded
           noPagination
           height="30vh"
-          headers={["Batch Number", "Expiry Date", "Balance", "Status"]}
+          headers={[
+            "Batch Number",
+            "Expiry Date",
+            "Receiving Date",
+            "Balance",
+            "Status",
+          ]}
           data={
             rowData?.batches?.map((batch: any) => [
               batch.batchNumber,
               dayjs(batch.expiryDate).format("DD-MMM-YYYY"),
+              dayjs(batch.receivingDate).format("DD-MMM-YYYY"),
               batch.balance || "-",
               <span
                 className={`px-3 py-1 rounded-full text-xs font-medium ${
