@@ -45,6 +45,13 @@ export const ENDPOINTS = {
 
   // --------------Inventory Transfer Orders-------------
   TRANSFER_ORDERS: "/transfer-orders",
+
   // --------------Inventory Stock Taking-------------
   STOCK_TAKING: "/stock-taking",
+
+  // --------------Account Ledger-------------
+  ACCOUNT_LEDGER: "/ledgers",
+
+  // --------------Account Ledger-------------
+  ATTENDANCE: "/attendance",
 };

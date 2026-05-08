@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllItems } from "../../../../api/itemServices";
 import CustomInput from "../../../../components/customInput";
 import CustomTable from "../../../../components/customTable";
@@ -51,7 +51,7 @@ export default function CreateSalesInvoice() {
   const [invoiceDate, setInvoiceDate] = useState("");
   const [saveRow, setSaveRow] = useState(false);
   const { goBack } = useAppNavigate();
-
+  const queryClient = useQueryClient();
   const { data: AllDistributors } = useQuery({
     queryKey: ["getAllDistributor"],
     queryFn: getAllDistributor,
@@ -82,6 +82,7 @@ export default function CreateSalesInvoice() {
   });
 
   const items = AllItems?.data?.items || [];
+  console.log("🚀 ~ items:", items);
 
   const itemOptions =
     items.map((item: any) => ({
@@ -154,42 +155,40 @@ export default function CreateSalesInvoice() {
 
       const payload = {
         distributor: distributorData._id,
-        distributorPercentage: distributorPercentage,
-        invoiceDate: invoiceDate,
+        distributorPercentage,
+        invoiceDate,
         taxPct: taxPercentage,
-        totalAmount: totalAmount,
-        // notes: "Valid invoice",
-        items: tableData.map((item: any) => {
-          return {
-            item: item.itemId,
-            orderedQty: Number(item.orderedQty || 0),
-            bonus: Number(item.bonus || 0),
-            discountPct: Number(item.discountPct || 0),
-            tp: Number(item.tp || 0),
-            batchNumber: item.batchNumber || "",
-            expiryDate: item.expiryDate || "",
-          };
-        }),
+        totalAmount,
+        items: tableData.map((item: any) => ({
+          item: item.itemId,
+          orderedQty: Number(item.orderedQty || 0),
+          bonus: Number(item.bonus || 0),
+          discountPct: Number(item.discountPct || 0),
+          tp: Number(item.tp || 0),
+          batchNumber: item.batchNumber || "",
+          expiryDate: item.expiryDate || "",
+        })),
       };
 
       await CreateSalesInvoiceApi(payload);
 
-      notifySuccess("Purchase Order Created Successfully");
+      notifySuccess("Sale Invoice is Created Successfully");
 
+      // reset form
       setTableData([]);
       setDistributorData(null);
       setTaxPercentage("");
-      // setPartyCategory("");
-      // setDeliveryAddress("");
-      // setType("");
 
-      // localStorage.removeItem(STORAGE_KEY);
+      await queryClient.invalidateQueries({
+        queryKey: ["getAllSalesInvoice"],
+      });
+
+      goBack();
     } catch (error: any) {
       console.error(error);
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
-      // refetch();
     }
   };
   const handleDeleteSelected = () => {
@@ -463,7 +462,7 @@ export default function CreateSalesInvoice() {
                     uom: item?.uom || "",
                     tp: item?.tp || "",
                     mrp: item?.mrp || "",
-                    itemBalance: item?.balance || "",
+                    itemBalance: item?.balance || "0",
                     batchNumber: item?.batchNumber || "",
                     expiryDate: item?.expiryDate || "",
                   }));

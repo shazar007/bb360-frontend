@@ -60,12 +60,12 @@ export default function CustomImagePicker({
         />
 
         <div
-          className={`w-full h-10 px-4 flex items-center text-xs rounded-md bg-[#ECF0F4] ${className}`}
+          className={`w-full h-10 px-3 flex items-center text-xs rounded-md bg-[#ECF0F4] ${className}`}
         >
           <div className="flex items-center gap-2">
             <Icon
-              icon="mdi:image-outline"
-              width="18"
+              icon="material-symbols-light:image-outline-rounded"
+              width="22"
               className="text-gray-400"
             />
             <span className={!value ? "text-gray-400" : ""}>

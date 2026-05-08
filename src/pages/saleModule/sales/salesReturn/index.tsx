@@ -108,7 +108,15 @@ export default function SalesReturn() {
               saleReturn.invoiceNumber,
               saleReturn.distributorCode,
               saleReturn.distributorName,
-              <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
+              <div
+                className={`capitalize w-max px-2 py-0.5 rounded-sm ${
+                  saleReturn.status === "posted"
+                    ? "bg-[#228422]/12 text-[#228422]" // green for posted
+                    : saleReturn.status === "draft"
+                      ? "bg-[#F59E0B]/12 text-[#F59E0B]" // yellow for draft
+                      : "bg-gray-100 text-gray-500" // fallback
+                }`}
+              >
                 <p>{saleReturn.status}</p>
               </div>,
               saleReturn.description,
