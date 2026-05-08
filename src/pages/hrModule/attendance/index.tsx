@@ -19,6 +19,7 @@ import {
   getAllAttendance,
   updateAttendanceAdmin,
 } from "../../../api/hrServices";
+import { MonthYearFilter } from "../../../components/monthYearFilter";
 
 const titles = [
   "Employee Id",
@@ -30,20 +31,6 @@ const titles = [
   "Checkout Location",
   "Status",
   "Action",
-];
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
 ];
 
 export default function Attendance() {
@@ -95,7 +82,7 @@ export default function Attendance() {
     year: new Date().getFullYear(),
   });
 
-  const { data, refetch, isFetching } = useQuery<AxiosResponse<any>>({
+  const { data, refetch } = useQuery<AxiosResponse<any>>({
     queryKey: ["Attendance", searchValue, selectedMonthYear],
     queryFn: () =>
       getAllAttendance({
@@ -218,12 +205,18 @@ export default function Attendance() {
   };
   return (
     <div className="bg-[#F7F7F7] md:h-[calc(100vh-108px)] h-auto rounded-xl p-4">
-      <div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
+          <p className="text-base font-semibold md:text-lg text-heading1">
+            Attendance
+          </p>
+        </div>
         <div className="flex flex-wrap items-center justify-between gap-4 md:flex-nowrap">
           <div className="flex flex-wrap w-full gap-3 sm:w-auto md:flex-nowrap">
             <div
               onClick={handleClickRefech}
-              className="flex items-center justify-center h-10 bg-[#E5EBF7] rounded-md cursor-pointer min-w-10"
+              className="flex items-center justify-center h-10 bg-[#ECF0F4] rounded-md cursor-pointer min-w-10"
             >
               <Icon
                 icon="ion:reload-outline"
@@ -233,19 +226,10 @@ export default function Attendance() {
               />
             </div>
             <div className="w-[calc(100%-60px)] md:w-45 lg:w-48 xl:w-auto 2xl:w-auto">
-              <MonthYearPickerNumber
+              <MonthYearFilter
                 value={selectedMonthYear}
                 onChange={setSelectedMonthYear}
               />{" "}
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-3 md:flex-nowrap">
-            <div className="w-full md:w-53 lg:w-auto">
-              {" "}
-              <SearchById value={searchId} onChange={setSearchId} />
-            </div>
-            <div className="w-full md:w-53 lg:w-auto">
-              <SearchByName value={searchName} onChange={setSearchName} />
             </div>
           </div>
         </div>
@@ -256,61 +240,69 @@ export default function Attendance() {
             <div
               key={role}
               onClick={() => setActiveTab(role as any)}
-              className={`cursor-pointer rounded-t-2xl rounded-b-2xl md:rounded-b-none h-10 md:h-14 flex justify-center items-center sm:w-30 xl:w-25 w-full ${
+              className={`cursor-pointer rounded-t-xl rounded-b-xl md:rounded-b-none h-10 md:h-12 flex justify-center items-center sm:w-30 xl:w-25 w-full ${
                 activeTab === role
-                  ? " bg-white text-[#7d7d7d]"
-                  : "bg-[#E5EBF7] text-black"
+                  ? " bg-white text-heading1"
+                  : "bg-[#E5EBF7] text-[#7d7d7d]"
               }`}
             >
-              <p className="text-xs font-medium lg:text-sm">{role}</p>
+              <p className="text-xs lg:text-sm">{role}</p>
             </div>
           ))}
         </div>
-        <button
-          onClick={handleGenerateAttendance}
-          className="h-10 w-full md:mb-0 mb-4  text-white md:w-50 bg-primary  rounded-md gap-3 cursor-pointer flex justify-center items-center"
-        >
-          {isloadingAttendance ? (
-            <SyncLoader color="#fff" size={6} />
-          ) : (
-            "Generate Attendance"
-          )}
-        </button>
+        <div className="flex flex-wrap gap-2 md:flex-nowrap">
+          <div className="w-full md:w-53 lg:w-auto">
+            {" "}
+            <SearchById
+              value={searchId}
+              onChange={setSearchId || setSearchName}
+            />
+          </div>
+          <button
+            onClick={handleGenerateAttendance}
+            className="h-10 w-full md:mb-2 mb-4  text-sm text-white md:w-40 bg-primary  rounded-md gap-3 cursor-pointer flex justify-center items-center"
+          >
+            {isloadingAttendance ? (
+              <SyncLoader color="#fff" size={6} />
+            ) : (
+              "Generate Attendance"
+            )}
+          </button>
+        </div>
       </div>{" "}
       <div
         className={`bg-[#ffffff]  rounded-xl h-auto  ${
           activeTab === "Field Staff" ? "rounded-tl-none" : ""
         }`}
       >
-        <div className="flex justify-between items-center px-4.5 py-3">
+        <div className="flex justify-between items-center px-4.5 py-3 ">
           <p className="text-xs font-semibold text-primary">Employee’s_List</p>
         </div>
 
-        <div
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
-          className="mt-2 overflow-y-auto bg-white rounded-xl"
-        >
-          <CustomTable norounded headers={titles} data={tableData} />
-        </div>
+        <CustomTable
+          norounded
+          height="auto"
+          headers={titles}
+          data={tableData}
+        />
       </div>
       {openModel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="relative mx-3 bg-white rounded-xl w-150">
-            <div className="flex justify-between p-6 bg-[#E5EBF7] rounded-t-xl">
-              <p className="text-xl font-medium">Updated Attendance</p>
-              <p
-                onClick={() => setOpenModel(false)}
-                className="cursor-pointer text-primary"
-              >
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-xs font-semibold text-heading1">
                 {" "}
+                Updated Attendance
+              </h2>
+              <button
+                className="cursor-pointer"
+                onClick={() => setOpenModel(false)}
+              >
                 ✕
-              </p>
+              </button>
             </div>
 
-            <form onSubmit={formik.handleSubmit} className="p-6">
+            <form onSubmit={formik.handleSubmit} className="p-4">
               <div className="space-y-4">
                 <CustomTimePicker
                   label="CheckIn"
@@ -348,80 +340,6 @@ export default function Attendance() {
     </div>
   );
 }
-
-const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 20 }, (_, i) => currentYear - 10 + i);
-interface MonthYearPickerProps {
-  value: { month: number; year: number }; // month is number now
-  onChange: (val: { month: number; year: number }) => void;
-}
-
-const MonthYearPickerNumber: React.FC<MonthYearPickerProps> = ({
-  value,
-  onChange,
-}) => {
-  const [open, setOpen] = useState(false);
-
-  const handleMonthChange = (month: number) => {
-    onChange({ ...value, month });
-  };
-
-  const handleYearChange = (year: number) => {
-    onChange({ ...value, year });
-  };
-
-  return (
-    <div className="relative inline-block w-full h-10 lg:w-45">
-      <div
-        className="flex items-center justify-between px-3 py-2 text-sm text-[#131313] border border-primary rounded-lg cursor-pointer"
-        onClick={() => setOpen(!open)}
-      >
-        <div className="flex items-center gap-2">
-          <Icon
-            icon="mdi:calendar"
-            width={20}
-            height={20}
-            className="text-primary"
-          />
-          <span>{`${value.month}-${value.year}`}</span>
-        </div>
-        <Icon
-          icon={open ? "mdi:chevron-up" : "mdi:chevron-down"}
-          width={20}
-          height={20}
-        />
-      </div>
-
-      {open && (
-        <div className="absolute z-50 flex w-full gap-2 p-3 mt-1 text-xs bg-white rounded shadow-lg">
-          <select
-            className="flex-1 p-1 w-10 border border-primary rounded"
-            value={value.month}
-            onChange={(e) => handleMonthChange(Number(e.target.value))}
-          >
-            {months.map((m, i) => (
-              <option key={m} value={i + 1}>
-                {m}
-              </option>
-            ))}
-          </select>
-
-          <select
-            className="flex-1 p-1 border-primary border rounded"
-            value={value.year}
-            onChange={(e) => handleYearChange(Number(e.target.value))}
-          >
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-    </div>
-  );
-};
 
 interface GeoAddressProps {
   lat: number;

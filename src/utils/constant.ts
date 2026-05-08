@@ -1,3 +1,4 @@
+import * as Yup from "yup";
 type NavItem = {
   name: string;
   path?: string;
@@ -1129,3 +1130,53 @@ export const partyAccounts = [
     reference: "Import Dept",
   },
 ];
+
+export const LeaveSchema = Yup.object().shape({
+  employeeId: Yup.string().required("Employee ID is required"),
+
+  employeeName: Yup.string().required("Employee name is required"),
+
+  leaveType: Yup.string().required("Leave type is required"),
+
+  endDate: Yup.date().required("End date is required"),
+
+  reason: Yup.string().required("Reason is required"),
+});
+export const payrollSchema = Yup.object({
+  employeeId: Yup.string().required("Employee ID is required"),
+  employeeName: Yup.string().required("Employee Name is required"),
+  position: Yup.string().required("Position Name is required"),
+  month: Yup.string().required("Month is required"),
+  year: Yup.number().required("Year is required"),
+  approvedLeaves: Yup.number().required("Approved Leaves is required"),
+  presentDays: Yup.number().required("Present Days is required"),
+  basicSalary: Yup.number().required("Basic Salary is required"),
+  totalWorkingDays: Yup.number().required("Total Working Days is required"),
+  allowances: Yup.object({
+    medical: Yup.number().required("Medical Allowance is required"),
+    transport: Yup.number().required("Transport Allowance is required"),
+    others: Yup.number().required("Other Allowance is required"),
+  }),
+  deductions: Yup.object({
+    pf: Yup.number().required("PF is required"),
+    loan: Yup.number().required("Loan is required"),
+    advanceSalary: Yup.number().required("Advance Salary is required"),
+    tax: Yup.number().required("Tax is required"),
+    others: Yup.number().required("others deduction is required"),
+  }),
+});
+
+export const EventSchema = Yup.object().shape({
+  coverImage: Yup.string()
+    .required("Cover image is required")
+    .url("Cover image must be a valid URL"),
+  date: Yup.date()
+    .required("Date is required")
+    .typeError("Please select a valid date"),
+  heading: Yup.string()
+    .required("Heading is required")
+    .min(5, "Heading must be at least 5 characters")
+    .max(100, "Heading can't exceed 100 characters"),
+  overview: Yup.string().required("Overview is required"),
+  category: Yup.string().required("Category is required"),
+});

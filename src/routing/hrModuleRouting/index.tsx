@@ -5,6 +5,7 @@ import Setting from "../../pages/hrModule/setting";
 import Payroll from "../../pages/hrModule/payroll";
 import Events from "../../pages/hrModule/events";
 import Leaves from "../../pages/hrModule/leaves";
+import PayrollDetails from "../../pages/hrModule/payroll/payRollDetails";
 export default function HrModuleRouting() {
   useEffect(() => {
     document.title = "Hr Module — BB-360";
@@ -15,6 +16,8 @@ export default function HrModuleRouting() {
       <Route path="/leaves" element={<Leaves />} />
       <Route path="/events" element={<Events />} />
       <Route path="/payroll" element={<Payroll />} />
+      <Route path="/payroll/details" element={<PayrollDetails />} />
+
       <Route path="/setting" element={<Setting />} />
     </Routes>
   );

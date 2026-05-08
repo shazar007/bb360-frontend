@@ -1,10 +1,10 @@
 import { Icon } from "@iconify/react";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useRef, useState } from "react";
 
 type CustomDatePickerProps = {
   label?: string;
-  value?: string;
+  value?: string | Dayjs | null;
   onChange?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
@@ -56,7 +56,13 @@ export default function CustomDatePicker({
           ref={inputRef}
           type="date"
           name={name}
-          value={internalValue}
+          value={
+            typeof internalValue === "string"
+              ? internalValue
+              : internalValue
+                ? internalValue.format("YYYY-MM-DD")
+                : ""
+          }
           onChange={(e) => handleChange(e.target.value)}
           required={required}
           disabled={disabled}
