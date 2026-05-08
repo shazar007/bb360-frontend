@@ -211,22 +211,15 @@ export default function Events() {
                           />
                         </button>
                       </div>
-                      <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full cursor-pointer">
-                        <button
-                          onClick={() => {
-                            setEditing(e);
-                            setDeleteConfirmation(true);
-                          }}
-                        >
-                          <Icon
-                            className="cursor-pointer "
-                            color="#E90761"
-                            height="18"
-                            width="24"
-                            icon="mingcute:delete-fill"
-                          />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => {
+                          setEditing(e);
+                          setDeleteConfirmation(true);
+                        }}
+                        className="h-12 w-12 text-white rounded-full cursor-pointer bg-[#FF0000] flex items-center justify-center"
+                      >
+                        <Icon icon="proicons:delete" className="text-xl" />
+                      </button>
                     </div>
                   </div>
                 </div>

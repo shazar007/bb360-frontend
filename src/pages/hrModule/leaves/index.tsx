@@ -271,7 +271,12 @@ export default function Leaves() {
         </div>
         <div className="mt-4">
           {" "}
-          <CustomTable headers={titles} norounded data={tableData} />
+          <CustomTable
+            headers={titles}
+            height="80vh"
+            norounded
+            data={tableData}
+          />
         </div>
       </div>
       {openModel && (
@@ -436,10 +441,10 @@ export default function Leaves() {
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Distributor
+                Delete Leaves
               </p>
               <p className="text-center text-heading1">
-                Are you sure to delete this distributor?
+                Are you sure to delete this Leaves?
               </p>
             </div>
             <div className="flex justify-between gap-2 p-4 pt-0">

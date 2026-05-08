@@ -19,6 +19,7 @@ import CustomInput from "../../../components/customInput";
 import CustomSelect from "../../../components/customSelect";
 import { SyncLoader } from "react-spinners";
 import { MonthYearFilter } from "../../../components/monthYearFilter";
+import { useNavigate } from "react-router-dom";
 
 const tableHeaders = [
   "Employee ID",
@@ -30,6 +31,7 @@ const tableHeaders = [
   "Approved By",
   "Payroll Status",
   "Action",
+  "Details",
 ];
 const months = [
   { label: "January", value: "January" },
@@ -53,6 +55,7 @@ export default function Payroll() {
   const { user } = useSelector((state: any) => {
     return state.user;
   });
+  const navigate = useNavigate();
   const [searchId, setSearchId] = useState("");
   const [searchName, setSearchName] = useState("");
   const debouncedSearchId = useDebounce(searchId, 500);
@@ -236,7 +239,7 @@ export default function Payroll() {
       >
         <Icon
           icon="ph:dots-three-outline-vertical-duotone"
-          className="text-2xl text-primary cursor-pointer"
+          className="text-2xl cursor-pointer text-primary"
           onClick={() => setOpenActionId(openActionId === v._id ? null : v._id)}
         />
 
@@ -266,7 +269,16 @@ export default function Payroll() {
           </div>
         )}
       </div>,
-      <p>Details</p>,
+      <p
+        className="font-medium cursor-pointer text-primary"
+        onClick={() =>
+          navigate("/hr-module/payroll-details", {
+            state: { rowData: v },
+          })
+        }
+      >
+        Details
+      </p>,
     ]) || [];
 
   const formik = useFormik({
@@ -362,12 +374,12 @@ export default function Payroll() {
               }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-35"
             >
-              <Icon icon="basil:add-outline" className="text-lg  text-white" />
+              <Icon icon="basil:add-outline" className="text-lg text-white" />
               <p className="text-sm font-medium text-white">Add Payroll</p>
             </button>
           </div>
         </div>
-        <div className="mt-4 h-auto">
+        <div className="h-auto mt-4">
           <CustomTable headers={tableHeaders} norounded data={tableData} />
         </div>
       </div>
@@ -390,7 +402,7 @@ export default function Payroll() {
               </button>
             </div>
 
-            <form onSubmit={formik.handleSubmit} className="space-y-6 p-4">
+            <form onSubmit={formik.handleSubmit} className="p-4 space-y-6">
               <div className="flex flex-wrap gap-6">
                 <div className="flex-1 space-y-4 min-w-70">
                   <div>
@@ -583,7 +595,7 @@ export default function Payroll() {
               <div className="flex justify-end mt-5">
                 <button
                   type="submit"
-                  className="h-10 w-full md:w-38 text-sm bg-primary rounded-md gap-3 cursor-pointer flex justify-center items-center text-white font-medium"
+                  className="flex items-center justify-center w-full h-10 gap-3 text-sm font-medium text-white rounded-md cursor-pointer md:w-38 bg-primary"
                 >
                   {isloading ? (
                     <SyncLoader color="#fff" size={6} />

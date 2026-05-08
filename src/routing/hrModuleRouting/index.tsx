@@ -16,7 +16,7 @@ export default function HrModuleRouting() {
       <Route path="/leaves" element={<Leaves />} />
       <Route path="/events" element={<Events />} />
       <Route path="/payroll" element={<Payroll />} />
-      <Route path="/payroll/details" element={<PayrollDetails />} />
+      <Route path="/payroll-details" element={<PayrollDetails />} />
 
       <Route path="/setting" element={<Setting />} />
     </Routes>
