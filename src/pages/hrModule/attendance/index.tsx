@@ -93,7 +93,114 @@ export default function Attendance() {
     placeholderData: (previousData) => previousData,
   });
 
-  const filteredData = data?.data.filter((v: any) => {
+  const dummyAttendanceData = [
+    {
+      _id: "1",
+      employee: {
+        employeeId: "EMP-001",
+        employeeName: "Ali Khan",
+        employeeType: "Field Staff",
+      },
+      date: "2026-07-01",
+      checkIn: {
+        time: "2026-07-01T09:00:00",
+      },
+      checkOut: {
+        time: "2026-07-01T18:00:00",
+        location: {
+          lat: 31.5204,
+          lng: 74.3587,
+        },
+      },
+      status: "Present",
+    },
+
+    {
+      _id: "2",
+      employee: {
+        employeeId: "EMP-002",
+        employeeName: "Ahmed Raza",
+        employeeType: "Office Staff",
+      },
+      date: "2026-07-02",
+      checkIn: {
+        time: "2026-07-02T09:30:00",
+      },
+      checkOut: {
+        time: "2026-07-02T17:45:00",
+        location: {
+          lat: 24.8607,
+          lng: 67.0011,
+        },
+      },
+      status: "Late",
+    },
+
+    {
+      _id: "3",
+      employee: {
+        employeeId: "EMP-003",
+        employeeName: "Usman Tariq",
+        employeeType: "Admin",
+      },
+      date: "2026-07-03",
+      checkIn: {
+        time: "2026-07-03T08:50:00",
+      },
+      checkOut: {
+        time: "2026-07-03T17:00:00",
+        location: {
+          lat: 33.6844,
+          lng: 73.0479,
+        },
+      },
+      status: "Present",
+    },
+
+    {
+      _id: "4",
+      employee: {
+        employeeId: "EMP-004",
+        employeeName: "Sara Khan",
+        employeeType: "Field Staff",
+      },
+      date: "2026-07-04",
+      checkIn: {
+        time: "2026-07-04T10:15:00",
+      },
+      checkOut: {
+        time: "2026-07-04T19:10:00",
+        location: {
+          lat: 31.4504,
+          lng: 73.135,
+        },
+      },
+      status: "Absent",
+    },
+
+    {
+      _id: "5",
+      employee: {
+        employeeId: "EMP-005",
+        employeeName: "Hassan Ali",
+        employeeType: "Office Staff",
+      },
+      date: "2026-07-05",
+      checkIn: {
+        time: "2026-07-05T09:05:00",
+      },
+      checkOut: {
+        time: "2026-07-05T18:20:00",
+        location: {
+          lat: 30.1575,
+          lng: 71.5249,
+        },
+      },
+      status: "On Leave",
+    },
+  ];
+
+  const filteredData = dummyAttendanceData.filter((v: any) => {
     if (activeTab === "Office Staff")
       return v.employee.employeeType === "Office Staff";
     if (activeTab === "Field Staff")

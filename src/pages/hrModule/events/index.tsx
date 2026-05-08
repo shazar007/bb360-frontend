@@ -31,7 +31,54 @@ export default function Events() {
     queryFn: () => getAllEvents(),
     staleTime: 5 * 60 * 1000,
   });
-  let AllEvents = data?.data;
+
+  const dummyEventsData = [
+    {
+      _id: "1",
+      coverImage:
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop",
+      date: "2026-07-10",
+      heading: "Annual HR Meeting",
+      overview:
+        "Company annual HR meeting for discussing employee performance and company growth.",
+      category: "HR",
+    },
+
+    {
+      _id: "2",
+      coverImage:
+        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1200&auto=format&fit=crop",
+      date: "2026-07-15",
+      heading: "Office Staff Workshop",
+      overview:
+        "Workshop for office staff to improve productivity and management skills.",
+      category: "Office Staff",
+    },
+
+    {
+      _id: "3",
+      coverImage:
+        "https://images.unsplash.com/photo-1515169067868-5387ec356754?q=80&w=1200&auto=format&fit=crop",
+      date: "2026-07-20",
+      heading: "Field Staff Training",
+      overview:
+        "Special training session for field staff regarding customer communication.",
+      category: "Field Staff",
+    },
+
+    {
+      _id: "4",
+      coverImage:
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?q=80&w=1200&auto=format&fit=crop",
+      date: "2026-07-25",
+      heading: "Company Celebration",
+      overview:
+        "Celebration event for achieving yearly targets and employee appreciation.",
+      category: "HR",
+    },
+  ];
+
+  let AllEvents = dummyEventsData;
 
   useEffect(() => {
     document.title = "HR-Management | Events";

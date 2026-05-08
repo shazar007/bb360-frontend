@@ -112,7 +112,7 @@ export default function Payroll() {
   };
 
   const handleGoToDetails = (row: any[]) => {
-    const rowData = data?.data?.find((v: any) => v.employeeId === row[0]);
+    const rowData = dummyPayrollData.find((v: any) => v.employeeId === row[0]);
 
     if (rowData) {
       navigate("/payroll/payrollDetails", {
@@ -120,8 +120,107 @@ export default function Payroll() {
       });
     }
   };
+
+  const dummyPayrollData = [
+    {
+      _id: "1",
+      employeeId: "EMP-001",
+      employeeName: "Ali Khan",
+      position: "Frontend Developer",
+      presentDays: 26,
+      grossSalary: 120000,
+      netPay: 110000,
+      approvedBy: "Admin",
+      payrollStatus: "Pending",
+
+      month: "May",
+      year: "2026",
+      totalWorkingDays: 30,
+      approvedLeaves: 2,
+      basicSalary: 100000,
+
+      allowances: {
+        medical: 5000,
+        transport: 7000,
+        others: 3000,
+      },
+
+      deductions: {
+        pf: 2000,
+        loan: 0,
+        advanceSalary: 1000,
+        tax: 4000,
+        others: 0,
+      },
+    },
+
+    {
+      _id: "2",
+      employeeId: "EMP-002",
+      employeeName: "Ahmed Raza",
+      position: "Backend Developer",
+      presentDays: 28,
+      grossSalary: 150000,
+      netPay: 138000,
+      approvedBy: "HR Manager",
+      payrollStatus: "Approved",
+
+      month: "May",
+      year: "2026",
+      totalWorkingDays: 30,
+      approvedLeaves: 1,
+      basicSalary: 130000,
+
+      allowances: {
+        medical: 6000,
+        transport: 8000,
+        others: 4000,
+      },
+
+      deductions: {
+        pf: 3000,
+        loan: 2000,
+        advanceSalary: 0,
+        tax: 5000,
+        others: 0,
+      },
+    },
+
+    {
+      _id: "3",
+      employeeId: "EMP-003",
+      employeeName: "Sara Khan",
+      position: "UI/UX Designer",
+      presentDays: 25,
+      grossSalary: 100000,
+      netPay: 92000,
+      approvedBy: "Finance Manager",
+      payrollStatus: "Pending",
+
+      month: "May",
+      year: "2026",
+      totalWorkingDays: 30,
+      approvedLeaves: 3,
+      basicSalary: 85000,
+
+      allowances: {
+        medical: 4000,
+        transport: 5000,
+        others: 2000,
+      },
+
+      deductions: {
+        pf: 2000,
+        loan: 0,
+        advanceSalary: 1000,
+        tax: 3000,
+        others: 0,
+      },
+    },
+  ];
+
   const tableData =
-    data?.data?.map((v: any) => [
+    dummyPayrollData.map((v: any) => [
       v.employeeId,
       v.employeeName,
       v.position || "-",

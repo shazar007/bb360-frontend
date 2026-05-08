@@ -59,8 +59,59 @@ export default function Leaves() {
     queryFn: () => getAllLeaves(searchValue),
     placeholderData: (previousData) => previousData,
   });
+
+  const dummyLeavesData = [
+    {
+      _id: "1",
+      employeeId: "EMP-001",
+      employeeName: "Ali Khan",
+      leaveType: "Casual Leave",
+      startDate: "2026-07-01",
+      endDate: "2026-07-03",
+      approvedBy: "HR-001",
+      status: "Pending",
+      reason: "Personal Work",
+    },
+
+    {
+      _id: "2",
+      employeeId: "EMP-002",
+      employeeName: "Ahmed Raza",
+      leaveType: "Sick Leave",
+      startDate: "2026-07-05",
+      endDate: "2026-07-06",
+      approvedBy: "HR-002",
+      status: "Approved",
+      reason: "Fever",
+    },
+
+    {
+      _id: "3",
+      employeeId: "EMP-003",
+      employeeName: "Sara Khan",
+      leaveType: "Annual Leave",
+      startDate: "2026-07-10",
+      endDate: "2026-07-15",
+      approvedBy: "HR-001",
+      status: "Rejected",
+      reason: "Vacation",
+    },
+
+    {
+      _id: "4",
+      employeeId: "EMP-004",
+      employeeName: "Usman Tariq",
+      leaveType: "Paternity Leave",
+      startDate: "2026-07-18",
+      endDate: "2026-07-22",
+      approvedBy: "",
+      status: "Pending",
+      reason: "Family Time",
+    },
+  ];
+
   const tableData =
-    data?.data?.map((v: any) => [
+    dummyLeavesData.map((v: any) => [
       v.employeeId,
       v.employeeName,
       v.leaveType,
