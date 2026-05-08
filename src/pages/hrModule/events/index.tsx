@@ -26,7 +26,7 @@ export default function Events() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const [isloadingDelete, setLoadingDelete] = useState(false);
 
-  const { data, refetch, isFetching, isLoading } = useQuery({
+  const { refetch, isFetching, isLoading } = useQuery({
     queryKey: ["AllEvents"],
     queryFn: () => getAllEvents(),
     staleTime: 5 * 60 * 1000,

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Icon } from "@iconify/react";
 import type { Dayjs } from "dayjs";
 
@@ -36,7 +36,6 @@ export default function CustomTimePicker({
   disabled = false,
   className = "",
   name,
-  placeholder = "Select time",
 }: CustomTimePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 

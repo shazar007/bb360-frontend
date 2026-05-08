@@ -12,7 +12,6 @@ import { SyncLoader } from "react-spinners";
 import { useDebounce } from "../../../hooks/deBounce";
 import CustomTimePicker from "../../../components/timePicker";
 import SearchById from "../../../components/SearchBar/searchById";
-import SearchByName from "../../../components/SearchBar/searchByName";
 import CustomTable from "../../../components/customTable";
 import {
   createDailyAttendance,
@@ -82,7 +81,7 @@ export default function Attendance() {
     year: new Date().getFullYear(),
   });
 
-  const { data, refetch } = useQuery<AxiosResponse<any>>({
+  const { refetch } = useQuery<AxiosResponse<any>>({
     queryKey: ["Attendance", searchValue, selectedMonthYear],
     queryFn: () =>
       getAllAttendance({

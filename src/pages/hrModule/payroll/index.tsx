@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import type { AxiosResponse } from "axios";
-import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDebounce } from "../../../hooks/deBounce";
 import {
@@ -47,7 +46,6 @@ const months = [
   { label: "December", value: "December" },
 ];
 export default function Payroll() {
-  const navigate = useNavigate();
   const [openActionId, setOpenActionId] = useState<string | null>(null);
   const [editing, setEditing] = useState<any>(null);
   const [openModel, setOpenModel] = useState(false);
@@ -70,7 +68,7 @@ export default function Payroll() {
     year: currentYear,
   });
 
-  const { data, refetch, isFetching } = useQuery<AxiosResponse<any>>({
+  const { refetch } = useQuery<AxiosResponse<any>>({
     queryKey: [
       "Payrolls",
       debouncedSearchId,
@@ -109,16 +107,6 @@ export default function Payroll() {
         console.error(error);
         notifyError("Failed to approve payroll.");
       });
-  };
-
-  const handleGoToDetails = (row: any[]) => {
-    const rowData = dummyPayrollData.find((v: any) => v.employeeId === row[0]);
-
-    if (rowData) {
-      navigate("/payroll/payrollDetails", {
-        state: { rowData },
-      });
-    }
   };
 
   const dummyPayrollData = [

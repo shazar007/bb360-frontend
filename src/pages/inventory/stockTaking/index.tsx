@@ -9,7 +9,7 @@ export default function StockTaking() {
   const { goTo } = useAppNavigate();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
-  const [deleteItem, setDeleteItem] = useState<any>(null);
+  const [setDeleteItem] = useState<any>(null);
   const [confirm, setConfirm] = useState(false);
   const isDeleting = false;
   const allStockTakings = [

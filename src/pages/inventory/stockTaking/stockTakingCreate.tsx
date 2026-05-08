@@ -34,7 +34,7 @@ export default function StockTakingCreate() {
   const { goBack } = useAppNavigate();
   const [form, setForm] = useState(headerInitialForm);
 
-  const [saveLoading, setSaveLoading] = useState(false);
+  const [saveLoading] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [rowForm, setRowForm] = useState(rowInitialForm);
   const handleHeaderChange = (name: string, value: any) => {

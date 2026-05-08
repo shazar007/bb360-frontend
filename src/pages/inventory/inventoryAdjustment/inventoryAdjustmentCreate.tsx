@@ -15,7 +15,6 @@ import {
   addInventoryAdjustment,
   getAllInventoryAdjustments,
 } from "../../../api/inventoryServices";
-import { batch } from "react-redux";
 
 export default function InventoryAdjustmentCreate() {
   const [addInventoryAdjustmentModel, setAddInventoryAdjustment] =
@@ -141,14 +140,14 @@ export default function InventoryAdjustmentCreate() {
       value: item?._id ?? "",
     })) || [];
 
-const batchOptions =
-  items
-    ?.find((i: any) => i._id === rowForm.item)
-    ?.batches?.map((b: any) => ({
-      label: b.batchNumber,
-      value: b.batchNumber,
-      balance: b.balance,
-    })) || [];
+  const batchOptions =
+    items
+      ?.find((i: any) => i._id === rowForm.item)
+      ?.batches?.map((b: any) => ({
+        label: b.batchNumber,
+        value: b.batchNumber,
+        balance: b.balance,
+      })) || [];
   // console.log("🚀 ~ InventoryAdjustmentCreate ~ rowForm:", rowForm);
 
   const handleSubmit = async () => {
@@ -178,7 +177,7 @@ const batchOptions =
           quantityAdjusted: Number(row.quantityAdjusted || 0),
         })),
       };
-      console.log("🚀 ~ handleSubmit ~ payload:", payload)
+      console.log("🚀 ~ handleSubmit ~ payload:", payload);
 
       await addInventoryAdjustment(payload);
       refetchItems();
@@ -196,8 +195,8 @@ const batchOptions =
       localStorage.removeItem("inventoryAdjustment");
 
       goBack();
-    } catch (error:any) {
-      console.log("🚀 ~ handleSubmit ~ errr:", error?.response?.data)
+    } catch (error: any) {
+      console.log("🚀 ~ handleSubmit ~ errr:", error?.response?.data);
 
       notifyError("Something went wrong");
     } finally {
@@ -404,9 +403,10 @@ const batchOptions =
                 value={rowForm.batchNumber}
                 label="Batch Number"
                 disabled={!rowForm.item || batchOptions.length === 0}
-                title={!rowForm.item ? "Please select item name first" : undefined}
+                title={
+                  !rowForm.item ? "Please select item name first" : undefined
+                }
                 onChange={(val) => {
-                  
                   const selectedBatch = batchOptions.find(
                     (b: any) => b.value === val,
                   );

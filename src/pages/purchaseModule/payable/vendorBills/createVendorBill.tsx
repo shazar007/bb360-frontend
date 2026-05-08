@@ -25,7 +25,6 @@ export default function CreateVendorBill() {
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
   const queryClient = useQueryClient();
-  const [tableItems, setTableItems] = useState<any[]>([]);
   const {
     data: order,
     isLoading,
@@ -37,7 +36,6 @@ export default function CreateVendorBill() {
   const purchaseOrderData = (order as any)?.data;
   useEffect(() => {
     if (purchaseOrderData?.items) {
-      setTableItems(purchaseOrderData.items);
     }
   }, [purchaseOrderData]);
 
@@ -115,7 +113,6 @@ export default function CreateVendorBill() {
       notifySuccess("Purchase Invoice Created Successfully");
 
       setPoNumber("");
-      setTableItems([]);
       setEditRow(null);
       setEditIndex(null);
 

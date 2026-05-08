@@ -26,7 +26,7 @@ export default function CreateSalesReturn() {
   const [tableData, setTableData] = useState<any[]>([]);
   const [restock, setRestock] = useState("");
   const [conditionCheck, setConditionCheck] = useState("");
-  const [data, setData] = useState<any>(null);
+  const [setData] = useState<any>(null);
   const [invoiceNumber, setinvoiceNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);

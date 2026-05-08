@@ -9,7 +9,7 @@ import { UserLogout } from "../../api/userServices";
 import { SyncLoader } from "react-spinners";
 export default function ProfileImage() {
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState(profile);
+  const [image] = useState(profile);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();

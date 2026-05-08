@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useAppNavigate } from "../../../../hooks/navigation";
 import { GetSalesInvoiceApi } from "../../../../api/sale";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 
 export default function DeliveryChallan() {
-  const { goTo } = useAppNavigate();
   const navigate = useNavigate();
   const { data: SaleInvoices, isLoading } = useQuery({
     queryKey: ["getAllSalesInvoice"],

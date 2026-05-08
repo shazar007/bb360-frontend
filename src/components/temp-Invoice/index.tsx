@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import logo from "../../assets/Nourish.png";
 import { Icon } from "@iconify/react";
 import dayjs from "dayjs";

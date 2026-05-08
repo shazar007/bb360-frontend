@@ -3,7 +3,6 @@ import PurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder"
 import PendingReceiveOrdersList from "../../../pages/purchaseModule/purchase/pendingReceiveOrdersList";
 import GenerateConsolidateVendorBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill";
 import CreateBill from "../../../pages/purchaseModule/purchase/generateConsolidateVendorBill/createBill";
-import CreateReceipt from "../../../pages/purchaseModule/purchase/receivingChallan/createReceivingChallan";
 import CreateContract from "../../../pages/purchaseModule/purchase/purchaseContract/createContract";
 import PurchaseContract from "../../../pages/purchaseModule/purchase/purchaseContract";
 import CreatePurchaseOrder from "../../../pages/purchaseModule/purchase/purchaseOrder/createPurchaseOrder";

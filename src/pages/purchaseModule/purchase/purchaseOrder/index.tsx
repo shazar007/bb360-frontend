@@ -18,7 +18,7 @@ export default function PurchaseOrder() {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [editIndex, setEditIndex] = useState<string | null>(null);
-  const [tableData, setTableData] = useState<any[]>([]);
+  const [tableData] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const printRef = useRef(null);
 
@@ -47,33 +47,7 @@ export default function PurchaseOrder() {
   const handleCreate = () => {
     goTo("/purchase-module/purchase/purchase-order/create-order");
   };
-  const handleEdit = (item: any, index: number) => {
-    setEditIndex(item._id);
-    setOpenModal(true);
 
-    setForm({
-      poNumber: item.poNumber || "",
-      date: item.date || item.createdAt || "",
-      partyAccount: item.partyAccount?._id || "",
-      partyCategory: item.partyCategory || "",
-      deliveryAddress: item.deliveryAddress || "",
-      type: item.type || "",
-    });
-
-    setTableData(
-      item.items?.map((it: any) => ({
-        itemId: it.item,
-        itemName: it.itemName,
-        itemCode: it.itemCode,
-        itemCategory: it.itemCategory,
-        uom: it.uom,
-        quantity: it.quantity,
-        purchaseRate: it.purchaseRate,
-        unitPrice: it.unitPrice,
-        amount: it.amount,
-      })) || [],
-    );
-  };
   const handleSave = async () => {
     try {
       if (!editIndex) {

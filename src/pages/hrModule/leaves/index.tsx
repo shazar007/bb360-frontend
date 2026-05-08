@@ -54,7 +54,7 @@ export default function Leaves() {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false);
   const searchValue = debouncedSearchId || debouncedSearchName;
 
-  const { data, refetch, isFetching } = useQuery<AxiosResponse<any>>({
+  const { refetch } = useQuery<AxiosResponse<any>>({
     queryKey: ["Leaves", searchValue],
     queryFn: () => getAllLeaves(searchValue),
     placeholderData: (previousData) => previousData,
