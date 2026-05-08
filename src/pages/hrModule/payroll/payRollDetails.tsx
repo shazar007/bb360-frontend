@@ -129,7 +129,7 @@ export default function PayrollDetails() {
 
         <button
           onClick={handleDownloadPDF}
-          className="h-10 w-full md:w-50 text-white bg-primary rounded-md gap-3 cursor-pointer flex justify-center items-center"
+          className="flex items-center justify-center w-full h-10 gap-3 text-white rounded-md cursor-pointer md:w-50 bg-primary"
         >
           {isLoading ? (
             <SyncLoader color="#fff" size={6} />
@@ -146,13 +146,13 @@ export default function PayrollDetails() {
           ref={slipRef}
           style={{ backgroundColor: "#ffffff", color: "#000000" }}
         >
-          <div className="flex flex-col md:flex-row items-center md:items-stretch justify-between border border-primary rounded-lg overflow-hidden">
+          <div className="flex flex-col items-center justify-between overflow-hidden border rounded-lg md:flex-row md:items-stretch border-primary">
             <div className="flex items-center gap-3 p-4 md:w-1/3">
               <img src={Logo} alt="logo" className="w-15 h-15" />
               <p className="max-[564px] text-base">Himmel Pharma</p>
             </div>
 
-            <div className="text-center md:w-1/3 border-t md:border-t-0 md:border-l md:border-r border-primary flex justify-center items-center flex-col">
+            <div className="flex flex-col items-center justify-center text-center border-t md:w-1/3 md:border-t-0 md:border-l md:border-r border-primary">
               <p className="text-[24px]">Salary Slip</p>
               <p className="text-[16px] text-black">
                 {rowData?.month} {rowData?.year}
@@ -164,8 +164,7 @@ export default function PayrollDetails() {
             </div>
           </div>
 
-          {/* Employee Info */}
-          <div className="border border-primary h-auto rounded-lg mt-3 p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid h-auto grid-cols-1 gap-4 p-4 mt-3 border rounded-lg border-primary sm:grid-cols-2">
             <div>
               <p className="flex items-center text-xs lg:text-sm">
                 <span className="text-[#7D7D7D] md:min-w-32.5 min-w-25">
@@ -223,8 +222,7 @@ export default function PayrollDetails() {
             </div>
           </div>
 
-          {/* Salary Table */}
-          <div className="overflow-x-auto border border-primary rounded-lg mt-2">
+          <div className="mt-2 overflow-x-auto border rounded-lg border-primary">
             <div className="min-w-150 grid grid-cols-4 bg-[#E5EBF7] text-[#7D7D7D] text-start p-2 rounded-t-md text-sm">
               <p>Description</p>
               <p>Earnings</p>
@@ -346,7 +344,6 @@ export default function PayrollDetails() {
             </div>
           </div>
 
-          {/* Net Payable */}
           <div className="border border-primary rounded-lg mt-2 flex flex-col-2 md:flex-row justify-between items-center p-4 font-semibold bg-[#E5EBF7] text-sm md:text-base">
             <p>Net Payable</p>
             <p className="text-center md:text-right">Rs:{rowData.netPay}/</p>

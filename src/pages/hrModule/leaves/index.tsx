@@ -292,7 +292,7 @@ export default function Leaves() {
                 ✕
               </button>
             </div>
-            <form onSubmit={formik.handleSubmit} className="space-y-6 p-4">
+            <form onSubmit={formik.handleSubmit} className="p-4 space-y-6">
               <div className="flex flex-wrap gap-6">
                 <div className="flex-1 space-y-4 min-w-70">
                   <div>
@@ -407,7 +407,7 @@ export default function Leaves() {
                 <button
                   type="submit"
                   disabled={isloading}
-                  className="h-10 w-full md:w-35 text-white bg-primary text-sm rounded-md gap-3 cursor-pointer flex justify-center items-center"
+                  className="flex items-center justify-center w-full h-10 gap-3 text-sm text-white rounded-md cursor-pointer md:w-35 bg-primary"
                 >
                   {isloading ? (
                     <SyncLoader color="#fff" size={6} />
@@ -514,7 +514,6 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
 
   return (
     <>
-      {/* STATUS DROPDOWN */}
       <div className="relative w-30">
         <div
           onClick={() => setOpen(!open)}

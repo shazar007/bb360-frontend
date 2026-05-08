@@ -276,8 +276,6 @@ export default function InventoryAdjustmentCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  // console.log("DATE PICKED:", val);
-
                   setForm((prev) => ({
                     ...prev,
                     transactionDate: val || "",

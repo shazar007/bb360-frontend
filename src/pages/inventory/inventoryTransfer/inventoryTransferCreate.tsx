@@ -234,7 +234,6 @@ export default function InventoryTransferCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  // console.log("DATE PICKED:", val);
                   setForm((prev) => ({
                     ...prev,
                     transactionDate: val || "",
@@ -390,8 +389,6 @@ export default function InventoryTransferCreate() {
                   }));
                 }}
               />
-
-              {/* Batch Number */}
 
               <CustomSelectSearch
                 options={batchOptions}

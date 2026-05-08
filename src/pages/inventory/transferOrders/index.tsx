@@ -83,7 +83,6 @@ export default function TransferOrders() {
           <div className="mt-3">
             <CustomTable
               height="60vh"
-              // loading={isLoading}
               headers={[
                 "Edit",
                 "View",

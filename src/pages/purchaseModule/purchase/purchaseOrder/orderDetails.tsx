@@ -91,11 +91,8 @@ export default function OrderDetails() {
               "Item Description",
               "Item Category",
               "UOM",
-              // "Batch Number",
-              // "Expiry Date",
               "Quantity ",
               "Purchase Rate",
-              // "Unit Price",
               "Amount",
             ]}
             data={receivedData.items.map((item: any) => [
