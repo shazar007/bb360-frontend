@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #14ccc3;
+  --color-secondary: #304250;
+  --color-bgprimary: #f6f6f6;
+
+  --color-heading1: #304250;
+  --color-heading2: #757575;
+}
+* {
+  font-family: "Roboto", sans-serif;
+}
+.Roboto {
+  font-family: "Roboto", sans-serif;
+}
+.science {
+  font-family: "Science Gothic", sans-serif;
+  font-optical-sizing: auto;
+}
+.syncopate {
+  font-family: "Syncopate", sans-serif;
+}
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+}
