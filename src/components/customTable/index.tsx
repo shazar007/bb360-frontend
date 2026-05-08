@@ -8,6 +8,7 @@ type CustomTableProps = {
   height?: string;
   loading?: boolean;
   norounded?: boolean;
+  noPagination?: boolean;
 };
 
 export default function CustomTable({
@@ -16,6 +17,7 @@ export default function CustomTable({
   height,
   norounded,
   loading,
+  noPagination,
 }: CustomTableProps) {
   return (
     <div
@@ -72,37 +74,41 @@ export default function CustomTable({
           )}
         </tbody>
       </table>
-      <div
-        className={`p-4 border-t-[0.5px] border-[#304250]/36 flex items-center justify-between  ${
-          norounded ? "rounded-t-0" : "rounded-b-xl"
-        }`}
-      >
-        <p className="text-sm bg-transparent text-heading2">1 row selected</p>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Icon
-              icon="simple-line-icons:arrow-left"
-              className="text-heading2 text-[14px]"
-            />
-            <Icon
-              icon="fluent:arrow-next-16-regular"
-              className="text-heading2 text-[20px] rotate-180"
-            />
-            <p>1</p>
-            <Icon
-              icon="fluent:arrow-next-16-regular"
-              className="text-heading2 text-[20px]"
-            />
-            <Icon
-              icon="simple-line-icons:arrow-right"
-              className="text-heading2 text-[14px]"
-            />
-          </div>
-          <div className="flex items-center gap-1 text-xs text-heading1">
-            <p>1</p> <p>-</p> <p>3</p> <p>of</p> <p>3</p>
+      {noPagination ? (
+        ""
+      ) : (
+        <div
+          className={`p-4 border-t-[0.5px] border-[#304250]/36 flex items-center justify-between  ${
+            norounded ? "rounded-t-0" : "rounded-b-xl"
+          }`}
+        >
+          <p className="text-sm bg-transparent text-heading2">1 row selected</p>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Icon
+                icon="simple-line-icons:arrow-left"
+                className="text-heading2 text-[14px]"
+              />
+              <Icon
+                icon="fluent:arrow-next-16-regular"
+                className="text-heading2 text-[20px] rotate-180"
+              />
+              <p>1</p>
+              <Icon
+                icon="fluent:arrow-next-16-regular"
+                className="text-heading2 text-[20px]"
+              />
+              <Icon
+                icon="simple-line-icons:arrow-right"
+                className="text-heading2 text-[14px]"
+              />
+            </div>
+            <div className="flex items-center gap-1 text-xs text-heading1">
+              <p>1</p> <p>-</p> <p>3</p> <p>of</p> <p>3</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function CreateReceivingChallan() {
   const [loading, setLoading] = useState(false);
+  const [receivingDate, setReceivingDate] = useState<any>(null);
   const [createChallan, setCreateChallan] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
@@ -89,7 +90,15 @@ export default function CreateReceivingChallan() {
       [key]: value,
     }));
   };
+  const adjustedTotalAmount = tableItems.reduce((sum: number, item: any) => {
+    const rejectedQty = Number(item?.rejectedQty || 0);
+    const rate = Number(item?.purchaseRate || 0);
 
+    return sum + rejectedQty * rate;
+  }, 0);
+
+  const finalTotalAmount =
+    Number(purchaseOrderData?.totalAmount || 0) - adjustedTotalAmount;
   useEffect(() => {
     if (purchaseOrderData?.items && tableItems.length === 0) {
       setTableItems(purchaseOrderData.items);
@@ -109,8 +118,10 @@ export default function CreateReceivingChallan() {
       const payload = {
         purchaseOrder: String(purchaseOrderData?._id || purchaseOrderData?.id),
         taxPercentage: Number(purchaseOrderData?.tax || 0),
-        totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+        // totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+        totalAmount: finalTotalAmount,
         status: "completed",
+        date: receivingDate,
         items: tableItems.map((item: any) => ({
           item: String(item?.item?._id || item?.item),
           itemCode: item?.itemCode || "",
@@ -121,7 +132,8 @@ export default function CreateReceivingChallan() {
           expiryDate: item?.expiryDate || null,
           orderedQty: Number(item?.orderedQty || item?.quantity || 0),
           deliveredQty: Number(item?.deliveredQty || 0),
-          rejectedQty: Number(item?.rejectedQty || 0),
+          rejectedQty:
+            Number(editRow?.quantity || 0) - Number(editRow?.deliveredQty || 0),
           purchaseRate: item?.purchaseRate || "",
           reason: item?.reason?.trim() || "N/A",
           amount: Number(item?.amount || 0),
@@ -129,6 +141,7 @@ export default function CreateReceivingChallan() {
       };
 
       await createReceivingChallan(payload);
+      // console.log("🚀 ~ payload:", payload);
 
       notifySuccess("Receiving Challan Created Successfully");
 
@@ -143,6 +156,7 @@ export default function CreateReceivingChallan() {
       setLoading(false);
     }
   };
+
   return (
     <>
       <div className="mt-8">
@@ -223,15 +237,11 @@ export default function CreateReceivingChallan() {
                   </button>
                 </div>
 
-                <CustomInput
-                  label="Order Date"
+                <CustomDatePicker
+                  label="Receiving Date"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  value={
-                    purchaseOrderData?.date
-                      ? new Date(purchaseOrderData.date).toLocaleDateString()
-                      : ""
-                  }
-                  disabled
+                  value={receivingDate}
+                  onChange={(val) => setReceivingDate(val)}
                 />
               </div>
               <div className="space-y-2">
@@ -284,7 +294,7 @@ export default function CreateReceivingChallan() {
                 <CustomInput
                   label="Total Amount"
                   className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  value={purchaseOrderData ? purchaseOrderData.totalAmount : ""}
+                  value={finalTotalAmount}
                   disabled
                 />
               </div>
@@ -331,7 +341,7 @@ export default function CreateReceivingChallan() {
                 item.deliveredQty || "",
                 item.rejectedQty || "",
                 item.reason || "",
-                item.amount,
+                finalTotalAmount,
               ])}
             />
           </div>
@@ -397,8 +407,8 @@ export default function CreateReceivingChallan() {
                 <CustomInput
                   label="Rejected Quantity"
                   value={editRow?.rejectedQty || ""}
-                  onChange={(e) => handleChange("rejectedQty", e.target.value)}
-                />{" "}
+                  disabled
+                />
                 <CustomInput
                   label="Reason"
                   value={editRow?.reason || ""}
