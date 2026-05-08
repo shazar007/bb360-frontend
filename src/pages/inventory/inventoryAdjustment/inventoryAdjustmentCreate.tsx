@@ -15,6 +15,7 @@ import {
   addInventoryAdjustment,
   getAllInventoryAdjustments,
 } from "../../../api/inventoryServices";
+import { batch } from "react-redux";
 
 export default function InventoryAdjustmentCreate() {
   const [addInventoryAdjustmentModel, setAddInventoryAdjustment] =
@@ -35,11 +36,12 @@ export default function InventoryAdjustmentCreate() {
     item: "",
     itemCode: "",
     itemName: "",
+    batchNumber: "",
     uom: "",
     quantity: "",
     quantityAdjusted: "",
   });
-  
+
   const [form, setForm] = useState({
     transactionNumber: "",
     createdFrom: "",
@@ -65,8 +67,7 @@ export default function InventoryAdjustmentCreate() {
   const handleSave = () => {
     const availableQty = Number(rowForm.quantity || 0);
     const adjustedQty = Number(rowForm.quantityAdjusted || 0);
-    console.log("🚀 ~ handleSave ~ rowForm:", rowForm)
-    
+    console.log("🚀 ~ handleSave ~ rowForm:", rowForm);
 
     if (!rowForm.itemCode) {
       return notifyError("Please fill required fields");
@@ -100,6 +101,7 @@ export default function InventoryAdjustmentCreate() {
         item: "",
         itemCode: "",
         itemName: "",
+        batchNumber: "",
         uom: "",
         quantity: "",
         quantityAdjusted: "",
@@ -123,20 +125,32 @@ export default function InventoryAdjustmentCreate() {
     localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
   };
 
-  const { data: AllItems, refetch: refetchItems} = useQuery({
-    queryKey: ["getItemByCategory", "raw"],
-    queryFn: () => getItemByCategory("raw"),
+  const { data: AllItems, refetch: refetchItems } = useQuery({
+    queryKey: ["getItemByCategory", "finished"],
+    queryFn: () => getItemByCategory("finished"),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
   const items = AllItems?.data?.items || [];
+  // console.log("🚀 ~ InventoryAdjustmentCreate ~ items:", items);
   const itemOptions =
     items?.map((item: any) => ({
       label: item?.itemName ?? "",
       value: item?._id ?? "",
     })) || [];
+
+const batchOptions =
+  items
+    ?.find((i: any) => i._id === rowForm.item)
+    ?.batches?.map((b: any) => ({
+      label: b.batchNumber,
+      value: b.batchNumber,
+      balance: b.balance,
+    })) || [];
+  // console.log("🚀 ~ InventoryAdjustmentCreate ~ rowForm:", rowForm);
+
   const handleSubmit = async () => {
     if (tableData.length === 0) {
       notifyError("Add at least one item");
@@ -157,13 +171,14 @@ export default function InventoryAdjustmentCreate() {
         createdFrom: form.createdFrom,
         status: form.status,
 
-        
         notes: "Created from Inventory Adjustment Create Page",
         items: tableData.map((row) => ({
           item: row.item,
+          batchNumber: row.batchNumber,
           quantityAdjusted: Number(row.quantityAdjusted || 0),
         })),
       };
+      console.log("🚀 ~ handleSubmit ~ payload:", payload)
 
       await addInventoryAdjustment(payload);
       refetchItems();
@@ -181,7 +196,9 @@ export default function InventoryAdjustmentCreate() {
       localStorage.removeItem("inventoryAdjustment");
 
       goBack();
-    } catch (error) {
+    } catch (error:any) {
+      console.log("🚀 ~ handleSubmit ~ errr:", error?.response?.data)
+
       notifyError("Something went wrong");
     } finally {
       setLoading(false);
@@ -262,7 +279,7 @@ export default function InventoryAdjustmentCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  console.log("DATE PICKED:", val);
+                  // console.log("DATE PICKED:", val);
 
                   setForm((prev) => ({
                     ...prev,
@@ -311,33 +328,35 @@ export default function InventoryAdjustmentCreate() {
               "Select",
               "Item Code",
               "Item Name",
+              "Batch Number",
               "UOM",
               "Quantity",
               "Quantity Adjusted ",
             ]}
             data={tableData.map((item, index) => {
-              console.log("🚀 ~ InventoryAdjustmentCreate ~ item:", item)
+              // console.log("🚀 ~ InventoryAdjustmentCreate ~ item:", item);
               return [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-                onClick={() => {
-                  setForm(item);
-                  setEditIndex(index);
-                  setAddInventoryAdjustment(true);
-                }}
-              />,
-              <CustomCheckbox
-                checked={item.selected}
-                onChange={(v) => toggleSelect(index, v)}
-              />,
+                <Icon
+                  icon="basil:edit-outline"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={() => {
+                    setForm(item);
+                    setEditIndex(index);
+                    setAddInventoryAdjustment(true);
+                  }}
+                />,
+                <CustomCheckbox
+                  checked={item.selected}
+                  onChange={(v) => toggleSelect(index, v)}
+                />,
 
-              item.itemCode,
-              item.itemName,
-              item.uom,
-              item.quantity,
-              item.quantityAdjusted === "" ? 0 : item.quantityAdjusted,
-            ];
+                item.itemCode,
+                item.itemName,
+                item.batchNumber,
+                item.uom,
+                item.quantity,
+                item.quantityAdjusted === "" ? 0 : item.quantityAdjusted,
+              ];
             })}
           />
         </div>
@@ -380,6 +399,27 @@ export default function InventoryAdjustmentCreate() {
                 }}
               />
 
+              <CustomSelectSearch
+                options={batchOptions}
+                value={rowForm.batchNumber}
+                label="Batch Number"
+                disabled={!rowForm.item || batchOptions.length === 0}
+                title={!rowForm.item ? "Please select item name first" : undefined}
+                onChange={(val) => {
+                  
+                  const selectedBatch = batchOptions.find(
+                    (b: any) => b.value === val,
+                  );
+
+                  if (!selectedBatch) return;
+
+                  setRowForm((prev) => ({
+                    ...prev,
+                    batchNumber: selectedBatch.label,
+                    quantity: selectedBatch.balance || 0,
+                  }));
+                }}
+              />
               <CustomInput label="UOM" value={rowForm.uom} disabled />
 
               <CustomInput label="Quantity" value={rowForm.quantity} />
@@ -392,7 +432,9 @@ export default function InventoryAdjustmentCreate() {
                   const entered = Number(value || 0);
                   const available = Number(rowForm.quantity || 0);
                   if (entered > available) {
-                    notifyError("Quantity Adjusted cannot be greater than Quantity");
+                    notifyError(
+                      "Quantity Adjusted cannot be greater than Quantity",
+                    );
                     return;
                   }
                   setRowForm({ ...rowForm, quantityAdjusted: value });
