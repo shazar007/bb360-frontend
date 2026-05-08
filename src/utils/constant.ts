@@ -538,10 +538,10 @@ export const navItems: NavItem[] = [
         name: "Transfer Orders",
         path: "/inventory/transfer-orders",
       },
-      {
-        name: "Stock Taking",
-        path: "/inventory/stock-taking",
-      },
+      // {
+      //   name: "Stock Taking",
+      //   path: "/inventory/stock-taking",
+      // },
     ],
   },
   {

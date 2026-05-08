@@ -28,6 +28,7 @@ export default function InventoryTransferCreate() {
     itemCode: "",
     itemName: "",
     uom: "",
+    batchNumber: [],
     quantity: "",
     quantityAdjusted: "",
   };
@@ -124,8 +125,8 @@ export default function InventoryTransferCreate() {
   });
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getItemByCategory", "raw"],
-    queryFn: () => getItemByCategory("raw"),
+    queryKey: ["getItemByCategory", "finished"],
+    queryFn: () => getItemByCategory("finished"),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
@@ -133,6 +134,7 @@ export default function InventoryTransferCreate() {
   });
 
   const items = AllItems?.data?.items || [];
+  // console.log("🚀 ~ InventoryTransferCreate ~ all items:", AllItems)
 
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",
@@ -222,8 +224,7 @@ export default function InventoryTransferCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  console.log("DATE PICKED:", val);
-
+                  // console.log("DATE PICKED:", val);
                   setForm((prev) => ({
                     ...prev,
                     transactionDate: val || "",
@@ -318,6 +319,7 @@ export default function InventoryTransferCreate() {
                       itemCode: item.itemCode,
                       itemName: item.itemName,
                       uom: item.uom,
+                      batchNumber: item.batchNumber,
                       quantity: item.quantity,
                       quantityAdjusted: item.quantityAdjusted,
                     });
@@ -378,9 +380,26 @@ export default function InventoryTransferCreate() {
                 }}
               />
 
+              {/* Batch Number */}
+
+              {/* <CustomSelectSearch
+                options={itemOptions}
+                value={rowForm.item}
+                label="Batch Number"
+                onChange={(val) => {
+                  const selected = items.find((i: any) => i._id === val);
+
+                  setRowForm((p) => ({
+                    ...p,
+                   batchNumber: selected,
+                  }));
+                }}
+              /> */}
+
               <CustomInput
                 label="UOM"
                 value={rowForm.uom}
+                disabled={true}
                 onChange={(e: any) =>
                   setRowForm({ ...rowForm, uom: e.target.value })
                 }
@@ -389,6 +408,7 @@ export default function InventoryTransferCreate() {
               <CustomInput
                 label="Quantity"
                 value={rowForm.quantity}
+                disabled={true}
                 onChange={(e: any) =>
                   setRowForm({ ...rowForm, quantity: e.target.value })
                 }

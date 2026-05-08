@@ -52,6 +52,7 @@ export default function MaterialIssueNoteCreate() {
   });
 
   const items = AllItems?.data?.items || [];
+  // console.log("🚀 ~ MaterialIssueNoteCreate ~ items:", items)
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",
     value: item?._id ?? "",
@@ -113,7 +114,7 @@ export default function MaterialIssueNoteCreate() {
       })),
     };
 
-    console.log("Final Payload:", payload);
+    // console.log("Final Payload:", payload);
     await addMaterialIssueNote(payload);
 
     setTimeout(() => {

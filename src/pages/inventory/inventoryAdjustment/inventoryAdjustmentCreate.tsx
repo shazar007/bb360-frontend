@@ -39,6 +39,7 @@ export default function InventoryAdjustmentCreate() {
     quantity: "",
     quantityAdjusted: "",
   });
+  
   const [form, setForm] = useState({
     transactionNumber: "",
     createdFrom: "",
@@ -46,6 +47,7 @@ export default function InventoryAdjustmentCreate() {
     transactionDate: "",
     transactionName: "",
   });
+
   useEffect(() => {
     const stored = localStorage.getItem("inventoryAdjustment");
     if (stored) {
@@ -61,8 +63,16 @@ export default function InventoryAdjustmentCreate() {
     localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
   };
   const handleSave = () => {
-    if (!rowForm.itemCode || !rowForm.quantity) {
+    const availableQty = Number(rowForm.quantity || 0);
+    const adjustedQty = Number(rowForm.quantityAdjusted || 0);
+    console.log("🚀 ~ handleSave ~ rowForm:", rowForm)
+    
+
+    if (!rowForm.itemCode) {
       return notifyError("Please fill required fields");
+    }
+    if (adjustedQty > availableQty) {
+      return notifyError("Quantity Adjusted cannot be greater than Quantity");
     }
 
     setSaveRow(true);
@@ -113,7 +123,7 @@ export default function InventoryAdjustmentCreate() {
     localStorage.setItem("inventoryAdjustment", JSON.stringify(updated));
   };
 
-  const { data: AllItems } = useQuery({
+  const { data: AllItems, refetch: refetchItems} = useQuery({
     queryKey: ["getItemByCategory", "raw"],
     queryFn: () => getItemByCategory("raw"),
     placeholderData: (prev) => prev,
@@ -146,6 +156,8 @@ export default function InventoryAdjustmentCreate() {
         transactionDate: form.transactionDate,
         createdFrom: form.createdFrom,
         status: form.status,
+
+        
         notes: "Created from Inventory Adjustment Create Page",
         items: tableData.map((row) => ({
           item: row.item,
@@ -154,7 +166,7 @@ export default function InventoryAdjustmentCreate() {
       };
 
       await addInventoryAdjustment(payload);
-
+      refetchItems();
       notifySuccess("Saved successfully");
 
       setForm({
@@ -303,7 +315,9 @@ export default function InventoryAdjustmentCreate() {
               "Quantity",
               "Quantity Adjusted ",
             ]}
-            data={tableData.map((item, index) => [
+            data={tableData.map((item, index) => {
+              console.log("🚀 ~ InventoryAdjustmentCreate ~ item:", item)
+              return [
               <Icon
                 icon="basil:edit-outline"
                 className="text-lg cursor-pointer text-primary"
@@ -322,8 +336,9 @@ export default function InventoryAdjustmentCreate() {
               item.itemName,
               item.uom,
               item.quantity,
-              item.quantityAdjusted,
-            ])}
+              item.quantityAdjusted === "" ? 0 : item.quantityAdjusted,
+            ];
+            })}
           />
         </div>
       </div>
@@ -372,9 +387,16 @@ export default function InventoryAdjustmentCreate() {
               <CustomInput
                 label="Quantity Adjusted"
                 value={rowForm.quantityAdjusted}
-                onChange={(e: any) =>
-                  setRowForm({ ...rowForm, quantityAdjusted: e.target.value })
-                }
+                onChange={(e: any) => {
+                  const value = e.target.value;
+                  const entered = Number(value || 0);
+                  const available = Number(rowForm.quantity || 0);
+                  if (entered > available) {
+                    notifyError("Quantity Adjusted cannot be greater than Quantity");
+                    return;
+                  }
+                  setRowForm({ ...rowForm, quantityAdjusted: value });
+                }}
               />
             </div>
 

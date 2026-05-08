@@ -144,7 +144,9 @@ export default function ItemUpdate() {
               "M.R.P",
               "Status",
             ]}
-            data={items.map((item: any, index: number) => [
+            data={items.map((item: any, index: number) => {
+              console.log("🚀 ~ ItemUpdate ~ item:", item)
+              return [
               <div className="relative">
                 <Icon
                   icon="qlementine-icons:menu-burger-16"
@@ -189,13 +191,14 @@ export default function ItemUpdate() {
               item.expiryDate
                 ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
                 : "-",
-              item.tradePrice || "-",
+              item.tp || "-",
               item.mrp || "-",
 
               <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
                 Good
               </div>,
-            ])}
+            ];
+            })}
           />
         </div>
       </div>
