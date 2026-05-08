@@ -85,10 +85,20 @@ export default function CreateReceivingChallan() {
     setEditRow({ ...item });
   };
   const handleChange = (key: string, value: any) => {
-    setEditRow((prev: any) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setEditRow((prev: any) => {
+      const updatedRow = {
+        ...prev,
+        [key]: value,
+      };
+
+      // Auto calculate rejected qty
+      if (key === "deliveredQty") {
+        updatedRow.rejectedQty =
+          Number(updatedRow.quantity || 0) - Number(value || 0);
+      }
+
+      return updatedRow;
+    });
   };
   const adjustedTotalAmount = tableItems.reduce((sum: number, item: any) => {
     const rejectedQty = Number(item?.rejectedQty || 0);
@@ -117,8 +127,7 @@ export default function CreateReceivingChallan() {
 
       const payload = {
         purchaseOrder: String(purchaseOrderData?._id || purchaseOrderData?.id),
-        taxPercentage: Number(purchaseOrderData?.tax || 0),
-        // totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+        taxPercentage: Number(purchaseOrderData?.taxPercentage || 0),
         totalAmount: finalTotalAmount,
         status: "completed",
         date: receivingDate,
@@ -132,8 +141,9 @@ export default function CreateReceivingChallan() {
           expiryDate: item?.expiryDate || null,
           orderedQty: Number(item?.orderedQty || item?.quantity || 0),
           deliveredQty: Number(item?.deliveredQty || 0),
+
           rejectedQty:
-            Number(editRow?.quantity || 0) - Number(editRow?.deliveredQty || 0),
+            Number(item?.quantity || 0) - Number(item?.deliveredQty || 0),
           purchaseRate: item?.purchaseRate || "",
           reason: item?.reason?.trim() || "N/A",
           amount: Number(item?.amount || 0),
