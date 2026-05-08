@@ -28,7 +28,7 @@ export default function InventoryTransferCreate() {
     itemCode: "",
     itemName: "",
     uom: "",
-    batchNumber: [],
+    batchNumber: "",
     quantity: "",
     quantityAdjusted: "",
   };
@@ -99,6 +99,7 @@ export default function InventoryTransferCreate() {
 
       items: rows.map((row) => ({
         item: row.item,
+        batchNumber: row.batchNumber,
         quantityAdjusted: Number(row.quantityAdjusted || 0),
       })),
     };
@@ -140,6 +141,15 @@ export default function InventoryTransferCreate() {
     label: item?.itemName ?? "",
     value: item?._id ?? "",
   }));
+
+  const batchOptions =
+    items
+      ?.find((i: any) => i._id === rowForm.item)
+      ?.batches?.map((b: any) => ({
+        label: b.batchNumber,
+        value: b.batchNumber,
+        balance: b.balance,
+      })) || [];
 
   return (
     <>
@@ -208,8 +218,9 @@ export default function InventoryTransferCreate() {
               <CustomSelect
                 label="Status"
                 options={[
-                  { label: "Posted", value: "posted" },
-                  { label: "Draft", value: "draft" },
+                  { label: "Pending", value: "pending" },
+                  { label: "Approved", value: "approved" },
+                  { label: "Rejected", value: "rejected" },
                   { label: "Cancelled", value: "cancelled" },
                 ]}
                 value={form.status}
@@ -305,6 +316,7 @@ export default function InventoryTransferCreate() {
                 "Select",
                 "Item Code",
                 "Item Name",
+                "Batch Number",
                 "UOM",
                 "Quantity",
                 "Quantity Adjusted",
@@ -382,19 +394,28 @@ export default function InventoryTransferCreate() {
 
               {/* Batch Number */}
 
-              {/* <CustomSelectSearch
-                options={itemOptions}
-                value={rowForm.item}
+              <CustomSelectSearch
+                options={batchOptions}
+                value={rowForm.batchNumber}
                 label="Batch Number"
+                disabled={!rowForm.item || batchOptions.length === 0}
+                title={
+                  !rowForm.item ? "Please select item name first" : undefined
+                }
                 onChange={(val) => {
-                  const selected = items.find((i: any) => i._id === val);
+                  const selectedBatch = batchOptions.find(
+                    (b: any) => b.value === val,
+                  );
 
-                  setRowForm((p) => ({
-                    ...p,
-                   batchNumber: selected,
+                  if (!selectedBatch) return;
+
+                  setRowForm((prev) => ({
+                    ...prev,
+                    batchNumber: selectedBatch.label,
+                    quantity: selectedBatch.balance || 0,
                   }));
                 }}
-              /> */}
+              />
 
               <CustomInput
                 label="UOM"

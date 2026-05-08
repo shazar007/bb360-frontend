@@ -15,6 +15,7 @@ type CustomSelectProps = {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  title?: string;
   className?: string;
   white?: boolean;
 };
@@ -28,6 +29,7 @@ export default function CustomSelectSearch({
   placeholder = "Select option",
   required = false,
   disabled = false,
+  title,
   className = "",
   white = false,
 }: CustomSelectProps) {
@@ -38,8 +40,9 @@ export default function CustomSelectSearch({
 
   const selected = options.find((opt) => opt.value === value);
   const filteredOptions = options.filter((opt) =>
-    opt.label.toLowerCase().includes(search.toLowerCase()),
+    String(opt.label).toLowerCase().includes(search.toLowerCase()),
   );
+  // console.log("🚀 ~ CustomSelectSearch ~ filteredOptions:", filteredOptions)
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -68,6 +71,7 @@ export default function CustomSelectSearch({
       )}
 
       <div
+        title={disabled ? title : undefined}
         onClick={() => {
           if (disabled || options.length === 0) return;
           setOpen((prev) => !prev);
@@ -106,8 +110,9 @@ export default function CustomSelectSearch({
 
           <div className="overflow-auto max-h-48">
             {filteredOptions.length > 0 ? (
-              filteredOptions.map((opt) => (
-                <div
+              filteredOptions.map((opt) => {
+                return(
+                    <div
                   key={opt.value}
                   onClick={() => {
                     onChange(opt.value);
@@ -118,7 +123,8 @@ export default function CustomSelectSearch({
                 >
                   {opt.label}
                 </div>
-              ))
+                )
+              })
             ) : (
               <div className="px-4 py-3 text-xs text-gray-400">
                 No results found
