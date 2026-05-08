@@ -58,7 +58,7 @@ export default function AccountLedger() {
       return getAccountLedger(partyId, fromDate, toDate);
     },
     enabled: !!partyId,
-    placeholderData: undefined, // ✅ remove this — was showing previous party data
+    placeholderData: undefined,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
@@ -106,7 +106,7 @@ export default function AccountLedger() {
         </div>
       </div>
 
-      <div className="bg-bgprimary rounded-2xl mt-3">
+      <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">Select Ledger</p>
@@ -124,9 +124,10 @@ export default function AccountLedger() {
                 value={ledgerType}
                 onChange={(selectedOption: any) => {
                   const val = selectedOption?.value ?? selectedOption;
-                  console.log("🚀 ledgerType selected:", val); // ✅ check value
-                  setLedgerType(val); // ✅ stores "Vendor" or "Distributor"
-                  setPartyId(""); // ✅ reset party
+                  console.log("🚀 ledgerType selected:", val);
+                  setLedgerType(val);
+
+                  setPartyId("");
                 }}
                 placeholder="Vendors/Distributors"
               />
@@ -136,11 +137,10 @@ export default function AccountLedger() {
                 label="Select Party"
                 placeholder="Noor Sons"
                 options={partyOptions}
-                value={partyId} // ✅ plain string ID
+                value={partyId}
                 onChange={(opt: any) => {
                   const val = opt?.value ?? opt;
-                  console.log("🚀 partyId selected:", val); // ✅ check value
-                  setPartyId(val); // ✅ triggers API via queryKey change
+                  setPartyId(val);
                 }}
               />
             </div>

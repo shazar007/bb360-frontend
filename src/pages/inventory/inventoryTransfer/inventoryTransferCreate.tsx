@@ -135,7 +135,6 @@ export default function InventoryTransferCreate() {
   });
 
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ InventoryTransferCreate ~ all items:", AllItems)
 
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",

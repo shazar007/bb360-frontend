@@ -111,11 +111,8 @@ export default function OrderDetails() {
               item.itemName,
               item.itemCategory,
               item.uom || "-",
-              // item.batchNumber || "-",
-              // item.expiryDate || "-",
               item.quantity || "-",
               item.purchaseRate || "-",
-              // item.unitPrice || "-",
               item.amount || "-",
             ])}
           />

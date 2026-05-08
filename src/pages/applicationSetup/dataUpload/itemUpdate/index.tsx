@@ -194,10 +194,7 @@ export default function ItemUpdate() {
                 item.itemName || "-",
                 item.itemCategory || "-",
                 item.uom || "-",
-                // item.batchNumber || "-",
-                // item.expiryDate
-                //   ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
-                //   : "-",
+
                 item.tp || "-",
                 item.mrp || "-",
 

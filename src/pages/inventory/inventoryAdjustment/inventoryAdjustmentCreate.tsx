@@ -133,7 +133,6 @@ export default function InventoryAdjustmentCreate() {
     refetchOnWindowFocus: false,
   });
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ InventoryAdjustmentCreate ~ items:", items);
   const itemOptions =
     items?.map((item: any) => ({
       label: item?.itemName ?? "",
@@ -148,7 +147,6 @@ export default function InventoryAdjustmentCreate() {
         value: b.batchNumber,
         balance: b.balance,
       })) || [];
-  // console.log("🚀 ~ InventoryAdjustmentCreate ~ rowForm:", rowForm);
 
   const handleSubmit = async () => {
     if (tableData.length === 0) {
@@ -333,7 +331,6 @@ export default function InventoryAdjustmentCreate() {
               "Quantity Adjusted ",
             ]}
             data={tableData.map((item, index) => {
-              // console.log("🚀 ~ InventoryAdjustmentCreate ~ item:", item);
               return [
                 <Icon
                   icon="basil:edit-outline"

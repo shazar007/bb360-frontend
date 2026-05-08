@@ -32,7 +32,7 @@ const initialFormState = {
   discount: "",
   bonus: "",
   batchNumber: "",
-  expiryDate: "", // ← add this
+  expiryDate: "",
 };
 
 export default function CreateSalesInvoice() {
@@ -174,7 +174,6 @@ export default function CreateSalesInvoice() {
 
       notifySuccess("Sale Invoice is Created Successfully");
 
-      // reset form
       setTableData([]);
       setDistributorData(null);
       setTaxPercentage("");

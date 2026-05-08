@@ -393,7 +393,6 @@ export default function VendorUpload() {
             headers={[
               "Edit",
               "Select",
-              // "Vendor Code",
               "Vendor Name",
               "Vendor Category",
               "Contact Number",
@@ -417,7 +416,6 @@ export default function VendorUpload() {
                 checked={selectedRows.includes(index)}
                 onChange={(v) => toggleSelect(index, v)}
               />,
-              // item.vendorCode || "TO BE GENERATE",
               item.vendorName || "-",
               item.vendorCategory || "-",
               item.contactNumber || "-",

@@ -111,10 +111,10 @@ export default function SalesReturn() {
               <div
                 className={`capitalize w-max px-2 py-0.5 rounded-sm ${
                   saleReturn.status === "posted"
-                    ? "bg-[#228422]/12 text-[#228422]" // green for posted
+                    ? "bg-[#228422]/12 text-[#228422]"
                     : saleReturn.status === "draft"
-                      ? "bg-[#F59E0B]/12 text-[#F59E0B]" // yellow for draft
-                      : "bg-gray-100 text-gray-500" // fallback
+                      ? "bg-[#F59E0B]/12 text-[#F59E0B]"
+                      : "bg-gray-100 text-gray-500"
                 }`}
               >
                 <p>{saleReturn.status}</p>

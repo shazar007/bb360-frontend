@@ -52,7 +52,6 @@ export default function MaterialIssueNoteCreate() {
   });
 
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ MaterialIssueNoteCreate ~ items:", items)
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",
     value: item?._id ?? "",

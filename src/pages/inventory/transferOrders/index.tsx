@@ -137,12 +137,10 @@ export default function TransferOrders() {
 
                   <Icon
                     icon="hugeicons:view"
-                    // onClick={() => handlePrint(item)}
                     className="text-lg cursor-pointer text-primary"
                   />,
                   <Icon
                     icon="ion:print-outline"
-                    // onClick={() => handlePrint(item)}
                     className="text-lg cursor-pointer text-primary"
                   />,
                   item?.transactionNumber || "-",
@@ -191,8 +189,6 @@ export default function TransferOrders() {
                     boxShadow: "0px 1px 12px 0px #0000001F",
                   }}
                   className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000] flex items-center justify-center"
-                  // onClick={handleDelete}
-                  // disabled={isDeleting}
                 >
                   {isDeleting ? (
                     <SyncLoader size={8} color="#ffffff" />

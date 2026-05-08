@@ -4,7 +4,7 @@ import CreateDistributorInvoice from "../../../pages/saleModule/sales/salesInvoi
 import DeliveryChallan from "../../../pages/saleModule/sales/deliveryChallan";
 import CreateDeliveryChallan from "../../../pages/saleModule/sales/deliveryChallan/createDeliveryChallan";
 
-import SalesReturn from "../../../pages/saleModule/sales/salesReturn"; // index.tsx
+import SalesReturn from "../../../pages/saleModule/sales/salesReturn";
 import CreateSalesReturn from "../../../pages/saleModule/sales/salesReturn/createSalesReturn";
 export default function SaleRouting() {
   return (

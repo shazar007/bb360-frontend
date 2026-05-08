@@ -10,7 +10,6 @@ import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import dayjs from "dayjs";
-// import { deleteDistributor } from "../../../../api/distributorServices";
 
 const STORAGE_KEY = "temp_distributor_upload";
 export default function DistributorUpload() {
