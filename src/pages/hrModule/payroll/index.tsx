@@ -380,7 +380,7 @@ export default function Payroll() {
           </div>
         </div>
         <div className="h-auto mt-4">
-          <CustomTable headers={tableHeaders} norounded data={tableData} />
+          <CustomTable headers={tableHeaders} data={tableData} height="60vh" />
         </div>
       </div>
 

@@ -1,14 +1,15 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useEffect } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import SalesInvoiceModel from "./components/salesInvoiceModel";
 import { useState } from "react";
 import { GetSalesInvoiceApi } from "../../../../api/sale";
 import { useQuery } from "@tanstack/react-query";
+import CustomCheckbox from "../../../../components/customCheckbox";
 
 export default function SalesInvoice() {
   const { goTo } = useAppNavigate();
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [showMenu, setShowMenu] = useState(false);
   const { data: SaleInvoices, isLoading } = useQuery({
     queryKey: ["getAllSalesInvoice"],
@@ -23,9 +24,13 @@ export default function SalesInvoice() {
   });
 
   const saleInvoicesData: any = SaleInvoices?.data || [];
-  useEffect(() => {
-    document.title = "Distributor Invoice — BB-360";
-  }, []);
+  const toggleSelect = (index: number, checked: boolean) => {
+    if (checked) {
+      setSelectedRows((prev) => [...prev, index]);
+    } else {
+      setSelectedRows((prev) => prev.filter((i) => i !== index));
+    }
+  };
   return (
     <div className="mt-8">
       <div className="flex flex-wrap items-center justify-between">
@@ -100,7 +105,7 @@ export default function SalesInvoice() {
             "Quantity (Pcs)",
             "Amount",
           ]}
-          data={saleInvoicesData?.map((item: any) => [
+          data={saleInvoicesData?.map((item: any, index: number) => [
             <div className="relative">
               <Icon
                 icon="qlementine-icons:menu-burger-16"
@@ -115,9 +120,13 @@ export default function SalesInvoice() {
               )}
             </div>,
 
-            <Icon
-              icon="fluent:checkbox-checked-16-regular"
-              className="text-lg cursor-pointer text-primary"
+            // <Icon
+            //   icon="fluent:checkbox-checked-16-regular"
+            //   className="text-lg cursor-pointer text-primary"
+            // />,
+            <CustomCheckbox
+              checked={selectedRows.includes(index)}
+              onChange={(v) => toggleSelect(index, v)}
             />,
             item?.invoiceNumber,
             item.distributor.distributorCode,

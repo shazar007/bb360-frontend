@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { useQuery } from "@tanstack/react-query";
@@ -19,9 +19,7 @@ export default function SalesReturn() {
     refetchOnReconnect: false,
   });
   const allSalesReturns = saleRetrun?.data?.data || [];
-  useEffect(() => {
-    document.title = "Sales Return — BB-360";
-  }, []);
+
   const toggleSelect = (id: string, checked: boolean) => {
     setSelectedRows((prev) =>
       checked ? [...prev, id] : prev.filter((i) => i !== id),

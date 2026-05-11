@@ -7,7 +7,6 @@ export default function ItemDetails() {
   const location = useLocation();
 
   const { rowData } = (location.state as { rowData: any }) || {};
-  console.log("🚀 ~ rowData:", rowData?.batches);
 
   return (
     <div className="mt-8">

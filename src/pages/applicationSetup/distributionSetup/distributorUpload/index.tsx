@@ -173,8 +173,6 @@ export default function DistributorUpload() {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
-        console.log("RAW EXCEL DATA:", jsonData);
-
         const formatExcelDate = (val: any) => {
           if (!val) return "";
           if (typeof val === "string" && val.includes("/")) {

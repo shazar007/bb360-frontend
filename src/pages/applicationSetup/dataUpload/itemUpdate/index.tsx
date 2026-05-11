@@ -145,7 +145,6 @@ export default function ItemUpdate() {
               "Status",
             ]}
             data={items.map((item: any, index: number) => {
-              console.log("🚀 ~ ItemUpdate ~ item:", item);
               return [
                 <div className="relative">
                   <Icon

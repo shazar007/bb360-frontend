@@ -26,7 +26,6 @@ export default function ReceivingChallan() {
     refetchOnWindowFocus: true,
   });
   const AllPurchaseReceiving = PurchaseReceiving?.data?.data || [];
-  console.log("🚀 ~ AllPurchaseReceiving:", AllPurchaseReceiving);
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,

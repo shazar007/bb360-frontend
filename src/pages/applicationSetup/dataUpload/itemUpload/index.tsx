@@ -219,8 +219,6 @@ export default function DataUpload() {
           selected: false,
         }));
 
-        console.log("FORMATTED:", formatted);
-
         setTableData([...formatted]);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
 

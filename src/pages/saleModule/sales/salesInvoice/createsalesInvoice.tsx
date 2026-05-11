@@ -12,6 +12,7 @@ import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import { CreateSalesInvoiceApi } from "../../../../api/sale";
+import CustomSelect from "../../../../components/customSelect";
 
 const tabs = [
   "Transaction Lines",
@@ -38,6 +39,7 @@ const initialFormState = {
 export default function CreateSalesInvoice() {
   const [form, setForm] = useState(initialFormState);
   const [loading, setLoading] = useState(false);
+  const [selectedItemBatches, setSelectedItemBatches] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [selectedDistributor, setSelectedDistributor] = useState("");
   const [distributorData, setDistributorData] = useState<any>(null);
@@ -57,15 +59,12 @@ export default function CreateSalesInvoice() {
     queryFn: getAllDistributor,
     staleTime: 1000 * 60 * 5,
   });
-
   const qty = +form.orderedQty || 0;
   const tp = +form.tp || 0;
   const discount = +form.discount || 0;
-
   const totalTP = tp * qty;
   const discountValue = (totalTP * discount) / 100;
   const netAmount = totalTP - discountValue;
-
   const allDistributors = AllDistributors?.data?.distributors || [];
 
   const distributorOptions = [
@@ -82,12 +81,12 @@ export default function CreateSalesInvoice() {
   });
 
   const items = AllItems?.data?.items || [];
-  console.log("🚀 ~ items:", items);
 
   const itemOptions =
     items.map((item: any) => ({
       label: item.itemName,
       value: item._id,
+      batches: item?.batches || [],
     })) || [];
 
   const handleSave = async () => {
@@ -99,13 +98,12 @@ export default function CreateSalesInvoice() {
     const orderedQtyNum = Number(form.orderedQty || 0);
     const itemBalanceNum = Number(form.itemBalance || 0);
     if (orderedQtyNum > itemBalanceNum) {
-      notifyError("Ordered quantity cannot be greater than item balance");
+      notifyError("Low Balance");
       return;
     }
 
     try {
       setSaveRow(true);
-
       const newItem = {
         ...form,
         itemBalance: form.itemBalance || "",
@@ -115,12 +113,9 @@ export default function CreateSalesInvoice() {
         totalAmount: netAmount,
         amount: netAmount,
       };
-
       setTableData((prev) => [...prev, newItem]);
-
       setForm(initialFormState);
       setAddItem(false);
-
       notifySuccess("Item added successfully");
     } catch (err) {
       notifyError("Something went wrong");
@@ -171,9 +166,7 @@ export default function CreateSalesInvoice() {
       };
 
       await CreateSalesInvoiceApi(payload);
-
       notifySuccess("Sale Invoice is Created Successfully");
-
       setTableData([]);
       setDistributorData(null);
       setTaxPercentage("");
@@ -211,10 +204,6 @@ export default function CreateSalesInvoice() {
 
     setTotalAmount((subtotal + distributorAmount + taxAmount).toFixed(2));
   }, [tableData, distributorPercentage, taxPercentage]);
-
-  useEffect(() => {
-    document.title = "Distributor Invoice — BB-360";
-  }, []);
 
   return (
     <>
@@ -452,68 +441,84 @@ export default function CreateSalesInvoice() {
                 placeholder="Select Item"
                 value={form.itemId}
                 onChange={(val) => {
-                  const item = items.find((i: any) => i._id === val);
+                  const item = itemOptions.find((i: any) => i.value === val);
+                  setSelectedItemBatches(item?.batches || []);
+
                   setForm((prev) => ({
                     ...prev,
                     itemId: val,
-                    itemName: item?.itemName || "",
-                    itemCode: item?.itemCode || "",
-                    uom: item?.uom || "",
-                    tp: item?.tp || "",
-                    mrp: item?.mrp || "",
-                    itemBalance: item?.balance || "0",
-                    batchNumber: item?.batchNumber || "",
-                    expiryDate: item?.expiryDate || "",
+                    itemName: item?.label || "",
+                    itemCode:
+                      items.find((x: any) => x._id === val)?.itemCode || "",
+                    uom: items.find((x: any) => x._id === val)?.uom || "",
+                    tp: items.find((x: any) => x._id === val)?.tp || "",
+                    mrp: items.find((x: any) => x._id === val)?.mrp || "",
+                    itemBalance: "",
+                    batchNumber: "",
+                    expiryDate: "",
+                  }));
+                }}
+              />{" "}
+              <CustomSelect
+                label="Batch Number"
+                options={[
+                  { label: "Select Batch", value: "" },
+
+                  ...(selectedItemBatches?.map((batch: any) => ({
+                    label: batch.batchNumber,
+                    value: batch.batchNumber,
+                  })) || []),
+                ]}
+                value={form.batchNumber}
+                onChange={(val) => {
+                  const selectedBatch = selectedItemBatches.find(
+                    (b: any) => b.batchNumber === val,
+                  );
+
+                  setForm((p) => ({
+                    ...p,
+                    batchNumber: val,
+                    itemBalance: String(selectedBatch?.balance || 0),
+                    expiryDate: selectedBatch?.expiryDate || "",
                   }));
                 }}
               />
               <CustomInput label="Item Code" value={form.itemCode} disabled />
-
-              <CustomInput label="UOM" value={form.uom} disabled />
-
               <CustomInput
                 label="Item Balance"
                 value={form.itemBalance}
+                disabled
                 onChange={(e) =>
                   setForm((p) => ({ ...p, itemBalance: e.target.value }))
                 }
               />
-
+              <CustomInput label="UOM" value={form.uom} disabled />
               <CustomInput
                 label="Ordered Quantity"
                 value={form.orderedQty}
                 onChange={(e) => {
                   const nextQty = e.target.value;
+
+                  setForm((p) => ({
+                    ...p,
+                    orderedQty: nextQty,
+                  }));
+
                   const nextQtyNum = Number(nextQty || 0);
                   const itemBalanceNum = Number(form.itemBalance || 0);
 
-                  if (nextQty && nextQtyNum > itemBalanceNum) {
-                    notifyError(
-                      "Ordered quantity cannot be greater than item balance",
-                    );
-                    return;
+                  if (nextQtyNum > itemBalanceNum) {
+                    notifyError(`Low Balance`);
                   }
-
-                  setForm((p) => ({ ...p, orderedQty: nextQty }));
                 }}
-              />
-
-              <CustomInput
-                label="Batch Number"
-                value={form.batchNumber}
-                onChange={(e) =>
-                  setForm((p) => ({ ...p, batchNumber: e.target.value }))
-                }
-              />
+              />{" "}
               <CustomDatePicker
                 label="Expiry Date"
                 value={form.expiryDate}
                 onChange={(val) => setForm((p) => ({ ...p, expiryDate: val }))}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
-
               <CustomInput label="TP" value={form.tp} disabled />
-
               <CustomInput
                 label="Discount %"
                 value={form.discount}
@@ -521,7 +526,6 @@ export default function CreateSalesInvoice() {
                   setForm((p) => ({ ...p, discount: e.target.value }))
                 }
               />
-
               <CustomInput
                 label="Bonus"
                 value={form.bonus}
@@ -529,13 +533,11 @@ export default function CreateSalesInvoice() {
                   setForm((p) => ({ ...p, bonus: e.target.value }))
                 }
               />
-
               <CustomInput
                 label="Gross Amount"
                 value={String(totalTP)}
                 disabled
               />
-
               <CustomInput label="Amount" value={String(netAmount)} disabled />
             </div>
 

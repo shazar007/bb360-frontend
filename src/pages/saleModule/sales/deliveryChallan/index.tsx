@@ -19,7 +19,6 @@ export default function DeliveryChallan() {
     refetchOnReconnect: false,
   });
   const saleInvoicesData: any = SaleInvoices?.data || [];
-  console.log("🚀 ~ saleInvoicesData:", saleInvoicesData);
 
   const goWithState = (path: any, state = {}) => {
     navigate(path, { state });
@@ -93,7 +92,6 @@ export default function DeliveryChallan() {
             />,
             item?.invoiceNumber,
             dayjs(item?.createdAt).format("DD-MMM-YYYY"),
-
             item?.distributorName,
             item?.contactNumber,
             item?.address,

@@ -165,7 +165,7 @@ export default function Events() {
         </div>
         <div
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          className="bg-[#ffffff] overflow-y-auto mt-4 p-4 rounded-lg 2xl:h-[calc(79.4vh-0px)] xl:h-[calc(69.4vh-0px)]"
+          className="bg-[#ffffff] overflow-y-auto mt-4 p-4 rounded-lg "
         >
           <p className="text-sm text-[#7d7d7d] leading-[100%]">Events List</p>
           <div className="flex flex-wrap items-center gap-4 mt-4">

@@ -16,6 +16,7 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import { GetSalesInvoiceByInvoiceNo } from "../../../../api/sale";
 import dayjs from "dayjs";
+import { getAllItems } from "../../../../api/itemServices";
 
 export default function CreateSalesReturn() {
   const { goBack } = useAppNavigate();
@@ -24,16 +25,13 @@ export default function CreateSalesReturn() {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
-  const [restock, setRestock] = useState("");
-  const [conditionCheck, setConditionCheck] = useState("");
-  const [setData] = useState<any>(null);
+
   const [invoiceNumber, setinvoiceNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
-  const [discount, setDiscount] = useState("");
   const [description, setDescription] = useState("");
-  const [taxPct, setTaxPct] = useState("");
+
   const { refetch: reload } = useQuery({
     queryKey: ["getAllSalesReturns"],
     queryFn: getAllSalesReturns,
@@ -45,16 +43,7 @@ export default function CreateSalesReturn() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const {
-    data: Invoice,
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["GetSalesInvoiceByInvoiceNo", invoiceNumber],
-    queryFn: () => GetSalesInvoiceByInvoiceNo(invoiceNumber),
-    enabled: false,
-  });
-  const InvoiceData = (Invoice as any)?.data;
+
   const toggleSelect = (index: number) => {
     setSelectedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
@@ -62,32 +51,45 @@ export default function CreateSalesReturn() {
   };
   useEffect(() => {
     const stored = localStorage.getItem("salesReturn");
+
     if (stored) {
-      setData(JSON.parse(stored));
+      const parsed = JSON.parse(stored);
+
+      setTableData(parsed.items || []);
     }
   }, []);
   const [form, setForm] = useState({
     itemId: "",
     itemName: "",
     itemCode: "",
-    itemCategory: "",
-    uom: "",
     batchNumber: "",
     expiryDate: "",
     returnedQty: "",
-    taxAmount: "",
     amount: "",
+    conditionCheck: "",
+    restock: "",
   });
 
-  const items = InvoiceData?.items || [];
+  const {
+    data: AllItems,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["getAllItems"],
+    queryFn: getAllItems,
 
-  useEffect(() => {
-    document.title = "Sales Return — BB-360";
-  }, []);
+    placeholderData: (prev) => prev,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const items = AllItems?.data?.items || [];
 
   const handleAddRow = () => {
-    if (!form.itemId) return alert("Select Item");
-
     setTableData((prev) => [...prev, form]);
 
     setShowPrint(true);
@@ -96,13 +98,12 @@ export default function CreateSalesReturn() {
       itemId: "",
       itemName: "",
       itemCode: "",
-      itemCategory: "",
-      uom: "",
       batchNumber: "",
       expiryDate: "",
       returnedQty: "",
-      taxAmount: "",
       amount: "",
+      conditionCheck: "",
+      restock: "",
     });
   };
 
@@ -119,26 +120,36 @@ export default function CreateSalesReturn() {
   };
   const buildPayload = (data: any[]) => {
     return {
-      invoiceNumber: invoiceNumber,
-      Distributor: InvoiceData.distributor?._id || null,
-      returnDate: new Date().toISOString().split("T")[0],
-      conditionCheck,
-      restock,
-      discount: Number(discount),
+      returnDate: new Date().toISOString(),
+
       description,
-      taxPct: Number(taxPct),
+
       returnTotal: data.reduce(
-        (sum, item) => sum + Number(item.amount || 0),
+        (sum, item) =>
+          sum + Number(item.amount || 0) * Number(item.returnedQty || 0),
         0,
       ),
-      notes: null,
+
       items: data.map((item) => ({
         item: item.itemId,
+
+        itemCode: item.itemCode,
+
+        itemName: item.itemName,
+
         batchNumber: item.batchNumber,
+
         expiryDate: item.expiryDate,
+
         returnQty: Number(item.returnedQty),
-        taxAmount: Number(item.taxAmount),
-        amount: Number(item.amount),
+
+        conditionCheck: item.conditionCheck,
+
+        restock: item.restock,
+
+        taxAmount: Number(item.taxAmount || 0),
+
+        amount: Number(item.amount || 0),
       })),
     };
   };
@@ -150,19 +161,20 @@ export default function CreateSalesReturn() {
       }
       setLoading(true);
       const payload = buildPayload(tableData);
-      await createSalesReturnApi(payload);
-      localStorage.removeItem("salesReturn");
-      setTableData([]);
-      setSelectedRows([]);
-      setShowPostModal(false);
-      notifySuccess("Posted Successfully");
+      console.log("🚀 ~ payload:", payload);
+      // await createSalesReturnApi(payload);
+      // localStorage.removeItem("salesReturn");
+      // setTableData([]);
+      // setSelectedRows([]);
+      // setShowPostModal(false);
+      // notifySuccess("Posted Successfully");
     } catch (err) {
       console.error(err);
       notifyError("Something went wrong");
     } finally {
-      setLoading(false);
-      reload();
-      goTo("/sale-module/sales/sales-return");
+      // setLoading(false);
+      // reload();
+      // goTo("/sale-module/sales/sales-return");
     }
   };
   const handleDeleteSelected = () => {
@@ -247,99 +259,43 @@ export default function CreateSalesReturn() {
                 Enter Sales_Return
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-2 md:gap-y-2 md:gap-x-10  p-4 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
-              <div className="space-y-2">
-                <div className="flex items-end gap-2">
-                  <div className="flex-1">
-                    <CustomInput
-                      className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                      label="Invoice ID"
-                      value={invoiceNumber}
-                      onChange={(e: any) => setinvoiceNumber(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    onClick={handleSearch}
-                    className="h-10 px-4 text-xs text-white rounded-md cursor-pointer bg-secondary"
-                  >
-                    {isLoading ? (
-                      <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
-                    ) : (
-                      "Search"
-                    )}
-                  </button>
-                </div>
-                <CustomDatePicker
-                  label="Date"
-                  disabled
-                  value={
-                    InvoiceData?.createdAt
-                      ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
-                      : ""
-                  }
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomInput
-                  label="Distributor Name"
-                  disabled
-                  value={InvoiceData?.distributor?.distributorName || ""}
-                />
-                <CustomInput
-                  label="Contact Number"
-                  disabled
-                  value={InvoiceData?.contactNumber || ""}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomSelect
-                  label="Condition Check"
-                  value={conditionCheck}
-                  onChange={(val) => setConditionCheck(val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  options={optionsData.conditionCheck}
-                />
-                <CustomInput
-                  label="Description"
-                  value={description}
-                  onChange={(e: any) => setDescription(e.target.value)}
-                  placeholder="Enter Description"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomSelect
-                  label="Restock"
-                  placeholder="Yes/No"
-                  options={optionsData.reStock}
-                  value={restock}
-                  onChange={(val) => setRestock(val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-                <CustomInput
-                  label="Tax %"
-                  value={taxPct}
-                  onChange={(e: any) => setTaxPct(e.target.value)}
-                  placeholder="Enter Tax %"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomInput
-                  label="Discount"
-                  value={discount}
-                  onChange={(e: any) => setDiscount(e.target.value)}
-                  placeholder="Enter Discount"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-                <CustomInput
-                  label="Return Total"
-                  placeholder="50"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
+            <div className="grid grid-cols-1 gap-2 gap-y-2 md:gap-x-10  p-4 md:grid-cols-2 lg:grid-cols-3 ">
+              <CustomInput
+                label="Distributor Name"
+                disabled
+                value={InvoiceData?.distributor?.distributorName || ""}
+              />
+              <CustomDatePicker
+                label="Retrun Date"
+                disabled
+                value={
+                  InvoiceData?.createdAt
+                    ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
+                    : ""
+                }
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />
+
+              <CustomInput
+                label="Description"
+                value={description}
+                onChange={(e: any) => setDescription(e.target.value)}
+                placeholder="Enter Description"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />
+
+              <CustomInput
+                label="Contact Number"
+                disabled
+                value={InvoiceData?.contactNumber || ""}
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />
+
+              <CustomInput
+                label="Return Total"
+                placeholder="50"
+                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+              />
             </div>
           </div>
         </div>
@@ -369,11 +325,11 @@ export default function CreateSalesReturn() {
               "Edit",
               "Item Code",
               "Item Name",
-              "UOM",
               "Batch Number",
               "Expiry Date",
               "Returned Quantity",
-              "Tax Amount",
+              "Condition Check",
+              "Re-Stock",
               "Amount",
             ]}
             data={
@@ -389,18 +345,15 @@ export default function CreateSalesReturn() {
                       icon="qlementine-icons:menu-burger-16"
                       className="text-lg text-primary"
                     />,
-
                     item.itemCode,
                     item.itemName,
-                    item.uom,
                     item.batchNumber,
-
-                    <span className="px-2 py-1 text-green-600 bg-green-100 rounded">
-                      Matched
-                    </span>,
-
+                    dayjs(item.expiryDate).isValid()
+                      ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                      : "-",
                     item.returnedQty,
-                    item.taxAmount,
+                    item.conditionCheck,
+                    item.restock,
                     item.amount,
                   ])
             }
@@ -429,31 +382,25 @@ export default function CreateSalesReturn() {
               <CustomSelectSearch
                 options={items.map((item: any) => ({
                   label: item.itemName,
-                  value: item.item,
+                  value: item._id,
                 }))}
                 label="Item Name"
                 value={form.itemId}
                 onChange={(val) => {
-                  const selected = items.find((i: any) => i.item === val);
+                  const selected = items.find((i: any) => i._id === val);
 
                   setForm((prev) => ({
                     ...prev,
                     itemId: val,
-                    itemName: selected?.itemName,
-                    itemCode: selected?.itemCode,
-                    itemCategory: selected?.itemCategory,
-                    uom: selected?.uom,
-                    batchNumber: selected?.batchNumber,
-                    expiryDate: selected?.expiryDate,
-                    amount: selected?.amount,
+                    itemName: selected?.itemName || "",
+                    itemCode: selected?.itemCode || "",
+                    batchNumber: selected?.batchNumber || "",
+                    expiryDate: selected?.expiryDate || "",
+                    amount: selected?.amount || "",
                   }));
                 }}
               />
-
               <CustomInput label="Item Code" value={form.itemCode} disabled />
-
-              <CustomInput label="UOM" value={form.uom} disabled />
-
               <CustomInput
                 label="Batch Number"
                 value={form.batchNumber}
@@ -468,23 +415,26 @@ export default function CreateSalesReturn() {
                 }
                 disabled
               />
-
               <CustomInput
                 label="Returned Quantity"
                 value={form.returnedQty}
                 onChange={(e) =>
                   setForm({ ...form, returnedQty: e.target.value })
                 }
+              />{" "}
+              <CustomSelect
+                label="Condition Check"
+                options={optionsData.conditionCheck}
+                value={form.conditionCheck}
+                onChange={(val) => setForm({ ...form, conditionCheck: val })}
               />
-
-              <CustomInput
-                label="Tax Amount"
-                value={form.taxAmount}
-                onChange={(e) =>
-                  setForm({ ...form, taxAmount: e.target.value })
-                }
+              <CustomSelect
+                label="Restock"
+                placeholder="Yes/No"
+                options={optionsData.reStock}
+                value={form.restock}
+                onChange={(val) => setForm({ ...form, restock: val })}
               />
-
               <CustomInput label="Amount" value={form.amount} />
             </div>
 

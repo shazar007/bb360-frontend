@@ -66,7 +66,6 @@ export default function InventoryAdjustmentCreate() {
   const handleSave = () => {
     const availableQty = Number(rowForm.quantity || 0);
     const adjustedQty = Number(rowForm.quantityAdjusted || 0);
-    console.log("🚀 ~ handleSave ~ rowForm:", rowForm);
 
     if (!rowForm.itemCode) {
       return notifyError("Please fill required fields");
@@ -175,7 +174,6 @@ export default function InventoryAdjustmentCreate() {
           quantityAdjusted: Number(row.quantityAdjusted || 0),
         })),
       };
-      console.log("🚀 ~ handleSubmit ~ payload:", payload);
 
       await addInventoryAdjustment(payload);
       refetchItems();
@@ -194,8 +192,6 @@ export default function InventoryAdjustmentCreate() {
 
       goBack();
     } catch (error: any) {
-      console.log("🚀 ~ handleSubmit ~ errr:", error?.response?.data);
-
       notifyError("Something went wrong");
     } finally {
       setLoading(false);

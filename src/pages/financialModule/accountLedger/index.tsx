@@ -54,7 +54,6 @@ export default function AccountLedger() {
   const { data: ledgerData, isLoading } = useQuery({
     queryKey: ["account-ledger", partyId, fromDate, toDate],
     queryFn: () => {
-      console.log("🚀 API HIT ~ partyId:", partyId);
       return getAccountLedger(partyId, fromDate, toDate);
     },
     enabled: !!partyId,
@@ -63,7 +62,6 @@ export default function AccountLedger() {
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
-  console.log("🚀 ~ ledgerData:", ledgerData);
 
   const handleDateChange = (type: "from" | "to", date: any) => {
     setFilterLoading(true);
@@ -124,7 +122,6 @@ export default function AccountLedger() {
                 value={ledgerType}
                 onChange={(selectedOption: any) => {
                   const val = selectedOption?.value ?? selectedOption;
-                  console.log("🚀 ledgerType selected:", val);
                   setLedgerType(val);
 
                   setPartyId("");

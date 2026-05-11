@@ -177,9 +177,6 @@ export default function VendorUpload() {
         const sheet = workbook.Sheets[sheetName];
 
         const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
-
-        console.log("RAW EXCEL DATA:", jsonData);
-
         const formatExcelDate = (val: any) => {
           if (!val) return "";
 
