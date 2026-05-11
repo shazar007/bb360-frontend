@@ -5,6 +5,7 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { useQuery } from "@tanstack/react-query";
 import { getAllSalesReturns } from "../../../../api/saleRetrun";
+import dayjs from "dayjs";
 
 export default function SalesReturn() {
   const { goTo } = useAppNavigate();
@@ -82,16 +83,15 @@ export default function SalesReturn() {
           headers={[
             "Edit",
             "Select",
-            "Invoice Number",
+            "Retrun Number",
+            "Date",
             "Distributor Code",
             "Distributor Name",
-            "Licence Status",
             "Item Description",
             "Quantity (Pcs)",
             "Amount",
           ]}
           data={allSalesReturns.map((saleReturn: any) => {
-            const item = saleReturn?.items?.[0];
             return [
               <Icon
                 icon="qlementine-icons:menu-burger-16"
@@ -103,23 +103,18 @@ export default function SalesReturn() {
                   toggleSelect(saleReturn._id, checked)
                 }
               />,
-              saleReturn.invoiceNumber,
+              saleReturn.returnNumber,
+              dayjs(saleReturn.returnDate).isValid()
+                ? dayjs(saleReturn.returnDate).format("DD-MMM-YYYY")
+                : "-",
               saleReturn.distributorCode,
               saleReturn.distributorName,
-              <div
-                className={`capitalize w-max px-2 py-0.5 rounded-sm ${
-                  saleReturn.status === "posted"
-                    ? "bg-[#228422]/12 text-[#228422]"
-                    : saleReturn.status === "draft"
-                      ? "bg-[#F59E0B]/12 text-[#F59E0B]"
-                      : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <p>{saleReturn.status}</p>
-              </div>,
               saleReturn.description,
-              item?.returnQty || 0,
-              item?.amount || 0,
+              saleReturn?.items?.reduce(
+                (sum: number, item: any) => sum + Number(item?.returnQty || 0),
+                0,
+              ),
+              saleReturn?.returnTotal || 0,
             ];
           })}
         />
