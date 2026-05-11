@@ -263,16 +263,16 @@ export default function CreateSalesReturn() {
               <CustomInput
                 label="Distributor Name"
                 disabled
-                value={InvoiceData?.distributor?.distributorName || ""}
+                // value={InvoiceData?.distributor?.distributorName || ""}
               />
               <CustomDatePicker
                 label="Retrun Date"
                 disabled
-                value={
-                  InvoiceData?.createdAt
-                    ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
-                    : ""
-                }
+                // value={
+                //   InvoiceData?.createdAt
+                //     ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
+                //     : ""
+                // }
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
 
@@ -287,7 +287,7 @@ export default function CreateSalesReturn() {
               <CustomInput
                 label="Contact Number"
                 disabled
-                value={InvoiceData?.contactNumber || ""}
+                // value={InvoiceData?.contactNumber || ""}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
 
