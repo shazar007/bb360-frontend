@@ -13,6 +13,7 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import { CreateSalesInvoiceApi } from "../../../../api/sale";
 import CustomSelect from "../../../../components/customSelect";
+import dayjs from "dayjs";
 
 const tabs = [
   "Transaction Lines",
@@ -50,7 +51,7 @@ export default function CreateSalesInvoice() {
   const [distributorPercentage, setDistributorPercentage] = useState("");
   const [taxPercentage, setTaxPercentage] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
-  const [invoiceDate, setInvoiceDate] = useState("");
+  const [invoiceDate, setInvoiceDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [saveRow, setSaveRow] = useState(false);
   const { goBack } = useAppNavigate();
   const queryClient = useQueryClient();
@@ -286,6 +287,7 @@ export default function CreateSalesInvoice() {
 
           <CustomDatePicker
             label="Date"
+            disabled
             value={invoiceDate}
             className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
             onChange={(val) => setInvoiceDate(val)}

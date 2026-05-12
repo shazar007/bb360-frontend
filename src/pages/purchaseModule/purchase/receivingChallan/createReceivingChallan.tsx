@@ -12,10 +12,13 @@ import {
   getAllPurchaseReceiving,
 } from "../../../../api/purchaseReceiving";
 import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
 export default function CreateReceivingChallan() {
   const [loading, setLoading] = useState(false);
-  const [receivingDate, setReceivingDate] = useState<any>(null);
+  const [receivingDate, setReceivingDate] = useState(
+    dayjs().format("YYYY-MM-DD"),
+  );
   const [createChallan, setCreateChallan] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);

@@ -13,12 +13,14 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import { getAllVendors } from "../../../../api/vendorServices";
 import { createPurchaseOrderApi } from "../../../../api/purchaseOrder";
+import dayjs from "dayjs";
 
 const tabs = ["Items Details", "Terms and Conditions", "Summary"];
 export default function CreatePurchaseOrder() {
   const [activeTab, setActiveTab] = useState("Items Details");
   const { goBack } = useAppNavigate();
   const STORAGE_KEY = "purchase_order_items";
+  const [orderDate, setOrderDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [tableData, setTableData] = useState<any[]>([]);
   const [advanceAmount, setAdvanceAmount] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
@@ -246,8 +248,9 @@ export default function CreatePurchaseOrder() {
             <div className="space-y-1.5">
               <CustomDatePicker
                 label="Date"
-                value="2026-03-01"
+                value={orderDate}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                onChange={(val) => setOrderDate(val)}
               />{" "}
               <CustomSelect
                 label="Type"

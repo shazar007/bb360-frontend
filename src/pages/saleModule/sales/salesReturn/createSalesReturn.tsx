@@ -26,7 +26,7 @@ export default function CreateSalesReturn() {
   const [showPrint, setShowPrint] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const [batchOptions, setBatchOptions] = useState<any[]>([]);
-  const [returnDate, setReturnDate] = useState("");
+  const [returnDate, setReturnDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [selectedDistributor, setSelectedDistributor] = useState({
@@ -135,10 +135,8 @@ export default function CreateSalesReturn() {
       returnTotal: returnTotal,
       items: data.map((item) => {
         const selectedItem = items.find((i: any) => i._id === item.itemId);
-
         const tp = Number(selectedItem?.tp || 0);
         const qty = Number(item.returnedQty || 0);
-
         return {
           item: item.itemId,
           batchNumber: item.batchNumber,
@@ -169,7 +167,6 @@ export default function CreateSalesReturn() {
       goTo("/sale-module/sales/sales-return");
     } catch (err: any) {
       console.error(err);
-      // console.log("🚀 ~ err:", err.response?.data?.message);
       notifyError(err.response?.data?.message || "Something went wrong");
       setShowPostModal(false);
     } finally {
@@ -263,6 +260,7 @@ export default function CreateSalesReturn() {
                 value={returnDate ? dayjs(returnDate).format("YYYY-MM-DD") : ""}
                 onChange={(val: any) => setReturnDate(val)}
                 className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+                disabled
               />
               <CustomInput
                 label="Description"
