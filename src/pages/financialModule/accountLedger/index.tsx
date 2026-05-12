@@ -113,7 +113,6 @@ export default function AccountLedger() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-50.25">
             <div className="space-y-2">
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Ledger Type"
                 options={[
                   { label: "Vendor", value: "Vendor" },
@@ -130,7 +129,6 @@ export default function AccountLedger() {
               />
 
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Select Party"
                 placeholder="Noor Sons"
                 options={partyOptions}
@@ -144,14 +142,12 @@ export default function AccountLedger() {
 
             <div className="space-y-2">
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="From Date"
                 value={fromDate}
                 onChange={(date: any) => handleDateChange("from", date)}
               />
 
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="To Date"
                 value={toDate}
                 onChange={(date: any) => handleDateChange("to", date)}

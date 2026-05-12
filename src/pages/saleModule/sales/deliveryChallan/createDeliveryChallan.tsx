@@ -53,26 +53,16 @@ export default function CreateDeliveryChallan() {
                 <CustomInput
                   label="Purchase Order"
                   placeholder="PO-000121"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   disabled
                 />
-                <CustomDatePicker
-                  label="Date"
-                  value="2026-04-08"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
+                <CustomDatePicker label="Date" value="2026-04-08" />
               </div>
 
               <div className="space-y-2">
-                <CustomSelect
-                  label="Party Account"
-                  placeholder="Noorsons"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
+                <CustomSelect label="Party Account" placeholder="Noorsons" />
                 <CustomInput
                   label="Party Reference"
                   placeholder="Rawat-Organic Dep"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
 
@@ -80,12 +70,10 @@ export default function CreateDeliveryChallan() {
                 <CustomInput
                   label="Contact Number"
                   placeholder="+92 322 1235 225"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
                 <CustomInput
                   label="Delivery Address"
                   placeholder="Main GT Road near Rawat Mor, Rawalpindi"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />
               </div>
               <div className="space-y-2"></div>

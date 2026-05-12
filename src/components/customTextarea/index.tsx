@@ -12,10 +12,13 @@ export default function CustomTextarea({
 }: CustomTextareaProps) {
   return (
     <div className="relative w-full">
-      <label className="bg-white px-1 text-xs text-[#7D7D7D]">{label}</label>
+      <label className="bg-white px-1 text-xs leading-4 text-heading1">
+        {label}
+      </label>
       <textarea
         {...props}
-        className={`rounded-md w-full bg-[#ECF0F4] h-25 px-3 placeholder:text-[#7d7d7d] py-2 text-sm outline-none ${className}`}
+        style={{ resize: "none" }}
+        className={`rounded-md w-full bg-[#ECF0F4] h-25 px-3 placeholder:text-heading1/36 py-2 placeholder:text-xs text-xs outline-none ${className}`}
       />
     </div>
   );

@@ -26,7 +26,9 @@ export default function CustomDatePicker({
   placeholder = "Select date",
 }: CustomDatePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [internalValue, setInternalValue] = useState(value || "");
+  const [internalValue, setInternalValue] = useState(
+    value || dayjs().format("YYYY-MM-DD"),
+  );
   useEffect(() => {
     setInternalValue(value || "");
   }, [value]);
@@ -83,7 +85,7 @@ export default function CustomDatePicker({
             <span className={!internalValue ? "text-gray-400" : ""}>
               {internalValue && dayjs(internalValue).isValid()
                 ? dayjs(internalValue).format("DD-MMM-YYYY")
-                : placeholder}
+                : dayjs().format("DD-MMM-YYYY")}
             </span>
           </div>
           {internalValue && !disabled && (

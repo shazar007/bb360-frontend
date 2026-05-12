@@ -36,22 +36,11 @@ export default function ItemDetails() {
             />
             <CustomInput
               label="Units of Measure (UOM)"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               value={rowData?.uom}
               disabled
             />{" "}
-            <CustomInput
-              label="T.P"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-              value={rowData?.tp}
-              disabled
-            />{" "}
-            <CustomInput
-              label="M.R.P"
-              className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-              value={rowData?.mrp}
-              disabled
-            />
+            <CustomInput label="T.P" value={rowData?.tp} disabled />{" "}
+            <CustomInput label="M.R.P" value={rowData?.mrp} disabled />
           </div>
         </div>
       </div>{" "}

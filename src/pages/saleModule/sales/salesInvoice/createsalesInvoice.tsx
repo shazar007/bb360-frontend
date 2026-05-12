@@ -269,40 +269,34 @@ export default function CreateSalesInvoice() {
             label="Contact Number"
             disabled
             value={distributorData?.contactNumber || ""}
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
           />
           <CustomInput
             label="Licence Status"
             disabled
             value={distributorData?.licenceStatus || ""}
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
           />
 
           <CustomInput
             label="Address"
             disabled
             value={distributorData?.address || ""}
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
           />
 
           <CustomDatePicker
             label="Date"
             disabled
             value={invoiceDate}
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
             onChange={(val) => setInvoiceDate(val)}
           />
 
           <CustomInput
             label="Distributor Percentage"
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
             value={distributorPercentage}
             onChange={(e) => setDistributorPercentage(e.target.value)}
           />
 
           <CustomInput
             label="Tax %"
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
             value={taxPercentage}
             onChange={(e) => setTaxPercentage(e.target.value)}
           />
@@ -518,7 +512,6 @@ export default function CreateSalesInvoice() {
                 label="Expiry Date"
                 value={form.expiryDate}
                 onChange={(val) => setForm((p) => ({ ...p, expiryDate: val }))}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
               <CustomInput label="TP" value={form.tp} disabled />
               <CustomInput
