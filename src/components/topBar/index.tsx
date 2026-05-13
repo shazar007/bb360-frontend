@@ -26,7 +26,8 @@ export default function TopBar() {
   };
 
   const isParentActive = (item: any): boolean => {
-    if (item.path && location.pathname.startsWith(item.path)) return true;
+    if (item.path?.trim() && location.pathname.startsWith(item.path))
+      return true;
     if (item.children) {
       return item.children.some((child: any) => isParentActive(child));
     }
