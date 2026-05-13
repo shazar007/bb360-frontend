@@ -2,14 +2,19 @@ import { useLocation } from "react-router-dom";
 import CustomTable from "../../../../components/customTable";
 import dayjs from "dayjs";
 import CustomInput from "../../../../components/customInput";
+import { Icon } from "@iconify/react";
 
 export default function ItemDetails() {
   const location = useLocation();
-
   const { rowData } = (location.state as { rowData: any }) || {};
-
   return (
     <div className="mt-8">
+      <div className="flex items-center gap-2">
+        <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
+        <p className="text-base font-semibold md:text-lg text-heading1">
+          Data Upload / Items Details
+        </p>
+      </div>
       <div className="mt-3">
         <div className="bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4 ">
@@ -22,7 +27,7 @@ export default function ItemDetails() {
               label="Product Code"
               value={rowData?.itemCode}
               disabled
-            />{" "}
+            />
             <CustomInput
               label="Product Name"
               value={rowData?.itemName}
@@ -38,20 +43,16 @@ export default function ItemDetails() {
               label="Units of Measure (UOM)"
               value={rowData?.uom}
               disabled
-            />{" "}
+            />
             <CustomInput label="T.P" value={rowData?.tp} disabled />{" "}
             <CustomInput label="M.R.P" value={rowData?.mrp} disabled />
           </div>
         </div>
-      </div>{" "}
+      </div>
       <div className="pb-3 mt-3 bg-white rounded-2xl">
-        <div>
-          {" "}
-          <p className="p-3 px-4 text-xs cursor-pointer text-primary">
-            {" "}
-            Products Batches
-          </p>
-        </div>
+        <p className="p-3 px-4 text-xs cursor-pointer text-primary">
+          Products Batches
+        </p>
         <CustomTable
           norounded
           noPagination
@@ -81,7 +82,7 @@ export default function ItemDetails() {
             ]) || []
           }
         />
-      </div>{" "}
+      </div>
     </div>
   );
 }
