@@ -4,7 +4,7 @@ import CustomInput from "../../../../components/customInput";
 import CustomSelect from "../../../../components/customSelect";
 export default function WorkCalendarCreate() {
   return (
-    <div className="bg-[#f6f6f6] rounded-2xl mt-3">
+    <div className="bg-bgprimary rounded-2xl mt-3">
       <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
@@ -53,56 +53,16 @@ export default function WorkCalendarCreate() {
             </p>
           </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-40.25">
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Name"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+            <CustomInput label="Name" placeholder="Lorem Ipsum" />
 
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Start Hour"
-                placeholder="09:00 AM"
-              />
+            <CustomSelect label="Start Hour" placeholder="09:00 AM" />
+            <CustomSelect label="Half Mark After" placeholder="12:30 PM" />
+            <CustomInput label="Half Duty Minimum Min" placeholder="-" />
 
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="End Hour"
-                placeholder="09:00 AM"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Work Hours Per Day"
-                placeholder="8H"
-              />
-
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Half Mark After"
-                placeholder="12:30 PM"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Full Duty Minimum Min"
-                placeholder="-"
-              />
-
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Half Duty Minimum Min"
-                placeholder="-"
-              />
-            </div>
+            <CustomSelect label="Work Hours Per Day" placeholder="8H" />
+            <CustomSelect label="End Hour" placeholder="09:00 AM" />
+            <CustomInput label="Full Duty Minimum Min" placeholder="-" />
           </div>
         </div>
 

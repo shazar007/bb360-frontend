@@ -62,62 +62,16 @@ export default function DefineEmployeeSalaryCreate() {
             </p>
           </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-40.25">
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Employee"
-                placeholder="Lorem Ipsum"
-              />
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+            <CustomSelect label="Employee" placeholder="Lorem Ipsum" />
+            <CustomSelect label="Current Salary" placeholder="09:00 AM" />
+            <CustomSelect label="Work Hours Per Day" placeholder="8hr" />
+            <CustomInput label="Full Duty Minimum Min" placeholder="-" />
 
-              <CustomDatePicker
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Creation Date"
-                placeholder="01-Mar-2026"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Start Hour"
-                placeholder="09:00 AM"
-              />
-
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="End Hour"
-                placeholder="09:00 AM"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Work Hours Per Day"
-                placeholder="8hr"
-              />
-
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Half Mark After"
-                placeholder="12:30 PM"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Full Duty Minimum Min"
-                placeholder="-"
-              />
-
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Half Duty Minimum Min"
-                placeholder="-"
-              />
-            </div>
+            <CustomDatePicker label="Creation Date" placeholder="01-Mar-2026" />
+            <CustomSelect label="End Hour" placeholder="09:00 AM" />
+            <CustomSelect label="Half Mark After" placeholder="12:30 PM" />
+            <CustomInput label="Half Duty Minimum Min" placeholder="-" />
           </div>
         </div>
 

@@ -47,7 +47,7 @@ export default function EmployeesCreate() {
         </div>
       </div>
 
-      <div className="bg-[#f6f6f6] rounded-2xl mt-3">
+      <div className="bg-bgprimary rounded-2xl mt-3">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">
@@ -55,62 +55,18 @@ export default function EmployeesCreate() {
             </p>
           </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-40.25">
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Transaction Number"
-                placeholder="TO BE GENERATE"
-              />
-
-              <CustomDatePicker
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Hire Date"
-                placeholder="01-Mar-2026"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Name"
-                placeholder="Lorem Ipsum"
-              />
-
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Father Name"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Gender"
-                placeholder="Male / Female"
-              />
-
-              <CustomDatePicker
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="DOB"
-                placeholder="01-Mar-2026"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="Religion"
-                placeholder="-"
-              />
-
-              <CustomInput
-                className="w-full h-10 px-4 rounded-md bg-[#ECF0F4]"
-                label="CNIC"
-                placeholder="-"
-              />
-            </div>
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+            <CustomInput
+              label="Transaction Number"
+              placeholder="TO BE GENERATE"
+            />
+            <CustomInput label="Name" placeholder="Lorem Ipsum" />{" "}
+            <CustomSelect label="Gender" placeholder="Male / Female" />{" "}
+            <CustomInput label="Religion" placeholder="-" />
+            <CustomDatePicker label="Hire Date" placeholder="01-Mar-2026" />
+            <CustomInput label="Father Name" placeholder="Lorem Ipsum" />
+            <CustomDatePicker label="DOB" placeholder="01-Mar-2026" />
+            <CustomInput label="CNIC" placeholder="-" />
           </div>
         </div>
 
@@ -121,93 +77,37 @@ export default function EmployeesCreate() {
             </p>
           </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-40.25">
-            <div className="space-y-2">
-              <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="City"
-                placeholder="01-Mar-2026"
-              />
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 xl:gap-y-2 xl:gap-x-40.25 w-full lg:w-[46.5%]">
+            <CustomDatePicker label="City" placeholder="01-Mar-2026" />
 
-              <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Country"
-                placeholder="01-Mar-2026"
-              />
-            </div>
+            <CustomDatePicker label="Country" placeholder="01-Mar-2026" />
+            <CustomInput label="Phone Number" placeholder="Lorem Ipsum" />
 
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Phone Number"
-                placeholder="Lorem Ipsum"
-              />
-
-              <CustomInput
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Address"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
+            <CustomInput label="Address" placeholder="Lorem Ipsum" />
           </div>
         </div>
+      </div>
 
-        <div className="mt-2 bg-white rounded-2xl">
-          <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
-            <p className="text-xs font-semibold text-heading1">Job Detail</p>
-          </div>
+      <div className="mt-2 bg-white rounded-2xl">
+        <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
+          <p className="text-xs font-semibold text-heading1">Job Detail</p>
+        </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-40.25">
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Designation"
-                placeholder="Lorem Ipsum"
-              />
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+          <CustomSelect label="Designation" placeholder="Lorem Ipsum" />
 
-              <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Employee Grade"
-                placeholder="01-Mar-2026"
-              />
-            </div>
+          <CustomDatePicker label="Employee Grade" placeholder="01-Mar-2026" />
+          <CustomInput label="Department Name" placeholder="Lorem Ipsum" />
 
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Department Name"
-                placeholder="Lorem Ipsum"
-              />
+          <CustomInput label="Location Name" placeholder="Lorem Ipsum" />
+          <CustomSelect label="Employee Type" placeholder="Lorem Ipsum" />
 
-              <CustomInput
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Location Name"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Employee Type"
-                placeholder="Lorem Ipsum"
-              />
-
-              <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Define Payroll"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <CustomInput
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                label="Status"
-                placeholder="Lorem Ipsum"
-              />
-            </div>
-          </div>
+          <CustomSelect
+            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
+            label="Define Payroll"
+            placeholder="Lorem Ipsum"
+          />
+          <CustomInput label="Status" placeholder="Lorem Ipsum" />
         </div>
       </div>
     </div>

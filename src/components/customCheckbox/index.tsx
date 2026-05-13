@@ -6,7 +6,7 @@ export default function CustomCheckbox({
   onChange,
 }: {
   checked?: boolean;
-  onChange: (value: boolean) => void;
+  onChange?: (value: boolean) => void;
 }) {
   return (
     <FormControlLabel
