@@ -50,7 +50,7 @@ export default function InventoryTransferCreate() {
   const [rowForm, setRowForm] = useState(rowInitialForm);
   const [loading, setLoading] = useState(false);
 
-  const { goBack } = useAppNavigate();
+  const { goBack } = useAppNavigate();  
 
   useEffect(() => {
     const stored = localStorage.getItem("inventory-transfer-rows");
@@ -330,8 +330,8 @@ export default function InventoryTransferCreate() {
                       item: item.item,
                       itemCode: item.itemCode,
                       itemName: item.itemName,
-                      uom: item.uom,
                       batchNumber: item.batchNumber,
+                      uom: item.uom,
                       quantity: item.quantity,
                       quantityAdjusted: item.quantityAdjusted,
                     });

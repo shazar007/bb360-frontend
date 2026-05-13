@@ -14,11 +14,14 @@ import {
   getAllMaterialReturnNotes,
 } from "../../../api/inventoryServices";
 import { SyncLoader } from "react-spinners";
+import CustomSelect from "../../../components/customSelect";
 const tabs = ["Transaction Lines", "Accounting Lines", "System Information"];
 
 const rowInitialForm = {
   itemCode: "",
   uom: "",
+  batchNumber: "",
+  quantity: "",
   receivedQuantity: 0,
   amount: 0,
   item: "",
@@ -28,6 +31,7 @@ const headerInitialForm = {
   transactionName: "",
   transactionDate: "",
   createdFrom: "",
+  status: "",
   notes: "",
   receivedFrom: "",
 };
@@ -47,8 +51,8 @@ export default function MaterialReturnNoteCreate() {
   };
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getItemByCategory", "raw"],
-    queryFn: () => getItemByCategory("raw"),
+    queryKey: ["getItemByCategory", "finished"],
+    queryFn: () => getItemByCategory("finished"),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
@@ -60,6 +64,14 @@ export default function MaterialReturnNoteCreate() {
     label: item?.itemName ?? "",
     value: item?._id ?? "",
   }));
+  const batchOptions =
+    items
+      ?.find((i: any) => i._id === rowForm.item)
+      ?.batches?.map((b: any) => ({
+        label: b.batchNumber,
+        value: b.batchNumber,
+        balance: b.balance,
+      })) || [];
 
   const toggleSelect = (index: number, value: boolean) => {
     const updated = [...tableData];
@@ -108,8 +120,10 @@ export default function MaterialReturnNoteCreate() {
       createdFrom: form.createdFrom,
       receivedFrom: form.receivedFrom,
       notes: form.notes,
+      status: form.status,
       items: tableData.map((row) => ({
         item: row.item,
+        batchNumber: row.batchNumber,
         receivedQuantity: Number(row.receivedQuantity),
         amount: Number(row.amount),
       })),
@@ -120,7 +134,7 @@ export default function MaterialReturnNoteCreate() {
 
       await addMaterialReturnNote(payload);
 
-      notifySuccess("Material Issue Note Saved Successfully");
+      notifySuccess("Material Return Note Saved Successfully");
       refetch();
       goBack();
     } catch (error: any) {
@@ -203,6 +217,22 @@ export default function MaterialReturnNoteCreate() {
                   handleHeaderChange("createdFrom", e.target.value)
                 }
               />
+              <CustomSelect
+                label="Status"
+                options={[
+                  { label: "Pending", value: "pending" },
+                  { label: "Approved", value: "approved" },
+                  { label: "Rejected", value: "rejected" },
+                  { label: "Cancelled", value: "cancelled" },
+                ]}
+                value={form.status}
+                onChange={(val: any) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    status: val?.value || val,
+                  }))
+                }
+              />
               <CustomInput
                 label="Notes"
                 value={form.notes}
@@ -263,7 +293,9 @@ export default function MaterialReturnNoteCreate() {
                   "Select",
                   "Item Code",
                   "Item Name",
+                  "Batch Number",
                   "UOM",
+                  "Quantity",
                   "Received Quantity",
                   "Amount",
                 ]}
@@ -283,7 +315,9 @@ export default function MaterialReturnNoteCreate() {
                   />,
                   item.itemCode,
                   item.itemName,
+                  item.batchNumber,
                   item.uom,
+                  item.quantity || "-",
                   item.receivedQuantity,
                   item.amount,
                 ])}
@@ -338,10 +372,43 @@ export default function MaterialReturnNoteCreate() {
                     itemName: selected?.itemName || "",
                     itemCode: selected?.itemCode || "",
                     uom: selected?.uom || "",
+                    quantity: selected?.balance || "",
                   }));
                 }}
               />
+              <CustomSelectSearch
+                options={batchOptions}
+                value={rowForm.batchNumber}
+                label="Batch Number"
+                disabled={!rowForm.item || batchOptions.length === 0}
+                title={
+                  !rowForm.item ? "Please select item name first" : undefined
+                }
+                onChange={(val) => {
+                  const selectedBatch = batchOptions.find(
+                    (b: any) => b.value === val,
+                  );
+
+                  if (!selectedBatch) return;
+
+                  setRowForm((prev) => ({
+                    ...prev,
+                    batchNumber: selectedBatch.label,
+                    quantity: selectedBatch.balance || 0,
+                  }));
+                }}
+              />
+
               <CustomInput label="UOM" value={rowForm.uom} disabled />
+
+              <CustomInput
+                label="Quantity"
+                value={rowForm.quantity}
+                disabled={true}
+                onChange={(e: any) =>
+                  setRowForm({ ...rowForm, quantity: e.target.value })
+                }
+              />
               <CustomInput
                 label="Quantity to Issue"
                 type="string"

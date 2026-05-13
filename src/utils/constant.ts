@@ -527,22 +527,15 @@ export const navItems: NavItem[] = [
         name: "Inventory Transfer",
         path: "/inventory/inventory-transfer",
       },
-      {
-        name: "Material Issue Note",
-        path: "/inventory/material-issue-note",
-      },
-      {
-        name: "Material Return Note",
-        path: "/inventory/material-return-note",
-      },
-      {
-        name: "Transfer Orders",
-        path: "/inventory/transfer-orders",
-      },
+    
       // {
-      //   name: "Stock Taking",
-      //   path: "/inventory/stock-taking",
+      //   name: "Transfer Orders",
+      //   path: "/inventory/transfer-orders",
       // },
+      {
+        name: "Stock Taking",
+        path: "/inventory/stock-taking",
+      },
     ],
   },
   {
@@ -951,7 +944,15 @@ export const navItems: NavItem[] = [
     name: "Manufacturing Module",
     icon: "mdi:factory",
     children: [
-      { name: "No Data Found" },
+      // { name: "No Data Found" },
+        {
+        name: "Material Issue Note",
+        path: "/manufacturing-module/material-issue-note",
+      },
+      {
+        name: "Material Return Note",
+        path: "/manufacturing-module/material-return-note",
+      },
       // {
       //   name: "Manufacturing Setup",
       //   children: [

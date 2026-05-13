@@ -18,6 +18,8 @@ const rowInitialForm = {
   itemCode: "",
   item: "",
   uom: "",
+  batchNumber: "",
+  quantity: "",
   issuedQuantity: 0,
   amount: 0,
 };
@@ -43,8 +45,8 @@ export default function MaterialIssueNoteCreate() {
   const [rowForm, setRowForm] = useState(rowInitialForm);
 
   const { data: AllItems } = useQuery({
-    queryKey: ["getItemByCategory", "raw"],
-    queryFn: () => getItemByCategory("raw"),
+    queryKey: ["getItemByCategory", "finished"],
+    queryFn: () => getItemByCategory("finished"),
     placeholderData: (prev) => prev,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
@@ -52,11 +54,19 @@ export default function MaterialIssueNoteCreate() {
   });
 
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ MaterialIssueNoteCreate ~ items:", items)
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",
     value: item?._id ?? "",
   }));
+
+  const batchOptions =
+    items
+      ?.find((i: any) => i._id === rowForm.item)
+      ?.batches?.map((b: any) => ({
+        label: b.batchNumber,
+        value: b.batchNumber,
+        balance: b.balance,
+      })) || [];
 
   const handleHeaderChange = (name: string, value: any) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -109,6 +119,7 @@ export default function MaterialIssueNoteCreate() {
       notes: form.notes,
       items: tableData.map((row) => ({
         item: row.item,
+        batchNumber: row.batchNumber,
         issuedQuantity: Number(row.issuedQuantity),
         amount: Number(row.amount),
       })),
@@ -210,9 +221,11 @@ export default function MaterialIssueNoteCreate() {
 
         <div className="pb-4 mt-4 overflow-hidden bg-white shadow-sm rounded-2xl">
           <div className="flex justify-between items-center px-4.5 py-3">
+            
             <p className="text-sm font-semibold text-primary">
               Transaction Lines
             </p>
+
             <div className="flex items-center gap-2">
               <button
                 onClick={handleDeleteSelected}
@@ -227,6 +240,7 @@ export default function MaterialIssueNoteCreate() {
                 Add Row
               </button>
             </div>
+
           </div>
 
           <CustomTable
@@ -237,7 +251,9 @@ export default function MaterialIssueNoteCreate() {
               "Select",
               "Item Code",
               "Item Name",
+              "Batch Number",
               "UOM",
+              "Quantity",
               "Qty Issued",
               "Amount",
             ]}
@@ -257,7 +273,9 @@ export default function MaterialIssueNoteCreate() {
               />,
               item.itemCode,
               item.itemName,
+              item.batchNumber,
               item.uom,
+              item.quantity,
               item.issuedQuantity,
               item.amount,
             ])}
@@ -297,7 +315,39 @@ export default function MaterialIssueNoteCreate() {
                   }));
                 }}
               />
+
+              <CustomSelectSearch
+                options={batchOptions}
+                value={rowForm.batchNumber}
+                label="Batch Number"
+                disabled={!rowForm.item || batchOptions.length === 0}
+                title={
+                  !rowForm.item ? "Please select item name first" : undefined
+                }
+                onChange={(val) => {
+                  const selectedBatch = batchOptions.find(
+                    (b: any) => b.value === val,
+                  );
+
+                  if (!selectedBatch) return;
+
+                  setRowForm((prev) => ({
+                    ...prev,
+                    batchNumber: selectedBatch.label,
+                    quantity: selectedBatch.balance || 0,
+                  }));
+                }}
+              />
               <CustomInput label="UOM" value={rowForm.uom} disabled />
+
+              <CustomInput
+                label="Quantity"
+                value={rowForm.quantity}
+                disabled={true}
+                onChange={(e: any) =>
+                  setRowForm({ ...rowForm, quantity: e.target.value })
+                }
+              />
               <CustomInput
                 label="Quantity to Issue"
                 type="string"

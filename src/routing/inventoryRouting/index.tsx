@@ -29,7 +29,7 @@ export default function InventoryRouting() {
         path="/inventory-transfer/create"
         element={<InventoryTransferCreate />}
       />
-      <Route path="/material-issue-note" element={<MaterialIssueNote />} />
+      {/* <Route path="/material-issue-note" element={<MaterialIssueNote />} />
       <Route
         path="/material-issue-note/create"
         element={<MaterialIssueNoteCreate />}
@@ -42,16 +42,16 @@ export default function InventoryRouting() {
       <Route
         path="/material-return-note/create"
         element={<MaterialReturnNoteCreate />}
-      />
+      /> */}
       <Route path="/transfer-orders" element={<TransferOrders />} />
       <Route
         path="/transfer-orders/create"
         element={<TransferOrdersCreate />}
       />
-      <Route
+      {/* <Route
         path="/material-return-note/create"
         element={<MaterialReturnNoteCreate />}
-      />
+      /> */}
       <Route path="/stock-taking" element={<StockTaking />} />
       <Route path="/stock-taking/create" element={<StockTakingCreate />} />
     </Routes>
