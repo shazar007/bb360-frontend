@@ -16,7 +16,6 @@ export default function AccountLedger() {
 
   const [partyId, setPartyId] = useState<string>("");
   const [ledgerType, setLedgerType] = useState<string>("");
-  const [loadingParties, setLoadingParties] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
   const [fromDate, setFromDate] = useState("2026-05-01");
   const [toDate, setToDate] = useState("2026-05-10");

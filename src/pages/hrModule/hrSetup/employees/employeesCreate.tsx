@@ -29,8 +29,6 @@ export default function EmployeesCreate() {
     status: "",
   });
 
-  const [errors, setErrors] = useState<any>({});
-
   const validateForm = () => {
     let newErrors: any = {};
 
@@ -39,8 +37,6 @@ export default function EmployeesCreate() {
         newErrors[key] = "This field is required";
       }
     });
-
-    setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
       notifyError("Please fill all required fields");
@@ -53,11 +49,6 @@ export default function EmployeesCreate() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-
-    setErrors((prev: any) => ({
-      ...prev,
-      [name]: "",
     }));
   };
   const handleSubmit = async () => {

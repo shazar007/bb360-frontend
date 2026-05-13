@@ -23,7 +23,6 @@ export default function CustomDatePicker({
   className = "",
   name,
   white = false,
-  placeholder = "Select date",
 }: CustomDatePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [internalValue, setInternalValue] = useState(
