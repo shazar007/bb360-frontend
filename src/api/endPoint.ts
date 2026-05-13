@@ -1,4 +1,5 @@
-export const BASE_URL = "https://bb360-backend.vercel.app";
+// export const BASE_URL = "https://bb360-backend.vercel.app";
+export const BASE_URL = "http://35.222.147.10/api";
 // export const BASE_URL = "http://localhost:5001";
 
 export const ENDPOINTS = {
