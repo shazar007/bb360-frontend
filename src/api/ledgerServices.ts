@@ -12,5 +12,11 @@ export const getAccountLedger = (
 };
 
 export const addDebitCreaitNotes = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.DEBIT_CREDIT_NOTE, values);
+  const token = localStorage.getItem("token");
+
+  return HTTP_CLIENT.post(ENDPOINTS.DEBIT_CREDIT_NOTE, values, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };

@@ -44,7 +44,7 @@ export default function ItemDetails() {
           </div>
         </div>
       </div>{" "}
-      <div className="mt-3 bg-white rounded-2xl">
+      <div className="pb-3 mt-3 bg-white rounded-2xl">
         <div>
           {" "}
           <p className="p-3 px-4 text-xs cursor-pointer text-primary">

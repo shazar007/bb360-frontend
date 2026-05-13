@@ -7,65 +7,132 @@ import CustomDatePicker from "../../../components/datePicker";
 import CustomTextarea from "../../../components/customTextarea";
 import { notifyError, notifySuccess } from "../../../components/toast";
 import { addDebitCreaitNotes } from "../../../api/ledgerServices";
+import type { AxiosError } from "axios";
+import { getAllDistributor } from "../../../api/distributorServices";
+import { useQuery } from "@tanstack/react-query";
+import { getAllVendors } from "../../../api/vendorServices";
+import { SyncLoader } from "react-spinners";
 
 export default function DebitCreditNote() {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     date: "",
     type: "",
     partyType: "",
     partyAccount: "",
-    referenceNumber: "",
+    referenceId: null,
     amount: "",
     description: "",
   });
+  const isEmpty = (value: any) => !value || value.toString().trim() === "";
+
+  const { data: AllDistributors } = useQuery({
+    queryKey: ["getAllDistributor"],
+    queryFn: getAllDistributor,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: AllVendors } = useQuery({
+    queryKey: ["getAllVendors"],
+    queryFn: getAllVendors,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+
+  const vendors = AllVendors?.data?.vendors || [];
+  const distributors = AllDistributors?.data?.distributors || [];
+
+  const partyOptions =
+    formData.partyType === "Vendor"
+      ? vendors.map((item: any) => ({
+          label: item.vendorName,
+          value: item._id,
+        }))
+      : formData.partyType === "Distributor"
+        ? distributors.map((item: any) => ({
+            label: item.distributorName,
+            value: item._id,
+          }))
+        : [];
+  const resetForm = () => {
+    setFormData({
+      date: "",
+      type: "",
+      partyType: "",
+      partyAccount: "",
+      referenceId: null,
+      amount: "",
+      description: "",
+    });
+  };
   const handleSave = async () => {
     const {
       date,
       type,
       partyType,
       partyAccount,
-      referenceNumber,
+      referenceId,
       amount,
       description,
     } = formData;
+
     if (
-      !date ||
-      !type ||
-      !partyType ||
-      !partyAccount ||
-      !referenceNumber ||
-      !amount ||
-      !description
+      isEmpty(date) ||
+      isEmpty(type) ||
+      isEmpty(partyType) ||
+      isEmpty(partyAccount) ||
+      isEmpty(amount) ||
+      isEmpty(description)
     ) {
       notifyError("All fields are required");
       return;
     }
+
     const payload = {
       date,
-      type,
-      partyType,
-      partyAccount,
-      referenceNumber,
-      amount: Number(amount),
       description,
+      partyAccount,
+      partyType,
+      referenceId,
+      debit: type === "Debit" ? Number(amount) : 0,
+      credit: type === "Credit" ? Number(amount) : 0,
     };
+
     try {
-      addDebitCreaitNotes(payload);
-      console.log("🚀 ~ payload:", payload);
+      setLoading(true);
+
+      await addDebitCreaitNotes(payload);
+
       notifySuccess("Saved Successfully");
-      setFormData({
-        date: "",
-        type: "",
-        partyType: "",
-        partyAccount: "",
-        referenceNumber: "",
-        amount: "",
-        description: "",
-      });
-    } catch (error: any) {
-      console.log(error);
-      notifyError(error?.response?.data?.message || "Something went wrong");
+      resetForm();
+    } catch (error: unknown) {
+      const err = error as AxiosError<any>;
+      notifyError(err?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
+  };
+  const isPartyLoading =
+    formData.partyType === "Vendor"
+      ? !AllVendors
+      : formData.partyType === "Distributor"
+        ? !AllDistributors
+        : false;
+  const handlePartyAccountClick = () => {
+    if (!formData.partyType) {
+      notifyError("Please select Party Type first");
+      return;
+    }
+  };
+  type PartyType = "Vendor" | "Distributor";
+  const partyNameMap: Record<PartyType, Record<string, string>> = {
+    Vendor: Object.fromEntries(vendors.map((v: any) => [v._id, v.vendorName])),
+    Distributor: Object.fromEntries(
+      distributors.map((d: any) => [d._id, d.distributorName]),
+    ),
   };
   return (
     <div className="mt-2">
@@ -77,7 +144,7 @@ export default function DebitCreditNote() {
           </p>
         </div>
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
             <Icon icon="ion:play-back-outline" className="w-5 h-5" />
             Back
           </button>
@@ -87,14 +154,20 @@ export default function DebitCreditNote() {
           </button>
           <button
             onClick={handleSave}
-            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer"
+            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
           >
-            <Icon icon="mynaui:save" className="w-5 h-5" />
-            Save
+            {loading ? (
+              <SyncLoader size={8} color="#ffffff" />
+            ) : (
+              <>
+                <Icon icon="mynaui:save" className="w-5 h-5" />
+                Save
+              </>
+            )}
           </button>
         </div>
       </div>
-      <div className="bg-bgprimary rounded-2xl mt-3">
+      <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">Select_Data</p>
@@ -137,45 +210,49 @@ export default function DebitCreditNote() {
               <CustomSelect
                 label="Party Type"
                 value={formData.partyType}
+                options={[
+                  { label: "Vendor", value: "Vendor" },
+                  { label: "Distributor", value: "Distributor" },
+                ]}
                 onChange={(val) =>
                   setFormData({
                     ...formData,
                     partyType: val,
+                    partyAccount: "",
                   })
                 }
-                options={[
-                  {
-                    label: "Vendor",
-                    value: "Vendor",
-                  },
-                  {
-                    label: "Distributor",
-                    value: "Distributor",
-                  },
-                ]}
-                placeholder="Vendor / Distributor"
               />
-              <CustomInput
+
+              <CustomSelect
                 label="Party Account"
-                placeholder="Noorsons Distributor"
+                options={partyOptions}
+                onMenuOpen={handlePartyAccountClick}
                 value={formData.partyAccount}
-                onChange={(e: any) =>
+                disabled={isPartyLoading}
+                placeholder={
+                  isPartyLoading ? (
+                    <SyncLoader size={6} color="#14CCC3" />
+                  ) : (
+                    "Select Party"
+                  )
+                }
+                onChange={(opt: any) =>
                   setFormData({
                     ...formData,
-                    partyAccount: e.target.value,
+                    partyAccount: opt?.value ?? opt,
                   })
                 }
               />
             </div>
             <div className="space-y-2">
               <CustomInput
-                label="Reference Number"
-                placeholder="INC22584"
-                value={formData.referenceNumber}
+                label="Reference Id"
+                placeholder="INC22584 (optional)"
+                value={formData.referenceId}
                 onChange={(e: any) =>
                   setFormData({
                     ...formData,
-                    referenceNumber: e.target.value,
+                    referenceId: e.target.value,
                   })
                 }
               />
@@ -223,8 +300,10 @@ export default function DebitCreditNote() {
                 formData.date || "-",
                 formData.type || "-",
                 formData.partyType || "-",
-                formData.partyAccount || "-",
-                formData.referenceNumber || "-",
+                partyNameMap[formData.partyType as keyof typeof partyNameMap]?.[
+                  formData.partyAccount
+                ] || "-",
+                formData.referenceId || "-",
                 formData.description || "-",
                 formData.amount || "-",
               ],

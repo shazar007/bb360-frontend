@@ -56,5 +56,5 @@ export const ENDPOINTS = {
   ATTENDANCE: "/attendance",
 
   // --------------Debit / Credit Note-------------
-  DEBIT_CREDIT_NOTE: "/attendance",
+  DEBIT_CREDIT_NOTE: "/ledgers/journal-voucher",
 };

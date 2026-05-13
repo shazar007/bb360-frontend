@@ -9,12 +9,14 @@ import dayjs from "dayjs";
 import { getAccountLedger } from "../../../api/ledgerServices";
 import { getAllDistributor } from "../../../api/distributorServices";
 import { getAllVendors } from "../../../api/vendorServices";
+import { SyncLoader } from "react-spinners";
 
 export default function AccountLedger() {
   const { goBack } = useAppNavigate();
 
   const [partyId, setPartyId] = useState<string>("");
   const [ledgerType, setLedgerType] = useState<string>("");
+  const [loadingParties, setLoadingParties] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
   const [fromDate, setFromDate] = useState("2026-05-01");
   const [toDate, setToDate] = useState("2026-05-10");
@@ -66,10 +68,12 @@ export default function AccountLedger() {
   const handleDateChange = (type: "from" | "to", date: any) => {
     setFilterLoading(true);
     const formatted = dayjs(date).format("YYYY-MM-DD");
+
     if (type === "from") setFromDate(formatted);
     else setToDate(formatted);
-  };
 
+    setTimeout(() => setFilterLoading(false), 300);
+  };
   const allLedgerEntries = ledgerData?.data?.ledger || [];
 
   useEffect(() => {
@@ -77,7 +81,12 @@ export default function AccountLedger() {
       setFilterLoading(false);
     }
   }, [isLoading, ledgerData]);
-
+  const isPartyLoading =
+    ledgerType === "Vendor"
+      ? !AllVendors
+      : ledgerType === "Distributor"
+        ? !AllDistributors
+        : false;
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -130,9 +139,18 @@ export default function AccountLedger() {
 
               <CustomSelect
                 label="Select Party"
-                placeholder="Noor Sons"
                 options={partyOptions}
                 value={partyId}
+                disabled={isPartyLoading}
+                placeholder={
+                  isPartyLoading ? (
+                    <SyncLoader size={6} color="#14CCC3" />
+                  ) : ledgerType === "Vendor" ? (
+                    "Select Vendor"
+                  ) : (
+                    "Select Distributor"
+                  )
+                }
                 onChange={(opt: any) => {
                   const val = opt?.value ?? opt;
                   setPartyId(val);
