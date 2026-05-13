@@ -55,7 +55,7 @@ export default function Filters({
   return (
     <div
       style={{ boxShadow: "-4px 0px 24px 0px #00000029" }}
-      className={`fixed top-0 right-0 w-110 flex flex-col h-screen bg-[#F6F6F6] rounded-tl-2xl rounded-bl-2xl z-50 transform transition-transform duration-300 ease-in-out
+      className={`fixed top-0 right-0 w-110 flex flex-col h-screen bg-bgprimary rounded-tl-2xl rounded-bl-2xl z-50 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
     >

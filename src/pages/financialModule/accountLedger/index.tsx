@@ -9,12 +9,14 @@ import dayjs from "dayjs";
 import { getAccountLedger } from "../../../api/ledgerServices";
 import { getAllDistributor } from "../../../api/distributorServices";
 import { getAllVendors } from "../../../api/vendorServices";
+import { SyncLoader } from "react-spinners";
 
 export default function AccountLedger() {
   const { goBack } = useAppNavigate();
 
   const [partyId, setPartyId] = useState<string>("");
   const [ledgerType, setLedgerType] = useState<string>("");
+  const [loadingParties, setLoadingParties] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
   const [fromDate, setFromDate] = useState("2026-05-01");
   const [toDate, setToDate] = useState("2026-05-10");
@@ -66,10 +68,12 @@ export default function AccountLedger() {
   const handleDateChange = (type: "from" | "to", date: any) => {
     setFilterLoading(true);
     const formatted = dayjs(date).format("YYYY-MM-DD");
+
     if (type === "from") setFromDate(formatted);
     else setToDate(formatted);
-  };
 
+    setTimeout(() => setFilterLoading(false), 300);
+  };
   const allLedgerEntries = ledgerData?.data?.ledger || [];
 
   useEffect(() => {
@@ -77,7 +81,12 @@ export default function AccountLedger() {
       setFilterLoading(false);
     }
   }, [isLoading, ledgerData]);
-
+  const isPartyLoading =
+    ledgerType === "Vendor"
+      ? !AllVendors
+      : ledgerType === "Distributor"
+        ? !AllDistributors
+        : false;
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -113,7 +122,6 @@ export default function AccountLedger() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-50.25">
             <div className="space-y-2">
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Ledger Type"
                 options={[
                   { label: "Vendor", value: "Vendor" },
@@ -130,11 +138,19 @@ export default function AccountLedger() {
               />
 
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Select Party"
-                placeholder="Noor Sons"
                 options={partyOptions}
                 value={partyId}
+                disabled={isPartyLoading}
+                placeholder={
+                  isPartyLoading ? (
+                    <SyncLoader size={6} color="#14CCC3" />
+                  ) : ledgerType === "Vendor" ? (
+                    "Select Vendor"
+                  ) : (
+                    "Select Distributor"
+                  )
+                }
                 onChange={(opt: any) => {
                   const val = opt?.value ?? opt;
                   setPartyId(val);
@@ -144,14 +160,12 @@ export default function AccountLedger() {
 
             <div className="space-y-2">
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="From Date"
                 value={fromDate}
                 onChange={(date: any) => handleDateChange("from", date)}
               />
 
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="To Date"
                 value={toDate}
                 onChange={(date: any) => handleDateChange("to", date)}

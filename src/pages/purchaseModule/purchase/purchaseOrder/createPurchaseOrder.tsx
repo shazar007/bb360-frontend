@@ -235,7 +235,6 @@ export default function CreatePurchaseOrder() {
                   setPartyCategory(selected?.category || "");
                 }}
                 options={partyAccounts}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
 
               <CustomInput
@@ -249,7 +248,6 @@ export default function CreatePurchaseOrder() {
               <CustomDatePicker
                 label="Date"
                 value={orderDate}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 onChange={(val) => setOrderDate(val)}
               />{" "}
               <CustomSelect
@@ -289,7 +287,6 @@ export default function CreatePurchaseOrder() {
               <CustomInput
                 label="Total Amount"
                 placeholder="Enter Total Amount"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 value={totalAmount}
                 disabled
               />

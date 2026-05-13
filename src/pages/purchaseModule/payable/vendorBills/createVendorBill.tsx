@@ -184,7 +184,6 @@ export default function CreateVendorBill() {
                 <div className="flex items-end gap-2">
                   <div className="flex-1">
                     <CustomInput
-                      className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                       label="Purchase Receving"
                       value={poNumber}
                       onChange={(e: any) => setPoNumber(e.target.value)}
@@ -205,7 +204,6 @@ export default function CreateVendorBill() {
 
                 <CustomInput
                   label="Invoice Date"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.date
                       ? new Date(purchaseOrderData.date).toLocaleDateString()
@@ -217,14 +215,12 @@ export default function CreateVendorBill() {
 
               <div className="space-y-2">
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Party Account"
                   value={purchaseOrderData?.partyAccount?.vendorName || ""}
                   disabled
                 />
 
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Party Categroy"
                   value={purchaseOrderData?.partyAccount?.vendorCategory || "-"}
                   disabled
@@ -233,14 +229,12 @@ export default function CreateVendorBill() {
 
               <div className="space-y-2">
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Delivery Address"
                   value={purchaseOrderData?.deliveryAddress}
                   disabled
                 />
 
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Type"
                   value={purchaseOrderData?.type || ""}
                   disabled
@@ -249,13 +243,11 @@ export default function CreateVendorBill() {
 
               <div className="space-y-2">
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Tax%"
                   value={purchaseOrderData?.taxPercentage || "0"}
                   disabled
                 />{" "}
                 <CustomInput
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   label="Total Amount"
                   value={purchaseOrderData?.totalAmount || "0"}
                   disabled

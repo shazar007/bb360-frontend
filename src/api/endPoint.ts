@@ -53,6 +53,9 @@ export const ENDPOINTS = {
   // --------------Account Ledger-------------
   ACCOUNT_LEDGER: "/ledgers",
 
-  // --------------Account Ledger-------------
+  // --------------Attendence-------------
   ATTENDANCE: "/attendance",
+
+  // --------------Debit / Credit Note-------------
+  DEBIT_CREDIT_NOTE: "/ledgers/journal-voucher",
 };

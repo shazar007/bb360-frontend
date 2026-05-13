@@ -260,7 +260,6 @@ export default function CreateReceivingChallan() {
                       onChange={(e: any) => {
                         setPoNumber(e.target.value);
                       }}
-                      className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                     />
                   </div>
 
@@ -282,7 +281,6 @@ export default function CreateReceivingChallan() {
 
                 <CustomDatePicker
                   label="Receiving Date"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={receivingDate}
                   onChange={(val) => setReceivingDate(val)}
                 />
@@ -290,7 +288,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Party Account"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.partyAccount
                       ? purchaseOrderData.partyAccount?.vendorName
@@ -300,7 +297,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Party Category"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.partyAccount
                       ? purchaseOrderData.partyAccount?.vendorCategory
@@ -312,7 +308,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Delivery Address"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData ? purchaseOrderData.deliveryAddress : ""
                   }
@@ -320,7 +315,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Type"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={purchaseOrderData ? purchaseOrderData.type : ""}
                   disabled
                 />
@@ -328,7 +322,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Tax%"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData ? purchaseOrderData.taxPercentage : ""
                   }
@@ -336,7 +329,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Total Amount"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={finalTotalAmount}
                   disabled
                 />
@@ -435,7 +427,6 @@ export default function CreateReceivingChallan() {
                   label="Expiry Date"
                   value={editRow?.expiryDate || ""}
                   onChange={(val) => handleChange("expiryDate", val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />{" "}
                 <CustomInput
                   label="Ordered Quantity"

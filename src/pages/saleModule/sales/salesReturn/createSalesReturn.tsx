@@ -259,7 +259,6 @@ export default function CreateSalesReturn() {
                 label="Return Date"
                 value={returnDate ? dayjs(returnDate).format("YYYY-MM-DD") : ""}
                 onChange={(val: any) => setReturnDate(val)}
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 disabled
               />
               <CustomInput
@@ -267,7 +266,6 @@ export default function CreateSalesReturn() {
                 value={description}
                 onChange={(e: any) => setDescription(e.target.value)}
                 placeholder="Enter Description"
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
               />
               <CustomInput
                 label="Distributor Id"
@@ -279,12 +277,7 @@ export default function CreateSalesReturn() {
                 value={selectedDistributor.contactNumber}
                 disabled
               />
-              <CustomInput
-                label="Return Total"
-                value={returnTotal}
-                disabled
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-              />
+              <CustomInput label="Return Total" value={returnTotal} disabled />
             </div>
           </div>
         </div>

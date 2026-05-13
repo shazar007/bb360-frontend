@@ -30,18 +30,14 @@ export default function ItemUpdate() {
   } = useQuery({
     queryKey: ["getAllItems"],
     queryFn: getAllItems,
-
     placeholderData: (prev) => prev,
-
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
   const items = AllItems?.data?.items || [];
-
   const handleEdit = (index: number) => {
     setSelectedIndex(index);
     setIsEdit(true);
@@ -58,11 +54,8 @@ export default function ItemUpdate() {
       console.log("NO ID FOUND ❌");
       return;
     }
-
     setDeleteLoading(true);
-
     console.log("DELETING ID:", selectedId);
-
     deleteItem(selectedId)
       .then(() => {
         notifySuccess("Item deleted successfully ✅");
@@ -78,18 +71,15 @@ export default function ItemUpdate() {
         setSelectedId(null);
       });
   };
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setOpenMenuIndex(null);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   return (
     <>
       <div className="mt-8">
@@ -100,7 +90,6 @@ export default function ItemUpdate() {
               Data Upload / Items Update
             </p>
           </div>
-
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative w-full md:w-60">
               <input
@@ -112,7 +101,6 @@ export default function ItemUpdate() {
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
               />
             </div>
-
             <button
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm bg-white rounded-md cursor-pointer md:w-27 text-heading1"
@@ -122,12 +110,10 @@ export default function ItemUpdate() {
             </button>
           </div>
         </div>
-
         <div className="pb-4 mt-2 bg-white rounded-2xl">
           <div className="flex justify-between items-center px-4.5 py-3">
             <p className="text-xs font-semibold text-primary">Items_List</p>
           </div>
-
           <CustomTable
             norounded
             loading={isLoading}
@@ -139,7 +125,6 @@ export default function ItemUpdate() {
               "Product Name",
               "Item Category",
               "Units of Measure (UOM)",
-
               "T.P",
               "M.R.P",
               "Status",
@@ -154,7 +139,6 @@ export default function ItemUpdate() {
                       setOpenMenuIndex(openMenuIndex === index ? null : index)
                     }
                   />
-
                   {openMenuIndex === index && (
                     <div className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6">
                       <button
@@ -163,7 +147,6 @@ export default function ItemUpdate() {
                       >
                         Edit Product
                       </button>
-
                       <button
                         className="w-full px-2 py-1 text-left text-red-600 cursor-pointer hover:bg-gray-100"
                         onClick={() => {
@@ -176,24 +159,24 @@ export default function ItemUpdate() {
                     </div>
                   )}
                 </div>,
-
                 <Icon
                   icon="f7:chevron-right-square"
                   className="text-lg cursor-pointer text-primary"
                   onClick={() =>
-                    navigate("/application-setup/data-upload/item-details", {
-                      state: {
-                        rowData: item,
+                    navigate(
+                      "/application-setup/data-upload/item-update-details",
+                      {
+                        state: {
+                          rowData: item,
+                        },
                       },
-                    })
+                    )
                   }
                 />,
-
                 item.itemCode || "-",
                 item.itemName || "-",
                 item.itemCategory || "-",
                 item.uom || "-",
-
                 item.tp || "-",
                 item.mrp || "-",
 
@@ -205,7 +188,6 @@ export default function ItemUpdate() {
           />
         </div>
       </div>
-
       {isEdit && selectedIndex !== null && (
         <ItemModel
           close={() => setIsEdit(false)}
@@ -213,16 +195,12 @@ export default function ItemUpdate() {
           data={items[selectedIndex]}
           onSave={(values: any) => {
             const item = items[selectedIndex];
-
             if (!item?._id) {
               notifyError("Invalid Item ID ❌");
               return;
             }
-
             const { batchNumber, expiryDate, ...safeValues } = values;
-
             setSaveLoading(true);
-
             updateItem(item._id, safeValues)
               .then(() => {
                 notifySuccess("Item updated successfully ✅");
@@ -238,13 +216,11 @@ export default function ItemUpdate() {
           }}
         />
       )}
-
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/50">
           <div className="bg-white shadow-xl w-100 rounded-2xl">
             <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
               <p onClick={() => setConfirm(false)} className="cursor-pointer">
-                {" "}
                 ✕
               </p>
             </div>
@@ -256,7 +232,6 @@ export default function ItemUpdate() {
                 Are you sure to delete the product?
               </p>
             </div>
-
             <div className="flex justify-between gap-2 p-4 pt-0">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
@@ -277,7 +252,7 @@ export default function ItemUpdate() {
                 {deleteLoading ? (
                   <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
                 ) : (
-                  "   Delete"
+                  "Delete"
                 )}
               </button>
             </div>

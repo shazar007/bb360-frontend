@@ -1,24 +1,53 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import Attendance from "../../pages/hrModule/attendance";
-import Setting from "../../pages/hrModule/setting";
-import Payroll from "../../pages/hrModule/payroll";
-import Events from "../../pages/hrModule/events";
-import Leaves from "../../pages/hrModule/leaves";
-import PayrollDetails from "../../pages/hrModule/payroll/payRollDetails";
+
+import HrSetupRouting from "./hrSetupRouting";
+import EmployeePerformanceRouting from "./employeePerformanceRouting";
+import EmployeeLeaveExpenseRouting from "./employeeLeaveExpenseRouting";
+import AttendanceSetupRouting from "./attendanceSetupRouting";
+import HrAttendanceRouting from "./hrAttendanceRouting";
+import EmployeeAttendanceReportsRouting from "./employeeAttendanceReportsRouting";
+import PayrollSetupRouting from "./payrollSetupRouting";
+import PayrollProcessRouting from "./payrollProcessRouting";
+import EmployeePayrollReportsRouting from "./employeePayrollReportsRouting";
+import EmployeeReportsRouting from "./employeeReportsRouting";
+
 export default function HrModuleRouting() {
   useEffect(() => {
-    document.title = "Hr Module — BB-360";
+    document.title = "HR Module — BB-360";
   }, []);
+
   return (
     <Routes>
-      <Route path="/attendance" element={<Attendance />} />
-      <Route path="/leaves" element={<Leaves />} />
-      <Route path="/events" element={<Events />} />
-      <Route path="/payroll" element={<Payroll />} />
-      <Route path="/payroll-details" element={<PayrollDetails />} />
+      <Route path="/hr-setup/*" element={<HrSetupRouting />} />
 
-      <Route path="/setting" element={<Setting />} />
+      <Route
+        path="/employee-performance/*"
+        element={<EmployeePerformanceRouting />}
+      />
+
+      <Route
+        path="/employee-leave-expense/*"
+        element={<EmployeeLeaveExpenseRouting />}
+      />
+
+      <Route path="/attendance-setup/*" element={<AttendanceSetupRouting />} />
+
+      <Route path="/hr-attendance/*" element={<HrAttendanceRouting />} />
+
+      <Route
+        path="/employee-attendance-reports/*"
+        element={<EmployeeAttendanceReportsRouting />}
+      />
+
+      <Route path="/payroll-setup/*" element={<PayrollSetupRouting />} />
+      <Route path="/payroll-process/*" element={<PayrollProcessRouting />} />
+      <Route
+        path="/employee-payroll-reports/*"
+        element={<EmployeePayrollReportsRouting />}
+      />
+
+      <Route path="/employee-reports/*" element={<EmployeeReportsRouting />} />
     </Routes>
   );
 }
