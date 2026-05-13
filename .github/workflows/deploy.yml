@@ -1,0 +1,45 @@
+name: Deploy React App
+
+on:
+  push:
+    branches:
+      - main # runs only when you push to main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Pull your code into the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Build the React app
+      - name: Build
+        run: npm run build
+
+      # 5. Set up SSH key from GitHub secrets
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
+
+      # 6. Copy build folder to VM using rsync
+      - name: Deploy to GCP VM
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key" \
+            ./dist/ \
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:/var/www/html/
