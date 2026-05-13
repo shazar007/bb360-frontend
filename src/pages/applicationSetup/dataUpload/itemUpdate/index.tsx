@@ -181,11 +181,14 @@ export default function ItemUpdate() {
                   icon="f7:chevron-right-square"
                   className="text-lg cursor-pointer text-primary"
                   onClick={() =>
-                    navigate("/application-setup/data-upload/item-details", {
-                      state: {
-                        rowData: item,
+                    navigate(
+                      "/application-setup/data-upload/item-update-details",
+                      {
+                        state: {
+                          rowData: item,
+                        },
                       },
-                    })
+                    )
                   }
                 />,
 
