@@ -3,7 +3,7 @@ name: Deploy React App
 on:
   push:
     branches:
-      - main # runs only when you push to main //
+      - main
 
 jobs:
   deploy:
@@ -36,7 +36,16 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
 
-      # 6. Copy build folder to VM using rsync
+      # 6. Test SSH connection (debug)
+      - name: Test SSH connection
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+              -vvv \
+              -o StrictHostKeyChecking=no \
+              ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} \
+              "echo SSH connection successful!"
+
+      # 7. Copy build folder to VM using rsync
       - name: Deploy to GCP VM
         run: |
           rsync -avz --delete \
