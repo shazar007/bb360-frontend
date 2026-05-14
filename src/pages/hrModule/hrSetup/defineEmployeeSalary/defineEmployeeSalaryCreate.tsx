@@ -1,11 +1,76 @@
 import { Icon } from "@iconify/react";
+import { useState } from "react";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import CustomSelectSearch from "../../../../components/customSelectSearch";
+import CustomTable from "../../../../components/customTable";
 import CustomInput from "../../../../components/customInput";
-import CustomSelect from "../../../../components/customSelect";
 import CustomDatePicker from "../../../../components/datePicker";
 
 export default function DefineEmployeeSalaryCreate() {
+  const [loading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState({
+    employee: "",
+    creationDate: "",
+    salary: "",
+  });
+
+  const handleChange = (field: string, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    if (!formData.employee) {
+      notifyError("Employee is required");
+      return false;
+    }
+
+    if (!formData.creationDate) {
+      notifyError("Creation Date is required");
+      return false;
+    }
+
+    if (!formData.salary) {
+      notifyError("Salary is required");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const payload = {
+      employee_id: formData.employee,
+      creationDate: formData.creationDate,
+      salary: formData.salary,
+    };
+
+    console.log("Payload => ", payload);
+
+    try {
+      setLoading(true);
+
+      // const response = await createEmployeeSalary(payload);
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      notifySuccess("Employee Salary Created Successfully");
+
+      console.log(payload);
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-[#f6f6f6] rounded-2xl mt-3">
+    <div className="mt-3 bg-bgprimary rounded-2xl">
       <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
@@ -30,7 +95,9 @@ export default function DefineEmployeeSalaryCreate() {
             </div>
 
             <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+              style={{
+                boxShadow: "0px 1px 12px 0px #0000001F",
+              }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
               <Icon icon="mage:filter" className="text-lg" />
@@ -38,7 +105,9 @@ export default function DefineEmployeeSalaryCreate() {
             </button>
 
             <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+              style={{
+                boxShadow: "0px 1px 12px 0px #0000001F",
+              }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-40"
             >
               <Icon icon="basil:add-outline" className="text-lg" />
@@ -46,11 +115,21 @@ export default function DefineEmployeeSalaryCreate() {
             </button>
 
             <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
+              onClick={handleSubmit}
+              disabled={loading}
+              style={{
+                boxShadow: "0px 1px 12px 0px #0000001F",
+              }}
+              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-50"
             >
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Create
+              {loading ? (
+                "Loading..."
+              ) : (
+                <>
+                  <Icon icon="basil:add-outline" className="text-lg" />
+                  Create
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -63,79 +142,66 @@ export default function DefineEmployeeSalaryCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
-            <CustomSelect label="Employee" placeholder="Lorem Ipsum" />
-            <CustomSelect label="Current Salary" placeholder="09:00 AM" />
-            <CustomSelect label="Work Hours Per Day" placeholder="8hr" />
-            <CustomInput label="Full Duty Minimum Min" placeholder="-" />
-
-            <CustomDatePicker label="Creation Date" placeholder="01-Mar-2026" />
-            <CustomSelect label="End Hour" placeholder="09:00 AM" />
-            <CustomSelect label="Half Mark After" placeholder="12:30 PM" />
-            <CustomInput label="Half Duty Minimum Min" placeholder="-" />
+            <CustomSelectSearch
+              label="Employee"
+              placeholder="Select Employee"
+              value={formData.employee}
+              onChange={(value: any) => handleChange("employee", value)}
+              options={[
+                {
+                  label: "Ali Hassan",
+                  value: "1",
+                },
+                {
+                  label: "Bilal Ahmed",
+                  value: "2",
+                },
+                {
+                  label: "Usman Khan",
+                  value: "3",
+                },
+              ]}
+            />
+            <CustomInput
+              label="Salary"
+              placeholder="Enter Salary"
+              value={formData.salary}
+              onChange={(value: any) => handleChange("salary", value)}
+            />
+            <CustomDatePicker
+              label="Creation Date"
+              value={formData.creationDate}
+              onChange={(value: any) => handleChange("creationDate", value)}
+            />
           </div>
         </div>
+        <div className="mt-3 bg-bgprimary rounded-2xl">
+          <div className="mt-3">
+            <CustomTable
+              loading={false}
+              height="60vh"
+              headers={[
+                "Edit",
+                "Employee ID",
+                "Employee Name",
+                "Creation Date",
+                "Salary",
+              ]}
+              data={[
+                [
+                  <Icon
+                    icon="basil:edit-outline"
+                    className="text-lg cursor-pointer text-primary"
+                  />,
 
-        <div className="mt-2 bg-white rounded-2xl">
-          <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
-            <p className="text-xs font-semibold text-heading1">Working Days</p>
-          </div>
+                  "EMP-1226",
 
-          <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-y-6">
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Monday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Tuesday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Wednesday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Thursday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Friday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Saturday</p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-primary text-lg"
-              />
-              <p className="text-xs text-heading1">Sunday</p>
-            </div>
+                  "Mohamed Sayah",
+                  "13-March-2025",
+                  "50,000",
+                ],
+              ]}
+            />
           </div>
         </div>
       </div>

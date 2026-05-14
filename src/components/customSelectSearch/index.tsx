@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
+import { SyncLoader } from "react-spinners";
 
 type Option = {
   label: any;
@@ -18,6 +19,7 @@ type CustomSelectProps = {
   title?: string;
   className?: string;
   white?: boolean;
+  loading?: boolean;
 };
 
 export default function CustomSelectSearch({
@@ -32,6 +34,7 @@ export default function CustomSelectSearch({
   title,
   className = "",
   white = false,
+  loading = false,
 }: CustomSelectProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -39,6 +42,7 @@ export default function CustomSelectSearch({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const selected = options.find((opt) => opt.value === value);
+
   const filteredOptions = options.filter((opt) =>
     String(opt.label).toLowerCase().includes(search.toLowerCase()),
   );
@@ -51,6 +55,7 @@ export default function CustomSelectSearch({
         setSearch("");
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -72,17 +77,25 @@ export default function CustomSelectSearch({
       <div
         title={disabled ? title : undefined}
         onClick={() => {
-          if (disabled || options.length === 0) return;
+          if (disabled || loading || options.length === 0) return;
           setOpen((prev) => !prev);
         }}
         onBlur={onBlur}
         className={`flex items-center justify-between h-10 px-4 rounded-md text-xs
         ${white ? "bg-white" : "bg-[#ECF0F4]"}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        ${
+          disabled || loading
+            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer"
+        }
         ${className}`}
       >
         <span className={selected ? "text-heading1" : "text-gray-400"}>
-          {selected?.label ?? placeholder}
+          {loading ? (
+            <SyncLoader color="#14CCC3" size={6} speedMultiplier={0.6} />
+          ) : (
+            (selected?.label ?? placeholder)
+          )}
         </span>
 
         <Icon
@@ -94,7 +107,7 @@ export default function CustomSelectSearch({
         />
       </div>
 
-      {open && options.length > 0 && (
+      {open && (
         <div className="absolute z-50 w-full py-2 mt-1 bg-white rounded-md shadow-md top-full">
           <div className="p-2 border-b">
             <input
@@ -105,31 +118,36 @@ export default function CustomSelectSearch({
               onChange={(e) => setSearch(e.target.value)}
               className="w-full px-2 py-1 text-xs border-[0.5px] border-gray-300 h-10 rounded outline-none"
             />
-          </div>
-
-          <div className="overflow-auto max-h-48">
-            {filteredOptions.length > 0 ? (
-              filteredOptions.map((opt) => {
-                return (
-                  <div
-                    key={opt.value}
-                    onClick={() => {
-                      onChange(opt.value);
-                      setOpen(false);
-                      setSearch("");
-                    }}
-                    className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
-                  >
-                    {opt.label}
+          </div>{" "}
+          {loading ? (
+            <div className="px-4 py-3 text-xs text-gray-400">
+              <SyncLoader color="#14CCC3" size={6} speedMultiplier={0.6} />
+            </div>
+          ) : (
+            <>
+              <div className="overflow-auto max-h-48">
+                {filteredOptions.length > 0 ? (
+                  filteredOptions.map((opt) => (
+                    <div
+                      key={opt.value}
+                      onClick={() => {
+                        onChange(opt.value);
+                        setOpen(false);
+                        setSearch("");
+                      }}
+                      className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
+                    >
+                      {opt.label}
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-4 py-3 text-xs text-gray-400">
+                    No results found
                   </div>
-                );
-              })
-            ) : (
-              <div className="px-4 py-3 text-xs text-gray-400">
-                No results found
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       )}
     </div>

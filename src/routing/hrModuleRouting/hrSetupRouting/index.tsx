@@ -1,5 +1,3 @@
-// hrSetupRouting/index.tsx
-
 import { Routes, Route } from "react-router-dom";
 
 import { employeeRoutes } from "./employees";

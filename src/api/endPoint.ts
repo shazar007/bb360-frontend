@@ -58,4 +58,10 @@ export const ENDPOINTS = {
 
   // --------------Debit / Credit Note-------------
   DEBIT_CREDIT_NOTE: "/ledgers/journal-voucher",
+
+  // --------------Employees-------------
+  EMPLOYEES: "/employees",
+
+  // --------------Upload-------------
+  UPLOAD_IMAGE: "/image-upload/upload",
 };

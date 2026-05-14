@@ -1,13 +1,137 @@
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import CustomInput from "../../../../components/customInput";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
 
 export default function DefineEmployeeSalary() {
   const { goTo } = useAppNavigate();
 
+  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [editData, setEditData] = useState<any>({
+    id: "",
+    employeeId: "",
+    employeeName: "",
+    currentSalary: "",
+    newSalary: "",
+    effectiveDate: "",
+    changeAmount: "",
+    changePercent: "",
+    creationDate: "",
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setEditData((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    if (!editData.employeeId) {
+      notifyError("Employee ID is required");
+      return;
+    }
+
+    if (!editData.employeeName) {
+      notifyError("Employee Name is required");
+      return;
+    }
+
+    if (!editData.currentSalary) {
+      notifyError("Current Salary is required");
+      return;
+    }
+
+    if (!editData.newSalary) {
+      notifyError("New Salary is required");
+      return;
+    }
+
+    if (!editData.effectiveDate) {
+      notifyError("Effective Date is required");
+      return;
+    }
+
+    const payload = {
+      id: editData.id,
+      employee_id: editData.employeeId,
+      employee_name: editData.employeeName,
+      current_salary: editData.currentSalary,
+      new_salary: editData.newSalary,
+      effective_date: editData.effectiveDate,
+      change_amount: editData.changeAmount,
+      change_percent: editData.changePercent,
+      creation_date: editData.creationDate,
+    };
+
+    console.log("Update Payload => ", payload);
+
+    try {
+      setLoading(true);
+
+      // API CALL
+      // await updateEmployeeSalary(payload);
+
+      // demo delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      notifySuccess("Employee Salary Updated Successfully");
+
+      setOpenModal(false);
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const salaryData = [
+    {
+      id: 1,
+      employeeId: "EMP-1226",
+      employeeName: "Mohamed Sayah",
+      currentSalary: "50,000",
+      newSalary: "60,000",
+      effectiveDate: "20-May-2026",
+      changeAmount: "10,000",
+      changePercent: "20%",
+      creationDate: "13-March-2025",
+    },
+
+    {
+      id: 2,
+      employeeId: "EMP-1526",
+      employeeName: "Bilal Hassan",
+      currentSalary: "70,000",
+      newSalary: "80,000",
+      effectiveDate: "25-May-2026",
+      changeAmount: "10,000",
+      changePercent: "14%",
+      creationDate: "15-March-2025",
+    },
+  ];
+
+  const handleEdit = (row: any) => {
+    setEditData(row);
+    setOpenModal(true);
+    setOpenDropdown(null);
+  };
+
+  const handleDelete = (id: number) => {
+    console.log("Delete ID => ", id);
+
+    setOpenDropdown(null);
+  };
+
   return (
     <>
-      <div className="mt-8">
+      <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -63,7 +187,7 @@ export default function DefineEmployeeSalary() {
               loading={false}
               height="60vh"
               headers={[
-                "Edit",
+                "Action",
                 "Employee ID",
                 "Employee Name",
                 "Current Salary",
@@ -73,34 +197,148 @@ export default function DefineEmployeeSalary() {
                 "Change %",
                 "Creation Date",
               ]}
-              data={[
-                [
+              data={salaryData.map((row, index) => [
+                <div className="relative" key={row.id}>
                   <Icon
-                    icon="basil:edit-outline"
+                    icon="qlementine-icons:menu-burger-16"
                     className="text-lg cursor-pointer text-primary"
-                  />,
+                    onClick={() =>
+                      setOpenDropdown(openDropdown === index ? null : index)
+                    }
+                  />
 
-                  "EMP-1226",
+                  {openDropdown === index && (
+                    <div
+                      className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md cursor-pointer -right-15 top-6"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() => handleEdit(row)}
+                        className="w-full px-2 py-1 text-left hover:bg-gray-100"
+                      >
+                        Edit
+                      </button>
 
-                  "Mohamed Sayah",
-
-                  "50,000",
-
-                  "-",
-
-                  "20-May-2026",
-
-                  "-",
-
-                  "-",
-
-                  "13-March-2025",
-                ],
-              ]}
+                      <button className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100">
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>,
+                row.employeeId,
+                row.employeeName,
+                row.currentSalary,
+                row.newSalary,
+                row.effectiveDate,
+                row.changeAmount,
+                row.changePercent,
+                row.creationDate,
+              ])}
             />
           </div>
         </div>
       </div>
+
+      {openModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-xs font-semibold text-heading1">
+                Update Employee Salary
+              </h2>
+
+              <button
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+                className="text-xl cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
+              <CustomInput
+                label="Employee ID"
+                value={editData.employeeId}
+                onChange={(e: any) =>
+                  handleInputChange("employeeId", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Employee Name"
+                value={editData.employeeName}
+                onChange={(e: any) =>
+                  handleInputChange("employeeName", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Current Salary"
+                value={editData.currentSalary}
+                onChange={(e: any) =>
+                  handleInputChange("currentSalary", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="New Salary"
+                value={editData.newSalary}
+                onChange={(e: any) =>
+                  handleInputChange("newSalary", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Effective Date"
+                value={editData.effectiveDate}
+                onChange={(e: any) =>
+                  handleInputChange("effectiveDate", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Change Amount"
+                value={editData.changeAmount}
+                onChange={(e: any) =>
+                  handleInputChange("changeAmount", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Change %"
+                value={editData.changePercent}
+                onChange={(e: any) =>
+                  handleInputChange("changePercent", e.target.value)
+                }
+              />
+
+              <CustomInput
+                label="Creation Date"
+                value={editData.creationDate}
+                onChange={(e: any) =>
+                  handleInputChange("creationDate", e.target.value)
+                }
+              />
+            </div>
+
+            <div className="flex justify-end p-4">
+              <button
+                onClick={handleUpdate}
+                disabled={loading}
+                className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
+              >
+                {loading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Update"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function RequisitionProcurement() {
   const navigate = useNavigate();
   return (
-    <div className="mt-8">
+    <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -79,7 +79,6 @@ export default function RequisitionProcurement() {
                 icon="basil:edit-outline"
                 className="text-lg cursor-pointer text-primary"
               />,
-
               "236",
               "05-Mar-2026",
               "RQ000045",

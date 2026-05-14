@@ -12,12 +12,14 @@ export const HTTP_CLIENT = axios.create({
 export const setupInterceptors = (navigate: any) => {
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
-      const token = Cookies.get("token");
+      const token = Cookies.get("token") || localStorage.getItem("token");
 
-      console.log("TOKEN FROM COOKIE:", token);
+      console.log("TOKEN FROM COOKIE:", token); // is this null?
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        console.warn("⚠️ No token found — request will be unauthorized");
       }
 
       return config;

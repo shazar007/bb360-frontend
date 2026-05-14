@@ -1,14 +1,18 @@
 import { Icon } from "@iconify/react";
-
 import CustomSelect from "../../../.../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
+import { addEmployee } from "../../../../api/employeesServices";
+import { useAppNavigate } from "../../../../hooks/navigation";
+import CustomImagePicker from "../../../../components/customImagePicker";
 
 export default function EmployeesCreate() {
+  const [loading, setLoading] = useState(false);
+  const { goBack } = useAppNavigate();
   const [formData, setFormData] = useState({
-    transactionNumber: "",
     name: "",
     gender: "",
     religion: "",
@@ -17,6 +21,7 @@ export default function EmployeesCreate() {
     dob: "",
     cnic: "",
     city: "",
+    image: "",
     country: "",
     phoneNumber: "",
     address: "",
@@ -28,25 +33,17 @@ export default function EmployeesCreate() {
     definePayroll: "",
     status: "",
   });
-
-  const [errors, setErrors] = useState<any>({});
-
   const validateForm = () => {
     let newErrors: any = {};
-
     Object.keys(formData).forEach((key) => {
       if (!formData[key as keyof typeof formData]) {
         newErrors[key] = "This field is required";
       }
     });
-
-    setErrors(newErrors);
-
     if (Object.keys(newErrors).length > 0) {
       notifyError("Please fill all required fields");
       return false;
     }
-
     return true;
   };
   const handleChange = (name: string, value: any) => {
@@ -54,48 +51,44 @@ export default function EmployeesCreate() {
       ...prev,
       [name]: value,
     }));
-
-    setErrors((prev: any) => ({
-      ...prev,
-      [name]: "",
-    }));
   };
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
     const payload = {
-      transactionNumber: formData.transactionNumber,
       name: formData.name,
       gender: formData.gender,
       religion: formData.religion,
       hireDate: formData.hireDate,
       fatherName: formData.fatherName,
       dob: formData.dob,
-      cnic: formData.cnic,
+      cnic: Number(formData.cnic),
       city: formData.city,
       country: formData.country,
-      phoneNumber: formData.phoneNumber,
+      phoneNumber: Number(formData.phoneNumber),
       address: formData.address,
       designation: formData.designation,
       employeeGrade: formData.employeeGrade,
       departmentName: formData.departmentName,
       locationName: formData.locationName,
       employeeType: formData.employeeType,
+      image: formData.image,
       definePayroll: formData.definePayroll,
       status: formData.status,
     };
-
     console.log("Payload =>", payload);
-
     try {
-      // await addEmployees(payload);
+      setLoading(true);
+      await addEmployee(payload);
       notifySuccess("Employee Created Successfully");
-
       // console.log("API Response =>", data);
-    } catch (error) {
-      notifyError("Something went wrong");
-
+    } catch (error: any) {
       console.log("API Error =>", error);
+      notifyError(
+        error?.response?.data?.message ||
+          "Something went wrong while creating employee",
+      );
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -121,19 +114,31 @@ export default function EmployeesCreate() {
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
             />
           </div>
-
+          <button
+            onClick={goBack}
+            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F]"
+          >
+            <Icon icon="ion:play-back-outline" className="w-5 h-5" />
+            Back
+          </button>
           <button
             onClick={handleSubmit}
             style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-28"
           >
-            <Icon icon="basil:add-outline" className="text-lg" />
-            Save
+            {loading ? (
+              <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+            ) : (
+              <>
+                <Icon icon="basil:add-outline" className="text-lg" />
+                Save
+              </>
+            )}
           </button>
         </div>
       </div>
 
-      <div className="bg-bgprimary rounded-2xl mt-3">
+      <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">
@@ -142,15 +147,6 @@ export default function EmployeesCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
-            <CustomInput
-              label="Transaction Number"
-              placeholder="TO BE GENERATE"
-              value={formData.transactionNumber}
-              onChange={(e: any) =>
-                handleChange("transactionNumber", e.target.value)
-              }
-            />
-
             <CustomInput
               label="Name"
               placeholder="Lorem Ipsum"
@@ -203,6 +199,12 @@ export default function EmployeesCreate() {
               value={formData.cnic}
               onChange={(e: any) => handleChange("cnic", e.target.value)}
             />
+            <CustomImagePicker
+              label="Image"
+              value={formData.image}
+              placeholder="Pick Image"
+              onChange={(file) => handleChange("image", file)}
+            />
           </div>
         </div>
 
@@ -220,19 +222,17 @@ export default function EmployeesCreate() {
               value={formData.city}
               onChange={(e: any) => handleChange("city", e.target.value)}
             />
-
-            <CustomInput
-              label="Country"
-              placeholder="Enter Country"
-              value={formData.country}
-              onChange={(e: any) => handleChange("country", e.target.value)}
-            />
-
             <CustomInput
               label="Phone Number"
               placeholder="Enter Phone Number"
               value={formData.phoneNumber}
               onChange={(e: any) => handleChange("phoneNumber", e.target.value)}
+            />
+            <CustomInput
+              label="Country"
+              placeholder="Enter Country"
+              value={formData.country}
+              onChange={(e: any) => handleChange("country", e.target.value)}
             />
 
             <CustomInput
@@ -253,18 +253,16 @@ export default function EmployeesCreate() {
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
           <CustomSelect
             label="Designation"
-            placeholder="Lorem Ipsum"
+            placeholder="Select Designation"
             value={formData.designation}
             onChange={(value: any) => handleChange("designation", value)}
+            options={[
+              { label: "Software Engineer", value: "software_engineer" },
+              { label: "Frontend Developer", value: "frontend_developer" },
+              { label: "Backend Developer", value: "backend_developer" },
+              { label: "HR Manager", value: "hr_manager" },
+            ]}
           />
-
-          <CustomDatePicker
-            label="Employee Grade"
-            placeholder="01-Mar-2026"
-            value={formData.employeeGrade}
-            onChange={(value: any) => handleChange("employeeGrade", value)}
-          />
-
           <CustomInput
             label="Department Name"
             placeholder="Enter Department Name"
@@ -273,34 +271,46 @@ export default function EmployeesCreate() {
               handleChange("departmentName", e.target.value)
             }
           />
-
-          <CustomInput
-            label="Location Name"
-            placeholder="Enter Location"
-            value={formData.locationName}
-            onChange={(e: any) => handleChange("locationName", e.target.value)}
-          />
-
           <CustomSelect
             label="Employee Type"
-            placeholder="Enter Employee Type"
+            placeholder="Select Employee Type"
             value={formData.employeeType}
             onChange={(value: any) => handleChange("employeeType", value)}
+            options={[
+              { label: "Permanent", value: "permanent" },
+              { label: "Contract", value: "contract" },
+              { label: "Intern", value: "intern" },
+              { label: "Part Time", value: "part_time" },
+            ]}
           />
-
-          <CustomSelect
-            className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-            label="Define Payroll"
-            placeholder="Lorem Ipsum"
-            value={formData.definePayroll}
-            onChange={(value: any) => handleChange("definePayroll", value)}
-          />
-
           <CustomInput
             label="Status"
             placeholder="Enter Status"
             value={formData.status}
             onChange={(e: any) => handleChange("status", e.target.value)}
+          />{" "}
+          <CustomDatePicker
+            label="Employee Grade"
+            placeholder="01-Mar-2026"
+            value={formData.employeeGrade}
+            onChange={(value: any) => handleChange("employeeGrade", value)}
+          />
+          <CustomInput
+            label="Job Location"
+            placeholder="Enter Location"
+            value={formData.locationName}
+            onChange={(e: any) => handleChange("locationName", e.target.value)}
+          />
+          <CustomSelect
+            label="Define Payroll"
+            placeholder="Select Payroll Type"
+            value={formData.definePayroll}
+            onChange={(value: any) => handleChange("definePayroll", value)}
+            options={[
+              { label: "Monthly Payroll", value: "monthly" },
+              { label: "Weekly Payroll", value: "weekly" },
+              { label: "Daily Wage", value: "daily" },
+            ]}
           />
         </div>
       </div>
