@@ -1,5 +1,4 @@
 import { Icon } from "@iconify/react";
-
 import CustomSelect from "../../../.../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
@@ -16,38 +15,23 @@ export default function EmployeesCreate() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative w-full md:w-60">
-            <input
-              placeholder="Search"
-              className="w-full h-10 pl-10 pr-4 bg-white rounded-sm focus:outline-none placeholder:text-heading1/36 placeholder:text-sm"
-            />
-
-            <Icon
-              icon="mynaui:search"
-              className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
-            />
-          </div>
-
-          <button
-            style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-            className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
-          >
-            <Icon icon="basil:add-outline" className="text-lg" />
-            Upload
+        <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
+            <Icon icon="ion:play-back-outline" className="w-5 h-5" />
+            Back
           </button>
-
-          <button
-            style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-            className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-45"
-          >
-            <Icon icon="basil:add-outline" className="text-lg" />
-            Download Template
+          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F]">
+            <Icon icon="ion:print-outline" className="w-5 h-5" />
+            Print
+          </button>
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary">
+            <Icon icon="mynaui:save" className="w-5 h-5" />
+            Save
           </button>
         </div>
       </div>
 
-      <div className="bg-bgprimary rounded-2xl mt-3">
+      <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">
@@ -79,10 +63,8 @@ export default function EmployeesCreate() {
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 xl:gap-y-2 xl:gap-x-40.25 w-full lg:w-[46.5%]">
             <CustomDatePicker label="City" placeholder="01-Mar-2026" />
-
             <CustomDatePicker label="Country" placeholder="01-Mar-2026" />
             <CustomInput label="Phone Number" placeholder="Lorem Ipsum" />
-
             <CustomInput label="Address" placeholder="Lorem Ipsum" />
           </div>
         </div>
