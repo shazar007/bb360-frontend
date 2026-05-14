@@ -134,25 +134,10 @@ export default function WorkCalendarCreate() {
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative w-full md:w-60">
-              <input
-                placeholder="Search"
-                className="w-full h-10 pl-10 pr-4 bg-white rounded-sm focus:outline-none placeholder:text-heading1/36 placeholder:text-sm"
-              />
-
-              <Icon
-                icon="mynaui:search"
-                className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
-              />
-            </div>
-
-            <button
-              style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
-            >
-              <Icon icon="mage:filter" className="text-lg" />
-              Filters
+          <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
+            <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
+              <Icon icon="ion:play-back-outline" className="w-5 h-5" />
+              Back
             </button>
 
             <button

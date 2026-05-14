@@ -1,10 +1,16 @@
 import { Icon } from "@iconify/react";
+<<<<<<< HEAD
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import CustomTable from "../../../../components/customTable";
 import CustomInput from "../../../../components/customInput";
+=======
+// import CustomInput from "../../../../components/customInput";
+import CustomSelect from "../../../../components/customSelect";
+>>>>>>> 19e7878ec52d34d5cd49e0f1448c6fbd7fa11a83
 import CustomDatePicker from "../../../../components/datePicker";
+import CustomTable from "../../../../components/customTable";
 
 export default function DefineEmployeeSalaryCreate() {
   const [loading, setLoading] = useState(false);
@@ -72,10 +78,9 @@ export default function DefineEmployeeSalaryCreate() {
   return (
     <div className="mt-3 bg-bgprimary rounded-2xl">
       <div className="mt-2">
-        <div className="flex flex-wrap items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
-
             <p className="text-base font-semibold md:text-lg text-heading1">
               Create Employee Salary
             </p>
