@@ -1,16 +1,10 @@
 import { Icon } from "@iconify/react";
-<<<<<<< HEAD
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import CustomTable from "../../../../components/customTable";
 import CustomInput from "../../../../components/customInput";
-=======
-// import CustomInput from "../../../../components/customInput";
-import CustomSelect from "../../../../components/customSelect";
->>>>>>> 19e7878ec52d34d5cd49e0f1448c6fbd7fa11a83
 import CustomDatePicker from "../../../../components/datePicker";
-import CustomTable from "../../../../components/customTable";
 
 export default function DefineEmployeeSalaryCreate() {
   const [loading, setLoading] = useState(false);
