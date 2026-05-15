@@ -2,15 +2,14 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { notifyError } from "../components/toast";
 import { BASE_URL } from "../api/endPoint";
+import { logout } from "../redux/userSlice";
+import { store } from "../redux/store";
 
 export const HTTP_CLIENT = axios.create({
   baseURL: BASE_URL,
 });
 
-let isSessionExpiredHandled = false;
-
 export const setupInterceptors = (navigate: any) => {
-  console.log("TOKEN FROM COOKIE:", Cookies.get("token"));
   HTTP_CLIENT.interceptors.request.use(
     (config: any) => {
       const token = Cookies.get("token");
@@ -30,19 +29,13 @@ export const setupInterceptors = (navigate: any) => {
     (response: any) => response,
     (error: any) => {
       const status = error.response?.status;
-      const isLogoutCall = error.config?.url?.includes("logout");
 
-      if (status === 401 && !isSessionExpiredHandled && !isLogoutCall) {
-        isSessionExpiredHandled = true;
-
+      if (status === 401) {
         Cookies.remove("token");
+        store.dispatch(logout());
 
         notifyError("Session expired. Please login again.");
-        navigate("/");
-
-        setTimeout(() => {
-          isSessionExpiredHandled = false;
-        }, 2000);
+        navigate("/login");
       }
 
       if (status === 500) {

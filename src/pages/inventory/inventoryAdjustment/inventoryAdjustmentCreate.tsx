@@ -66,7 +66,6 @@ export default function InventoryAdjustmentCreate() {
   const handleSave = () => {
     const availableQty = Number(rowForm.quantity || 0);
     const adjustedQty = Number(rowForm.quantityAdjusted || 0);
-    console.log("🚀 ~ handleSave ~ rowForm:", rowForm);
 
     if (!rowForm.itemCode) {
       return notifyError("Please fill required fields");
@@ -133,7 +132,6 @@ export default function InventoryAdjustmentCreate() {
     refetchOnWindowFocus: false,
   });
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ InventoryAdjustmentCreate ~ items:", items);
   const itemOptions =
     items?.map((item: any) => ({
       label: item?.itemName ?? "",
@@ -148,7 +146,6 @@ export default function InventoryAdjustmentCreate() {
         value: b.batchNumber,
         balance: b.balance,
       })) || [];
-  // console.log("🚀 ~ InventoryAdjustmentCreate ~ rowForm:", rowForm);
 
   const handleSubmit = async () => {
     if (tableData.length === 0) {
@@ -177,7 +174,6 @@ export default function InventoryAdjustmentCreate() {
           quantityAdjusted: Number(row.quantityAdjusted || 0),
         })),
       };
-      console.log("🚀 ~ handleSubmit ~ payload:", payload);
 
       await addInventoryAdjustment(payload);
       refetchItems();
@@ -196,8 +192,6 @@ export default function InventoryAdjustmentCreate() {
 
       goBack();
     } catch (error: any) {
-      console.log("🚀 ~ handleSubmit ~ errr:", error?.response?.data);
-
       notifyError("Something went wrong");
     } finally {
       setLoading(false);
@@ -278,8 +272,6 @@ export default function InventoryAdjustmentCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  // console.log("DATE PICKED:", val);
-
                   setForm((prev) => ({
                     ...prev,
                     transactionDate: val || "",
@@ -333,7 +325,6 @@ export default function InventoryAdjustmentCreate() {
               "Quantity Adjusted ",
             ]}
             data={tableData.map((item, index) => {
-              // console.log("🚀 ~ InventoryAdjustmentCreate ~ item:", item);
               return [
                 <Icon
                   icon="basil:edit-outline"

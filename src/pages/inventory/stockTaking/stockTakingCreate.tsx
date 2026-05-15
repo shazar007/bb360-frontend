@@ -112,10 +112,7 @@ export default function StockTakingCreate() {
               Print
             </button>
 
-            <button
-              //   onClick={handleFinalSave}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
-            >
+            <button className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27">
               {saveLoading ? (
                 <SyncLoader color="#fff" size={6} />
               ) : (

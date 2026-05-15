@@ -12,10 +12,13 @@ import {
   getAllPurchaseReceiving,
 } from "../../../../api/purchaseReceiving";
 import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 
 export default function CreateReceivingChallan() {
   const [loading, setLoading] = useState(false);
-  const [receivingDate, setReceivingDate] = useState<any>(null);
+  const [receivingDate, setReceivingDate] = useState(
+    dayjs().format("YYYY-MM-DD"),
+  );
   const [createChallan, setCreateChallan] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editRow, setEditRow] = useState<any>(null);
@@ -85,10 +88,19 @@ export default function CreateReceivingChallan() {
     setEditRow({ ...item });
   };
   const handleChange = (key: string, value: any) => {
-    setEditRow((prev: any) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setEditRow((prev: any) => {
+      const updatedRow = {
+        ...prev,
+        [key]: value,
+      };
+
+      if (key === "deliveredQty") {
+        updatedRow.rejectedQty =
+          Number(updatedRow.quantity || 0) - Number(value || 0);
+      }
+
+      return updatedRow;
+    });
   };
   const adjustedTotalAmount = tableItems.reduce((sum: number, item: any) => {
     const rejectedQty = Number(item?.rejectedQty || 0);
@@ -107,6 +119,38 @@ export default function CreateReceivingChallan() {
   const handleSaveInvoice = async () => {
     if (loading) return;
 
+    if (!receivingDate) {
+      notifyError("Receiving Date is required");
+      return;
+    }
+    if (!editRow?.batchNumber?.trim()) {
+      notifyError("Batch Number is required");
+      return;
+    }
+
+    if (!editRow?.expiryDate) {
+      notifyError("Expiry Date is required");
+      return;
+    }
+
+    if (!tableItems.length) {
+      notifyError("No items available");
+      return;
+    }
+
+    const invalidItem = tableItems.find((item: any) => {
+      return (
+        item.deliveredQty === "" ||
+        item.deliveredQty === null ||
+        item.deliveredQty === undefined
+      );
+    });
+
+    if (invalidItem) {
+      notifyError("Please fill Delivered Quantity for all items");
+      return;
+    }
+
     try {
       if (!purchaseOrderData) {
         notifyError("No Purchase Order Data Found");
@@ -117,8 +161,7 @@ export default function CreateReceivingChallan() {
 
       const payload = {
         purchaseOrder: String(purchaseOrderData?._id || purchaseOrderData?.id),
-        taxPercentage: Number(purchaseOrderData?.tax || 0),
-        // totalAmount: Number(purchaseOrderData?.totalAmount || 0),
+        taxPercentage: Number(purchaseOrderData?.taxPercentage || 0),
         totalAmount: finalTotalAmount,
         status: "completed",
         date: receivingDate,
@@ -132,8 +175,9 @@ export default function CreateReceivingChallan() {
           expiryDate: item?.expiryDate || null,
           orderedQty: Number(item?.orderedQty || item?.quantity || 0),
           deliveredQty: Number(item?.deliveredQty || 0),
+
           rejectedQty:
-            Number(editRow?.quantity || 0) - Number(editRow?.deliveredQty || 0),
+            Number(item?.quantity || 0) - Number(item?.deliveredQty || 0),
           purchaseRate: item?.purchaseRate || "",
           reason: item?.reason?.trim() || "N/A",
           amount: Number(item?.amount || 0),
@@ -141,7 +185,6 @@ export default function CreateReceivingChallan() {
       };
 
       await createReceivingChallan(payload);
-      // console.log("🚀 ~ payload:", payload);
 
       notifySuccess("Receiving Challan Created Successfully");
 
@@ -206,7 +249,7 @@ export default function CreateReceivingChallan() {
                 Item Receipt
               </p>
             </div>
-            <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-10 lg:gap-29.25">
+            <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-29.25">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div className="flex-1">
@@ -217,7 +260,6 @@ export default function CreateReceivingChallan() {
                       onChange={(e: any) => {
                         setPoNumber(e.target.value);
                       }}
-                      className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                     />
                   </div>
 
@@ -239,7 +281,6 @@ export default function CreateReceivingChallan() {
 
                 <CustomDatePicker
                   label="Receiving Date"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={receivingDate}
                   onChange={(val) => setReceivingDate(val)}
                 />
@@ -247,7 +288,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Party Account"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.partyAccount
                       ? purchaseOrderData.partyAccount?.vendorName
@@ -257,7 +297,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Party Category"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData?.partyAccount
                       ? purchaseOrderData.partyAccount?.vendorCategory
@@ -269,7 +308,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Delivery Address"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData ? purchaseOrderData.deliveryAddress : ""
                   }
@@ -277,7 +315,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Type"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={purchaseOrderData ? purchaseOrderData.type : ""}
                   disabled
                 />
@@ -285,7 +322,6 @@ export default function CreateReceivingChallan() {
               <div className="space-y-2">
                 <CustomInput
                   label="Tax%"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={
                     purchaseOrderData ? purchaseOrderData.taxPercentage : ""
                   }
@@ -293,7 +329,6 @@ export default function CreateReceivingChallan() {
                 />
                 <CustomInput
                   label="Total Amount"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                   value={finalTotalAmount}
                   disabled
                 />
@@ -392,7 +427,6 @@ export default function CreateReceivingChallan() {
                   label="Expiry Date"
                   value={editRow?.expiryDate || ""}
                   onChange={(val) => handleChange("expiryDate", val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 />{" "}
                 <CustomInput
                   label="Ordered Quantity"

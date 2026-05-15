@@ -10,7 +10,6 @@ import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import dayjs from "dayjs";
-// import { deleteDistributor } from "../../../../api/distributorServices";
 
 const STORAGE_KEY = "temp_distributor_upload";
 export default function DistributorUpload() {
@@ -174,8 +173,6 @@ export default function DistributorUpload() {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
-        console.log("RAW EXCEL DATA:", jsonData);
-
         const formatExcelDate = (val: any) => {
           if (!val) return "";
           if (typeof val === "string" && val.includes("/")) {

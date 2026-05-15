@@ -42,7 +42,6 @@ export default function CustomSelectSearch({
   const filteredOptions = options.filter((opt) =>
     String(opt.label).toLowerCase().includes(search.toLowerCase()),
   );
-  // console.log("🚀 ~ CustomSelectSearch ~ filteredOptions:", filteredOptions)
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -96,7 +95,7 @@ export default function CustomSelectSearch({
       </div>
 
       {open && options.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 py-2 bg-white rounded-md shadow-md top-full">
+        <div className="absolute z-50 w-full py-2 mt-1 bg-white rounded-md shadow-md top-full">
           <div className="p-2 border-b">
             <input
               ref={inputRef}
@@ -111,19 +110,19 @@ export default function CustomSelectSearch({
           <div className="overflow-auto max-h-48">
             {filteredOptions.length > 0 ? (
               filteredOptions.map((opt) => {
-                return(
-                    <div
-                  key={opt.value}
-                  onClick={() => {
-                    onChange(opt.value);
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                  className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
-                >
-                  {opt.label}
-                </div>
-                )
+                return (
+                  <div
+                    key={opt.value}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                      setSearch("");
+                    }}
+                    className="px-4 py-3 text-xs cursor-pointer hover:bg-gray-100"
+                  >
+                    {opt.label}
+                  </div>
+                );
               })
             ) : (
               <div className="px-4 py-3 text-xs text-gray-400">

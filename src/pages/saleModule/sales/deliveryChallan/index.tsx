@@ -19,7 +19,6 @@ export default function DeliveryChallan() {
     refetchOnReconnect: false,
   });
   const saleInvoicesData: any = SaleInvoices?.data || [];
-  console.log("🚀 ~ saleInvoicesData:", saleInvoicesData);
 
   const goWithState = (path: any, state = {}) => {
     navigate(path, { state });
@@ -35,7 +34,7 @@ export default function DeliveryChallan() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <div className="relative w-full md:w-60">
             <input
               placeholder="Search"
@@ -57,7 +56,7 @@ export default function DeliveryChallan() {
         </div>
       </div>
 
-      <div className="mt-2 bg-white rounded-2xl pb-4">
+      <div className="pb-4 mt-2 bg-white rounded-2xl">
         <CustomTable
           norounded
           loading={isLoading}
@@ -68,7 +67,6 @@ export default function DeliveryChallan() {
             "Report",
             "Invoice Number",
             "Create Date",
-            // "Dispatch Date",
             "Distributor Name",
             "Contact Number",
             "Delivery Address",
@@ -77,7 +75,7 @@ export default function DeliveryChallan() {
           data={saleInvoicesData?.map((item: any) => [
             <Icon
               icon="basil:edit-outline"
-              className="text-primary text-lg cursor-pointer"
+              className="text-lg cursor-pointer text-primary"
               onClick={() =>
                 goWithState("/sale-module/sales/delivery-challan/create", {
                   item,
@@ -86,15 +84,14 @@ export default function DeliveryChallan() {
             />,
             <Icon
               icon="hugeicons:view"
-              className="text-primary text-lg cursor-pointer"
+              className="text-lg cursor-pointer text-primary"
             />,
             <Icon
               icon="ion:print-outline"
-              className="text-primary text-lg cursor-pointer"
+              className="text-lg cursor-pointer text-primary"
             />,
             item?.invoiceNumber,
             dayjs(item?.createdAt).format("DD-MMM-YYYY"),
-            // item?.dispatchDate,
             item?.distributorName,
             item?.contactNumber,
             item?.address,

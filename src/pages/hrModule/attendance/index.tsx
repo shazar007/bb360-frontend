@@ -23,7 +23,6 @@ import { MonthYearFilter } from "../../../components/monthYearFilter";
 const titles = [
   "Employee Id",
   "Employee Name",
-  // "Employee Role",
   "Date",
   "CheckIn",
   "CheckOut",
@@ -212,19 +211,7 @@ export default function Attendance() {
     filteredData?.map((v: any) => [
       v.employee?.employeeId,
       v.employee.employeeName,
-      // <p>
-      //   {v.employee.employeeRole === "mr"
-      //     ? "Medical Rep"
-      //     : v.employee.employeeRole === "am"
-      //     ? "Area Manager"
-      //     : v.employee.employeeRole === "rm"
-      //     ? "Regional Manager"
-      //     : v.employee.employeeRole === "hr"
-      //     ? "HR"
-      //     : v.employee.employeeRole === "admin"
-      //     ? "Admin"
-      //     : "Unknown Role"}
-      // </p>,
+
       v.date ? dayjs(v.date).format("YYYY-MM-DD") : "--",
       v.checkIn?.time ? dayjs(v.checkIn.time).format("HH:mm") : "--",
       v.checkOut?.time ? dayjs(v.checkOut.time).format("HH:mm") : "--",
@@ -248,7 +235,7 @@ export default function Attendance() {
         <Icon
           icon="basil:edit-outline"
           key={v._id}
-          className="cursor-pointer text-xl"
+          className="text-xl cursor-pointer"
           onClick={() => {
             setEditing(v);
             setOpenModel(true);
@@ -366,7 +353,7 @@ export default function Attendance() {
           </div>
           <button
             onClick={handleGenerateAttendance}
-            className="h-10 w-full md:mb-2 mb-4  text-sm text-white md:w-40 bg-primary  rounded-md gap-3 cursor-pointer flex justify-center items-center"
+            className="flex items-center justify-center w-full h-10 gap-3 mb-4 text-sm text-white rounded-md cursor-pointer md:mb-2 md:w-40 bg-primary"
           >
             {isloadingAttendance ? (
               <SyncLoader color="#fff" size={6} />
@@ -430,7 +417,7 @@ export default function Attendance() {
               <div className="flex justify-end mt-6">
                 <button
                   type="submit"
-                  className="h-10 md:w-50 w-full cursor-pointer bg-primary text-white rounded-md flex justify-center items-center"
+                  className="flex items-center justify-center w-full h-10 text-white rounded-md cursor-pointer md:w-50 bg-primary"
                 >
                   {isloading ? (
                     <SyncLoader color="#fff" size={6} />

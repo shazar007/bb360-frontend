@@ -10,3 +10,13 @@ export const getAccountLedger = (
     `${ENDPOINTS.ACCOUNT_LEDGER}/${id}?from=${from}&to=${to}`,
   );
 };
+
+export const addDebitCreaitNotes = (values: any) => {
+  const token = localStorage.getItem("token");
+
+  return HTTP_CLIENT.post(ENDPOINTS.DEBIT_CREDIT_NOTE, values, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

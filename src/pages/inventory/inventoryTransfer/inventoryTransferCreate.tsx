@@ -135,7 +135,6 @@ export default function InventoryTransferCreate() {
   });
 
   const items = AllItems?.data?.items || [];
-  // console.log("🚀 ~ InventoryTransferCreate ~ all items:", AllItems)
 
   const itemOptions = items.map((item: any) => ({
     label: item?.itemName ?? "",
@@ -235,7 +234,6 @@ export default function InventoryTransferCreate() {
                 label="Transaction Date"
                 value={form.transactionDate}
                 onChange={(val: any) => {
-                  // console.log("DATE PICKED:", val);
                   setForm((prev) => ({
                     ...prev,
                     transactionDate: val || "",
@@ -391,8 +389,6 @@ export default function InventoryTransferCreate() {
                   }));
                 }}
               />
-
-              {/* Batch Number */}
 
               <CustomSelectSearch
                 options={batchOptions}

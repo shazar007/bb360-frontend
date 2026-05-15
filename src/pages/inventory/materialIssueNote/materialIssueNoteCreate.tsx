@@ -125,7 +125,6 @@ export default function MaterialIssueNoteCreate() {
       })),
     };
 
-    // console.log("Final Payload:", payload);
     await addMaterialIssueNote(payload);
 
     setTimeout(() => {

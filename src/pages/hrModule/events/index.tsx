@@ -160,12 +160,12 @@ export default function Events() {
             className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-35"
           >
             <Icon icon="basil:add-outline" className="text-lg text-white" />
-            <p className="  text-sm font-medium text-white">Add Events</p>
+            <p className="text-sm font-medium text-white ">Add Events</p>
           </button>
         </div>
         <div
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          className="bg-[#ffffff] overflow-y-auto mt-4 p-4 rounded-lg 2xl:h-[calc(79.4vh-0px)] xl:h-[calc(69.4vh-0px)]"
+          className="bg-[#ffffff] overflow-y-auto mt-4 p-4 rounded-lg "
         >
           <p className="text-sm text-[#7d7d7d] leading-[100%]">Events List</p>
           <div className="flex flex-wrap items-center gap-4 mt-4">
@@ -211,22 +211,15 @@ export default function Events() {
                           />
                         </button>
                       </div>
-                      <div className="flex items-center justify-center w-12 h-12 bg-white rounded-full cursor-pointer">
-                        <button
-                          onClick={() => {
-                            setEditing(e);
-                            setDeleteConfirmation(true);
-                          }}
-                        >
-                          <Icon
-                            className="cursor-pointer "
-                            color="#E90761"
-                            height="18"
-                            width="24"
-                            icon="mingcute:delete-fill"
-                          />
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => {
+                          setEditing(e);
+                          setDeleteConfirmation(true);
+                        }}
+                        className="h-12 w-12 text-white rounded-full cursor-pointer bg-[#FF0000] flex items-center justify-center"
+                      >
+                        <Icon icon="proicons:delete" className="text-xl" />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -260,14 +253,12 @@ export default function Events() {
                 ✕
               </button>
             </div>
-            <form onSubmit={formik.handleSubmit} className="space-y-6 p-4">
+            <form onSubmit={formik.handleSubmit} className="p-4 space-y-6">
               <div>
                 {" "}
                 <CustomImagePicker
                   placeholder="Upload Cover Photos"
                   label="Cover Photos"
-                  // fileType="Hr-Management"
-                  // type="image"
                   value={formik.values.coverImage}
                   onChange={(val: any) =>
                     formik.setFieldValue("coverImage", val)
@@ -358,7 +349,7 @@ export default function Events() {
               <div className="flex justify-end mt-5">
                 <button
                   type="submit"
-                  className="h-10 w-full md:w-32 text-sm bg-primary rounded-md gap-3 cursor-pointer flex justify-center items-center text-white font-medium"
+                  className="flex items-center justify-center w-full h-10 gap-3 text-sm font-medium text-white rounded-md cursor-pointer md:w-32 bg-primary"
                 >
                   {isloading ? (
                     <SyncLoader color="#fff" size={6} />

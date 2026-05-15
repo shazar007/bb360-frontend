@@ -8,7 +8,7 @@ export default function DataUploadRouting() {
     <Routes>
       <Route path="/item-upload" element={<DataUpload />} />
       <Route path="/item-update" element={<ItemUpdate />} />
-      <Route path="/item-details" element={<ItemDetails />} />
+      <Route path="/item-update-details" element={<ItemDetails />} />
     </Routes>
   );
 }

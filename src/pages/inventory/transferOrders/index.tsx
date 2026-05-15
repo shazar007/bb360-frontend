@@ -83,7 +83,6 @@ export default function TransferOrders() {
           <div className="mt-3">
             <CustomTable
               height="60vh"
-              // loading={isLoading}
               headers={[
                 "Edit",
                 "View",
@@ -115,7 +114,6 @@ export default function TransferOrders() {
                         <div
                           className="px-4 py-2 cursor-pointer hover:bg-gray-100"
                           onClick={() => {
-                            console.log("Edit", item);
                             setOpenMenuId(null);
                           }}
                         >
@@ -137,12 +135,10 @@ export default function TransferOrders() {
 
                   <Icon
                     icon="hugeicons:view"
-                    // onClick={() => handlePrint(item)}
                     className="text-lg cursor-pointer text-primary"
                   />,
                   <Icon
                     icon="ion:print-outline"
-                    // onClick={() => handlePrint(item)}
                     className="text-lg cursor-pointer text-primary"
                   />,
                   item?.transactionNumber || "-",
@@ -191,8 +187,6 @@ export default function TransferOrders() {
                     boxShadow: "0px 1px 12px 0px #0000001F",
                   }}
                   className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000] flex items-center justify-center"
-                  // onClick={handleDelete}
-                  // disabled={isDeleting}
                 >
                   {isDeleting ? (
                     <SyncLoader size={8} color="#ffffff" />

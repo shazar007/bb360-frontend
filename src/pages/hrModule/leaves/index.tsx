@@ -271,7 +271,12 @@ export default function Leaves() {
         </div>
         <div className="mt-4">
           {" "}
-          <CustomTable headers={titles} norounded data={tableData} />
+          <CustomTable
+            headers={titles}
+            height="80vh"
+            norounded
+            data={tableData}
+          />
         </div>
       </div>
       {openModel && (
@@ -292,7 +297,7 @@ export default function Leaves() {
                 ✕
               </button>
             </div>
-            <form onSubmit={formik.handleSubmit} className="space-y-6 p-4">
+            <form onSubmit={formik.handleSubmit} className="p-4 space-y-6">
               <div className="flex flex-wrap gap-6">
                 <div className="flex-1 space-y-4 min-w-70">
                   <div>
@@ -407,7 +412,7 @@ export default function Leaves() {
                 <button
                   type="submit"
                   disabled={isloading}
-                  className="h-10 w-full md:w-35 text-white bg-primary text-sm rounded-md gap-3 cursor-pointer flex justify-center items-center"
+                  className="flex items-center justify-center w-full h-10 gap-3 text-sm text-white rounded-md cursor-pointer md:w-35 bg-primary"
                 >
                   {isloading ? (
                     <SyncLoader color="#fff" size={6} />
@@ -436,10 +441,10 @@ export default function Leaves() {
             </div>
             <div className="p-4 mx-auto w-60">
               <p className="text-2xl font-semibold text-center">
-                Delete Distributor
+                Delete Leaves
               </p>
               <p className="text-center text-heading1">
-                Are you sure to delete this distributor?
+                Are you sure to delete this Leaves?
               </p>
             </div>
             <div className="flex justify-between gap-2 p-4 pt-0">
@@ -514,7 +519,6 @@ const StatusDropdown: React.FC<StatusDropdownProps> = ({
 
   return (
     <>
-      {/* STATUS DROPDOWN */}
       <div className="relative w-30">
         <div
           onClick={() => setOpen(!open)}

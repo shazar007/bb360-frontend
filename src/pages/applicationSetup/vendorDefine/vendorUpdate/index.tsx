@@ -119,7 +119,6 @@ export default function VendorUpdate() {
       setLoading(true);
 
       await updateVendor(id, {
-        // vendorCode: form.vendorCode,
         vendorName: form.vendorName,
         vendorCategory: form.vendorCategory,
         contactNumber: form.contactNumber,
@@ -216,7 +215,6 @@ export default function VendorUpdate() {
 
                     <button
                       className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
-                      // onClick={() => handleDelete(index)}
                       onClick={() => handleDeleteClick(item)}
                     >
                       Delete Vendor

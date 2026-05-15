@@ -75,7 +75,6 @@ export default function PurchaseOrder() {
       notifySuccess("Updated Successfully");
       setOpenModal(false);
       setEditIndex(null);
-      // refetch();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Update failed");
     }

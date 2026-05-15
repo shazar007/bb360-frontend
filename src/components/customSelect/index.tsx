@@ -11,11 +11,12 @@ type CustomSelectProps = {
   value?: string;
   onChange?: (value: string) => void;
   onBlur?: () => void;
-  placeholder?: string;
+  placeholder?: any;
   required?: boolean;
   disabled?: boolean;
   className?: string;
   white?: boolean;
+  onMenuOpen?: () => void;
 };
 
 export default function CustomSelect({

@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { getAccountLedger } from "../../../api/ledgerServices";
 import { getAllDistributor } from "../../../api/distributorServices";
 import { getAllVendors } from "../../../api/vendorServices";
+import { SyncLoader } from "react-spinners";
 
 export default function AccountLedger() {
   const { goBack } = useAppNavigate();
@@ -54,24 +55,24 @@ export default function AccountLedger() {
   const { data: ledgerData, isLoading } = useQuery({
     queryKey: ["account-ledger", partyId, fromDate, toDate],
     queryFn: () => {
-      console.log("🚀 API HIT ~ partyId:", partyId);
       return getAccountLedger(partyId, fromDate, toDate);
     },
     enabled: !!partyId,
-    placeholderData: undefined, // ✅ remove this — was showing previous party data
+    placeholderData: undefined,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
   });
-  console.log("🚀 ~ ledgerData:", ledgerData);
 
   const handleDateChange = (type: "from" | "to", date: any) => {
     setFilterLoading(true);
     const formatted = dayjs(date).format("YYYY-MM-DD");
+
     if (type === "from") setFromDate(formatted);
     else setToDate(formatted);
-  };
 
+    setTimeout(() => setFilterLoading(false), 300);
+  };
   const allLedgerEntries = ledgerData?.data?.ledger || [];
 
   useEffect(() => {
@@ -79,7 +80,12 @@ export default function AccountLedger() {
       setFilterLoading(false);
     }
   }, [isLoading, ledgerData]);
-
+  const isPartyLoading =
+    ledgerType === "Vendor"
+      ? !AllVendors
+      : ledgerType === "Distributor"
+        ? !AllDistributors
+        : false;
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -106,7 +112,7 @@ export default function AccountLedger() {
         </div>
       </div>
 
-      <div className="bg-bgprimary rounded-2xl mt-3">
+      <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
             <p className="text-xs font-semibold text-heading1">Select Ledger</p>
@@ -115,7 +121,6 @@ export default function AccountLedger() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-50.25">
             <div className="space-y-2">
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Ledger Type"
                 options={[
                   { label: "Vendor", value: "Vendor" },
@@ -124,37 +129,42 @@ export default function AccountLedger() {
                 value={ledgerType}
                 onChange={(selectedOption: any) => {
                   const val = selectedOption?.value ?? selectedOption;
-                  console.log("🚀 ledgerType selected:", val); // ✅ check value
-                  setLedgerType(val); // ✅ stores "Vendor" or "Distributor"
-                  setPartyId(""); // ✅ reset party
+                  setLedgerType(val);
+
+                  setPartyId("");
                 }}
                 placeholder="Vendors/Distributors"
               />
 
               <CustomSelect
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="Select Party"
-                placeholder="Noor Sons"
                 options={partyOptions}
-                value={partyId} // ✅ plain string ID
+                value={partyId}
+                disabled={isPartyLoading}
+                placeholder={
+                  isPartyLoading ? (
+                    <SyncLoader size={6} color="#14CCC3" />
+                  ) : ledgerType === "Vendor" ? (
+                    "Select Vendor"
+                  ) : (
+                    "Select Distributor"
+                  )
+                }
                 onChange={(opt: any) => {
                   const val = opt?.value ?? opt;
-                  console.log("🚀 partyId selected:", val); // ✅ check value
-                  setPartyId(val); // ✅ triggers API via queryKey change
+                  setPartyId(val);
                 }}
               />
             </div>
 
             <div className="space-y-2">
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="From Date"
                 value={fromDate}
                 onChange={(date: any) => handleDateChange("from", date)}
               />
 
               <CustomDatePicker
-                className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
                 label="To Date"
                 value={toDate}
                 onChange={(date: any) => handleDateChange("to", date)}

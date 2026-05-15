@@ -4,7 +4,7 @@ import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelect from "../../../../components/customSelect";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import CustomTable from "../../../../components/customTable";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -14,8 +14,9 @@ import {
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
-import { GetSalesInvoiceByInvoiceNo } from "../../../../api/sale";
 import dayjs from "dayjs";
+import { getAllItems } from "../../../../api/itemServices";
+import { getAllDistributor } from "../../../../api/distributorServices";
 
 export default function CreateSalesReturn() {
   const { goBack } = useAppNavigate();
@@ -24,37 +25,26 @@ export default function CreateSalesReturn() {
   const [showPostModal, setShowPostModal] = useState(false);
   const [showPrint, setShowPrint] = useState(false);
   const [tableData, setTableData] = useState<any[]>([]);
-  const [restock, setRestock] = useState("");
-  const [conditionCheck, setConditionCheck] = useState("");
-  const [setData] = useState<any>(null);
-  const [invoiceNumber, setinvoiceNumber] = useState("");
+  const [batchOptions, setBatchOptions] = useState<any[]>([]);
+  const [returnDate, setReturnDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [loading, setLoading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
-  const [discount, setDiscount] = useState("");
+  const [selectedDistributor, setSelectedDistributor] = useState({
+    distributorId: "",
+    distributorName: "",
+    contactNumber: "",
+  });
   const [description, setDescription] = useState("");
-  const [taxPct, setTaxPct] = useState("");
   const { refetch: reload } = useQuery({
     queryKey: ["getAllSalesReturns"],
     queryFn: getAllSalesReturns,
-
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
-  const {
-    data: Invoice,
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ["GetSalesInvoiceByInvoiceNo", invoiceNumber],
-    queryFn: () => GetSalesInvoiceByInvoiceNo(invoiceNumber),
-    enabled: false,
-  });
-  const InvoiceData = (Invoice as any)?.data;
+
   const toggleSelect = (index: number) => {
     setSelectedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
@@ -63,46 +53,63 @@ export default function CreateSalesReturn() {
   useEffect(() => {
     const stored = localStorage.getItem("salesReturn");
     if (stored) {
-      setData(JSON.parse(stored));
+      const parsed = JSON.parse(stored);
+
+      setTableData(parsed.items || []);
     }
   }, []);
   const [form, setForm] = useState({
     itemId: "",
     itemName: "",
     itemCode: "",
-    itemCategory: "",
-    uom: "",
     batchNumber: "",
     expiryDate: "",
     returnedQty: "",
-    taxAmount: "",
-    amount: "",
+    amount: 0,
+    conditionCheck: "",
+    restock: "",
+  });
+  const { data: AllDistributors } = useQuery({
+    queryKey: ["getAllDistributor"],
+    queryFn: getAllDistributor,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 
-  const items = InvoiceData?.items || [];
-
-  useEffect(() => {
-    document.title = "Sales Return — BB-360";
-  }, []);
+  const tableData22 = AllDistributors?.data?.distributors || [];
+  const distributorOptions = tableData22.map((d: any) => ({
+    label: d.distributorName,
+    value: d._id,
+  }));
+  const { data: AllItems } = useQuery({
+    queryKey: ["getAllItems"],
+    queryFn: getAllItems,
+    placeholderData: (prev) => prev,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const items = AllItems?.data?.items || [];
 
   const handleAddRow = () => {
-    if (!form.itemId) return alert("Select Item");
-
     setTableData((prev) => [...prev, form]);
-
     setShowPrint(true);
     setAddItem(false);
     setForm({
       itemId: "",
       itemName: "",
       itemCode: "",
-      itemCategory: "",
-      uom: "",
       batchNumber: "",
       expiryDate: "",
       returnedQty: "",
-      taxAmount: "",
-      amount: "",
+      amount: 0,
+      conditionCheck: "",
+      restock: "",
     });
   };
 
@@ -117,29 +124,29 @@ export default function CreateSalesReturn() {
       { label: "No", value: "No" },
     ],
   };
+  const returnTotal = useMemo(() => {
+    return tableData.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+  }, [tableData]);
   const buildPayload = (data: any[]) => {
     return {
-      invoiceNumber: invoiceNumber,
-      Distributor: InvoiceData.distributor?._id || null,
-      returnDate: new Date().toISOString().split("T")[0],
-      conditionCheck,
-      restock,
-      discount: Number(discount),
+      distributor: selectedDistributor.distributorId,
+      returnDate: returnDate || new Date().toISOString(),
       description,
-      taxPct: Number(taxPct),
-      returnTotal: data.reduce(
-        (sum, item) => sum + Number(item.amount || 0),
-        0,
-      ),
-      notes: null,
-      items: data.map((item) => ({
-        item: item.itemId,
-        batchNumber: item.batchNumber,
-        expiryDate: item.expiryDate,
-        returnQty: Number(item.returnedQty),
-        taxAmount: Number(item.taxAmount),
-        amount: Number(item.amount),
-      })),
+      returnTotal: returnTotal,
+      items: data.map((item) => {
+        const selectedItem = items.find((i: any) => i._id === item.itemId);
+        const tp = Number(selectedItem?.tp || 0);
+        const qty = Number(item.returnedQty || 0);
+        return {
+          item: item.itemId,
+          batchNumber: item.batchNumber,
+          expiryDate: item.expiryDate,
+          returnQty: qty,
+          condition: item.conditionCheck,
+          restock: item.restock,
+          amount: tp * qty,
+        };
+      }),
     };
   };
   const handlePost = async () => {
@@ -150,19 +157,21 @@ export default function CreateSalesReturn() {
       }
       setLoading(true);
       const payload = buildPayload(tableData);
+      console.log("🚀 ~ payload:", payload);
       await createSalesReturnApi(payload);
       localStorage.removeItem("salesReturn");
       setTableData([]);
       setSelectedRows([]);
       setShowPostModal(false);
       notifySuccess("Posted Successfully");
-    } catch (err) {
+      goTo("/sale-module/sales/sales-return");
+    } catch (err: any) {
       console.error(err);
-      notifyError("Something went wrong");
+      notifyError(err.response?.data?.message || "Something went wrong");
+      setShowPostModal(false);
     } finally {
       setLoading(false);
       reload();
-      goTo("/sale-module/sales/sales-return");
     }
   };
   const handleDeleteSelected = () => {
@@ -186,22 +195,7 @@ export default function CreateSalesReturn() {
     const payload = buildPayload(updated);
     localStorage.setItem("salesReturn", JSON.stringify(payload));
   };
-  const handleSearch = async () => {
-    if (!invoiceNumber.trim()) {
-      notifyError("Enter Purchase Order Number");
-      return;
-    }
 
-    const res = await refetch();
-
-    if (res.error) {
-      const message =
-        (res.error as any)?.response?.data?.message || "Something went wrong";
-
-      notifyError(message);
-      return;
-    }
-  };
   return (
     <>
       <div className="mt-8">
@@ -228,7 +222,6 @@ export default function CreateSalesReturn() {
                 Print
               </button>
             )}
-
             <button
               onClick={() => setShowPostModal(true)}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
@@ -247,99 +240,44 @@ export default function CreateSalesReturn() {
                 Enter Sales_Return
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-2 md:gap-y-2 md:gap-x-10  p-4 md:grid-cols-2 lg:grid-cols-5 lg:gap-10">
-              <div className="space-y-2">
-                <div className="flex items-end gap-2">
-                  <div className="flex-1">
-                    <CustomInput
-                      className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                      label="Invoice ID"
-                      value={invoiceNumber}
-                      onChange={(e: any) => setinvoiceNumber(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    onClick={handleSearch}
-                    className="h-10 px-4 text-xs text-white rounded-md cursor-pointer bg-secondary"
-                  >
-                    {isLoading ? (
-                      <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
-                    ) : (
-                      "Search"
-                    )}
-                  </button>
-                </div>
-                <CustomDatePicker
-                  label="Date"
-                  disabled
-                  value={
-                    InvoiceData?.createdAt
-                      ? dayjs(InvoiceData.createdAt).format("YYYY-MMM-DD")
-                      : ""
-                  }
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomInput
-                  label="Distributor Name"
-                  disabled
-                  value={InvoiceData?.distributor?.distributorName || ""}
-                />
-                <CustomInput
-                  label="Contact Number"
-                  disabled
-                  value={InvoiceData?.contactNumber || ""}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomSelect
-                  label="Condition Check"
-                  value={conditionCheck}
-                  onChange={(val) => setConditionCheck(val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                  options={optionsData.conditionCheck}
-                />
-                <CustomInput
-                  label="Description"
-                  value={description}
-                  onChange={(e: any) => setDescription(e.target.value)}
-                  placeholder="Enter Description"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomSelect
-                  label="Restock"
-                  placeholder="Yes/No"
-                  options={optionsData.reStock}
-                  value={restock}
-                  onChange={(val) => setRestock(val)}
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-                <CustomInput
-                  label="Tax %"
-                  value={taxPct}
-                  onChange={(e: any) => setTaxPct(e.target.value)}
-                  placeholder="Enter Tax %"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
-              <div className="space-y-2">
-                <CustomInput
-                  label="Discount"
-                  value={discount}
-                  onChange={(e: any) => setDiscount(e.target.value)}
-                  placeholder="Enter Discount"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-                <CustomInput
-                  label="Return Total"
-                  placeholder="50"
-                  className="w-full h-10 px-3 rounded-md bg-[#ECF0F4]"
-                />
-              </div>
+            <div className="grid grid-cols-1 gap-2 gap-y-2 md:gap-x-10  lg:gap-x-17.25 p-4 md:grid-cols-2 lg:grid-cols-3 ">
+              <CustomSelectSearch
+                label="Distributor"
+                options={distributorOptions}
+                value={selectedDistributor.distributorId}
+                onChange={(val) => {
+                  const selected = tableData22.find((d: any) => d._id === val);
+                  setSelectedDistributor({
+                    distributorId: val,
+                    distributorName: selected?.distributorName || "",
+                    contactNumber: selected?.contactNumber || "",
+                  });
+                }}
+              />
+
+              <CustomDatePicker
+                label="Return Date"
+                value={returnDate ? dayjs(returnDate).format("YYYY-MM-DD") : ""}
+                onChange={(val: any) => setReturnDate(val)}
+                disabled
+              />
+              <CustomInput
+                label="Description"
+                value={description}
+                onChange={(e: any) => setDescription(e.target.value)}
+                placeholder="Enter Description"
+              />
+              <CustomInput
+                label="Distributor Id"
+                value={selectedDistributor.distributorId}
+                disabled
+              />
+              <CustomInput
+                label="Contact Number"
+                value={selectedDistributor.contactNumber}
+                disabled
+              />
+              <CustomInput label="Return Total" value={returnTotal} disabled />
             </div>
           </div>
         </div>
@@ -349,13 +287,13 @@ export default function CreateSalesReturn() {
             <div className="flex items-center justify-between gap-3">
               <button
                 onClick={handleDeleteSelected}
-                className="h-8.5 w-8.5 text-white rounded-md bg-[#FF0000] flex items-center justify-center"
+                className="h-8.5 w-8.5 text-white rounded-md cursor-pointer bg-[#FF0000] flex items-center justify-center"
               >
                 <Icon icon="proicons:delete" className="text-xl" />
               </button>
               <button
                 onClick={() => setAddItem(true)}
-                className="text-xs text-white bg-secondary rounded-md w-18 h-8.5"
+                className="text-xs text-white cursor-pointer bg-secondary rounded-md w-18 h-8.5"
               >
                 Add Row
               </button>
@@ -369,11 +307,11 @@ export default function CreateSalesReturn() {
               "Edit",
               "Item Code",
               "Item Name",
-              "UOM",
               "Batch Number",
               "Expiry Date",
               "Returned Quantity",
-              "Tax Amount",
+              "Condition Check",
+              "Re-Stock",
               "Amount",
             ]}
             data={
@@ -384,30 +322,25 @@ export default function CreateSalesReturn() {
                       checked={selectedRows.includes(index)}
                       onChange={() => toggleSelect(index)}
                     />,
-
                     <Icon
                       icon="qlementine-icons:menu-burger-16"
                       className="text-lg text-primary"
                     />,
-
                     item.itemCode,
                     item.itemName,
-                    item.uom,
                     item.batchNumber,
-
-                    <span className="px-2 py-1 text-green-600 bg-green-100 rounded">
-                      Matched
-                    </span>,
-
+                    dayjs(item.expiryDate).isValid()
+                      ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
+                      : "-",
                     item.returnedQty,
-                    item.taxAmount,
+                    item.conditionCheck,
+                    item.restock,
                     item.amount,
                   ])
             }
           />
         </div>
       </div>
-
       {addItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full bg-white shadow-xl max-w-250 rounded-2xl">
@@ -424,40 +357,46 @@ export default function CreateSalesReturn() {
                 ✕
               </button>
             </div>
-
             <div className="grid grid-cols-2 gap-4 p-4">
               <CustomSelectSearch
                 options={items.map((item: any) => ({
                   label: item.itemName,
-                  value: item.item,
+                  value: item._id,
                 }))}
                 label="Item Name"
                 value={form.itemId}
                 onChange={(val) => {
-                  const selected = items.find((i: any) => i.item === val);
-
+                  const selected = items.find((i: any) => i._id === val);
+                  const batches = selected?.batches || [];
+                  setBatchOptions(batches);
                   setForm((prev) => ({
                     ...prev,
                     itemId: val,
-                    itemName: selected?.itemName,
-                    itemCode: selected?.itemCode,
-                    itemCategory: selected?.itemCategory,
-                    uom: selected?.uom,
-                    batchNumber: selected?.batchNumber,
-                    expiryDate: selected?.expiryDate,
-                    amount: selected?.amount,
+                    itemName: selected?.itemName || "",
+                    itemCode: selected?.itemCode || "",
+                    batchNumber: "",
+                    expiryDate: "",
                   }));
                 }}
               />
-
               <CustomInput label="Item Code" value={form.itemCode} disabled />
-
-              <CustomInput label="UOM" value={form.uom} disabled />
-
-              <CustomInput
+              <CustomSelect
                 label="Batch Number"
+                options={batchOptions.map((b: any) => ({
+                  label: b.batchNumber,
+                  value: b.batchNumber,
+                }))}
                 value={form.batchNumber}
-                disabled
+                onChange={(val) => {
+                  const selectedBatch = batchOptions.find(
+                    (b: any) => b.batchNumber === val,
+                  );
+                  setForm((prev) => ({
+                    ...prev,
+                    batchNumber: val,
+                    expiryDate: selectedBatch?.expiryDate || "",
+                  }));
+                }}
               />
               <CustomDatePicker
                 label="Expiry Date"
@@ -468,38 +407,51 @@ export default function CreateSalesReturn() {
                 }
                 disabled
               />
-
               <CustomInput
                 label="Returned Quantity"
                 value={form.returnedQty}
-                onChange={(e) =>
-                  setForm({ ...form, returnedQty: e.target.value })
-                }
-              />
+                onChange={(e: any) => {
+                  const qty = Number(e.target.value);
 
-              <CustomInput
-                label="Tax Amount"
-                value={form.taxAmount}
-                onChange={(e) =>
-                  setForm({ ...form, taxAmount: e.target.value })
-                }
-              />
+                  const selectedItem = items.find(
+                    (i: any) => i._id === form.itemId,
+                  );
 
-              <CustomInput label="Amount" value={form.amount} />
+                  const tp = Number(selectedItem?.tp || 0);
+
+                  setForm((prev) => ({
+                    ...prev,
+                    returnedQty: e.target.value,
+                    amount: tp * qty,
+                  }));
+                }}
+              />
+              <CustomSelect
+                label="Condition Check"
+                options={optionsData.conditionCheck}
+                value={form.conditionCheck}
+                onChange={(val) => setForm({ ...form, conditionCheck: val })}
+              />
+              <CustomSelect
+                label="Restock"
+                placeholder="Yes/No"
+                options={optionsData.reStock}
+                value={form.restock}
+                onChange={(val) => setForm({ ...form, restock: val })}
+              />
+              <CustomInput label="Amount" value={form.amount} disabled />
             </div>
-
             <div className="flex justify-end p-4 pt-0">
               <button
                 onClick={handleAddRow}
                 className="px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
               >
-                Enter
+                Save
               </button>
             </div>
           </div>
         </div>
       )}
-
       {showPostModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-md bg-white shadow-xl rounded-2xl">
@@ -511,7 +463,6 @@ export default function CreateSalesReturn() {
                 ✕
               </button>
             </div>
-
             <div className="p-4 text-center">
               <h2 className="mb-2 text-lg font-semibold text-heading1">
                 Post to ledger
@@ -520,7 +471,6 @@ export default function CreateSalesReturn() {
                 Are you sure to post this return to the ledger?
               </p>
             </div>
-
             <div className="flex items-center justify-between gap-4 p-4 pt-0">
               <button
                 onClick={() => setShowPostModal(false)}
@@ -528,7 +478,6 @@ export default function CreateSalesReturn() {
               >
                 Cancel
               </button>
-
               <button
                 onClick={handlePost}
                 disabled={loading}

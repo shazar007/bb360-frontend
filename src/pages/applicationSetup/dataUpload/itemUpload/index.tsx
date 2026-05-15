@@ -219,8 +219,6 @@ export default function DataUpload() {
           selected: false,
         }));
 
-        console.log("FORMATTED:", formatted);
-
         setTableData([...formatted]);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
 
@@ -425,7 +423,6 @@ export default function DataUpload() {
                 item.uom,
               ];
 
-              // Only push TP & MRP if NOT RAW_MATERIAL
               if (item.itemCategory !== "RAW_MATERIAL") {
                 baseRow.push(item.tp, item.mrp);
               }

@@ -97,20 +97,14 @@ export default function Setting() {
               placeholder="Select Start Time"
               label="Start Time"
               value={startTime}
-              // onChange={(val: Dayjs | null) => setStartTime(val)}
             />
             <CustomTimePicker
               placeholder="Select End Time"
               label="End Time"
               value={endTime}
-              // onChange={(val: Dayjs | null) => setEndTime(val)}
             />
 
-            <CustomTimePicker
-              label="Late After (minutes)"
-              // value={lateAfterMinutes}
-              // onChange={(e) => setLateAfterMinutes(Number(e.target.value))}
-            />
+            <CustomTimePicker label="Late After (minutes)" />
           </div>
         </div>
       </div>
