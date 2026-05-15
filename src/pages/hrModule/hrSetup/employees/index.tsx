@@ -518,7 +518,7 @@ export default function Employees() {
               <p className="text-2xl font-semibold text-center">
                 Delete Employees
               </p>
-              <p className="text-center text-heading1">
+              <p className="text-center text-heading1 mt-3">
                 Are you sure to delete this Employees?
               </p>
             </div>

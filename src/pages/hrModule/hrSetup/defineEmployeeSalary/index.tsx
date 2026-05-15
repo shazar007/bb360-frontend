@@ -8,7 +8,8 @@ import { SyncLoader } from "react-spinners";
 
 export default function DefineEmployeeSalary() {
   const { goTo } = useAppNavigate();
-
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
 
   const [openModal, setOpenModal] = useState(false);
@@ -219,7 +220,12 @@ export default function DefineEmployeeSalary() {
                         Edit
                       </button>
 
-                      <button className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100">
+                      <button
+                        onClick={() => {
+                          setConfirm(true);
+                        }}
+                        className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
+                      >
                         Delete
                       </button>
                     </div>
@@ -238,7 +244,6 @@ export default function DefineEmployeeSalary() {
           </div>
         </div>
       </div>
-
       {openModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
@@ -333,6 +338,45 @@ export default function DefineEmployeeSalary() {
                   <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
                 ) : (
                   "Update"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}{" "}
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-80">
+              <p className="text-2xl font-semibold text-center">
+                Delete Employee Salary
+              </p>
+              <p className="text-center text-heading1 mt-3">
+                Are you sure to delete this Employee Salary?
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 p-4 pt-0">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => setConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                // onClick={handleDelete}
+              >
+                {deleteLoading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Delete"
                 )}
               </button>
             </div>
