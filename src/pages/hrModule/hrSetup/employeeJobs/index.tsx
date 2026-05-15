@@ -1,10 +1,76 @@
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
+import CustomInput from "../../../../components/customInput";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { SyncLoader } from "react-spinners";
+import {
+  getAllEmployeeJobs,
+  updateEmployeeJobs,
+} from "../../../../api/hrServices";
+import { notifyError, notifySuccess } from "../../../../components/toast";
 
 export default function EmployeeJobs() {
   const { goTo } = useAppNavigate();
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [editData, setEditData] = useState<any>(null);
+  const {
+    data: getEmployeeJobs,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["getAllEmployeeJobs"],
+    queryFn: getAllEmployeeJobs,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const AllEmployeeJobs: any[] = getEmployeeJobs?.data?.data || [];
+  const handleEdit = (item: any) => {
+    setEditData(item);
+    setOpenModal(true);
+  };
 
+  const handleChange = (field: string, value: string) => {
+    setEditData((prev: any) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleUpdate = async () => {
+    if (!editData?.job_name?.trim()) {
+      notifyError("Job Name is required");
+      return;
+    }
+
+    if (!editData?.description?.trim()) {
+      notifyError("Description is required");
+      return;
+    }
+
+    const payload = {
+      job_name: editData.job_name,
+      description: editData.description,
+    };
+
+    try {
+      setLoading(true);
+
+      await updateEmployeeJobs(editData.id, payload);
+      notifySuccess("Job updated successfully");
+      setOpenModal(false);
+      await refetch();
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -50,25 +116,72 @@ export default function EmployeeJobs() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
+              loading={isLoading}
               height="60vh"
               headers={["Edit", "Job Name", "Description"]}
-              data={[
-                [
+              data={
+                AllEmployeeJobs?.map((item: any) => [
                   <Icon
                     icon="basil:edit-outline"
                     className="text-lg cursor-pointer text-primary"
+                    onClick={() => handleEdit(item)}
                   />,
-
                   "Assistant Manager",
-
                   "For Assisting",
-                ],
-              ]}
+                ]) || []
+              }
             />
           </div>
         </div>
       </div>
+      {openModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-120 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-xs font-semibold text-heading1">
+                Update Employee Job
+              </h2>
+
+              <button
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+                className="text-xl cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            <CustomInput
+              label="Job Name"
+              value={editData?.job_name || ""}
+              onChange={(e: any) => handleChange("job_name", e.target.value)}
+            />
+
+            <CustomInput
+              label="Description"
+              value={editData?.description || ""}
+              onChange={(e: any) => handleChange("description", e.target.value)}
+            />
+
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                onClick={() => setOpenModal(false)}
+                className="px-4 py-2 bg-gray-200 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleUpdate}
+                disabled={loading}
+                className="px-4 py-2 bg-primary text-white rounded"
+              >
+                {loading ? <SyncLoader color="#fff" size={6} /> : "Update"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

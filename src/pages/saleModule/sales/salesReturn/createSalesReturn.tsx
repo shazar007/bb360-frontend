@@ -157,7 +157,6 @@ export default function CreateSalesReturn() {
       }
       setLoading(true);
       const payload = buildPayload(tableData);
-      console.log("🚀 ~ payload:", payload);
       await createSalesReturnApi(payload);
       localStorage.removeItem("salesReturn");
       setTableData([]);

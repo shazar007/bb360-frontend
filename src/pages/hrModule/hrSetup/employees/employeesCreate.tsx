@@ -5,9 +5,49 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
-import { addEmployee } from "../../../../api/employeesServices";
+import {
+  addEmployee,
+  getAllEmployees,
+} from "../../../../api/employeesServices";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomImagePicker from "../../../../components/customImagePicker";
+import CustomSelectSearch from "../../../../components/customSelectSearch";
+import {
+  getAllEmployeeDesignation,
+  getAllEmployeeGrades,
+  getAllEmployeeType,
+  getAllWorkCalendar,
+} from "../../../../api/hrServices";
+import { useQuery } from "@tanstack/react-query";
+
+const fetchHROptions = async () => {
+  const [typeRes, designationRes, gradesRes, workCalendarres] =
+    await Promise.all([
+      getAllEmployeeType(),
+      getAllEmployeeDesignation(),
+      getAllEmployeeGrades(),
+      getAllWorkCalendar(),
+    ]);
+
+  return {
+    employeeTypeOptions: (typeRes?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+    employeeDesignation: (designationRes?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+    employeeGrades: (gradesRes?.data?.data || []).map((emp: any) => ({
+      label: emp.gradeName,
+      value: emp._id,
+    })),
+    workCalendar: (workCalendarres?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+  };
+};
 
 export default function EmployeesCreate() {
   const [loading, setLoading] = useState(false);
@@ -16,73 +56,70 @@ export default function EmployeesCreate() {
     name: "",
     gender: "",
     religion: "",
-    hireDate: "",
-    fatherName: "",
     dob: "",
+    fatherName: "",
+    profilePic: "",
     cnic: "",
-    city: "",
-    image: "",
-    country: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
+    city: "",
+    country: "",
+    hireDate: "",
+    definePayroll: "",
     designation: "",
     employeeGrade: "",
-    departmentName: "",
-    locationName: "",
     employeeType: "",
-    definePayroll: "",
-    status: "",
+    workCalendar: "",
+    email: "",
+    // departmentName: "",
+    jobLocation: "",
   });
+  const { refetch } = useQuery({
+    queryKey: ["getAllEmployees"],
+    queryFn: getAllEmployees,
+  });
+  const { data: hrOptions, isLoading: hrLoading } = useQuery({
+    queryKey: ["hrOptions"],
+    queryFn: fetchHROptions,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+
+  const {
+    employeeTypeOptions = [],
+    employeeDesignation = [],
+    employeeGrades = [],
+    workCalendar = [],
+  } = hrOptions ?? {};
+
   const validateForm = () => {
-    let newErrors: any = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key as keyof typeof formData]) {
-        newErrors[key] = "This field is required";
-      }
-    });
-    if (Object.keys(newErrors).length > 0) {
+    const hasEmpty = Object.values(formData).some((val) => !val);
+    if (hasEmpty) {
       notifyError("Please fill all required fields");
       return false;
     }
     return true;
   };
+
   const handleChange = (name: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
     const payload = {
-      name: formData.name,
-      gender: formData.gender,
-      religion: formData.religion,
-      hireDate: formData.hireDate,
-      fatherName: formData.fatherName,
-      dob: formData.dob,
-      cnic: Number(formData.cnic),
-      city: formData.city,
-      country: formData.country,
-      phoneNumber: Number(formData.phoneNumber),
-      address: formData.address,
-      designation: formData.designation,
-      employeeGrade: formData.employeeGrade,
-      departmentName: formData.departmentName,
-      locationName: formData.locationName,
-      employeeType: formData.employeeType,
-      image: formData.image,
-      definePayroll: formData.definePayroll,
-      status: formData.status,
+      ...formData,
     };
-    console.log("Payload =>", payload);
     try {
       setLoading(true);
       await addEmployee(payload);
       notifySuccess("Employee Created Successfully");
-      // console.log("API Response =>", data);
+      refetch();
+      goBack();
     } catch (error: any) {
-      console.log("API Error =>", error);
       notifyError(
         error?.response?.data?.message ||
           "Something went wrong while creating employee",
@@ -91,12 +128,12 @@ export default function EmployeesCreate() {
       setLoading(false);
     }
   };
+
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
-
           <p className="text-base font-semibold md:text-lg text-heading1">
             Create Employees
           </p>
@@ -108,7 +145,6 @@ export default function EmployeesCreate() {
               placeholder="Search"
               className="w-full h-10 pl-10 pr-4 bg-white rounded-sm focus:outline-none placeholder:text-heading1/36 placeholder:text-sm"
             />
-
             <Icon
               icon="mynaui:search"
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
@@ -145,7 +181,6 @@ export default function EmployeesCreate() {
               Create Personal Information
             </p>
           </div>
-
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
             <CustomInput
               label="Name"
@@ -153,46 +188,41 @@ export default function EmployeesCreate() {
               value={formData.name}
               onChange={(e: any) => handleChange("name", e.target.value)}
             />
-
             <CustomSelect
               label="Gender"
               placeholder="Male / Female"
               options={[
-                { label: "Male", value: "male" },
-                { label: "Female", value: "female" },
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
+                { label: "Other", value: "Other" },
               ]}
               value={formData.gender}
               onChange={(value: any) => handleChange("gender", value)}
             />
-
             <CustomInput
               label="Religion"
               placeholder="Islam"
               value={formData.religion}
               onChange={(e: any) => handleChange("religion", e.target.value)}
             />
-
             <CustomDatePicker
               label="Hire Date"
               placeholder="01-Mar-2026"
               value={formData.hireDate}
               onChange={(value: any) => handleChange("hireDate", value)}
             />
-
             <CustomInput
               label="Father Name"
               placeholder="Lorem Ipsum"
               value={formData.fatherName}
               onChange={(e: any) => handleChange("fatherName", e.target.value)}
             />
-
             <CustomDatePicker
               label="DOB"
               placeholder="01-Mar-2026"
               value={formData.dob}
               onChange={(value: any) => handleChange("dob", value)}
             />
-
             <CustomInput
               label="CNIC"
               placeholder="12345-1234567-8"
@@ -200,10 +230,10 @@ export default function EmployeesCreate() {
               onChange={(e: any) => handleChange("cnic", e.target.value)}
             />
             <CustomImagePicker
-              label="Image"
-              value={formData.image}
+              label="Profile Image"
+              value={formData.profilePic}
               placeholder="Pick Image"
-              onChange={(file) => handleChange("image", file)}
+              onChange={(file) => handleChange("profilePic", file)}
             />
           </div>
         </div>
@@ -214,8 +244,7 @@ export default function EmployeesCreate() {
               Email / Phone / Address
             </p>
           </div>
-
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 xl:gap-y-2 xl:gap-x-40.25 w-full lg:w-[46.5%]">
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25 ">
             <CustomInput
               label="City"
               placeholder="Enter City"
@@ -225,8 +254,8 @@ export default function EmployeesCreate() {
             <CustomInput
               label="Phone Number"
               placeholder="Enter Phone Number"
-              value={formData.phoneNumber}
-              onChange={(e: any) => handleChange("phoneNumber", e.target.value)}
+              value={formData.phone}
+              onChange={(e: any) => handleChange("phone", e.target.value)}
             />
             <CustomInput
               label="Country"
@@ -234,12 +263,17 @@ export default function EmployeesCreate() {
               value={formData.country}
               onChange={(e: any) => handleChange("country", e.target.value)}
             />
-
             <CustomInput
               label="Address"
               placeholder="Lorem Ipsum"
               value={formData.address}
               onChange={(e: any) => handleChange("address", e.target.value)}
+            />{" "}
+            <CustomInput
+              label="Email"
+              placeholder="Lorem Ipsum"
+              value={formData.email}
+              onChange={(e: any) => handleChange("email", e.target.value)}
             />
           </div>
         </div>
@@ -249,57 +283,54 @@ export default function EmployeesCreate() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Job Detail</p>
         </div>
-
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
-          <CustomSelect
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+          <CustomSelectSearch
             label="Designation"
             placeholder="Select Designation"
             value={formData.designation}
             onChange={(value: any) => handleChange("designation", value)}
-            options={[
-              { label: "Software Engineer", value: "software_engineer" },
-              { label: "Frontend Developer", value: "frontend_developer" },
-              { label: "Backend Developer", value: "backend_developer" },
-              { label: "HR Manager", value: "hr_manager" },
-            ]}
+            options={employeeDesignation}
+            loading={hrLoading}
           />
-          <CustomInput
+          {/* <CustomSelect
             label="Department Name"
+            options={}
             placeholder="Enter Department Name"
             value={formData.departmentName}
             onChange={(e: any) =>
               handleChange("departmentName", e.target.value)
             }
-          />
-          <CustomSelect
+          /> */}
+          <CustomSelectSearch
             label="Employee Type"
+            loading={hrLoading}
+            options={employeeTypeOptions}
             placeholder="Select Employee Type"
             value={formData.employeeType}
             onChange={(value: any) => handleChange("employeeType", value)}
-            options={[
-              { label: "Permanent", value: "permanent" },
-              { label: "Contract", value: "contract" },
-              { label: "Intern", value: "intern" },
-              { label: "Part Time", value: "part_time" },
-            ]}
           />
-          <CustomInput
-            label="Status"
-            placeholder="Enter Status"
-            value={formData.status}
-            onChange={(e: any) => handleChange("status", e.target.value)}
-          />{" "}
-          <CustomDatePicker
+
+          <CustomSelectSearch
+            label="Work Calendar"
+            placeholder="Select workCalendar"
+            value={formData.workCalendar}
+            onChange={(value: any) => handleChange("workCalendar", value)}
+            options={workCalendar}
+            loading={hrLoading}
+          />
+          <CustomSelectSearch
             label="Employee Grade"
-            placeholder="01-Mar-2026"
+            placeholder="Select Grade"
+            loading={hrLoading}
+            options={employeeGrades}
             value={formData.employeeGrade}
             onChange={(value: any) => handleChange("employeeGrade", value)}
           />
           <CustomInput
             label="Job Location"
             placeholder="Enter Location"
-            value={formData.locationName}
-            onChange={(e: any) => handleChange("locationName", e.target.value)}
+            value={formData.jobLocation}
+            onChange={(e: any) => handleChange("jobLocation", e.target.value)}
           />
           <CustomSelect
             label="Define Payroll"
@@ -307,9 +338,12 @@ export default function EmployeesCreate() {
             value={formData.definePayroll}
             onChange={(value: any) => handleChange("definePayroll", value)}
             options={[
-              { label: "Monthly Payroll", value: "monthly" },
-              { label: "Weekly Payroll", value: "weekly" },
-              { label: "Daily Wage", value: "daily" },
+              { label: "Daily Wages", value: "daily wages" },
+              { label: "Hourly Wages", value: "hourly wages" },
+              {
+                label: "Regular Monthly Payroll",
+                value: "regular monthly payroll",
+              },
             ]}
           />
         </div>

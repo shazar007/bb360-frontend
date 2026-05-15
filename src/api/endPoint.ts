@@ -62,6 +62,27 @@ export const ENDPOINTS = {
   // --------------Employees-------------
   EMPLOYEES: "/employees",
 
+  // --------------Employees Designation-------------
+  DESIGNATION: "/designation",
+
+  // --------------Employees Type-------------
+  EMPLOYEE_TYPE: "/employee-type",
+
+  // --------------Employee Grades-------------
+  EMPLOYEE_GRADES: "/employee-grade",
+
+  // --------------WORK CLENDER-------------
+  WORK_CLENDER: "/work-calendar",
+
+  // --------------EMPLOYEE JOBS-------------
+  EMPLOYEE_JOBS: "/employee-jobs",
+
+  // --------------EMPLOYEES-------------
+  EMPLOYEES_ALL: "/employees",
+
+  // --------------Employee Salary-------------
+  EMPLOYEE_SALARY: "/employee-salary",
+
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
 };

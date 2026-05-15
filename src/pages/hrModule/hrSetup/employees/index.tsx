@@ -8,59 +8,57 @@ import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import dayjs from "dayjs";
+import CustomSelectSearch from "../../../../components/customSelectSearch";
+import {
+  getAllEmployeeDesignation,
+  getAllEmployeeGrades,
+  getAllEmployeeType,
+  getAllWorkCalendar,
+  updateAllEmployee,
+} from "../../../../api/hrServices";
+import CustomSelect from "../../../../components/customSelect";
 
-const tableData = [
-  {
-    employeeId: "EMP-000121",
-    name: "Salman Ahmed",
-    gender: "male",
-    religion: "Islam",
-    hireDate: "15-Jan-2023",
-    fatherName: "Muhammad Ahmed",
-    dob: "12-Aug-1992",
-    cnic: "35202-1234567-1",
-    city: "Lahore",
-    country: "Pakistan",
-    phoneNumber: "+92 300 1234567",
-    address: "Model Town, Lahore",
-    designation: "Software Engineer",
-    employeeGrade: "B2",
-    departmentName: "IT Department",
-    locationName: "Head Office Lahore",
-    employeeType: "Full Time",
-    definePayroll: "Monthly",
-    status: "Active",
-    email: "salman.ahmed@gmail.com",
-  },
-  {
-    employeeId: "EMP-000122",
-    name: "Amina Khan",
-    gender: "female",
-    religion: "Islam",
-    hireDate: "10-Mar-2022",
-    fatherName: "Imran Khan",
-    dob: "05-May-1994",
-    cnic: "35201-7654321-9",
-    city: "Karachi",
-    country: "Pakistan",
-    phoneNumber: "+92 321 9876543",
-    address: "DHA Phase 5, Karachi",
-    designation: "HR Manager",
-    employeeGrade: "A2",
-    departmentName: "Human Resources",
-    locationName: "Karachi Office",
-    employeeType: "Full Time",
-    definePayroll: "Monthly",
-    status: "Active",
-    email: "amina.khan@gmail.com",
-  },
-];
+const fetchHROptions = async () => {
+  const [typeRes, designationRes, gradesRes, workCalendarres] =
+    await Promise.all([
+      getAllEmployeeType(),
+      getAllEmployeeDesignation(),
+      getAllEmployeeGrades(),
+      getAllWorkCalendar(),
+    ]);
+
+  return {
+    employeeTypeOptions: (typeRes?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+    employeeDesignation: (designationRes?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+    employeeGrades: (gradesRes?.data?.data || []).map((emp: any) => ({
+      label: emp.gradeName,
+      value: emp._id,
+    })),
+    workCalendar: (workCalendarres?.data?.data || []).map((emp: any) => ({
+      label: emp.name,
+      value: emp._id,
+    })),
+  };
+};
 export default function Employees() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<any>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { data: allEmployees } = useQuery({
+  const {
+    data: allEmployees,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["getAllEmployees"],
     queryFn: getAllEmployees,
     staleTime: Infinity,
@@ -69,6 +67,26 @@ export default function Employees() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
+  const { data: hrOptions, isLoading: hrLoading } = useQuery({
+    queryKey: ["hrOptions"],
+    queryFn: fetchHROptions,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const {
+    employeeTypeOptions = [],
+    employeeDesignation = [],
+    employeeGrades = [],
+    workCalendar = [],
+  } = hrOptions ?? {};
+  const AllEmployee: any[] = allEmployees?.data?.data || [];
+  console.log("🚀 ~ AllEmployee:", AllEmployee);
+  const handleChange = (name: string, value: any) => {
+    setEditData((prev: any) => ({ ...prev, [name]: value }));
+  };
   const toggleMenu = (index: number) => {
     setOpenMenuIndex(openMenuIndex === index ? null : index);
   };
@@ -133,12 +151,11 @@ export default function Employees() {
             <div class="info"><b>Designation:</b> ${item.designation || "-"}</div>
             <div class="info"><b>Employee Grade:</b> ${item.employeeGrade || "-"}</div>
             <div class="info"><b>Employee Type:</b> ${item.employeeType || "-"}</div>
-            <div class="info"><b>Department:</b> ${item.departmentName || "-"}</div>
-            <div class="info"><b>Location:</b> ${item.locationName || "-"}</div>
+            <div class="info"><b>Location:</b> ${item.jobLocation || "-"}</div>
             <div class="info"><b>Hire Date:</b> ${item.hireDate || "-"}</div>
             <div class="info"><b>Status:</b> ${item.status || "-"}</div>
             <div class="info"><b>Email:</b> ${item.email || "-"}</div>
-            <div class="info"><b>Phone:</b> ${item.phoneNumber || "-"}</div>
+            <div class="info"><b>Phone:</b> ${item.phone || "-"}</div>
             <div class="info"><b>Address:</b> ${item.address || "-"}</div>
             <div class="info"><b>City:</b> ${item.city || "-"}</div>
             <div class="info"><b>Country:</b> ${item.country || "-"}</div>
@@ -161,27 +178,28 @@ export default function Employees() {
         name: editData.name,
         gender: editData.gender,
         religion: editData.religion,
-        hireDate: editData.hireDate,
-        fatherName: editData.fatherName,
         dob: editData.dob,
+        fatherName: editData.fatherName,
         cnic: editData.cnic,
+        phone: editData.phone,
+        address: editData.address,
         city: editData.city,
         country: editData.country,
-        phoneNumber: editData.phoneNumber,
-        address: editData.address,
+        hireDate: editData.hireDate,
         designation: editData.designation,
         employeeGrade: editData.employeeGrade,
-        departmentName: editData.departmentName,
-        locationName: editData.locationName,
         employeeType: editData.employeeType,
+        workCalendar: editData.workCalendar,
         definePayroll: editData.definePayroll,
+        jobLocation: editData.jobLocation,
         status: editData.status,
         email: editData.email,
       };
       console.log("Update Payload =>", payload);
-      // await updateEmployeeApi(payload)
+      await updateAllEmployee(editData._id, payload);
       notifySuccess("Employee updated successfully");
       setIsEditOpen(false);
+      refetch();
     } catch (error) {
       console.log(error);
       notifyError("Failed to update employee");
@@ -227,7 +245,7 @@ export default function Employees() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
+              loading={isLoading}
               height="60vh"
               headers={[
                 "Edit",
@@ -242,10 +260,9 @@ export default function Employees() {
                 "Phone",
                 "Address",
                 "Job Title",
-                "Department",
                 "Location",
               ]}
-              data={tableData.map((row, index) => [
+              data={AllEmployee.map((row, index) => [
                 <div className="relative">
                   <Icon
                     icon="qlementine-icons:menu-burger-16"
@@ -258,21 +275,31 @@ export default function Employees() {
 
                   {openMenuIndex === index && (
                     <div
-                      className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-20 top-6"
+                      className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md -right-25 top-6"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
+                        className="w-full px-2 py-1 text-left text-heading1 cursor-pointer hover:bg-gray-100"
                         onClick={() => {
-                          setEditData(row);
+                          setEditData({
+                            ...row,
+                            designation: row.designation?._id || null,
+                            employeeGrade: row.employeeGrade?._id || null,
+                            employeeType: row.employeeType?._id || null,
+                            workCalendar: row.workCalendar?._id || null,
+                          });
                           setIsEditOpen(true);
                           setOpenMenuIndex(null);
                         }}
-                        className="w-full px-2 py-1 text-left cursor-pointer hover:bg-gray-100"
                       >
                         Edit
                       </button>
-
-                      <button className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100">
+                      <button
+                        onClick={() => {
+                          setConfirm(true);
+                        }}
+                        className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
+                      >
                         Delete
                       </button>
                     </div>
@@ -290,17 +317,17 @@ export default function Employees() {
                   onClick={() => handlePrint(row)}
                   className="text-lg cursor-pointer text-primary"
                 />,
+
                 row.employeeId,
                 row.name,
-                row.dob,
-                row.hireDate,
+                row.dob ? dayjs(row.dob).format("DD-MMM-YYYY") : "-",
+                row.hireDate ? dayjs(row.hireDate).format("DD-MMM-YYYY") : "-",
                 row.city,
                 row.email,
-                row.phoneNumber,
+                row.phone,
                 row.address,
-                row.designation,
-                row.departmentName,
-                row.locationName,
+                row.designation?.name || "-",
+                row.jobLocation,
               ])}
             />
           </div>
@@ -387,9 +414,9 @@ export default function Employees() {
               />
               <CustomInput
                 label="Phone Number"
-                value={editData?.phoneNumber || ""}
+                value={editData?.phone || ""}
                 onChange={(e) =>
-                  setEditData({ ...editData, phoneNumber: e.target.value })
+                  setEditData({ ...editData, phone: e.target.value })
                 }
               />
               <CustomInput
@@ -399,32 +426,63 @@ export default function Employees() {
                   setEditData({ ...editData, address: e.target.value })
                 }
               />
-              <CustomInput
+
+              <CustomSelectSearch
                 label="Designation"
+                placeholder="Select Designation"
                 value={editData?.designation || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, designation: e.target.value })
-                }
+                onChange={(value: any) => handleChange("designation", value)}
+                options={employeeDesignation}
+                loading={hrLoading}
               />
-              <CustomInput
-                label="Department"
-                value={editData?.departmentName || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, departmentName: e.target.value })
-                }
+              <CustomSelectSearch
+                label="Employee Grade"
+                placeholder="Select Grade"
+                loading={hrLoading}
+                options={employeeGrades}
+                value={editData?.employeeGrade || ""}
+                onChange={(value: any) => handleChange("employeeGrade", value)}
               />
-              <CustomInput
-                label="Location"
-                value={editData?.locationName || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, locationName: e.target.value })
-                }
+              <CustomSelectSearch
+                label="Employee Type"
+                loading={hrLoading}
+                options={employeeTypeOptions}
+                placeholder="Select Employee Type"
+                value={editData?.employeeType || ""}
+                onChange={(value: any) => handleChange("employeeType", value)}
               />
-              <CustomInput
+              <CustomSelectSearch
+                label="Work Calendar"
+                placeholder="Select workCalendar"
+                value={editData?.workCalendar || ""}
+                onChange={(value: any) => handleChange("workCalendar", value)}
+                options={workCalendar}
+                loading={hrLoading}
+              />
+              <CustomSelect
                 label="Status"
+                options={[
+                  { label: "Active", value: "Active" },
+                  { label: "Inactive", value: "Inactive" },
+                  { label: "Terminated", value: "Terminated" },
+                  { label: "On-Leave", value: "On-Leave" },
+                ]}
                 value={editData?.status || ""}
-                onChange={(e) =>
-                  setEditData({ ...editData, status: e.target.value })
+                onChange={(value: any) =>
+                  setEditData({ ...editData, status: value })
+                }
+              />
+              <CustomSelect
+                label="Payroll Status"
+                options={[
+                  { label: "Active", value: "Active" },
+                  { label: "On-Hold", value: "On-Hold" },
+                  { label: "Terminated", value: "Terminated" },
+                  { label: "Suspended", value: "Suspended" },
+                ]}
+                value={editData?.payrollStatus || ""}
+                onChange={(value: any) =>
+                  setEditData({ ...editData, payrollStatus: value })
                 }
               />
             </div>
@@ -443,6 +501,45 @@ export default function Employees() {
                   </>
                 ) : (
                   "Update"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}{" "}
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                ✕
+              </p>
+            </div>
+            <div className="p-4 mx-auto w-60">
+              <p className="text-2xl font-semibold text-center">
+                Delete Employees
+              </p>
+              <p className="text-center text-heading1">
+                Are you sure to delete this Employees?
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 p-4 pt-0">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => setConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
+                // onClick={handleDelete}
+              >
+                {deleteLoading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Delete"
                 )}
               </button>
             </div>

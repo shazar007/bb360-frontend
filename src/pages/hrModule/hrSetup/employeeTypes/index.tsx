@@ -1,10 +1,58 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getAllEmployeeType,
+  updateEmployeeType,
+} from "../../../../api/hrServices";
+import { useState } from "react";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
 
 export default function EmployeeTypes() {
+  const [confirm, setConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [newStatus, setNewStatus] = useState<boolean>(false);
   const { goTo } = useAppNavigate();
+  const {
+    data: getAllEmployeType,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["getAllEmployeeType"],
+    queryFn: getAllEmployeeType,
 
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const AllEmployeType: any[] = getAllEmployeType?.data?.data || [];
+  const handleStatusChange = (item: any) => {
+    setSelectedItem(item);
+    setNewStatus(!item.isActive);
+    setConfirm(true);
+  };
+  const handleConfirmUpdate = async () => {
+    try {
+      setLoading(true);
+
+      await updateEmployeeType(selectedItem._id, {
+        isActive: newStatus,
+      });
+      notifySuccess("Status updated successfully");
+      setConfirm(false);
+      refetch();
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Failed to update status");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -50,28 +98,84 @@ export default function EmployeeTypes() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
+              loading={isLoading}
               height="60vh"
               headers={["Edit", "Employee Type", "Is Active"]}
-              data={[
-                [
+              data={
+                AllEmployeType?.map((item: any) => [
                   <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
+                    icon={item.isActive ? "fa:toggle-on" : "fa:toggle-off"}
+                    className={`cursor-pointer text-2xl ${
+                      item.isActive ? "text-primary" : "text-gray-400"
+                    }`}
+                    onClick={() => handleStatusChange(item)}
                   />,
-
-                  "Director & CEO",
-
+                  item?.name,
                   <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg cursor-pointer text-primary"
+                    icon={
+                      item.isActive
+                        ? "fluent:checkbox-checked-16-regular"
+                        : "fluent:checkbox-unchecked-16-regular"
+                    }
+                    className={`cursor-pointer text-2xl ${
+                      item.isActive ? "text-primary" : "text-gray-400"
+                    }`}
+                    // onClick={() => handleStatusChange(item)}
                   />,
-                ],
-              ]}
+                ]) || []
+              }
             />
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {confirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white shadow-xl w-100 rounded-2xl">
+            <div className="p-4 flex justify-end border-b-[0.5px] border-[#304250]/36">
+              <p onClick={() => setConfirm(false)} className="cursor-pointer">
+                {" "}
+                ✕
+              </p>
+            </div>
+            <div className="mx-auto w-80 mt-4">
+              <p className="text-2xl font-semibold text-center">
+                {" "}
+                Change Status
+              </p>
+              <p className="text-center text-heading1">
+                Are you sure you want to change status to{" "}
+                <span className="font-semibold">
+                  {newStatus ? "Active" : "Inactive"}
+                </span>
+                ?
+              </p>
+            </div>
+
+            <div className="flex justify-between gap-2 mt-5 p-4 pt-0">
+              <button
+                className="h-10 rounded-md cursor-pointer w-25"
+                style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
+                onClick={() => setConfirm(false)}
+              >
+                Cancel
+              </button>
+              <button
+                style={{
+                  boxShadow: "0px 1px 12px 0px #0000001F",
+                }}
+                className="h-10 w-25 cursor-pointer rounded-md text-white bg-primary"
+                onClick={handleConfirmUpdate}
+              >
+                {loading ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Update"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

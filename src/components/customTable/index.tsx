@@ -21,7 +21,11 @@ export default function CustomTable({
 }: CustomTableProps) {
   return (
     <div
-      style={{ height: height || "40vh" }}
+      style={{
+        height: height || "40vh",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
       className={`flex flex-col justify-between overflow-auto bg-white  ${
         norounded ? "rounded-t-0" : "rounded-xl"
       }`}

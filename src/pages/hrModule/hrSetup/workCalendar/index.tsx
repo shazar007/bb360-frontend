@@ -1,10 +1,108 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getAllWorkCalendar,
+  updateWorkCalendar,
+} from "../../../../api/hrServices";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { useState } from "react";
+import { SyncLoader } from "react-spinners";
+import CustomInput from "../../../../components/customInput";
+import CustomCheckbox from "../../../../components/customCheckbox";
+import CustomTimePicker from "../../../../components/timePicker";
 
 export default function WorkCalendar() {
   const { goTo } = useAppNavigate();
+  const [editModal, setEditModal] = useState(false);
+  const [loadingUpdate, setLoadingUpdate] = useState(false);
 
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    workHoursPerDay: 0,
+    startHour: "",
+    endHour: "",
+    halfMarkAfter: 0,
+    halfDutyMinimumMin: 0,
+    fullDutyMinimumMin: 0,
+    workingDays: {
+      monday: false,
+      tuesday: false,
+      wednesday: false,
+      thursday: false,
+      friday: false,
+      saturday: false,
+      sunday: false,
+    },
+  });
+  const {
+    data: getWorkCalendar,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["getAllWorkCalendar"],
+    queryFn: getAllWorkCalendar,
+
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const AllWorkCalendar: any[] = getWorkCalendar?.data?.data || [];
+  const renderDayIcon = (value: boolean) => {
+    return (
+      <Icon
+        icon={
+          value
+            ? "fluent:checkbox-checked-16-regular"
+            : "fluent:checkbox-unchecked-16-regular"
+        }
+        className={`text-lg ${value ? "text-primary" : "text-gray-400"}`}
+      />
+    );
+  };
+  const handleEdit = (item: any) => {
+    setFormData({
+      id: item._id,
+      name: item.name,
+      workHoursPerDay: item.workHoursPerDay,
+      startHour: item.startHour,
+      endHour: item.endHour,
+      halfMarkAfter: item.halfMarkAfter,
+      halfDutyMinimumMin: item.halfDutyMinimumMin,
+      fullDutyMinimumMin: item.fullDutyMinimumMin,
+      workingDays: item.workingDays || {},
+    });
+
+    setEditModal(true);
+  };
+  const handleUpdate = async () => {
+    try {
+      setLoadingUpdate(true);
+
+      await updateWorkCalendar(formData.id, formData);
+
+      notifySuccess("Work Calendar Updated Successfully");
+
+      setEditModal(false);
+
+      await refetch();
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Update failed");
+    } finally {
+      setLoadingUpdate(false);
+    }
+  };
+  const handleNumberChange = (key: string, value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: Number(value) || 0,
+    }));
+  };
   return (
     <>
       <div className="mt-2">
@@ -50,7 +148,7 @@ export default function WorkCalendar() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
+              loading={isLoading}
               height="60vh"
               headers={[
                 "Edit",
@@ -64,57 +162,146 @@ export default function WorkCalendar() {
                 "Saturday",
                 "Sunday",
               ]}
-              data={[
-                [
+              data={
+                AllWorkCalendar?.map((item: any) => [
                   <Icon
                     icon="basil:edit-outline"
                     className="text-lg cursor-pointer text-primary"
+                    onClick={() => handleEdit(item)}
                   />,
+                  item?.name,
+                  item?.workHoursPerDay,
 
-                  "Morning Shift",
-
-                  "8",
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg text-primary"
-                  />,
-                ],
-              ]}
+                  renderDayIcon(item?.workingDays?.monday),
+                  renderDayIcon(item?.workingDays?.tuesday),
+                  renderDayIcon(item?.workingDays?.wednesday),
+                  renderDayIcon(item?.workingDays?.thursday),
+                  renderDayIcon(item?.workingDays?.friday),
+                  renderDayIcon(item?.workingDays?.saturday),
+                  renderDayIcon(item?.workingDays?.sunday),
+                ]) || []
+              }
             />
           </div>
         </div>
       </div>
+      {editModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h2 className="text-xs font-semibold text-heading1">
+                Update Work Calendar
+              </h2>
+
+              <button
+                onClick={() => {
+                  setEditModal(false);
+                }}
+                className="text-xl cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+              <CustomInput
+                label="Name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+              />
+              <CustomInput
+                label="Work Hours Per Day"
+                value={formData.workHoursPerDay}
+                onChange={(e: any) =>
+                  handleNumberChange("workHoursPerDay", e.target.value)
+                }
+              />{" "}
+              <CustomTimePicker
+                label="startHour"
+                value={formData.startHour}
+                onChange={(value: string) =>
+                  setFormData({
+                    ...formData,
+                    startHour: value,
+                  })
+                }
+              />
+              <CustomTimePicker
+                label="endHour"
+                value={formData.endHour}
+                onChange={(value: string) =>
+                  setFormData({
+                    ...formData,
+                    endHour: value,
+                  })
+                }
+              />
+              <CustomInput
+                label="Full Duty Minimum Min"
+                value={formData.fullDutyMinimumMin}
+                onChange={(e: any) =>
+                  handleNumberChange("fullDutyMinimumMin", e.target.value)
+                }
+              />{" "}
+              <CustomInput
+                label="Half Duty Minimum Min"
+                value={formData.halfDutyMinimumMin}
+                onChange={(e: any) =>
+                  handleNumberChange("halfDutyMinimumMin", e.target.value)
+                }
+              />{" "}
+              <CustomInput
+                label="Half Mark After (Minutes)"
+                value={formData.halfMarkAfter}
+                onChange={(e: any) =>
+                  handleNumberChange("halfMarkAfter", e.target.value)
+                }
+              />
+            </div>
+            <div className="grid grid-cols-4 gap-2 mt-4 px-6">
+              {Object.keys(formData.workingDays).map((day) => (
+                <label key={day} className="flex gap-2 items-center">
+                  <CustomCheckbox
+                    checked={
+                      formData.workingDays[
+                        day as keyof typeof formData.workingDays
+                      ]
+                    }
+                    onChange={() =>
+                      setFormData({
+                        ...formData,
+                        workingDays: {
+                          ...formData.workingDays,
+                          [day]:
+                            !formData.workingDays[
+                              day as keyof typeof formData.workingDays
+                            ],
+                        },
+                      })
+                    }
+                  />
+                  <p className="capitalize"> {day}</p>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex justify-end p-4">
+              <button
+                onClick={handleUpdate}
+                disabled={loadingUpdate}
+                className="mt-4 bg-primary cursor-pointer text-white px-6 py-2 rounded"
+              >
+                {loadingUpdate ? (
+                  <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Update"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

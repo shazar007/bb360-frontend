@@ -5,10 +5,17 @@ import CustomSelect from "../../../../components/customSelect";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomTimePicker from "../../../../components/timePicker";
+import {
+  addWorkCalendar,
+  getAllWorkCalendar,
+} from "../../../../api/hrServices";
+import { SyncLoader } from "react-spinners";
+import { useQuery } from "@tanstack/react-query";
+import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function WorkCalendarCreate() {
   const [loading, setLoading] = useState(false);
-
+  const { goBack } = useAppNavigate();
   const [formData, setFormData] = useState({
     name: "",
     startHour: "",
@@ -27,7 +34,17 @@ export default function WorkCalendarCreate() {
       sunday: false,
     },
   });
+  const { refetch } = useQuery({
+    queryKey: ["getAllWorkCalendar"],
+    queryFn: getAllWorkCalendar,
 
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -94,28 +111,47 @@ export default function WorkCalendarCreate() {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    const toNumber = (val: any) => Number(val) || 0;
+
     const payload = {
       name: formData.name,
-      start_hour: formData.startHour,
-      half_mark_after: formData.halfMarkAfter,
-      half_duty_minimum_min: Number(formData.halfDutyMinimumMin),
-      work_hours_per_day: formData.workHoursPerDay,
-      end_hour: formData.endHour,
-      full_duty_minimum_min: Number(formData.fullDutyMinimumMin),
-      working_days: Object.keys(formData.workingDays).filter(
-        (day) => formData.workingDays[day as keyof typeof formData.workingDays],
-      ),
+      workHoursPerDay: toNumber(formData.workHoursPerDay),
+      startHour: formData.startHour,
+      endHour: formData.endHour,
+      halfMarkAfter: toNumber(formData.halfMarkAfter),
+      fullDutyMinimumMin: toNumber(formData.fullDutyMinimumMin),
+      halfDutyMinimumMin: toNumber(formData.halfDutyMinimumMin),
+      workingDays: { ...formData.workingDays },
     };
-
-    console.log("Payload => ", payload);
-
     try {
       setLoading(true);
-      // const response = await createWorkCalendar(payload);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      notifySuccess("Work Calendar Created Successfully");
-      console.log(payload);
+      const response = await addWorkCalendar(payload);
+      notifySuccess(
+        response?.data?.message || "Work Calendar Created Successfully",
+      );
+      await refetch();
+      setFormData({
+        name: "",
+        startHour: "",
+        halfMarkAfter: "",
+        halfDutyMinimumMin: "",
+        workHoursPerDay: "",
+        endHour: "",
+        fullDutyMinimumMin: "",
+        workingDays: {
+          monday: false,
+          tuesday: false,
+          wednesday: false,
+          thursday: false,
+          friday: false,
+          saturday: false,
+          sunday: false,
+        },
+      });
+      goBack();
     } catch (error: any) {
+      console.log("Error => ", error);
+
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -135,7 +171,10 @@ export default function WorkCalendarCreate() {
           </div>
 
           <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-            <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
+            <button
+              onClick={goBack}
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary"
+            >
               <Icon icon="ion:play-back-outline" className="w-5 h-5" />
               Back
             </button>
@@ -147,7 +186,7 @@ export default function WorkCalendarCreate() {
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-50"
             >
               {loading ? (
-                "Loading..."
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
               ) : (
                 <>
                   <Icon icon="basil:add-outline" className="text-lg" />
@@ -178,11 +217,13 @@ export default function WorkCalendarCreate() {
               value={formData.endHour}
               onChange={(value: any) => handleChange("endHour", value)}
             />
-            <CustomTimePicker
+            <CustomInput
               label="Half Mark After"
-              placeholder="12:30 PM"
+              placeholder="Half Mark After (Minutes)"
               value={formData.halfMarkAfter}
-              onChange={(value: any) => handleChange("halfMarkAfter", value)}
+              onChange={(e: any) =>
+                handleChange("halfMarkAfter", e.target.value)
+              }
             />
             <CustomInput
               label="Half Duty Minimum Min"
@@ -204,18 +245,18 @@ export default function WorkCalendarCreate() {
               value={formData.workHoursPerDay}
               onChange={(value: any) => handleChange("workHoursPerDay", value)}
               options={[
-                { label: "1 Hour", value: "1H" },
-                { label: "2 Hours", value: "2H" },
-                { label: "3 Hours", value: "3H" },
-                { label: "4 Hours", value: "4H" },
-                { label: "5 Hours", value: "5H" },
-                { label: "6 Hours", value: "6H" },
-                { label: "7 Hours", value: "7H" },
-                { label: "8 Hours", value: "8H" },
-                { label: "9 Hours", value: "9H" },
-                { label: "10 Hours", value: "10H" },
-                { label: "11 Hours", value: "11H" },
-                { label: "12 Hours", value: "12H" },
+                { label: "1 Hour", value: "1" },
+                { label: "2 Hours", value: "2" },
+                { label: "3 Hours", value: "3" },
+                { label: "4 Hours", value: "4" },
+                { label: "5 Hours", value: "5" },
+                { label: "6 Hours", value: "6" },
+                { label: "7 Hours", value: "7" },
+                { label: "8 Hours", value: "8" },
+                { label: "9 Hours", value: "9" },
+                { label: "10 Hours", value: "10" },
+                { label: "11 Hours", value: "11" },
+                { label: "12 Hours", value: "12" },
               ]}
             />{" "}
             <CustomInput

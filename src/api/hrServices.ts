@@ -1,123 +1,91 @@
+import { addEmployee } from "./employeesServices";
 import { HTTP_CLIENT } from "../utils/httpClient";
 import { ENDPOINTS } from "./endPoint";
 
-export const getAllAttendance = (params?: {
-  search?: string;
-  month?: number;
-  year?: number;
-}) => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE, {
-    params,
-  });
+// --------------DESIGNATION-------------
+export const addEmployeeDesignation = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.DESIGNATION, values);
+};
+export const getAllEmployeeDesignation = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.DESIGNATION);
+};
+export const updateEmployeeDesignation = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.DESIGNATION}/${id}`, values);
 };
 
-export const updateAttendance = (id: string, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
+// --------------EMPLOYEES TYPE-------------
+
+export const addEmployeeType = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_TYPE, values);
 };
-export const updateAttendanceAdmin = (id: string, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
+export const getAllEmployeeType = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_TYPE);
+};
+export const updateEmployeeType = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_TYPE}/${id}`, values);
 };
 
-export const getAttendanceSummary = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE);
+// --------------EMPLOYEE GRADES-------------
+export const addEmployeeGrades = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_GRADES, values);
 };
-
-export const createDailyAttendance = () => {
-  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE);
+export const getAllEmployeeGrades = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_GRADES);
 };
-
-export const getAttendanceGraph = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE);
+export const updateEmployeeGrades = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_GRADES}/${id}`, values);
 };
-
-export const setCompanyTimingAPI = (values: {
-  startTime: string;
-  endTime: string;
-  lateAfterMinutes: number;
-}) => {
-  return HTTP_CLIENT.post(`${ENDPOINTS.ATTENDANCE}`, values);
-};
-export const GetCompanyTimingAPI = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE);
-};
-
-//  --------------------Events------------------------
-export const updateEvents = (id: string, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
-};
-export const createEvent = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE, values);
-};
-export const getAllEvents = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE);
-};
-export const deleteEvent = (id: string) => {
-  return HTTP_CLIENT.delete(`${ENDPOINTS.ATTENDANCE}/${id}`);
-};
-
-//  --------------------Leaves------------------------
-
-export const getAllLeaves = (search?: string) => {
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE, {
-    params: search ? { search } : {},
-  });
-};
-export const updateLeavesStatus = (
-  id: string,
-  values: { status: string; approvedBy: string },
+export const updateEmployeeGradesStatus = (
+  id: string | number,
+  values: any,
 ) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
-};
-export const updateLeave = (id: string, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
+  return HTTP_CLIENT.patch(`${ENDPOINTS.EMPLOYEE_GRADES}/${id}/toggle`, values);
 };
 
-export const deleteLeave = (id: string) => {
-  return HTTP_CLIENT.delete(`${ENDPOINTS.ATTENDANCE}/${id}`);
+// --------------WORK CLENDER-------------
+
+export const addWorkCalendar = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.WORK_CLENDER, values);
 };
-export const applyLeave = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE, values);
+export const getAllWorkCalendar = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.WORK_CLENDER);
+};
+export const updateWorkCalendar = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.WORK_CLENDER}/${id}`, values);
 };
 
-//  --------------------Payroll------------------------
-export const generatePayroll = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE, values);
+// --------------EMPLOYEE JOBS-------------
+
+export const addEmployeeJobs = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_JOBS, values);
+};
+export const getAllEmployeeJobs = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_JOBS);
+};
+export const updateEmployeeJobs = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_JOBS}/${id}`, values);
 };
 
-export const approvePayroll = (id: string, data: { approvedBy: string }) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE.replace(":id", id)}`, data);
+// --------------EMPLOYEE-------------
+
+export const addAllEmployee = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEES_ALL, values);
+};
+export const getAllEmployee = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEES_ALL);
+};
+export const updateAllEmployee = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`, values);
 };
 
-export const getAllPayrolls = (
-  employeeId?: string,
-  employeeName?: string,
-  month?: string,
-  year?: number,
-) => {
-  const params: any = {};
-  if (employeeId) params.employeeId = employeeId;
-  if (employeeName) params.employeeName = employeeName;
-  if (month) params.month = month;
-  if (year) params.year = year;
+// --------------Employee Salary-------------
 
-  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE, { params });
+export const addEmployeeSalary = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_SALARY, values);
 };
-
-export const getEmployeePayrolls = (employeeId: string) => {
-  return HTTP_CLIENT.get(
-    ENDPOINTS.ATTENDANCE.replace(":employeeId", employeeId),
-  );
+export const getAllEmployeeSalary = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_SALARY);
 };
-
-export const updatePayroll = (id: string, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE}/${id}`, values);
-};
-export const generateSalarySlip = (id: string) => {
-  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE.replace(":id", id));
-};
-
-export const downloadSalarySlip = (id: string) => {
-  return HTTP_CLIENT.get(`${ENDPOINTS.ATTENDANCE}/${id}`, {
-    responseType: "blob",
-  });
+export const updateEmployeeSalary = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_SALARY}/${id}`, values);
 };

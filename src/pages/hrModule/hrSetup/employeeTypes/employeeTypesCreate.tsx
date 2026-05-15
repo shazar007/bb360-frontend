@@ -1,9 +1,56 @@
 import { Icon } from "@iconify/react";
-import CustomTable from "../../../../components/customTable";
-import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
+import { useState } from "react";
+import { useAppNavigate } from "../../../../hooks/navigation";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { SyncLoader } from "react-spinners";
+import {
+  addEmployeeType,
+  getAllEmployeeType,
+} from "../../../../api/hrServices";
+import { useQuery } from "@tanstack/react-query";
 
 export default function EmployeeTypesCreate() {
+  const { goTo, goBack } = useAppNavigate();
+  const [loading, setLoading] = useState(false);
+  const { refetch } = useQuery({
+    queryKey: ["getAllEmployeeType"],
+    queryFn: getAllEmployeeType,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const [formData, setFormData] = useState({
+    name: "",
+  });
+  const handleSave = async () => {
+    if (!formData.name.trim()) {
+      notifyError("Employee type name is required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const payload = {
+        name: formData.name,
+      };
+
+      const response = await addEmployeeType(payload);
+      notifySuccess(
+        response?.data?.message || "Employee type created successfully",
+      );
+      goTo("/hr-module/hr-setup/employee-types");
+      refetch();
+    } catch (error: any) {
+      notifyError(
+        error?.response?.data?.message || "Failed to create employee type",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -17,7 +64,10 @@ export default function EmployeeTypesCreate() {
           </div>
 
           <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-            <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
+            <button
+              onClick={goBack}
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary"
+            >
               <Icon icon="ion:play-back-outline" className="w-5 h-5" />
               Back
             </button>
@@ -25,9 +75,19 @@ export default function EmployeeTypesCreate() {
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
             </button>
-            <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary">
-              <Icon icon="mynaui:save" className="w-5 h-5" />
-              Save
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary disabled:opacity-50"
+            >
+              {loading ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                <>
+                  <Icon icon="mynaui:save" className="w-5 h-5" />
+                  Save
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -39,31 +99,16 @@ export default function EmployeeTypesCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2  gap-24 xl:gap-y-2 xl:gap-x-40.25 lg:gap-x-40.25 lg:w-180 gap-y-2">
-            <CustomInput label="Employee Type Name" placeholder="write here" />
-            <CustomSelect label="Is Active" placeholder="Yes/No" />
-          </div>
-        </div>
-        <div className="mt-3 bg-bgprimar y rounded-2xl">
-          <div className="mt-3">
-            <CustomTable
-              loading={false}
-              height="40vh"
-              headers={["Edit", "Employee Type", "Is Active"]}
-              data={[
-                [
-                  <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-
-                  "Director & CEO",
-
-                  <Icon
-                    icon="fluent:checkbox-checked-16-regular"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                ],
-              ]}
+            <CustomInput
+              label="Employee Type Name"
+              placeholder="write here"
+              value={formData.name}
+              onChange={(e: any) =>
+                setFormData({
+                  ...formData,
+                  name: e.target.value,
+                })
+              }
             />
           </div>
         </div>
