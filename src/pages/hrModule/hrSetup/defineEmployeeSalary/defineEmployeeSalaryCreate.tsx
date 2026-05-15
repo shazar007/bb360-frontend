@@ -2,19 +2,45 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import CustomTable from "../../../../components/customTable";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
+import { getAllEmployees } from "../../../../api/employeesServices";
+import { useQuery } from "@tanstack/react-query";
+import { useAppNavigate } from "../../../../hooks/navigation";
+import { getAllEmployeeSalary } from "../../../../api/hrServices";
 
 export default function DefineEmployeeSalaryCreate() {
   const [loading, setLoading] = useState(false);
+  const { goBack } = useAppNavigate();
 
   const [formData, setFormData] = useState({
     employee: "",
     creationDate: "",
     salary: "",
   });
-
+  const { data: allEmployees, isLoading } = useQuery({
+    queryKey: ["getAllEmployees"],
+    queryFn: getAllEmployees,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const { refetch } = useQuery({
+    queryKey: ["getAllEmployeeSalary"],
+    queryFn: getAllEmployeeSalary,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const AllEmployee: any[] = allEmployees?.data?.data || [];
+  const employeeOptions = AllEmployee.map((emp: any) => ({
+    label: emp.name,
+    value: emp._id,
+  }));
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -54,13 +80,11 @@ export default function DefineEmployeeSalaryCreate() {
 
     try {
       setLoading(true);
-
       // const response = await createEmployeeSalary(payload);
-
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       notifySuccess("Employee Salary Created Successfully");
-
+      refetch();
+      goBack();
       console.log(payload);
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Something went wrong");
@@ -143,23 +167,11 @@ export default function DefineEmployeeSalaryCreate() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
             <CustomSelectSearch
               label="Employee"
+              loading={isLoading}
               placeholder="Select Employee"
               value={formData.employee}
+              options={employeeOptions}
               onChange={(value: any) => handleChange("employee", value)}
-              options={[
-                {
-                  label: "Ali Hassan",
-                  value: "1",
-                },
-                {
-                  label: "Bilal Ahmed",
-                  value: "2",
-                },
-                {
-                  label: "Usman Khan",
-                  value: "3",
-                },
-              ]}
             />
             <CustomInput
               label="Salary"
@@ -171,35 +183,6 @@ export default function DefineEmployeeSalaryCreate() {
               label="Creation Date"
               value={formData.creationDate}
               onChange={(value: any) => handleChange("creationDate", value)}
-            />
-          </div>
-        </div>
-        <div className="mt-3 bg-bgprimary rounded-2xl">
-          <div className="mt-3">
-            <CustomTable
-              loading={false}
-              height="60vh"
-              headers={[
-                "Edit",
-                "Employee ID",
-                "Employee Name",
-                "Creation Date",
-                "Salary",
-              ]}
-              data={[
-                [
-                  <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-
-                  "EMP-1226",
-
-                  "Mohamed Sayah",
-                  "13-March-2025",
-                  "50,000",
-                ],
-              ]}
             />
           </div>
         </div>
