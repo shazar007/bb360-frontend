@@ -1,10 +1,68 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useState } from "react";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import { useQuery } from "@tanstack/react-query";
 
 export default function EmployeeExpenseClaim() {
   const { goTo } = useAppNavigate();
+  const [rows, setRows] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
+  const [openModal, setOpenModal] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  // const { data, isLoading, refetch } = useQuery({
+  //   queryKey: ["employeeExpenseClaim"],
+  //   queryFn: getEmployeeExpenseClaim,
+  // });
+  const [formData, setFormData] = useState({
+    transactionDate: "",
+    transactionNumber: "",
+    locationName: "",
+    createdFrom: "",
+    grossAmount: "",
+    documentStatus: "",
+    approvedBy: "",
+    approvedDate: "",
+    itemRate: "",
+    byproductAmount: "",
+    isWhatIssue: "",
+    gatePassReturnable: "",
+  });
+  const handleEdit = (index: number) => {
+    const row = rows[index];
+
+    setFormData(row);
+    setEditIndex(index);
+    setOpenModal(true);
+  };
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+
+      const payload = {
+        ...formData,
+        id: rows[editIndex!].id,
+      };
+
+      // await updateEmployeeExpenseClaim(payload); // your API
+
+      const updatedRows = [...rows];
+      updatedRows[editIndex!] = formData;
+
+      setRows(updatedRows);
+
+      setOpenModal(false);
+      setEditIndex(null);
+
+      notifySuccess("Updated Successfully");
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <div className="mt-8">
@@ -65,30 +123,108 @@ export default function EmployeeExpenseClaim() {
                 "Is What Issue",
                 "Gate Pass Returnable ",
               ]}
-              data={[
-                [
-                  <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                  "-",
-                ],
-              ]}
+              data={rows.map((row: any, index: number) => [
+                <Icon
+                  icon="basil:edit-outline"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={() => handleEdit(index)}
+                />,
+
+                row.transactionDate,
+                row.transactionNumber,
+                row.locationName,
+                row.createdFrom,
+                row.grossAmount,
+                row.documentStatus,
+                row.approvedBy,
+                row.approvedDate,
+                row.itemRate,
+                row.byproductAmount,
+                row.isWhatIssue,
+                row.gatePassReturnable,
+              ])}
             />
           </div>
         </div>
       </div>
+      {openModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-3xl p-5 bg-white rounded-xl">
+            <h2 className="mb-4 text-lg font-semibold">
+              {editIndex !== null
+                ? "Update Expense Claim"
+                : "Create Expense Claim"}
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                value={formData.transactionNumber}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    transactionNumber: e.target.value,
+                  })
+                }
+                placeholder="Transaction Number"
+                className="p-2 border rounded"
+              />
+
+              <input
+                value={formData.locationName}
+                onChange={(e) =>
+                  setFormData({ ...formData, locationName: e.target.value })
+                }
+                placeholder="Location"
+                className="p-2 border rounded"
+              />
+
+              <input
+                value={formData.grossAmount}
+                onChange={(e) =>
+                  setFormData({ ...formData, grossAmount: e.target.value })
+                }
+                placeholder="Gross Amount"
+                className="p-2 border rounded"
+              />
+
+              <input
+                value={formData.documentStatus}
+                onChange={(e) =>
+                  setFormData({ ...formData, documentStatus: e.target.value })
+                }
+                placeholder="Status"
+                className="p-2 border rounded"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 mt-5">
+              <button
+                onClick={() => setOpenModal(false)}
+                className="px-4 py-2 bg-gray-300 rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => {
+                  if (editIndex !== null) {
+                    const updated = [...rows];
+                    updated[editIndex] = formData;
+                    setRows(updated);
+                  } else {
+                    setRows([...rows, formData]);
+                  }
+
+                  setOpenModal(false);
+                }}
+                className="px-4 py-2 text-white rounded bg-primary"
+              >
+                {loading ? "Update" : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

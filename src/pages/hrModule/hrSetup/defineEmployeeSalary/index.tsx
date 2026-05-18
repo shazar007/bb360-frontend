@@ -30,7 +30,6 @@ export default function DefineEmployeeSalary() {
     newSalary: "",
     effectiveDate: "",
   });
-  console.log("🚀 ~ editData:", editData);
   const {
     data: getEmployeeSalary,
     isLoading,
@@ -45,7 +44,6 @@ export default function DefineEmployeeSalary() {
     refetchOnReconnect: false,
   });
   const allEmployeeSalary: any[] = getEmployeeSalary?.data?.data || [];
-  console.log("🚀 ~ allEmployeeSalary:", allEmployeeSalary);
   const handleInputChange = (field: string, value: string) => {
     setEditData((prev: any) => ({
       ...prev,

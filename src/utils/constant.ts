@@ -32,39 +32,39 @@ export const navItems: NavItem[] = [
     name: "Application Setup",
     icon: "mdi:application",
     children: [
-      // {
-      //   name: "Classification",
-      //   children: [
-      //     {
-      //       name: "Department",
-      //       path: "/application-setup/classification/department",
-      //     },
-      //     {
-      //       name: "Classes",
-      //       path: "/application-setup/classification/classes",
-      //     },
-      //     {
-      //       name: "Countries",
-      //       path: "/application-setup/classification/countries",
-      //     },
-      //     {
-      //       name: "State",
-      //       path: "/application-setup/classification/state",
-      //     },
-      //     {
-      //       name: "City",
-      //       path: "/application-setup/classification/city",
-      //     },
-      //     {
-      //       name: "Area Types",
-      //       path: "/application-setup/classification/area-type",
-      //     },
-      //     {
-      //       name: "Entity Group",
-      //       path: "/application-setup/classification/entity-group",
-      //     },
-      //   ],
-      // },
+      {
+        name: "Classification",
+        children: [
+          {
+            name: "Departments",
+            path: "/application-setup/classification/departments",
+          },
+          // {
+          //   name: "Classes",
+          //   path: "/application-setup/classification/classes",
+          // },
+          // {
+          //   name: "Countries",
+          //   path: "/application-setup/classification/countries",
+          // },
+          // {
+          //   name: "State",
+          //   path: "/application-setup/classification/state",
+          // },
+          // {
+          //   name: "City",
+          //   path: "/application-setup/classification/city",
+          // },
+          // {
+          //   name: "Area Types",
+          //   path: "/application-setup/classification/area-type",
+          // },
+          // {
+          //   name: "Entity Group",
+          //   path: "/application-setup/classification/entity-group",
+          // },
+        ],
+      },
       // {
       //   name: "Set Up Taxes",
       //   children: [
@@ -1137,8 +1137,8 @@ export const navItems: NavItem[] = [
             path: "/hr-module/employee-leave-expense/leave-application",
           },
           {
-            name: "CPL Leave Approval",
-            path: "/hr-module/employee-leave-expense/cpl-leave-approval",
+            name: "CPL Approval",
+            path: "/hr-module/employee-leave-expense/cpl-approval",
           },
           {
             name: "Employee Expense Claim",

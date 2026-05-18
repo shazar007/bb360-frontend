@@ -53,7 +53,6 @@ export default function Employees() {
   const [editData, setEditData] = useState<any>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  console.log("🚀 ~ deleteId:", deleteId);
   const [confirm, setConfirm] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
