@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import CustomSelect from "../../../.../../../components/customSelect";
+import CustomInput from "../../../../components/customInput";
 
 export default function EmployeeLeaveApplicationCreate() {
   return (
@@ -37,21 +38,14 @@ export default function EmployeeLeaveApplicationCreate() {
             </p>
           </div>
 
-          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-250 lg:w-220 gap-y-2">
-            <CustomSelect
-              label="Employee Type"
-              placeholder="Prohibition Period/Permanent"
-            />
-            <CustomSelect
-              label="Criteria"
-              placeholder="Prohibition Period/Permanents"
-            />
-            <CustomSelect label="Is Group" placeholder="Yes/No" />
-            <CustomSelect
-              label="Parent"
-              placeholder="Job Knowledge and Skills"
-            />
-            <CustomSelect label="Total" placeholder="5" />
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-7xl lg:w-230 gap-y-2">
+            <CustomSelect label="Employee Namee" placeholder="" />
+            <CustomInput label="Absence Reason" placeholder="Write Here" />
+            <CustomSelect label="Date Start" placeholder="01-Mar-2026" />
+            <CustomSelect label="Status" placeholder="Approved" />
+            <CustomSelect label="Absence Type" placeholder="" />
+            <CustomInput label="Half Day Leave" placeholder="Yes/No" />
+            <CustomSelect label="Date End" placeholder="01-Mar-2026" />
           </div>
         </div>
       </div>

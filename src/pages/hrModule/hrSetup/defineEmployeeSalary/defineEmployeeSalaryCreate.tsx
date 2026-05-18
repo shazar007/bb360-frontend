@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import CustomSelect from "../../../../components/customSelect";
 import CustomDatePicker from "../../../../components/datePicker";
 import CustomTable from "../../../../components/customTable";
+import CustomInput from "../../../../components/customInput";
 
 export default function DefineEmployeeSalaryCreate() {
   return (
@@ -40,7 +41,7 @@ export default function DefineEmployeeSalaryCreate() {
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-24 xl:gap-y-2 xl:gap-x-40.25 lg:gap-x-40.25 lg:w-200 gap-y-2">
             <CustomSelect label="Employee" placeholder="Lorem Ipsum" />
-            <CustomSelect label="Salary" placeholder="09:00 AM" />
+            <CustomInput label="Salary" placeholder="" />
             <CustomDatePicker label="Creation Date" placeholder="01-Mar-2026" />
           </div>
         </div>

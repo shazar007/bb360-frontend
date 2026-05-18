@@ -3,6 +3,7 @@ import CustomSelect from "../../../.../../../components/customSelect";
 import CustomDate from "../../../.../../../components/datePicker";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
+import CustomInput from "../../../../components/customInput";
 const tabs = ["Employee Evaluation Lines", "System Information", "Attachments"];
 export default function EmployeePerformanceEvaluationCreate() {
   const [activeTab, setActiveTab] = useState("Employee Evaluation Lines");
@@ -42,7 +43,7 @@ export default function EmployeePerformanceEvaluationCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-22s0 lg:w-180 gap-y-2">
-            <CustomSelect
+            <CustomInput
               label="Transaction Number"
               placeholder="TO BE GENERATE"
             />
