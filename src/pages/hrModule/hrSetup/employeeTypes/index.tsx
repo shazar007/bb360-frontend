@@ -23,10 +23,8 @@ export default function EmployeeTypes() {
   } = useQuery({
     queryKey: ["getAllEmployeeType"],
     queryFn: getAllEmployeeType,
-
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
