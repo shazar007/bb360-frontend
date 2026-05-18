@@ -1,7 +1,4 @@
 import { Icon } from "@iconify/react";
-import CustomSelect from "../../../.../../../components/customSelect";
-import CustomInput from "../../../../components/customInput";
-import CustomDatePicker from "../../../../components/datePicker";
 
 export default function TimeAttendanceMachineData() {
   return (

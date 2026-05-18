@@ -15,7 +15,7 @@ import CustomDatePicker from "../../../../components/datePicker";
 
 export default function DefineEmployeeSalary() {
   const { goTo } = useAppNavigate();
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteLoading] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
 

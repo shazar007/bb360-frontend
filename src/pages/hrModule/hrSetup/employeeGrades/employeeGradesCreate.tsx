@@ -18,7 +18,7 @@ export default function EmployeeGradesCreate() {
     gradeName: "",
     description: "",
   });
-  const { data, refetch } = useQuery({
+  const { refetch } = useQuery({
     queryKey: ["getAllEmployeeGrades"],
     queryFn: getAllEmployeeGrades,
     staleTime: Infinity,
