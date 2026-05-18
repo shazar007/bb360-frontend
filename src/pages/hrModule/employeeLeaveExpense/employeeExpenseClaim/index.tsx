@@ -2,13 +2,11 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useState } from "react";
-import { notifyError, notifySuccess } from "../../../../components/toast";
-import { useQuery } from "@tanstack/react-query";
 
 export default function EmployeeExpenseClaim() {
   const { goTo } = useAppNavigate();
   const [rows, setRows] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
   const [openModal, setOpenModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
@@ -37,32 +35,7 @@ export default function EmployeeExpenseClaim() {
     setEditIndex(index);
     setOpenModal(true);
   };
-  const handleUpdate = async () => {
-    try {
-      setLoading(true);
 
-      const payload = {
-        ...formData,
-        id: rows[editIndex!].id,
-      };
-
-      // await updateEmployeeExpenseClaim(payload); // your API
-
-      const updatedRows = [...rows];
-      updatedRows[editIndex!] = formData;
-
-      setRows(updatedRows);
-
-      setOpenModal(false);
-      setEditIndex(null);
-
-      notifySuccess("Updated Successfully");
-    } catch (error: any) {
-      notifyError(error?.response?.data?.message || "Update failed");
-    } finally {
-      setLoading(false);
-    }
-  };
   return (
     <>
       <div className="mt-8">

@@ -11,7 +11,7 @@ import CustomSelectSearch from "../../../../components/customSelectSearch";
 
 export default function CreateCPL() {
   const { goBack } = useAppNavigate();
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [formData, setFormData] = useState({
     department: "",
     employee: "",

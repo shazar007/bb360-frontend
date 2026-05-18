@@ -3,9 +3,7 @@ import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import Filter from "./components/filter";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import CustomInput from "../../../../components/customInput";
-import { getAllCPLApproved } from "../../../../api/hrServices";
 import { SyncLoader } from "react-spinners";
 import dayjs from "dayjs";
 const fallbackData = [

@@ -14,7 +14,6 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function CreateDeparttment() {
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [rows, setRows] = useState<any[]>([]);
   const { goBack } = useAppNavigate();
   const {
     data: getdepartment,
