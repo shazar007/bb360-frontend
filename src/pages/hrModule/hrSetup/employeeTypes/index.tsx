@@ -118,7 +118,7 @@ export default function EmployeeTypes() {
                     className={`cursor-pointer text-2xl ${
                       item.isActive ? "text-primary" : "text-gray-400"
                     }`}
-                    // onClick={() => handleStatusChange(item)}
+                    onClick={() => handleStatusChange(item)}
                   />,
                 ]) || []
               }
