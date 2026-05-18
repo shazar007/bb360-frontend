@@ -187,7 +187,7 @@ export default function WorkCalendar() {
       </div>
       {editModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+          <div className="w-full mx-3  max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Update Work Calendar
@@ -202,7 +202,7 @@ export default function WorkCalendar() {
                 ✕
               </button>
             </div>
-            <div className="grid grid-cols-2 p-6 gap-y-4 gap-x-15">
+            <div className="grid grid-cols-1 p-6 md:grid-cols-2 gap-y-4 gap-x-15">
               <CustomInput
                 label="Name"
                 value={formData.name}
@@ -218,7 +218,7 @@ export default function WorkCalendar() {
                 }
               />{" "}
               <CustomTimePicker
-                label="startHour"
+                label="Start Hour"
                 value={formData.startHour}
                 onChange={(value: string) =>
                   setFormData({
@@ -228,7 +228,7 @@ export default function WorkCalendar() {
                 }
               />
               <CustomTimePicker
-                label="endHour"
+                label="End Hour"
                 value={formData.endHour}
                 onChange={(value: string) =>
                   setFormData({
@@ -259,9 +259,9 @@ export default function WorkCalendar() {
                 }
               />
             </div>
-            <div className="grid grid-cols-4 gap-2 mt-4 px-6">
+            <div className="grid grid-cols-2 gap-2 px-6 mt-4 md:grid-cols-4">
               {Object.keys(formData.workingDays).map((day) => (
-                <label key={day} className="flex gap-2 items-center">
+                <label key={day} className="flex items-center gap-2">
                   <CustomCheckbox
                     checked={
                       formData.workingDays[
@@ -290,7 +290,7 @@ export default function WorkCalendar() {
               <button
                 onClick={handleUpdate}
                 disabled={loadingUpdate}
-                className="mt-4 bg-primary cursor-pointer text-white px-6 py-2 rounded"
+                className="px-6 py-2 mt-4 text-white rounded cursor-pointer bg-primary"
               >
                 {loadingUpdate ? (
                   <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />

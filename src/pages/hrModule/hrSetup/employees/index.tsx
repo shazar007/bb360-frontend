@@ -11,6 +11,7 @@ import { SyncLoader } from "react-spinners";
 import dayjs from "dayjs";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import {
+  deleteEmployee,
   getAllEmployeeDesignation,
   getAllEmployeeGrades,
   getAllEmployeeType,
@@ -51,6 +52,8 @@ export default function Employees() {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
   const [editData, setEditData] = useState<any>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  console.log("🚀 ~ deleteId:", deleteId);
   const [confirm, setConfirm] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -145,13 +148,14 @@ export default function Employees() {
             <div class="info"><b>Father Name:</b> ${item.fatherName || "-"}</div>
             <div class="info"><b>Gender:</b> ${item.gender || "-"}</div>
             <div class="info"><b>Religion:</b> ${item.religion || "-"}</div>
-            <div class="info"><b>Date of Birth:</b> ${item.dob || "-"}</div>
+            <div class="info">
+              <b>Date of Birth:</b> ${item.dob ? dayjs(item.dob).format("DD-MMM-YYYY") : "-"}</div>
             <div class="info"><b>CNIC No.:</b> ${item.cnic || "-"}</div>
-            <div class="info"><b>Designation:</b> ${item.designation || "-"}</div>
-            <div class="info"><b>Employee Grade:</b> ${item.employeeGrade || "-"}</div>
-            <div class="info"><b>Employee Type:</b> ${item.employeeType || "-"}</div>
+            <div class="info"><b>Designation:</b> ${item.designation.name || "-"}</div>
+            <div class="info"><b>Employee Grade:</b> ${item.employeeGrade.gradeName || "-"}</div>
+            <div class="info"><b>Employee Type:</b> ${item.employeeType.name || "-"}</div>
             <div class="info"><b>Location:</b> ${item.jobLocation || "-"}</div>
-            <div class="info"><b>Hire Date:</b> ${item.hireDate || "-"}</div>
+            <div class="info"><b>Hire Date:</b>  ${item.hireDate ? dayjs(item.hireDate).format("DD-MMM-YYYY") : "-"}</div>
             <div class="info"><b>Status:</b> ${item.status || "-"}</div>
             <div class="info"><b>Email:</b> ${item.email || "-"}</div>
             <div class="info"><b>Phone:</b> ${item.phone || "-"}</div>
@@ -204,6 +208,32 @@ export default function Employees() {
       notifyError("Failed to update employee");
     } finally {
       setUpdateLoading(false);
+    }
+  };
+  const handleDelete = async () => {
+    if (!deleteId) {
+      notifyError("Employee ID not found");
+      return;
+    }
+
+    try {
+      setDeleteLoading(true);
+
+      await deleteEmployee(deleteId);
+
+      notifySuccess("Employee deleted successfully");
+
+      setConfirm(false);
+      setDeleteId(null);
+
+      refetch();
+    } catch (error: any) {
+      console.log(error);
+      notifyError(
+        error?.response?.data?.message || "Failed to delete employee",
+      );
+    } finally {
+      setDeleteLoading(false);
     }
   };
   return (
@@ -278,7 +308,7 @@ export default function Employees() {
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
-                        className="w-full px-2 py-1 text-left text-heading1 cursor-pointer hover:bg-gray-100"
+                        className="w-full px-2 py-1 text-left cursor-pointer text-heading1 hover:bg-gray-100"
                         onClick={() => {
                           setEditData({
                             ...row,
@@ -296,6 +326,7 @@ export default function Employees() {
                       <button
                         onClick={() => {
                           setConfirm(true);
+                          setDeleteId(row._id);
                         }}
                         className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
                       >
@@ -349,7 +380,7 @@ export default function Employees() {
                 ✕
               </button>
             </div>
-            <div className="grid grid-cols-2 p-4 gap-x-6 gap-y-2">
+            <div className="grid grid-cols-1 p-4 md:grid-cols-2 gap-x-6 gap-y-2">
               <CustomInput
                 label="Name"
                 value={editData?.name || ""}
@@ -505,7 +536,7 @@ export default function Employees() {
             </div>
           </div>
         </div>
-      )}{" "}
+      )}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
           <div className="bg-white shadow-xl w-100 rounded-2xl">
@@ -518,7 +549,7 @@ export default function Employees() {
               <p className="text-2xl font-semibold text-center">
                 Delete Employees
               </p>
-              <p className="text-center text-heading1 mt-3">
+              <p className="mt-3 text-center text-heading1">
                 Are you sure to delete this Employees?
               </p>
             </div>
@@ -533,7 +564,7 @@ export default function Employees() {
               <button
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
                 className="h-10 w-25 cursor-pointer rounded-md text-white bg-[#FF0000]"
-                // onClick={handleDelete}
+                onClick={handleDelete}
               >
                 {deleteLoading ? (
                   <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />

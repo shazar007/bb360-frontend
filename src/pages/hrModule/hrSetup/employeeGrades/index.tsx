@@ -165,7 +165,7 @@ export default function EmployeeGrades() {
                 ✕
               </p>
             </div>
-            <div className="mx-auto w-80 mt-4">
+            <div className="mx-auto mt-4 w-80">
               <p className="text-2xl font-semibold text-center">
                 {" "}
                 Change Status
@@ -174,12 +174,12 @@ export default function EmployeeGrades() {
                 Are you sure you want to change status to{" "}
                 <span className="font-semibold">
                   {newStatus ? "Active" : "Inactive"}
-                </span>
+                </span>{" "}
                 ?
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 mt-5 p-4 pt-0">
+            <div className="flex justify-between gap-2 p-4 pt-0 mt-5">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -191,7 +191,7 @@ export default function EmployeeGrades() {
                 style={{
                   boxShadow: "0px 1px 12px 0px #0000001F",
                 }}
-                className="h-10 w-25 cursor-pointer rounded-md text-white bg-primary"
+                className="h-10 text-white rounded-md cursor-pointer w-25 bg-primary"
                 onClick={handleConfirmUpdate}
               >
                 {loading ? (
@@ -206,10 +206,10 @@ export default function EmployeeGrades() {
       )}
       {editModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-120 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+          <div className="w-full mx-3  max-w-120 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
-                Update Designation
+                Update Employee Grades
               </h2>
 
               <button
@@ -249,7 +249,7 @@ export default function EmployeeGrades() {
                 <button
                   onClick={handleUpdate}
                   disabled={updateLoading}
-                  className="bg-primary cursor-pointer text-white px-5 py-2 rounded-md disabled:opacity-50"
+                  className="px-5 py-2 text-white rounded-md cursor-pointer bg-primary disabled:opacity-50"
                 >
                   {updateLoading ? (
                     <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />

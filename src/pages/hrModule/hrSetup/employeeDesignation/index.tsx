@@ -18,6 +18,7 @@ export default function EmployeeDesignation() {
   const [formData, setFormData] = useState({
     id: "",
     name: "",
+    description: "",
   });
   const {
     data: getAllDesignation,
@@ -26,10 +27,8 @@ export default function EmployeeDesignation() {
   } = useQuery({
     queryKey: ["getAllEmployeeDesignation"],
     queryFn: getAllEmployeeDesignation,
-
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -41,6 +40,7 @@ export default function EmployeeDesignation() {
     setFormData({
       id,
       name: item.name,
+      description: item.description,
     });
 
     setOpenModal(true);
@@ -52,6 +52,7 @@ export default function EmployeeDesignation() {
 
       const response = await updateEmployeeDesignation(formData.id, {
         name: formData.name,
+        description: formData.description,
       });
       notifySuccess("Designation updated successfully");
       console.log(response);
@@ -108,11 +109,11 @@ export default function EmployeeDesignation() {
         </div>
 
         <div className="mt-3 bg-bgprimary rounded-2xl">
-          <div className="mt-3  pb-3">
+          <div className="pb-3 mt-3">
             <CustomTable
               loading={isLoading}
               height="60vh"
-              headers={["Edit", "Designation Name"]}
+              headers={["Edit", "Designation Name", "Job Description"]}
               data={
                 allDesignation?.map((item: any) => [
                   <Icon
@@ -121,6 +122,7 @@ export default function EmployeeDesignation() {
                     onClick={() => handleEdit(item)}
                   />,
                   item?.name,
+                  item?.description,
                 ]) || []
               }
             />
@@ -129,7 +131,7 @@ export default function EmployeeDesignation() {
       </div>{" "}
       {openModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-120 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+          <div className="w-full mx-3 max-w-120 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Update Designation
@@ -144,7 +146,7 @@ export default function EmployeeDesignation() {
                 ✕
               </button>
             </div>
-            <div className="p-4">
+            <div className="p-4 space-y-2">
               <CustomInput
                 type="text"
                 label="Designation"
@@ -155,14 +157,23 @@ export default function EmployeeDesignation() {
                     name: e.target.value,
                   })
                 }
-                className="border w-full p-3 rounded-md"
               />
-
+              <CustomInput
+                type="text"
+                label="Job Description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    description: e.target.value,
+                  })
+                }
+              />
               <div className="flex justify-end">
                 <button
                   onClick={handleUpdate}
                   disabled={loading}
-                  className="bg-primary cursor-pointer text-white px-5 py-2 rounded-md mt-4 disabled:opacity-50"
+                  className="px-5 py-2 mt-4 text-white rounded-md cursor-pointer bg-primary disabled:opacity-50"
                 >
                   {loading ? (
                     <SyncLoader

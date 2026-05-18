@@ -5,6 +5,13 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomInput from "../../../../components/customInput";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getAllEmployeeSalary,
+  updateEmployeeSalary,
+} from "../../../../api/hrServices";
+import dayjs from "dayjs";
+import CustomDatePicker from "../../../../components/datePicker";
 
 export default function DefineEmployeeSalary() {
   const { goTo } = useAppNavigate();
@@ -22,11 +29,23 @@ export default function DefineEmployeeSalary() {
     currentSalary: "",
     newSalary: "",
     effectiveDate: "",
-    changeAmount: "",
-    changePercent: "",
-    creationDate: "",
   });
-
+  console.log("🚀 ~ editData:", editData);
+  const {
+    data: getEmployeeSalary,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["getAllEmployeeSalary"],
+    queryFn: getAllEmployeeSalary,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const allEmployeeSalary: any[] = getEmployeeSalary?.data?.data || [];
+  console.log("🚀 ~ allEmployeeSalary:", allEmployeeSalary);
   const handleInputChange = (field: string, value: string) => {
     setEditData((prev: any) => ({
       ...prev,
@@ -35,16 +54,6 @@ export default function DefineEmployeeSalary() {
   };
 
   const handleUpdate = async () => {
-    if (!editData.employeeId) {
-      notifyError("Employee ID is required");
-      return;
-    }
-
-    if (!editData.employeeName) {
-      notifyError("Employee Name is required");
-      return;
-    }
-
     if (!editData.currentSalary) {
       notifyError("Current Salary is required");
       return;
@@ -61,30 +70,20 @@ export default function DefineEmployeeSalary() {
     }
 
     const payload = {
-      id: editData.id,
-      employee_id: editData.employeeId,
-      employee_name: editData.employeeName,
-      current_salary: editData.currentSalary,
-      new_salary: editData.newSalary,
-      effective_date: editData.effectiveDate,
-      change_amount: editData.changeAmount,
-      change_percent: editData.changePercent,
-      creation_date: editData.creationDate,
+      currentSalary: editData.currentSalary,
+      newSalary: editData.newSalary,
+      effectiveDate: editData.effectiveDate,
     };
 
     console.log("Update Payload => ", payload);
 
     try {
       setLoading(true);
-
-      // API CALL
-      // await updateEmployeeSalary(payload);
-
-      // demo delay
+      await updateEmployeeSalary(editData._id, payload);
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       notifySuccess("Employee Salary Updated Successfully");
-
+      refetch();
       setOpenModal(false);
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Something went wrong");
@@ -92,41 +91,10 @@ export default function DefineEmployeeSalary() {
       setLoading(false);
     }
   };
-  const salaryData = [
-    {
-      id: 1,
-      employeeId: "EMP-1226",
-      employeeName: "Mohamed Sayah",
-      currentSalary: "50,000",
-      newSalary: "60,000",
-      effectiveDate: "20-May-2026",
-      changeAmount: "10,000",
-      changePercent: "20%",
-      creationDate: "13-March-2025",
-    },
-
-    {
-      id: 2,
-      employeeId: "EMP-1526",
-      employeeName: "Bilal Hassan",
-      currentSalary: "70,000",
-      newSalary: "80,000",
-      effectiveDate: "25-May-2026",
-      changeAmount: "10,000",
-      changePercent: "14%",
-      creationDate: "15-March-2025",
-    },
-  ];
 
   const handleEdit = (row: any) => {
     setEditData(row);
     setOpenModal(true);
-    setOpenDropdown(null);
-  };
-
-  const handleDelete = (id: number) => {
-    console.log("Delete ID => ", id);
-
     setOpenDropdown(null);
   };
 
@@ -185,7 +153,7 @@ export default function DefineEmployeeSalary() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
+              loading={isLoading}
               height="60vh"
               headers={[
                 "Action",
@@ -196,10 +164,9 @@ export default function DefineEmployeeSalary() {
                 "Effective From Date",
                 "Change Amount",
                 "Change %",
-                "Creation Date",
               ]}
-              data={salaryData.map((row, index) => [
-                <div className="relative" key={row.id}>
+              data={allEmployeeSalary.map((row, index) => [
+                <div className="relative" key={index}>
                   <Icon
                     icon="qlementine-icons:menu-burger-16"
                     className="text-lg cursor-pointer text-primary"
@@ -210,7 +177,7 @@ export default function DefineEmployeeSalary() {
 
                   {openDropdown === index && (
                     <div
-                      className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md cursor-pointer -right-15 top-6"
+                      className="absolute z-10 w-32 py-2 bg-white rounded-md shadow-md cursor-pointer -right-20 md:-right-15 top-6"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
@@ -219,26 +186,18 @@ export default function DefineEmployeeSalary() {
                       >
                         Edit
                       </button>
-
-                      <button
-                        onClick={() => {
-                          setConfirm(true);
-                        }}
-                        className="w-full px-2 py-1 text-left text-red-500 cursor-pointer hover:bg-gray-100"
-                      >
-                        Delete
-                      </button>
                     </div>
                   )}
                 </div>,
-                row.employeeId,
-                row.employeeName,
-                row.currentSalary,
-                row.newSalary,
-                row.effectiveDate,
-                row.changeAmount,
-                row.changePercent,
-                row.creationDate,
+                row.employeeId?.employeeId || "-",
+                row.employeeId?.name || "-",
+                row.currentSalary || "-",
+                row.newSalary || "-",
+                dayjs(row.expiryDate).isValid()
+                  ? dayjs(row.expiryDate).format("DD-MMM-YYYY")
+                  : "-",
+                row.changeAmount || "0",
+                row.changePercentage || "0",
               ])}
             />
           </div>
@@ -246,7 +205,7 @@ export default function DefineEmployeeSalary() {
       </div>
       {openModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
+          <div className="w-full mx-3  max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
                 Update Employee Salary
@@ -264,22 +223,6 @@ export default function DefineEmployeeSalary() {
 
             <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
               <CustomInput
-                label="Employee ID"
-                value={editData.employeeId}
-                onChange={(e: any) =>
-                  handleInputChange("employeeId", e.target.value)
-                }
-              />
-
-              <CustomInput
-                label="Employee Name"
-                value={editData.employeeName}
-                onChange={(e: any) =>
-                  handleInputChange("employeeName", e.target.value)
-                }
-              />
-
-              <CustomInput
                 label="Current Salary"
                 value={editData.currentSalary}
                 onChange={(e: any) =>
@@ -295,35 +238,11 @@ export default function DefineEmployeeSalary() {
                 }
               />
 
-              <CustomInput
+              <CustomDatePicker
                 label="Effective Date"
                 value={editData.effectiveDate}
                 onChange={(e: any) =>
                   handleInputChange("effectiveDate", e.target.value)
-                }
-              />
-
-              <CustomInput
-                label="Change Amount"
-                value={editData.changeAmount}
-                onChange={(e: any) =>
-                  handleInputChange("changeAmount", e.target.value)
-                }
-              />
-
-              <CustomInput
-                label="Change %"
-                value={editData.changePercent}
-                onChange={(e: any) =>
-                  handleInputChange("changePercent", e.target.value)
-                }
-              />
-
-              <CustomInput
-                label="Creation Date"
-                value={editData.creationDate}
-                onChange={(e: any) =>
-                  handleInputChange("creationDate", e.target.value)
                 }
               />
             </div>
@@ -356,7 +275,7 @@ export default function DefineEmployeeSalary() {
               <p className="text-2xl font-semibold text-center">
                 Delete Employee Salary
               </p>
-              <p className="text-center text-heading1 mt-3">
+              <p className="mt-3 text-center text-heading1">
                 Are you sure to delete this Employee Salary?
               </p>
             </div>

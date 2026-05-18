@@ -1109,10 +1109,7 @@ export const navItems: NavItem[] = [
             name: "Employee Grades",
             path: "/hr-module/hr-setup/employee-grades",
           },
-          {
-            name: "Employee Jobs",
-            path: "/hr-module/hr-setup/employee-jobs",
-          },
+
           {
             name: "Employee Designation",
             path: "/hr-module/hr-setup/employee-designation",

@@ -90,7 +90,7 @@ export default function CustomSelectSearch({
         }
         ${className}`}
       >
-        <span className={selected ? "text-heading1" : "text-gray-400"}>
+        <span className={selected ? "text-black" : "text-gray-400"}>
           {loading ? (
             <SyncLoader color="#14CCC3" size={6} speedMultiplier={0.6} />
           ) : (

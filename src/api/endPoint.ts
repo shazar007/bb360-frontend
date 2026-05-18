@@ -74,14 +74,13 @@ export const ENDPOINTS = {
   // --------------WORK CLENDER-------------
   WORK_CLENDER: "/work-calendar",
 
-  // --------------EMPLOYEE JOBS-------------
-  EMPLOYEE_JOBS: "/employee-jobs",
+  LOYEE_JOBS: "/employee-jobs",
 
   // --------------EMPLOYEES-------------
   EMPLOYEES_ALL: "/employees",
 
   // --------------Employee Salary-------------
-  EMPLOYEE_SALARY: "/employee-salary",
+  EMPLOYEE_SALARY: "/employee-salaries",
 
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",

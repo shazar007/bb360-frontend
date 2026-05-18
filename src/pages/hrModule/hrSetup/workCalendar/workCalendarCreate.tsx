@@ -227,7 +227,7 @@ export default function WorkCalendarCreate() {
             />
             <CustomInput
               label="Half Duty Minimum Min"
-              placeholder="-"
+              placeholder="Enter Half Duty Minimum Minutes"
               value={formData.halfDutyMinimumMin}
               onChange={(e: any) =>
                 handleChange("halfDutyMinimumMin", e.target.value)
@@ -261,7 +261,7 @@ export default function WorkCalendarCreate() {
             />{" "}
             <CustomInput
               label="Full Duty Minimum Min"
-              placeholder="-"
+              placeholder="Enter Full Duty Minimum Min"
               value={formData.fullDutyMinimumMin}
               onChange={(e: any) =>
                 handleChange("fullDutyMinimumMin", e.target.value)

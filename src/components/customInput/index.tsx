@@ -39,7 +39,7 @@ export default function CustomInput({
         placeholder={placeholder}
         required={required}
         disabled={disabled}
-        className={`placeholder:text-heading1/36 Roboto placeholder:text-xs text-xs rounded-md p-4 h-10 w-full focus:outline-none ${
+        className={`placeholder:text-heading1/36 Roboto placeholder:text-xs text-xs rounded-md text-black p-4 h-10 w-full focus:outline-none ${
           white ? "bg-white" : "bg-[#ECF0F4]"
         } ${className}`}
       />

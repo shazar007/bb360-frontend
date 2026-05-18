@@ -12,6 +12,8 @@ import { useQuery } from "@tanstack/react-query";
 
 export default function EmployeeDesignationCreate() {
   const [designationName, setDesignationName] = useState("");
+  const [jobDescription, setjobDescription] = useState("");
+
   const [loading, setLoading] = useState(false);
   const { goBack, goTo } = useAppNavigate();
 
@@ -33,7 +35,7 @@ export default function EmployeeDesignationCreate() {
     }
     try {
       setLoading(true);
-      const payload = { name: designationName };
+      const payload = { name: designationName, description: jobDescription };
       const response = await addEmployeeDesignation(payload);
       notifySuccess(
         response?.data?.message || "Employee designation created successfully",
@@ -107,6 +109,14 @@ export default function EmployeeDesignationCreate() {
               value={designationName}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setDesignationName(e.target.value)
+              }
+            />
+            <CustomInput
+              label="Job Description"
+              placeholder="write here"
+              value={jobDescription}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setjobDescription(e.target.value)
               }
             />
           </div>

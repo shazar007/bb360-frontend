@@ -1,4 +1,3 @@
-import { addEmployee } from "./employeesServices";
 import { HTTP_CLIENT } from "../utils/httpClient";
 import { ENDPOINTS } from "./endPoint";
 
@@ -14,7 +13,6 @@ export const updateEmployeeDesignation = (id: string | number, values: any) => {
 };
 
 // --------------EMPLOYEES TYPE-------------
-
 export const addEmployeeType = (values: any) => {
   return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_TYPE, values);
 };
@@ -43,7 +41,6 @@ export const updateEmployeeGradesStatus = (
 };
 
 // --------------WORK CLENDER-------------
-
 export const addWorkCalendar = (values: any) => {
   return HTTP_CLIENT.post(ENDPOINTS.WORK_CLENDER, values);
 };
@@ -52,18 +49,6 @@ export const getAllWorkCalendar = () => {
 };
 export const updateWorkCalendar = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.WORK_CLENDER}/${id}`, values);
-};
-
-// --------------EMPLOYEE JOBS-------------
-
-export const addEmployeeJobs = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_JOBS, values);
-};
-export const getAllEmployeeJobs = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_JOBS);
-};
-export const updateEmployeeJobs = (id: string | number, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_JOBS}/${id}`, values);
 };
 
 // --------------EMPLOYEE-------------
@@ -77,9 +62,11 @@ export const getAllEmployee = () => {
 export const updateAllEmployee = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`, values);
 };
+export const deleteEmployee = (id: string | number) => {
+  return HTTP_CLIENT.delete(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`);
+};
 
 // --------------Employee Salary-------------
-
 export const addEmployeeSalary = (values: any) => {
   return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_SALARY, values);
 };

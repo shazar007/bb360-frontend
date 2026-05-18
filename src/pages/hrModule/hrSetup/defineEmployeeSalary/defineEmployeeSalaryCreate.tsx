@@ -7,7 +7,11 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { getAllEmployees } from "../../../../api/employeesServices";
 import { useQuery } from "@tanstack/react-query";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { getAllEmployeeSalary } from "../../../../api/hrServices";
+import {
+  addEmployeeSalary,
+  getAllEmployeeSalary,
+} from "../../../../api/hrServices";
+import { SyncLoader } from "react-spinners";
 
 export default function DefineEmployeeSalaryCreate() {
   const [loading, setLoading] = useState(false);
@@ -15,8 +19,9 @@ export default function DefineEmployeeSalaryCreate() {
 
   const [formData, setFormData] = useState({
     employee: "",
-    creationDate: "",
-    salary: "",
+    effectiveDate: "",
+    currentSalary: 0,
+    newSalary: 0,
   });
   const { data: allEmployees, isLoading } = useQuery({
     queryKey: ["getAllEmployees"],
@@ -41,11 +46,16 @@ export default function DefineEmployeeSalaryCreate() {
     label: emp.name,
     value: emp._id,
   }));
-  const handleChange = (field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleChange = (field: any, value: any) => {
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+
+      if (field === "currentSalary") {
+        updated.newSalary = Number(value); // example logic
+      }
+
+      return updated;
+    });
   };
 
   const validateForm = () => {
@@ -54,13 +64,17 @@ export default function DefineEmployeeSalaryCreate() {
       return false;
     }
 
-    if (!formData.creationDate) {
-      notifyError("Creation Date is required");
+    if (!formData.effectiveDate) {
+      notifyError("Effective Date is required");
       return false;
     }
 
-    if (!formData.salary) {
-      notifyError("Salary is required");
+    if (!formData.currentSalary) {
+      notifyError("Current Salary is required");
+      return false;
+    }
+    if (!formData.newSalary) {
+      notifyError("New Salary is required");
       return false;
     }
 
@@ -71,16 +85,17 @@ export default function DefineEmployeeSalaryCreate() {
     if (!validateForm()) return;
 
     const payload = {
-      employee_id: formData.employee,
-      creationDate: formData.creationDate,
-      salary: formData.salary,
+      employeeId: formData.employee,
+      effectiveDate: formData.effectiveDate,
+      newSalary: formData.newSalary,
+      currentSalary: formData.currentSalary,
     };
 
     console.log("Payload => ", payload);
 
     try {
       setLoading(true);
-      // const response = await createEmployeeSalary(payload);
+      const response = await addEmployeeSalary(payload);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       notifySuccess("Employee Salary Created Successfully");
       refetch();
@@ -116,7 +131,13 @@ export default function DefineEmployeeSalaryCreate() {
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
               />
             </div>
-
+            <button
+              onClick={goBack}
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-secondary"
+            >
+              <Icon icon="ion:play-back-outline" className="w-5 h-5" />
+              Back
+            </button>
             <button
               style={{
                 boxShadow: "0px 1px 12px 0px #0000001F",
@@ -128,16 +149,6 @@ export default function DefineEmployeeSalaryCreate() {
             </button>
 
             <button
-              style={{
-                boxShadow: "0px 1px 12px 0px #0000001F",
-              }}
-              className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-40"
-            >
-              <Icon icon="basil:add-outline" className="text-lg" />
-              Upload Increment
-            </button>
-
-            <button
               onClick={handleSubmit}
               disabled={loading}
               style={{
@@ -146,7 +157,7 @@ export default function DefineEmployeeSalaryCreate() {
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27 disabled:opacity-50"
             >
               {loading ? (
-                "Loading..."
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
               ) : (
                 <>
                   <Icon icon="basil:add-outline" className="text-lg" />
@@ -174,15 +185,23 @@ export default function DefineEmployeeSalaryCreate() {
               onChange={(value: any) => handleChange("employee", value)}
             />
             <CustomInput
-              label="Salary"
-              placeholder="Enter Salary"
-              value={formData.salary}
-              onChange={(value: any) => handleChange("salary", value)}
+              label="Current Salary"
+              placeholder="Enter Current Salary in PKR"
+              value={formData.currentSalary}
+              onChange={(e) => handleChange("currentSalary", e.target.value)}
+            />
+
+            <CustomInput
+              label="New Salary"
+              placeholder="Enter New Salary in PKR"
+              value={formData.newSalary}
+              onChange={(e) => handleChange("newSalary", e.target.value)}
+              disabled
             />
             <CustomDatePicker
-              label="Creation Date"
-              value={formData.creationDate}
-              onChange={(value: any) => handleChange("creationDate", value)}
+              label="Effective Date"
+              value={formData.effectiveDate}
+              onChange={(value: any) => handleChange("effectiveDate", value)}
             />
           </div>
         </div>
