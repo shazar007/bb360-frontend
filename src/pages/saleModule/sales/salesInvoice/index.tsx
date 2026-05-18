@@ -2,15 +2,20 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import SalesInvoiceModel from "./components/salesInvoiceModel";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { GetSalesInvoiceApi } from "../../../../api/sale";
 import { useQuery } from "@tanstack/react-query";
 import CustomCheckbox from "../../../../components/customCheckbox";
+import { useReactToPrint } from "react-to-print";
+import { InvoiceTemplate } from "../../../../components/temp-Invoice";
 
 export default function SalesInvoice() {
-  const { goTo } = useAppNavigate();
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-  const [showMenu, setShowMenu] = useState(false);
+  const [showMenu, setShowMenu] = useState<number | null>(null);
+  const { goTo, goWithState } = useAppNavigate();
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const printRef = useRef(null);
+
   const { data: SaleInvoices, isLoading } = useQuery({
     queryKey: ["getAllSalesInvoice"],
     queryFn: GetSalesInvoiceApi,
@@ -30,6 +35,20 @@ export default function SalesInvoice() {
     } else {
       setSelectedRows((prev) => prev.filter((i) => i !== index));
     }
+  };
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: "Invoice",
+  });
+
+  const triggerPrint = (item: any) => {
+    console.log("🚀 ~ triggerPrint ~ item:", item);
+    setSelectedOrder(item);
+
+    setTimeout(() => {
+      handlePrint();
+    }, 300);
   };
   return (
     <div className="mt-2">
@@ -80,7 +99,9 @@ export default function SalesInvoice() {
           </button>
         </div>
       </div>
-
+      <div style={{ display: "none" }}>
+        <InvoiceTemplate ref={printRef} data={selectedOrder} />
+      </div>
       <div className="pb-4 mt-2 bg-white rounded-2xl">
         <div className="flex justify-between items-center px-4.5 py-2">
           <p className="text-xs font-semibold text-primary">Invoice_List</p>
@@ -96,6 +117,7 @@ export default function SalesInvoice() {
           loading={isLoading}
           headers={[
             "Edit",
+            "View",
             "Select",
             "Invoice Number",
             "Distributor Code",
@@ -110,14 +132,21 @@ export default function SalesInvoice() {
               <Icon
                 icon="qlementine-icons:menu-burger-16"
                 className="text-lg cursor-pointer text-primary"
-                onClick={() => setShowMenu(!showMenu)}
+                onClick={() => setShowMenu(showMenu === index ? null : index)}
               />
 
-              {showMenu && (
+              {showMenu === index && (
                 <div className="absolute left-0 z-50 top-6">
                   <SalesInvoiceModel />
                 </div>
               )}
+            </div>,
+            <div
+              key={`view-${index}`}
+              onClick={() => triggerPrint(item)}
+              className="flex justify-center cursor-pointer"
+            >
+              <Icon icon="hugeicons:view" className="text-lg text-primary" />
             </div>,
 
             // <Icon

@@ -168,10 +168,10 @@ export default function MaterialReturnNoteCreate() {
               Back
             </button>
 
-            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer text-heading1">
+            {/* <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer text-heading1">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
-            </button>
+            </button> */}
 
             <button
               onClick={handleFinalSave}

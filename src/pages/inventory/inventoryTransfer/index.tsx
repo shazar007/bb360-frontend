@@ -7,16 +7,22 @@ import {
   getAllInventoryTransfers,
 } from "../../../api/inventoryServices";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { notifyError, notifySuccess } from "../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import { useReactToPrint } from "react-to-print";
+import { PrintByAll } from "../inventoryAdjustment/printByAll";
+import { PrintByItem } from "../inventoryAdjustment/printByItem";
 
 export default function InventoryTransfer() {
   const { goTo } = useAppNavigate();
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [deleteItem, setDeleteItem] = useState<any>(null);
   const [confirm, setConfirm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
+  const printAllRef = useRef(null);
+  const printItemRef = useRef(null);
   const { data, isLoading } = useQuery({
     queryKey: ["getAllInventoryTransfers"],
     queryFn: getAllInventoryTransfers,
@@ -30,6 +36,24 @@ export default function InventoryTransfer() {
   });
 
   const allInventoryTransfer = data?.data?.transfers || [];
+  console.log("🚀 ~ InventoryTransfer ~ allInventoryTransfer:", allInventoryTransfer)
+  const handlePrintAll = useReactToPrint({
+    contentRef: printAllRef,
+    documentTitle: "Inventory Transfer",
+  });
+  const handlePrintItem = (item: any) => {
+    setSelectedItem(item);
+
+    setTimeout(() => {
+      printFn();
+    }, 200);
+  };
+
+  const printFn = useReactToPrint({
+    contentRef: printItemRef,
+    documentTitle: "Inventory Transfer",
+  });
+
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: deleteInventoryTransfer,
@@ -56,99 +80,6 @@ export default function InventoryTransfer() {
     deleteMutation.mutate(deleteItem._id);
   };
 
-  const handlePrint = (item: any) => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-
-    const itemsHtml = (item.items || [])
-      .map((i: any) => {
-        return `
-        <tr>
-          <td>${i.itemCode || i.item?.itemCode || "-"}</td>
-          <td>${i.itemName || i.item?.itemName || "-"}</td>
-          <td>${i.uom || i.item?.uom || "-"}</td>
-          <td>${i.quantity || "-"}</td>
-          <td>${i.quantityAdjusted || "-"}</td>
-        </tr>
-      `;
-      })
-      .join("");
-
-    printWindow.document.write(`
-    <html>
-      <head>
-        <title>Inventory Transfer</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-          }
-
-          h2 {
-            text-align: center;
-          }
-
-          .row {
-            margin: 6px 0;
-          }
-
-          table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-          }
-
-          th, td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-          }
-
-          th {
-            background: #f2f2f2;
-          }
-        </style>
-      </head>
-      <body>
-        <h2>Inventory Transfer</h2>
-
-        <div class="row"><b>Transaction Number:</b> ${item.transactionNumber || "-"}</div>
-        <div class="row"><b>Date:</b> ${
-          item.transactionDate
-            ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
-            : "-"
-        }</div>
-        <div class="row"><b>Created From:</b> ${item.createdFrom || "-"}</div>
-        <div class="row"><b>Transfer To:</b> ${item.transferTo || "-"}</div>
-        <div class="row"><b>Transaction Name:</b> ${item.transactionName || "-"}</div>
-        <div class="row"><b>Status:</b> ${item.status || "-"}</div>
-        <div class="row"><b>Notes:</b> ${item.notes || "-"}</div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Item Code</th>
-              <th>Item Name</th>
-              <th>UOM</th>
-              <th>Quantity</th>
-              <th>Adjusted</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml || `<tr><td colspan="5" style="text-align:center;">No Items</td></tr>`}
-          </tbody>
-        </table>
-
-        <script>
-          window.print();
-          window.onafterprint = () => window.close();
-        </script>
-      </body>
-    </html>
-  `);
-
-    printWindow.document.close();
-  };
   const isDeleting = deleteMutation.isPending;
 
   return (
@@ -178,7 +109,13 @@ export default function InventoryTransfer() {
               <Icon icon="mage:filter" className="text-lg" />
               Filters
             </button>
-
+            <button
+              onClick={handlePrintAll}
+              className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
+            >
+              <Icon icon="basil:add-outline" className="w-5 h-5" />
+              Print
+            </button>
             <button
               onClick={() => {
                 goTo("/inventory/inventory-transfer/create");
@@ -189,6 +126,20 @@ export default function InventoryTransfer() {
               Create
             </button>
           </div>
+        </div>
+        <div style={{ display: "none" }}>
+          <PrintByAll
+            ref={printAllRef}
+            data={allInventoryTransfer}
+            title="Inventory Transfer"
+          />
+        </div>
+        <div style={{ display: "none" }}>
+          <PrintByItem
+            ref={printItemRef}
+            data={selectedItem}
+            title="Inventory Transfer"
+          />
         </div>
 
         <div className="mt-3">
@@ -248,13 +199,13 @@ export default function InventoryTransfer() {
                 <Icon
                   icon="hugeicons:view"
                   className="text-lg cursor-pointer text-primary"
-                  onClick={() => handlePrint(item)}
+                  onClick={() => handlePrintItem(item)}
                 />,
 
                 <Icon
                   icon="ion:print-outline"
+                  onClick={() => handlePrintItem(item)}
                   className="text-lg cursor-pointer text-primary"
-                  onClick={() => handlePrint(item)}
                 />,
 
                 item?.transactionNumber || "-",

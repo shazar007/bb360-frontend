@@ -22,6 +22,7 @@ export default function InventoryTransferCreate() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [rows, setRows] = useState<any[]>([]);
+  console.log("🚀 ~ InventoryTransferCreate ~ rows:", rows);
   const [openModal, setOpenModal] = useState(false);
   const rowInitialForm = {
     item: "",
@@ -50,7 +51,7 @@ export default function InventoryTransferCreate() {
   const [rowForm, setRowForm] = useState(rowInitialForm);
   const [loading, setLoading] = useState(false);
 
-  const { goBack } = useAppNavigate();  
+  const { goBack } = useAppNavigate();
 
   useEffect(() => {
     const stored = localStorage.getItem("inventory-transfer-rows");
@@ -170,10 +171,10 @@ export default function InventoryTransferCreate() {
               Back
             </button>
 
-            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer">
+            {/* <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer">
               <Icon icon="ion:print-outline" />
               Print
-            </button>
+            </button> */}
             <button
               onClick={() => {
                 const payload = buildPayload();
@@ -343,6 +344,7 @@ export default function InventoryTransferCreate() {
                 />,
                 item.itemCode || "-",
                 item.itemName || "-",
+                item.batchNumber || "-",
                 item.uom || "-",
                 item.quantity || "-",
                 item.quantityAdjusted || "-",
@@ -434,9 +436,18 @@ export default function InventoryTransferCreate() {
               <CustomInput
                 label="Quantity Adjusted"
                 value={rowForm.quantityAdjusted}
-                onChange={(e: any) =>
-                  setRowForm({ ...rowForm, quantityAdjusted: e.target.value })
-                }
+                onChange={(e: any) => {
+                  const value = e.target.value;
+                  const entered = Number(value || 0);
+                  const available = Number(rowForm.quantity || 0);
+                  if (entered > available) {
+                    notifyError(
+                      "Quantity Adjusted cannot be greater than Quantity",
+                    );
+                    return;
+                  }
+                  setRowForm({ ...rowForm, quantityAdjusted: value });
+                }}
               />
             </div>
 

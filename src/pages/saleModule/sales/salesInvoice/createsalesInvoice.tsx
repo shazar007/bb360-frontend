@@ -226,10 +226,10 @@ export default function CreateSalesInvoice() {
               Back
             </button>
 
-            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer text-heading1">
+            {/* <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer text-heading1">
               <Icon icon="ion:print-outline" className="w-5 h-5" />
               Print
-            </button>
+            </button> */}
 
             <button
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
@@ -253,6 +253,7 @@ export default function CreateSalesInvoice() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Create Invoice</p>
         </div>
+        
         <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-4 ">
           <CustomSelectSearch
             label="Distributor Name"
@@ -454,7 +455,7 @@ export default function CreateSalesInvoice() {
                     expiryDate: "",
                   }));
                 }}
-              />{" "}
+              />
               <CustomSelect
                 label="Batch Number"
                 options={[

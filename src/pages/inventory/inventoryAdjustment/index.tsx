@@ -7,15 +7,19 @@ import {
   getAllInventoryAdjustments,
 } from "../../../api/inventoryServices";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { notifyError, notifySuccess } from "../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import { useReactToPrint } from "react-to-print";
+import { PrintByAll } from "./printByAll";
+import { PrintByItem } from "./printByItem";
 
 export default function InventoryAdjustment() {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [confirm, setConfirm] = useState(false);
   const [deleteItem, setDeleteItem] = useState<any>(null);
-  const { goTo } = useAppNavigate();
+  const { goTo, goWithState } = useAppNavigate();
+
   const { data, isLoading } = useQuery({
     queryKey: ["getAllInventoryAdjustments"],
     queryFn: getAllInventoryAdjustments,
@@ -40,6 +44,7 @@ export default function InventoryAdjustment() {
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
   const allInventoryAdjustments = data?.data?.adjustments || [];
+
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
     mutationFn: deleteInventoryAdjustment,
@@ -64,81 +69,25 @@ export default function InventoryAdjustment() {
 
     deleteMutation.mutate(deleteItem._id);
   };
-  const handlePrint = (item: any) => {
-    const printWindow = window.open("", "_blank");
+  const printAllRef = useRef(null);
+  const printItemRef = useRef(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const handlePrintAll = useReactToPrint({
+    contentRef: printAllRef,
+    documentTitle: "Inventory Adjustment",
+  });
+  const handlePrintItem = (item: any) => {
+    setSelectedItem(item);
 
-    if (!printWindow) return;
-
-    printWindow.document.write(`
-    <html>
-      <head>
-        <title>Print Inventory Adjustment</title>
-        <style>
-         table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-              }
-
-              th, td {
-                border: 1px solid #000;
-                padding: 8px;
-                text-align: left;
-              }
-
-              th {
-                background: #f2f2f2;
-              }
-        </style>
-      </head>
-      <body>
-        <h2>Inventory Adjustment</h2>
-
-        <div class="row"><b>Transaction Number:</b> ${item.transactionNumber || "-"}</div>
-        <div class="row"><b>Date:</b> ${item.transactionDate || "-"}</div>
-        <div class="row"><b>Created From:</b> ${item.createdFrom || "-"}</div>
-        <div class="row"><b>Transaction Name:</b> ${item.transactionName || "-"}</div>
-        <div class="row"><b>Status:</b> ${item.status || "-"}</div>
-        <div class="row"><b>Notes:</b> ${item.notes || "-"}</div>
-
-         <table>
-            <thead>
-            <tr>
-              <th>Item Code</th>
-              <th>Item Name</th>
-              <th>UOM</th>
-              <th>Quantity</th>
-              <th>Adjusted</th>
-            </tr>
-          </thead>
-          <tbody>
-        
-            ${(item.items || [])
-              .map(
-                (i: any) => `
-                <tr>
-                  <td>${i.itemCode || "-"}</td>
-                  <td>${i.itemName || "-"}</td>
-                  <td>${i.uom || "-"}</td>
-                  <td>${i.quantity || "-"}</td>
-                  <td>${i.quantityAdjusted || "-"}</td>
-                </tr>
-              `,
-              )
-              .join("")}
-          </tbody>
-        </table>
-
-        <script>
-          window.print();
-          window.onafterprint = () => window.close();
-        </script>
-      </body>
-    </html>
-  `);
-
-    printWindow.document.close();
+    setTimeout(() => {
+      printFn();
+    }, 200);
   };
+
+  const printFn = useReactToPrint({
+    contentRef: printItemRef,
+    documentTitle: "Inventory Adjustment",
+  });
   const isDeleting = deleteMutation.isPending;
   return (
     <>
@@ -166,6 +115,13 @@ export default function InventoryAdjustment() {
               <Icon icon="basil:add-outline" className="w-5 h-5" />
               Upload
             </button>
+            <button
+              onClick={handlePrintAll}
+              className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
+            >
+              <Icon icon="basil:add-outline" className="w-5 h-5" />
+              Print
+            </button>
 
             <button
               onClick={() => {
@@ -178,7 +134,156 @@ export default function InventoryAdjustment() {
             </button>
           </div>
         </div>
+        <div style={{ display: "none" }}>
+          <PrintByAll
+            ref={printAllRef}
+            data={allInventoryAdjustments}
+            title="Inventory Adjustment"
+            columns={[
+              {
+                label: "Transaction Number",
+                key: "transactionNumber",
+              },
+              {
+                label: "Date",
+                render: (row: any) =>
+                  dayjs(row.transactionDate).format("DD-MMM-YYYY"),
+              },
+              {
+                label: "Created From",
+                key: "createdFrom",
+              },
+              {
+                label: "Status",
+                key: "status",
+              },
+            ]}
+          />
+        </div>
+        <div style={{ display: "none" }}>
+       <PrintByItem
+  ref={printItemRef}
+  data={selectedItem}
+  title="Inventory Adjustment"
+  sections={[
+    {
+      title: "Basic Info",
+      type: "info",
 
+      fields: [
+        {
+          label: "Transaction Number",
+          key: "transactionNumber",
+        },
+
+        {
+          label: "Date",
+          render: (item: any) =>
+            item?.transactionDate
+              ? new Date(
+                  item.transactionDate,
+                ).toLocaleDateString()
+              : "-",
+        },
+
+        {
+          label: "Created From",
+          key: "createdFrom",
+        },
+
+        {
+          label: "Transaction Name",
+          key: "transactionName",
+        },
+
+        {
+          label: "Status",
+          key: "status",
+        },
+
+        {
+          label: "Notes",
+          key: "notes",
+        },
+
+        {
+          label: "Created By",
+          render: (item: any) =>
+            item?.createdBy?.name || "-",
+        },
+      ],
+    },
+
+    // ITEMS TABLE
+    {
+      title: "Items",
+      type: "table",
+
+      columns: [
+        {
+          label: "Item Code",
+          render: (row: any) =>
+            row?.item?.itemCode || "-",
+        },
+
+        {
+          label: "Item Name",
+          render: (row: any) =>
+            row?.item?.itemName || "-",
+        },
+
+        {
+          label: "UOM",
+          render: (row: any) =>
+            row?.item?.uom || "-",
+        },
+
+        {
+          label: "TP",
+          render: (row: any) =>
+            row?.item?.tp || "-",
+        },
+
+        {
+          label: "MRP",
+          render: (row: any) =>
+            row?.item?.mrp || "-",
+        },
+      ],
+
+      data: (item: any) => item?.items || [],
+    },
+
+    // BATCHES TABLE
+    {
+      title: "Batches",
+      type: "table",
+
+      columns: [
+        {
+          label: "Batch Number",
+          key: "batchNumber",
+        },
+
+        {
+          label: "Balance",
+          key: "balance",
+        },
+
+        {
+          label: "Adjusted Quantity",
+          key: "adjustedQuantity",
+        },
+      ],
+
+      data: (item: any) =>
+        (item?.items || []).flatMap(
+          (i: any) => i?.batches || [],
+        ),
+    },
+  ]}
+/>
+        </div>
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
@@ -236,12 +341,12 @@ export default function InventoryAdjustment() {
                 <Icon
                   icon="hugeicons:view"
                   className="text-lg cursor-pointer text-primary"
-                  onClick={() => handlePrint(item)}
+                  onClick={() => handlePrintItem(item)}
                 />,
 
                 <Icon
                   icon="ion:print-outline"
-                  onClick={() => handlePrint(item)}
+                  onClick={() => handlePrintItem(item)}
                   className="text-lg cursor-pointer text-primary"
                 />,
 

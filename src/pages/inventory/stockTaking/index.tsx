@@ -37,11 +37,13 @@ export default function StockTaking() {
     fromDate: "",
     toDate: "",
   };
+
   const { refetch } = useQuery({
     queryKey: ["getAllInventoryTransfers"],
     queryFn: getAllInventoryTransfers,
     enabled: false,
   });
+
   const [form, setForm] = useState(headerInitialForm);
   const [rowForm, setRowForm] = useState(rowInitialForm);
   const [loading, setLoading] = useState(false);
@@ -85,6 +87,7 @@ export default function StockTaking() {
     );
     updateRows(updated);
   };
+  
   const buildPayload = () => {
     return {
       fromDate: form.fromDate,
@@ -97,7 +100,9 @@ export default function StockTaking() {
       })),
     };
   };
+
   const createMutation = useMutation({
+
     mutationFn: addInventoryTransfer,
     onSuccess: () => {
       setLoading(false);
@@ -116,6 +121,7 @@ export default function StockTaking() {
       setLoading(false);
       notifyError("Inventory Transfer is Create failed");
     },
+
   });
 
   const { data: AllItems } = useQuery({
@@ -128,6 +134,8 @@ export default function StockTaking() {
   });
 
   const items = AllItems?.data?.items || [];
+
+  console.log("🚀 ~ StockTaking ~ items:", items)
   // console.log("🚀 ~ InventoryTransferCreate ~ all items:", AllItems)
 
   const itemOptions = items.map((item: any) => ({
@@ -168,7 +176,7 @@ export default function StockTaking() {
               <Icon icon="ion:print-outline" />
               Print
             </button>
-            <button
+            {/* <button
               onClick={() => {
                 const payload = buildPayload();
 
@@ -190,7 +198,7 @@ export default function StockTaking() {
                   Save
                 </>
               )}
-            </button>
+            </button> */}
           </div>
         </div>
         <div className="mt-3 bg-white rounded-2xl">
