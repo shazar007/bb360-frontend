@@ -88,12 +88,16 @@ export default function CustomDatePicker({
             </span>
           </div>
           {internalValue && !disabled && (
-            <span
-              className="text-gray-400 cursor-pointer"
+            <button
               onClick={handleClear}
+              className="rounded-full cursor-pointer"
+              type="button"
             >
-              &#10005;
-            </span>
+              <Icon
+                icon="material-symbols:close"
+                className="text-sm text-gray-400"
+              />
+            </button>
           )}
         </div>
       </div>

@@ -20,11 +20,7 @@ function formatTime(time?: string | Dayjs | null) {
     const minutes = now.getMinutes().toString().padStart(2, "0");
     return `${hours}:${minutes}`;
   }
-
-  if (typeof time === "string") {
-    return time;
-  }
-
+  if (typeof time === "string") return time;
   return time.format("HH:mm");
 }
 
@@ -39,10 +35,15 @@ export default function CustomTimePicker({
 }: CustomTimePickerProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const handleClear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onChange("");
+  };
+
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="text-heading1 text-xs mb-1">
+        <label className="mb-1 text-xs text-heading1">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -67,19 +68,34 @@ export default function CustomTimePicker({
           disabled={disabled}
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
+
         <div
-          className={`w-full h-10 px-4 flex items-center text-xs rounded-md bg-[#ECF0F4] ${className}`}
+          className={`w-full h-10 px-4 flex items-center justify-between text-xs rounded-md bg-[#ECF0F4] ${className}`}
         >
           <div className="flex items-center gap-2">
             <Icon
-              icon="mdi:clock-outline"
-              width="18"
+              icon="iconamoon:clock-light"
+              width="20"
               className="text-gray-400"
             />
+
             <span className={!value ? "text-gray-400" : ""}>
               {formatTime(value)}
             </span>
           </div>
+
+          {value && !disabled && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="rounded-full cursor-pointer hover:bg-gray-200"
+            >
+              <Icon
+                icon="material-symbols:close"
+                className="text-sm text-gray-400"
+              />
+            </button>
+          )}
         </div>
       </div>
     </div>

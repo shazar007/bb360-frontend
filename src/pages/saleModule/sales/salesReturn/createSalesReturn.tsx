@@ -157,7 +157,6 @@ export default function CreateSalesReturn() {
       }
       setLoading(true);
       const payload = buildPayload(tableData);
-      console.log("🚀 ~ payload:", payload);
       await createSalesReturnApi(payload);
       localStorage.removeItem("salesReturn");
       setTableData([]);
@@ -198,7 +197,7 @@ export default function CreateSalesReturn() {
 
   return (
     <>
-      <div className="mt-8">
+      <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />

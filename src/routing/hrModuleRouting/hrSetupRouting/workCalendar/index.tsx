@@ -1,5 +1,3 @@
-// hrSetupRouting/workCalendar/index.tsx
-
 import { Route } from "react-router-dom";
 
 import WorkCalendar from "../../../../pages/hrModule/hrSetup/workCalendar";

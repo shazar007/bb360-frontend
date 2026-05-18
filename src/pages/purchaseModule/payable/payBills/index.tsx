@@ -3,7 +3,7 @@ import CustomTable from "../../../../components/customTable";
 
 export default function PayBills() {
   return (
-    <div className="mt-8">
+    <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -11,11 +11,11 @@ export default function PayBills() {
             Payable / Pay Bills
           </p>
         </div>
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <div className="relative w-full md:w-60">
             <input
               placeholder="Search"
-              className="w-full h-10 pl-10 pr-4 bg-white rounded-md border border-gray-200 focus:outline-none"
+              className="w-full h-10 pl-10 pr-4 bg-white border border-gray-200 rounded-md focus:outline-none"
             />
             <Icon
               icon="mynaui:search"
@@ -23,22 +23,22 @@ export default function PayBills() {
             />
           </div>
 
-          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-white rounded-md">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-4 bg-white rounded-md md:w-auto">
             Actions
             <Icon icon="weui:arrow-filled" className="rotate-90" />
           </button>
 
-          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-secondary text-white rounded-md">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-4 text-white rounded-md md:w-auto bg-secondary">
             <Icon icon="mage:filter" />
             Filters
           </button>
 
-          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-secondary text-white rounded-md">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-4 text-white rounded-md md:w-auto bg-secondary">
             <Icon icon="ion:refresh-outline" />
             Reset
           </button>
 
-          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-primary text-white rounded-md">
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-4 text-white rounded-md md:w-auto bg-primary">
             <Icon icon="basil:add-outline" />
             Create
           </button>

@@ -19,7 +19,7 @@ export default function CreateRFQ() {
   const { goBack } = useAppNavigate();
   return (
     <>
-      <div className="mt-8">
+      <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -27,18 +27,15 @@ export default function CreateRFQ() {
               Procurement / Request for Quotation (RFQ)
             </p>
           </div>
-
           <div className="flex items-center w-full gap-2 md:w-auto">
             <button
               onClick={goBack}
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
-              {" "}
               <Icon icon="ion:play-back-outline" className="text-lg" />
               Back
             </button>
-
             <button
               style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
@@ -110,9 +107,9 @@ export default function CreateRFQ() {
                   "Item Description",
                   "Item Balance",
                   "UOM",
-                  "Quantity ",
+                  "Quantity",
                   "Retail Price",
-                  "Discount % ",
+                  "Discount %",
                   "Unit Price",
                   "Amount",
                   "Tax Code",

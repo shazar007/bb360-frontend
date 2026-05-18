@@ -8,7 +8,7 @@ export default function ItemDetails() {
   const location = useLocation();
   const { rowData } = (location.state as { rowData: any }) || {};
   return (
-    <div className="mt-8">
+    <div className="mt-2">
       <div className="flex items-center gap-2">
         <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
         <p className="text-base font-semibold md:text-lg text-heading1">

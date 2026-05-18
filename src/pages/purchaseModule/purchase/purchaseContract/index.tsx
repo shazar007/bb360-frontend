@@ -3,12 +3,12 @@ import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
 
 export default function PurchaseContract() {
-  const {goTo} = useAppNavigate();
+  const { goTo } = useAppNavigate();
   const handleCreate = () => {
     goTo("/purchase-module/purchase/purchase-contract/create-contract");
   };
   return (
-    <div className="mt-8">
+    <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />

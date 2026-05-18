@@ -1,14 +1,15 @@
-import { Route, Routes } from "react-router-dom";
+import { Routes } from "react-router-dom";
 
-import EmployeePerformanceCriteria from "../../../pages/hrModule/employeePerformance/employeePerformanceCriteria";
-import EmployeePerformanceEvaluation from "../../../pages/hrModule/employeePerformance/employeePerformanceEvaluation";
+import { employeePerformanceCriteriaRoutes } from "./employeePerformanceCriteria";
+
+import { employeePerformanceEvaluationRoutes } from "./employeePerformanceEvaluation";
 
 export default function EmployeePerformanceRouting() {
   return (
     <Routes>
-      <Route path="/criteria" element={<EmployeePerformanceCriteria />} />
+      {employeePerformanceCriteriaRoutes}
 
-      <Route path="/evaluation" element={<EmployeePerformanceEvaluation />} />
+      {employeePerformanceEvaluationRoutes}
     </Routes>
   );
 }
