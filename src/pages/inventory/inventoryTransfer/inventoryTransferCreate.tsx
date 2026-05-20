@@ -31,7 +31,7 @@ export default function InventoryTransferCreate() {
     uom: "",
     batchNumber: "",
     quantity: "",
-    quantityAdjusted: "",
+    transferQuantity: "",
   };
 
   const headerInitialForm = {
@@ -101,7 +101,7 @@ export default function InventoryTransferCreate() {
       items: rows.map((row) => ({
         item: row.item,
         batchNumber: row.batchNumber,
-        quantityAdjusted: Number(row.quantityAdjusted || 0),
+        quantityAdjusted: Number(row.transferQuantity || 0),
       })),
     };
   };
@@ -318,7 +318,7 @@ export default function InventoryTransferCreate() {
                 "Batch Number",
                 "UOM",
                 "Quantity",
-                "Quantity Adjusted",
+                "Transfer Quantity",
               ]}
               data={rows.map((item, index) => [
                 <Icon
@@ -332,7 +332,7 @@ export default function InventoryTransferCreate() {
                       batchNumber: item.batchNumber,
                       uom: item.uom,
                       quantity: item.quantity,
-                      quantityAdjusted: item.quantityAdjusted,
+                      transferQuantity: item.transferQuantity,
                     });
                     setEditIndex(index);
                     setOpenModal(true);
@@ -347,7 +347,7 @@ export default function InventoryTransferCreate() {
                 item.batchNumber || "-",
                 item.uom || "-",
                 item.quantity || "-",
-                item.quantityAdjusted || "-",
+                item.transferQuantity || "-",
               ])}
             />
           )}
@@ -434,19 +434,19 @@ export default function InventoryTransferCreate() {
               />
 
               <CustomInput
-                label="Quantity Adjusted"
-                value={rowForm.quantityAdjusted}
+                label="Transfer Quantity"
+                value={rowForm.transferQuantity}
                 onChange={(e: any) => {
                   const value = e.target.value;
                   const entered = Number(value || 0);
                   const available = Number(rowForm.quantity || 0);
                   if (entered > available) {
                     notifyError(
-                      "Quantity Adjusted cannot be greater than Quantity",
+                      "Transfer Quantity cannot be greater than Quantity",
                     );
                     return;
                   }
-                  setRowForm({ ...rowForm, quantityAdjusted: value });
+                  setRowForm({ ...rowForm, transferQuantity: value });
                 }}
               />
             </div>

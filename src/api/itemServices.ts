@@ -24,3 +24,8 @@ export const deleteItem = (id: string | number) => {
 export const getItemByCategory = (type: string | number) => {
   return HTTP_CLIENT.get(`${ENDPOINTS.ITEMS}/category/${type}`);
 };
+export const getStockTaking = (fromDate: string, toDate: string) => {
+  return HTTP_CLIENT.get(
+    `${ENDPOINTS.STOCK_TAKING}?fromDate=${fromDate}&toDate=${toDate}`,
+  );
+};

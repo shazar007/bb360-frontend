@@ -13,14 +13,19 @@ import { SyncLoader } from "react-spinners";
 import { useReactToPrint } from "react-to-print";
 import { PrintByAll } from "./printByAll";
 import { PrintByItem } from "./printByItem";
+import { printData } from "../../../utils/printData";
 
 export default function InventoryAdjustment() {
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [confirm, setConfirm] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [deleteItem, setDeleteItem] = useState<any>(null);
-  const { goTo, goWithState } = useAppNavigate();
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const printAllRef = useRef(null);
+  const printItemRef = useRef(null);
+  const { goTo } = useAppNavigate();
 
   const { data, isLoading } = useQuery({
+
     queryKey: ["getAllInventoryAdjustments"],
     queryFn: getAllInventoryAdjustments,
 
@@ -31,6 +36,7 @@ export default function InventoryAdjustment() {
     refetchOnMount: false,
     refetchOnReconnect: false,
   });
+
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -43,6 +49,7 @@ export default function InventoryAdjustment() {
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
+
   const allInventoryAdjustments = data?.data?.adjustments || [];
 
   const queryClient = useQueryClient();
@@ -69,13 +76,12 @@ export default function InventoryAdjustment() {
 
     deleteMutation.mutate(deleteItem._id);
   };
-  const printAllRef = useRef(null);
-  const printItemRef = useRef(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+
   const handlePrintAll = useReactToPrint({
     contentRef: printAllRef,
     documentTitle: "Inventory Adjustment",
   });
+
   const handlePrintItem = (item: any) => {
     setSelectedItem(item);
 
@@ -88,6 +94,7 @@ export default function InventoryAdjustment() {
     contentRef: printItemRef,
     documentTitle: "Inventory Adjustment",
   });
+  
   const isDeleting = deleteMutation.isPending;
   return (
     <>
@@ -139,150 +146,16 @@ export default function InventoryAdjustment() {
             ref={printAllRef}
             data={allInventoryAdjustments}
             title="Inventory Adjustment"
-            columns={[
-              {
-                label: "Transaction Number",
-                key: "transactionNumber",
-              },
-              {
-                label: "Date",
-                render: (row: any) =>
-                  dayjs(row.transactionDate).format("DD-MMM-YYYY"),
-              },
-              {
-                label: "Created From",
-                key: "createdFrom",
-              },
-              {
-                label: "Status",
-                key: "status",
-              },
-            ]}
+            columns={printData.adjustmentByAll}
           />
         </div>
         <div style={{ display: "none" }}>
-       <PrintByItem
-  ref={printItemRef}
-  data={selectedItem}
-  title="Inventory Adjustment"
-  sections={[
-    {
-      title: "Basic Info",
-      type: "info",
-
-      fields: [
-        {
-          label: "Transaction Number",
-          key: "transactionNumber",
-        },
-
-        {
-          label: "Date",
-          render: (item: any) =>
-            item?.transactionDate
-              ? new Date(
-                  item.transactionDate,
-                ).toLocaleDateString()
-              : "-",
-        },
-
-        {
-          label: "Created From",
-          key: "createdFrom",
-        },
-
-        {
-          label: "Transaction Name",
-          key: "transactionName",
-        },
-
-        {
-          label: "Status",
-          key: "status",
-        },
-
-        {
-          label: "Notes",
-          key: "notes",
-        },
-
-        {
-          label: "Created By",
-          render: (item: any) =>
-            item?.createdBy?.name || "-",
-        },
-      ],
-    },
-
-    // ITEMS TABLE
-    {
-      title: "Items",
-      type: "table",
-
-      columns: [
-        {
-          label: "Item Code",
-          render: (row: any) =>
-            row?.item?.itemCode || "-",
-        },
-
-        {
-          label: "Item Name",
-          render: (row: any) =>
-            row?.item?.itemName || "-",
-        },
-
-        {
-          label: "UOM",
-          render: (row: any) =>
-            row?.item?.uom || "-",
-        },
-
-        {
-          label: "TP",
-          render: (row: any) =>
-            row?.item?.tp || "-",
-        },
-
-        {
-          label: "MRP",
-          render: (row: any) =>
-            row?.item?.mrp || "-",
-        },
-      ],
-
-      data: (item: any) => item?.items || [],
-    },
-
-    // BATCHES TABLE
-    {
-      title: "Batches",
-      type: "table",
-
-      columns: [
-        {
-          label: "Batch Number",
-          key: "batchNumber",
-        },
-
-        {
-          label: "Balance",
-          key: "balance",
-        },
-
-        {
-          label: "Adjusted Quantity",
-          key: "adjustedQuantity",
-        },
-      ],
-
-      data: (item: any) =>
-        (item?.items || []).flatMap(
-          (i: any) => i?.batches || [],
-        ),
-    },
-  ]}
-/>
+          <PrintByItem
+            ref={printItemRef}
+            data={selectedItem}
+            title="Inventory Adjustment"
+            sections={printData.adjustmentByItem}
+          />
         </div>
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
@@ -294,70 +167,75 @@ export default function InventoryAdjustment() {
                 "View",
                 "Report",
                 "Transaction Number",
+                "Item Name",
                 "Transaction Date",
                 "Created From",
                 "Transaction Name",
                 "Status",
               ]}
-              data={allInventoryAdjustments.map((item: any, index: number) => [
-                <div
-                  className="relative inline-block menu-container"
-                  key={index}
-                >
+              data={allInventoryAdjustments.map((item: any, index: number) => {
+                return [
+                  <div
+                    className="relative inline-block menu-container"
+                    key={index}
+                  >
+                    <Icon
+                      icon="basil:edit-outline"
+                      className="text-lg cursor-pointer text-primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(openMenuId === index ? null : index);
+                      }}
+                    />
+
+                    {openMenuId === index && (
+                      <div className="absolute py-2 mt-2 bg-white rounded-md shadow-lg -right-15 z-999 w-22">
+                        <div
+                          className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                          onClick={() => {
+                            setOpenMenuId(null);
+                          }}
+                        >
+                          Edit
+                        </div>
+
+                        <div
+                          className="px-4 py-2 text-red-500 cursor-pointer hover:bg-red-100"
+                          onClick={() => {
+                            setDeleteItem(item);
+                            setConfirm(true);
+                            setOpenMenuId(null);
+                          }}
+                        >
+                          Delete
+                        </div>
+                      </div>
+                    )}
+                  </div>,
+                  ,
                   <Icon
-                    icon="basil:edit-outline"
+                    icon="hugeicons:view"
                     className="text-lg cursor-pointer text-primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenMenuId(openMenuId === index ? null : index);
-                    }}
-                  />
+                    onClick={() => handlePrintItem(item)}
+                  />,
 
-                  {openMenuId === index && (
-                    <div className="absolute py-2 mt-2 bg-white rounded-md shadow-lg -right-15 z-999 w-22">
-                      <div
-                        className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                        onClick={() => {
-                          setOpenMenuId(null);
-                        }}
-                      >
-                        Edit
-                      </div>
+                  <Icon
+                    icon="ion:print-outline"
+                    onClick={() => handlePrintItem(item)}
+                    className="text-lg cursor-pointer text-primary"
+                  />,
 
-                      <div
-                        className="px-4 py-2 text-red-500 cursor-pointer hover:bg-red-100"
-                        onClick={() => {
-                          setDeleteItem(item);
-                          setConfirm(true);
-                          setOpenMenuId(null);
-                        }}
-                      >
-                        Delete
-                      </div>
-                    </div>
-                  )}
-                </div>,
-                ,
-                <Icon
-                  icon="hugeicons:view"
-                  className="text-lg cursor-pointer text-primary"
-                  onClick={() => handlePrintItem(item)}
-                />,
-
-                <Icon
-                  icon="ion:print-outline"
-                  onClick={() => handlePrintItem(item)}
-                  className="text-lg cursor-pointer text-primary"
-                />,
-
-                item.transactionNumber || "-",
-                item.transactionDate
-                  ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
-                  : "-",
-                item.createdFrom || "-",
-                item.transactionName || "-",
-                item.status || "-",
-              ])}
+                  item.transactionNumber || "-",
+                  item?.items?.map((i: any) => i?.item?.itemName).join(", ") ||
+                    "-",
+                  item.transactionDate
+                    ? dayjs(item.transactionDate).format("DD-MMM-YYYY")
+                    : "-",
+                  item.createdFrom || "-",
+                  item.transactionName || "-",
+                  item.status || "-",
+                ];
+              })}
             />
           </div>
         </div>

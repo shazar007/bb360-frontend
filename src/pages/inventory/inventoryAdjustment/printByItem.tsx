@@ -2,7 +2,6 @@ import { forwardRef } from "react";
 
 export const PrintByItem = forwardRef(
   ({ data, title, sections }: any, ref: any) => {
-    console.log("🚀 ~ sections:", sections)
     const item = data;
 
     return (
@@ -12,7 +11,7 @@ export const PrintByItem = forwardRef(
             @media print {
               body {
                 -webkit-print-color-adjust: exact;
-                font-size: 12px;
+                font-size: 10px;
               }
 
               h2 {

@@ -1,84 +1,51 @@
+import dayjs from "dayjs";
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
-import CustomInput from "../../../components/customInput";
-import CustomSelect from "../../../components/customSelect";
-import CustomDatePicker from "../../../components/datePicker";
+import { useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
+import { useQuery } from "@tanstack/react-query";
+import { printData } from "../../../utils/printData";
 import CustomTable from "../../../components/customTable";
 import { useAppNavigate } from "../../../hooks/navigation";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { notifyError, notifySuccess } from "../../../components/toast";
-import {
-  addInventoryTransfer,
-  getAllInventoryTransfers,
-} from "../../../api/inventoryServices";
-import { SyncLoader } from "react-spinners";
-import CustomSelectSearch from "../../../components/customSelectSearch";
-import { getItemByCategory } from "../../../api/itemServices";
+import { getStockTaking } from "../../../api/itemServices";
+import CustomDatePicker from "../../../components/datePicker";
 import CustomCheckbox from "../../../components/customCheckbox";
+import { PrintByItem } from "../inventoryAdjustment/printByItem";
 
-const tabs = ["Transaction Lines", "Accounting Lines", "System Information"];
+const headerInitialForm = {
+  fromDate: dayjs().subtract(7, "day").format("YYYY-MM-DD"),
+  toDate: dayjs().format("YYYY-MM-DD"),
+};
 
 export default function StockTaking() {
-  const [activeTab, setActiveTab] = useState("Transaction Lines");
-  const [editIndex, setEditIndex] = useState<number | null>(null);
   const [rows, setRows] = useState<any[]>([]);
-  const [openModal, setOpenModal] = useState(false);
-  const rowInitialForm = {
-    item: "",
-    itemCode: "",
-    itemName: "",
-    uom: "",
-    batchNumber: "",
-    quantity: "",
-    quantityAdjusted: "",
-  };
+  const [form, setForm] = useState(headerInitialForm);
+  const { goBack, goWithState } = useAppNavigate();
+  const printAllRef = useRef(null);
 
-  const headerInitialForm = {
-    fromDate: "",
-    toDate: "",
-  };
+  const {
+    data: stockTakingData,
+    refetch,
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["getStockTaking"],
 
-  const { refetch } = useQuery({
-    queryKey: ["getAllInventoryTransfers"],
-    queryFn: getAllInventoryTransfers,
-    enabled: false,
+    queryFn: () => getStockTaking(form.fromDate, form.toDate),
+    enabled: true,
+
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+
+    staleTime: Infinity,
   });
 
-  const [form, setForm] = useState(headerInitialForm);
-  const [rowForm, setRowForm] = useState(rowInitialForm);
-  const [loading, setLoading] = useState(false);
-
-  const { goBack } = useAppNavigate();
-
-  useEffect(() => {
-    const stored = localStorage.getItem("inventory-transfer-rows");
-    if (stored) setRows(JSON.parse(stored));
-  }, []);
+  const stockTakingItems = stockTakingData?.data?.items || [];
+  const fromDate = stockTakingData?.data?.period?.fromDate;
+  const toDate = stockTakingData?.data?.period?.toDate;
 
   const updateRows = (updated: any[]) => {
     setRows(updated);
-    localStorage.setItem("inventory-transfer-rows", JSON.stringify(updated));
-  };
-
-  const handleSaveRow = () => {
-    let updated = [...rows];
-
-    if (editIndex !== null) {
-      updated[editIndex] = rowForm;
-    } else {
-      updated.push(rowForm);
-    }
-
-    updateRows(updated);
-
-    setRowForm(rowInitialForm);
-    setEditIndex(null);
-    setOpenModal(false);
-  };
-
-  const deleteSelectedRows = () => {
-    const filtered = rows.filter((item) => !item.selected);
-    updateRows(filtered);
   };
 
   const toggleSelect = (index: number, value: boolean) => {
@@ -87,71 +54,11 @@ export default function StockTaking() {
     );
     updateRows(updated);
   };
-  
-  const buildPayload = () => {
-    return {
-      fromDate: form.fromDate,
-      toDate: form.toDate,
 
-      items: rows.map((row) => ({
-        item: row.item,
-        batchNumber: row.batchNumber,
-        quantityAdjusted: Number(row.quantityAdjusted || 0),
-      })),
-    };
-  };
-
-  const createMutation = useMutation({
-
-    mutationFn: addInventoryTransfer,
-    onSuccess: () => {
-      setLoading(false);
-      localStorage.removeItem("inventory-transfer-rows");
-      setRows([]);
-
-      setForm(headerInitialForm);
-      setRowForm(rowInitialForm);
-      setEditIndex(null);
-      refetch();
-      notifySuccess("Inventory Transfer is Created successfully");
-      goBack();
-    },
-
-    onError: () => {
-      setLoading(false);
-      notifyError("Inventory Transfer is Create failed");
-    },
-
+  const handlePrintAll = useReactToPrint({
+    contentRef: printAllRef,
+    documentTitle: "Stock Taking",
   });
-
-  const { data: AllItems } = useQuery({
-    queryKey: ["getItemByCategory", "finished"],
-    queryFn: () => getItemByCategory("finished"),
-    placeholderData: (prev) => prev,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-  });
-
-  const items = AllItems?.data?.items || [];
-
-  console.log("🚀 ~ StockTaking ~ items:", items)
-  // console.log("🚀 ~ InventoryTransferCreate ~ all items:", AllItems)
-
-  const itemOptions = items.map((item: any) => ({
-    label: item?.itemName ?? "",
-    value: item?._id ?? "",
-  }));
-
-  // const batchOptions =
-  //   items
-  //     ?.find((i: any) => i._id === rowForm.item)
-  //     ?.batches?.map((b: any) => ({
-  //       label: b.batchNumber,
-  //       value: b.batchNumber,
-  //       balance: b.balance,
-  //     })) || [];
-
   return (
     <>
       <div className="mt-8">
@@ -172,33 +79,13 @@ export default function StockTaking() {
               Back
             </button>
 
-            <button className="flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md shadow cursor-pointer">
-              <Icon icon="ion:print-outline" />
-              Print
-            </button>
-            {/* <button
-              onClick={() => {
-                const payload = buildPayload();
-
-                if (!payload.items.length) {
-                  notifyError("Add at least one item");
-                  return;
-                }
-
-                setLoading(true);
-                createMutation.mutate(payload);
-              }}
+            <button
+              onClick={handlePrintAll}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >
-              {loading ? (
-                <SyncLoader color="#fff" size={6} />
-              ) : (
-                <>
-                  <Icon icon="mynaui:save" />
-                  Save
-                </>
-              )}
-            </button> */}
+              <Icon icon="ion:print-outline" />
+              Print / Save
+            </button>
           </div>
         </div>
         <div className="mt-3 bg-white rounded-2xl">
@@ -210,7 +97,6 @@ export default function StockTaking() {
               label="From Date"
               value={form.fromDate}
               onChange={(val: any) => {
-                // console.log("DATE PICKED:", val);
                 setForm((prev) => ({
                   ...prev,
                   fromDate: val || "",
@@ -221,7 +107,6 @@ export default function StockTaking() {
               label="To Date"
               value={form.toDate}
               onChange={(val: any) => {
-                // console.log("DATE PICKED:", val);
                 setForm((prev) => ({
                   ...prev,
                   toDate: val || "",
@@ -229,21 +114,38 @@ export default function StockTaking() {
               }}
             />
             <button
-              // onClick={goBack}
+              onClick={() => {
+                refetch();
+              }}
               className="flex items-center justify-center w-full h-10 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27"
             >
-              Search
+              {!isLoading && isFetching ? "Searching..." : "Search"}
             </button>
           </div>
+        </div>
+        <div style={{ display: "none" }}>
+          <PrintByItem
+            ref={printAllRef}
+            data={{
+              fromDate: fromDate ? dayjs(fromDate).format("DD-MMM-YYYY") : "-",
+              toDate: toDate ? dayjs(toDate).format("DD-MMM-YYYY") : "-",
+              items: stockTakingItems,
+            }}
+            title="Stock Taking"
+            sections={printData.stockTakingByAll}
+          />
         </div>
 
         <div className="mt-3 bg-white rounded-2xl">
           <CustomTable
+            loading={isLoading}
             norounded
             headers={[
-              "Edit",
+              "Details",
               "Select",
               "Item Code",
+              "Item Name",
+              "Total Batches",
               "Item Category",
               "UOM",
               "Opening Balance",
@@ -253,34 +155,36 @@ export default function StockTaking() {
               "Closing Stock",
               "Actual Stock",
             ]}
-            data={rows.map((item, index) => [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-xl cursor-pointer text-primary"
-                onClick={() => {
-                  setRowForm({
-                    item: item.item,
-                    itemCode: item.itemCode,
-                    itemName: item.itemName,
-                    batchNumber: item.batchNumber,
-                    uom: item.uom,
-                    quantity: item.quantity,
-                    quantityAdjusted: item.quantityAdjusted,
-                  });
-                  setEditIndex(index);
-                  setOpenModal(true);
-                }}
-              />,
-              <CustomCheckbox
-                checked={item.selected}
-                onChange={(v) => toggleSelect(index, v)}
-              />,
-              item.itemCode || "-",
-              item.itemName || "-",
-              item.uom || "-",
-              item.quantity || "-",
-              item.quantityAdjusted || "-",
-            ])}
+            data={stockTakingItems.map((item: any, index: any) => {
+              return [
+                <Icon
+                  icon="basil:edit-outline"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={() =>
+                    goWithState("/inventory/stock-taking/details", {
+                      item,
+                      fromDate: form.fromDate,
+                      toDate: form.toDate,
+                    })
+                  }
+                />,
+                <CustomCheckbox
+                  checked={item.selected}
+                  onChange={(v) => toggleSelect(index, v)}
+                />,
+                item.itemCode || "-",
+                item.itemName || "-",
+                item.totalBatches || "-",
+                item.itemCategory || "-",
+                item.uom || "-",
+                item.totals?.opening || "0",
+                item.totals?.purchase || "0",
+                item.totals?.adjustment || "0",
+                item.totals?.sale || "0",
+                item.totals?.closing || "0",
+                item.totals?.actual || "0",
+              ];
+            })}
           />
         </div>
       </div>

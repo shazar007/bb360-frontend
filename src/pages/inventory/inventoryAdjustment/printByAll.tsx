@@ -20,7 +20,7 @@ export const PrintByAll = forwardRef(
               th, td {
                 border: 1px solid #000;
                 padding: 8px;
-                font-size: 12px;
+                font-size: 10px;
                 text-align: left;
                 word-break: break-word;
               }

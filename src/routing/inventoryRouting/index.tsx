@@ -12,6 +12,7 @@ import MaterialReturnNoteCreate from "../../pages/inventory/materialReturnNote/m
 import StockTakingCreate from "../../pages/inventory/stockTaking/stockTakingCreate";
 import TransferOrdersCreate from "../../pages/inventory/transferOrders/transferOrdersCreate";
 import { useEffect } from "react";
+import StockTakingDetails from "../../pages/inventory/stockTaking/stockTakingDetails";
 
 export default function InventoryRouting() {
   useEffect(() => {
@@ -53,6 +54,8 @@ export default function InventoryRouting() {
         element={<MaterialReturnNoteCreate />}
       /> */}
       <Route path="/stock-taking" element={<StockTaking />} />
+      <Route path="/stock-taking/details" element={<StockTakingDetails />} />
+
       <Route path="/stock-taking/create" element={<StockTakingCreate />} />
     </Routes>
   );

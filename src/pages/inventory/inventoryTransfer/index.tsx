@@ -36,7 +36,10 @@ export default function InventoryTransfer() {
   });
 
   const allInventoryTransfer = data?.data?.transfers || [];
-  console.log("🚀 ~ InventoryTransfer ~ allInventoryTransfer:", allInventoryTransfer)
+  console.log(
+    "🚀 ~ InventoryTransfer ~ allInventoryTransfer:",
+    allInventoryTransfer,
+  );
   const handlePrintAll = useReactToPrint({
     contentRef: printAllRef,
     documentTitle: "Inventory Transfer",
@@ -132,6 +135,36 @@ export default function InventoryTransfer() {
             ref={printAllRef}
             data={allInventoryTransfer}
             title="Inventory Transfer"
+            columns={[
+              {
+                label: "Transaction Number",
+                key: "transactionNumber",
+              },
+              {
+                label: "Item Name",
+                render: (row: any) =>
+                  row?.items?.map((i: any) => i?.item?.itemName).join(", ") ||
+                  "-",
+              },
+
+              {
+                label: "Transaction Date",
+                render: (row: any) =>
+                  dayjs(row.transactionDate).format("DD-MMM-YYYY"),
+              },
+              {
+                label: "Created From",
+                key: "createdFrom",
+              },
+              {
+                label: "Transaction Name",
+                key: "transactionName",
+              },
+              {
+                label: "Status",
+                key: "status",
+              },
+            ]}
           />
         </div>
         <div style={{ display: "none" }}>
@@ -139,6 +172,108 @@ export default function InventoryTransfer() {
             ref={printItemRef}
             data={selectedItem}
             title="Inventory Transfer"
+             sections={[
+              {
+                title: "Basic Info",
+                type: "info",
+
+                fields: [
+                  {
+                    label: "Transaction Number",
+                    key: "transactionNumber",
+                  },
+
+                  {
+                    label: "Date",
+                    render: (item: any) =>
+                      item?.transactionDate
+                        ? new Date(item.transactionDate).toLocaleDateString()
+                        : "-",
+                  },
+
+                  {
+                    label: "Created From",
+                    key: "createdFrom",
+                  },
+
+                  {
+                    label: "Transaction Name",
+                    key: "transactionName",
+                  },
+                   {
+                    label: "Transfer To",
+                    key: "transferTo",
+                  },
+
+                  {
+                    label: "Status",
+                    key: "status",
+                  },
+
+                  {
+                    label: "Notes",
+                    key: "notes",
+                  },
+
+                  {
+                    label: "Created By",
+                    render: (item: any) => item?.createdBy?.name || "-",
+                  },
+                ],
+              },
+
+              // ITEMS TABLE
+              {
+                title: "Items",
+                type: "table",
+
+                columns: [
+                  {
+                    label: "Item Code",
+                    render: (row: any) => row?.item?.itemCode || "-",
+                  },
+
+                  {
+                    label: "Item Name",
+                    render: (row: any) => row?.item?.itemName || "-",
+                  },
+
+                  {
+                    label: "UOM",
+                    render: (row: any) => row?.item?.uom || "-",
+                  },
+
+                ],
+
+                data: (item: any) => item?.items || [],
+              },
+
+              // BATCHES TABLE
+              {
+                title: "Batches",
+                type: "table",
+
+                columns: [
+                  {
+                    label: "Batch Number",
+                    key: "batchNumber",
+                  },
+
+                  {
+                    label: "Balance",
+                    key: "balance",
+                  },
+
+                  {
+                    label: "Transfer Quantity",
+                    key: "transferQuantity",
+                  },
+                ],
+
+                data: (item: any) =>
+                  (item?.items || []).flatMap((i: any) => i?.batches || []),
+              },
+            ]}
           />
         </div>
 
