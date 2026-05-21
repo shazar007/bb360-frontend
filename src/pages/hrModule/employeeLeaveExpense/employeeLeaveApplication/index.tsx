@@ -13,41 +13,7 @@ import {
 import dayjs from "dayjs";
 import StatusSelector from "../../../../components/customStatusSelector";
 import CustomSelect from "../../../../components/customSelect";
-const dummyData = [
-  {
-    _id: "1",
-    employeeId: { name: "Ali Khan", employeeId: "EMP001" },
-    absenceType: "Sick Leave",
-    absenceReason: "Fever",
-    dateStart: "2026-05-10",
-    dateEnd: "2026-05-12",
-    totalDays: 3,
-    status: "Pending",
-    halfDayLeave: false,
-  },
-  {
-    _id: "2",
-    employeeId: { name: "Sara Ahmed", employeeId: "EMP002" },
-    absenceType: "Casual Leave",
-    absenceReason: "Family Function",
-    dateStart: "2026-05-14",
-    dateEnd: "2026-05-15",
-    totalDays: 2,
-    status: "Approved",
-    halfDayLeave: true,
-  },
-  {
-    _id: "3",
-    employeeId: { name: "John Doe", employeeId: "EMP003" },
-    absenceType: "Annual Leave",
-    absenceReason: "Vacation",
-    dateStart: "2026-05-01",
-    dateEnd: "2026-05-07",
-    totalDays: 7,
-    status: "Rejected",
-    halfDayLeave: false,
-  },
-];
+
 export default function EmployeeLeaveApplication() {
   const [loading, setLoading] = useState(false);
   const { goTo } = useAppNavigate();
@@ -62,7 +28,7 @@ export default function EmployeeLeaveApplication() {
     queryFn: getAllLeaveApplication,
   });
 
-  const rows = dummyData;
+  const rows = LeaveApplication?.data?.data;
   const handleUpdate = async () => {
     if (!editData?._id) return;
     try {
@@ -143,7 +109,7 @@ export default function EmployeeLeaveApplication() {
                 "Total Days",
                 "Status",
               ]}
-              data={rows.map((row: any) => [
+              data={(rows ?? []).map((row: any) => [
                 <Icon
                   icon="basil:edit-outline"
                   className="text-lg cursor-pointer text-primary"

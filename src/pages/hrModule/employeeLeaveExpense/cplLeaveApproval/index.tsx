@@ -40,20 +40,14 @@ export default function CplLeaveApproval() {
         workingHours: Number(editData.workingHours),
         cplApprovedStatus: editData.cplApprovedStatus,
       };
-
       console.log("UPDATE CPL PAYLOAD:", payload);
-
       await updateCPLApproved(editData._id, payload);
-
       await refetch();
-
       notifySuccess("CPL Updated Successfully");
-
       setIsEditOpen(false);
       setEditData(null);
     } catch (error: any) {
       console.log(error);
-
       notifyError(
         error?.response?.data?.message ||
           "Something went wrong while updating CPL",
@@ -80,7 +74,6 @@ export default function CplLeaveApproval() {
                 placeholder="Search"
                 className="w-full h-10 pl-10 pr-4 bg-white rounded-sm focus:outline-none placeholder:text-heading1/36 placeholder:text-sm"
               />
-
               <Icon
                 icon="mynaui:search"
                 className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
