@@ -5,7 +5,7 @@ import TimeAttendanceMachineData from "../../../pages/hrModule/hrAttendance/time
 import TimeAttendanceRegister from "../../../pages/hrModule/hrAttendance/timeAttendanceRegister";
 import AccrualPlanBalances from "../../../pages/hrModule/hrAttendance/accrualPlanBalances";
 import OvertimeApproval from "../../../pages/hrModule/hrAttendance/overtimeApproval";
-import OutdoorDuty from "../../../pages/hrModule/hrAttendance/outdoorDuty";
+import { outdoorDutyRoutes } from "./outdoorDuty";
 import LateDeduction from "../../../pages/hrModule/hrAttendance/lateDeduction";
 
 export default function HrAttendanceRouting() {
@@ -27,8 +27,7 @@ export default function HrAttendanceRouting() {
 
       <Route path="/overtime-approval" element={<OvertimeApproval />} />
 
-      <Route path="/outdoor-duty" element={<OutdoorDuty />} />
-
+      {outdoorDutyRoutes}
       <Route path="/late-deduction" element={<LateDeduction />} />
     </Routes>
   );
