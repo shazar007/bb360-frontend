@@ -94,11 +94,14 @@ export const ENDPOINTS = {
   // --------------Employee Leave Application-------------
   LEAVE_APPLICATION: "/leave-applications",
 
-  // --------------  CPL Approval-------------
-  CPL_APPROVAL: "/CPL-Approval",
+  // --------------CPL Approval-------------
+  CPL_APPROVAL: "/cpl",
 
   // --------------Employee Expense Claim-------------
   EXENSE_CLAIM: "/exense-claim",
+
+  // --------------Attendance Holidays-------------
+  ATTENDANCE_HOLIDAYS: "/holidays",
 
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",

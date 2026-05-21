@@ -2,12 +2,15 @@ import { Icon } from "@iconify/react";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
-import CustomSelect from "../../../../components/customSelect";
 import CustomInput from "../../../../components/customInput";
 import CustomDatePicker from "../../../../components/datePicker";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
+import { getAllDepartments } from "../../../../api/classificationServices";
+import { addCPLApproved, getAllWorkCalendar } from "../../../../api/hrServices";
+import CustomTimePicker from "../../../../components/timePicker";
+import { notifyError, notifySuccess } from "../../../../components/toast";
 
 export default function CreateCPL() {
   const { goBack } = useAppNavigate();
@@ -21,7 +24,6 @@ export default function CreateCPL() {
     timeIn: "",
     timeOut: "",
     workingHours: "",
-    cplApproved: "",
   });
   const { data: allEmployees, isLoading } = useQuery({
     queryKey: ["getAllEmployees"],
@@ -37,6 +39,67 @@ export default function CreateCPL() {
     label: emp.name,
     value: emp._id,
   }));
+  const queryClient = useQueryClient();
+  const createCPLMutation = useMutation({
+    mutationFn: addCPLApproved,
+
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
+        queryKey: ["getAllCPLApproved"],
+      });
+      notifySuccess("CPL Created Successfully");
+      setLoading(false);
+      goBack();
+    },
+
+    onError: (error: any) => {
+      console.log("Create CPL Error:", error);
+      notifyError(
+        error?.response?.data?.message ||
+          "Something went wrong while creating CPL",
+      );
+
+      setLoading(false);
+    },
+  });
+
+  const handleSubmit = () => {
+    setLoading(true);
+
+    const payload = {
+      department: formData.department,
+      employee: formData.employee,
+      workCalendar: formData.workCalendar,
+      shiftHours: Number(formData.shiftHours),
+      attendanceDate: formData.attendanceDate,
+      timeIn: formData.timeIn,
+      timeOut: formData.timeOut,
+      workingHours: Number(formData.workingHours),
+    };
+
+    createCPLMutation.mutate(payload);
+  };
+  const { data: allworkCalendar } = useQuery({
+    queryKey: ["getAllWorkCalendar"],
+    queryFn: getAllWorkCalendar,
+  });
+
+  const workCalendarOptions = (allworkCalendar?.data?.data || []).map(
+    (cal: any) => ({
+      label: cal.name,
+      value: cal._id,
+    }),
+  );
+  const { data: alldepartment } = useQuery({
+    queryKey: ["getAllDepartments"],
+    queryFn: getAllDepartments,
+  });
+
+  const AllgetDepartment = alldepartment?.data?.data || [];
+  const departmentOptions = AllgetDepartment.map((dep: any) => ({
+    label: dep.fullName || dep.name || "Unnamed",
+    value: dep._id,
+  }));
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -44,10 +107,9 @@ export default function CreateCPL() {
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
 
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Create Employee Leave Application
+            Create CPL Approved
           </p>
         </div>
-
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <button
             onClick={goBack}
@@ -61,7 +123,7 @@ export default function CreateCPL() {
             Print
           </button>
           <button
-            // onClick={handleSubmit}
+            onClick={handleSubmit}
             disabled={loading}
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary disabled:opacity-60"
           >
@@ -76,7 +138,6 @@ export default function CreateCPL() {
           </button>
         </div>
       </div>
-
       <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
@@ -85,44 +146,43 @@ export default function CreateCPL() {
             </p>
           </div>
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25 gap-y-2">
-            {/* Department */}
-            <CustomSelect
-              label="Department"
-              placeholder="Select Department"
-              value={formData.department}
-              options={[
-                { label: "HR", value: "HR" },
-                { label: "Finance", value: "Finance" },
-                { label: "IT", value: "IT" },
-              ]}
-              onChange={(value: any) =>
-                setFormData({ ...formData, department: value })
-              }
-            />
-
             <CustomSelectSearch
               label="Employee"
               loading={isLoading}
               placeholder="Select Employee"
               value={formData.employee}
               options={employeeOptions}
-              onChange={(value: any) =>
-                setFormData({ ...formData, employee: value })
-              }
-            />
-            <CustomSelect
-              label="Work Calendar"
-              placeholder="Select Calendar"
-              value={formData.workCalendar}
-              options={[
-                { label: "Standard Calendar", value: "standard" },
-                { label: "Ramadan Calendar", value: "ramadan" },
-              ]}
-              onChange={(value: any) =>
-                setFormData({ ...formData, workCalendar: value })
-              }
-            />
+              onChange={(value: any) => {
+                const selectedEmployee = AllEmployee.find(
+                  (emp: any) => emp._id === value,
+                );
 
+                setFormData((prev) => ({
+                  ...prev,
+                  employee: value,
+                  department:
+                    selectedEmployee?.department?._id ||
+                    selectedEmployee?.department ||
+                    "",
+                  workCalendar:
+                    selectedEmployee?.workCalendar?._id ||
+                    selectedEmployee?.workCalendar ||
+                    "",
+                }));
+              }}
+            />
+            <CustomSelectSearch
+              label="Department"
+              value={formData.department}
+              options={departmentOptions}
+              disabled
+            />
+            <CustomSelectSearch
+              label="Work Calendar"
+              value={formData.workCalendar}
+              options={workCalendarOptions}
+              disabled
+            />
             <CustomInput
               label="Shift Hours"
               placeholder="e.g. 9"
@@ -131,7 +191,6 @@ export default function CreateCPL() {
                 setFormData({ ...formData, shiftHours: e.target.value })
               }
             />
-
             <CustomDatePicker
               label="Attendance Date"
               value={formData.attendanceDate}
@@ -139,44 +198,34 @@ export default function CreateCPL() {
                 setFormData({ ...formData, attendanceDate: value })
               }
             />
-
-            <CustomInput
+            <CustomTimePicker
               label="Time In"
               placeholder="e.g. 09:00 AM"
               value={formData.timeIn}
-              onChange={(e: any) =>
-                setFormData({ ...formData, timeIn: e.target.value })
-              }
+              onChange={(value: any) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  timeIn: value,
+                }));
+              }}
             />
-
-            <CustomInput
+            <CustomTimePicker
               label="Time Out"
               placeholder="e.g. 06:00 PM"
               value={formData.timeOut}
-              onChange={(e: any) =>
-                setFormData({ ...formData, timeOut: e.target.value })
-              }
+              onChange={(value: any) => {
+                setFormData((prev) => ({
+                  ...prev,
+                  timeOut: value,
+                }));
+              }}
             />
-
             <CustomInput
               label="Working Hours"
               placeholder="Auto / Manual"
               value={formData.workingHours}
               onChange={(e: any) =>
                 setFormData({ ...formData, workingHours: e.target.value })
-              }
-            />
-
-            <CustomSelect
-              label="CPL Approved"
-              placeholder="Select"
-              value={formData.cplApproved}
-              options={[
-                { label: "Yes", value: true },
-                { label: "No", value: false },
-              ]}
-              onChange={(value: any) =>
-                setFormData({ ...formData, cplApproved: value })
               }
             />
           </div>

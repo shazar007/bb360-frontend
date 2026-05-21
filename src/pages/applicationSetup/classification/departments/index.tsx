@@ -25,7 +25,6 @@ export default function Departments() {
     queryFn: getAllDepartments,
   });
   const getAlldepartment: any[] = getdepartment?.data?.data || [];
-
   const handleStatusChange = (item: any) => {
     setSelectedItem(item);
     setNewStatus(!item.isActive);

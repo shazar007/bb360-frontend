@@ -11,6 +11,11 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { getAllEmployees } from "../../../../api/employeesServices";
+import { getAllDepartments } from "../../../../api/classificationServices";
+import {
+  addExpenseClaim,
+  getAllExpenseClaim,
+} from "../../../../api/hrServices";
 
 const tabs = ["Employee Evaluation Lines", "System Information", "Attachments"];
 
@@ -28,7 +33,6 @@ export default function EmployeeExpenseClaimCreate() {
     expenseDate: "",
     location: "",
   });
-
   const [rowForm, setRowForm] = useState({
     employeeName: "",
     expenseCategory: "",
@@ -37,15 +41,13 @@ export default function EmployeeExpenseClaimCreate() {
     total: "",
   });
 
-  // const { refetch } = useQuery({
-  //   queryKey: ["getAllEmployeeExpenseClaim"],
-  //   queryFn: getAllEmployeeExpenseClaim,
-  // });
+  const { refetch } = useQuery({
+    queryKey: ["getAllExpenseClaim"],
+    queryFn: getAllExpenseClaim,
+  });
 
-  // LOCAL STORAGE LOAD
   useEffect(() => {
     const storedRows = localStorage.getItem("expenseClaimRows");
-
     if (storedRows) {
       setRows(JSON.parse(storedRows));
     }
@@ -59,31 +61,19 @@ export default function EmployeeExpenseClaimCreate() {
     if (!rowForm.employeeName) {
       return notifyError("Employee Name is required");
     }
-
-    // UPDATE
     if (editIndex !== null) {
       const updatedRows = [...rows];
-
       updatedRows[editIndex] = rowForm;
-
       setRows(updatedRows);
-
       localStorage.setItem("expenseClaimRows", JSON.stringify(updatedRows));
-
       notifySuccess("Row Updated Successfully");
-
       setEditIndex(null);
     } else {
-      // ADD
       const updatedRows = [...rows, rowForm];
-
       setRows(updatedRows);
-
       localStorage.setItem("expenseClaimRows", JSON.stringify(updatedRows));
-
       notifySuccess("Row Added Successfully");
     }
-
     setRowForm({
       employeeName: "",
       expenseCategory: "",
@@ -98,17 +88,15 @@ export default function EmployeeExpenseClaimCreate() {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-
       const payload = {
         ...formData,
         rows,
       };
-      console.log("🚀 PAYLOAD:", payload);
-      // await addEmployeeExpenseClaim(payload);
+      await addExpenseClaim(payload);
       notifySuccess("Expense Claim Created");
       localStorage.removeItem("expenseClaimRows");
       setRows([]);
-      // await refetch();
+      await refetch();
       goBack();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Something went wrong");
@@ -135,6 +123,20 @@ export default function EmployeeExpenseClaimCreate() {
   const AllEmployee: any[] = allEmployees?.data?.data || [];
   const employeeOptions = AllEmployee.map((emp: any) => ({
     label: emp.name,
+    value: emp._id,
+  }));
+  const { data: alldepartment, isLoading: departLoading } = useQuery({
+    queryKey: ["getAllDepartments"],
+    queryFn: getAllDepartments,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const AllgetDepartment: any[] = alldepartment?.data?.data || [];
+  const departmentOptions = AllgetDepartment.map((emp: any) => ({
+    label: emp.fullName,
     value: emp._id,
   }));
   return (
@@ -188,22 +190,14 @@ export default function EmployeeExpenseClaimCreate() {
           </div>
 
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-10 lg:gapx-x-29.25 gap-y-4">
-            <CustomSelect
+            <CustomSelectSearch
               label="Department"
+              loading={departLoading}
               placeholder="Select Department"
               value={formData.department}
-              options={[
-                { label: "HR", value: "HR" },
-                { label: "Finance", value: "Finance" },
-                { label: "Accounts", value: "Accounts" },
-                { label: "IT", value: "IT" },
-                { label: "Administration", value: "Administration" },
-              ]}
+              options={departmentOptions}
               onChange={(value: any) =>
-                setFormData({
-                  ...formData,
-                  department: value,
-                })
+                setFormData({ ...formData, department: value })
               }
             />
 

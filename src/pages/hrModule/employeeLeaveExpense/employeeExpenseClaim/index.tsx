@@ -4,19 +4,24 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { useQuery } from "@tanstack/react-query";
-
+import { SyncLoader } from "react-spinners";
+import {
+  getAllExpenseClaim,
+  updateEmployeeExpenseClaim,
+} from "../../../../api/hrServices";
+import CustomInput from "../../../../components/customInput";
 export default function EmployeeExpenseClaim() {
-  const { goTo } = useAppNavigate();
-  const [rows, setRows] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
   const [openModal, setOpenModal] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
-  // const { data, isLoading, refetch } = useQuery({
-  //   queryKey: ["employeeExpenseClaim"],
-  //   queryFn: getEmployeeExpenseClaim,
-  // });
-  const [formData, setFormData] = useState({
+  const [loading, setLoading] = useState(false);
+  const { goTo } = useAppNavigate();
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["employeeExpenseClaim"],
+    queryFn: getAllExpenseClaim,
+  });
+
+  const allExpenseClaim = data?.data?.data || [];
+  const [formData, setFormData] = useState<any>({
     transactionDate: "",
     transactionNumber: "",
     locationName: "",
@@ -30,42 +35,39 @@ export default function EmployeeExpenseClaim() {
     isWhatIssue: "",
     gatePassReturnable: "",
   });
-  const handleEdit = (index: number) => {
-    const row = rows[index];
 
+  const handleEdit = (index: number) => {
+    const row = allExpenseClaim[index];
     setFormData(row);
     setEditIndex(index);
     setOpenModal(true);
   };
+
   const handleUpdate = async () => {
     try {
       setLoading(true);
-
+      const rowId = allExpenseClaim[editIndex!]?._id;
       const payload = {
-        ...formData,
-        id: rows[editIndex!].id,
+        transactionNumber: formData.transactionNumber,
+        locationName: formData.locationName,
+        grossAmount: formData.grossAmount,
+        documentStatus: formData.documentStatus,
       };
-
-      // await updateEmployeeExpenseClaim(payload); // your API
-
-      const updatedRows = [...rows];
-      updatedRows[editIndex!] = formData;
-
-      setRows(updatedRows);
-
+      await updateEmployeeExpenseClaim(rowId, payload);
+      await refetch();
+      notifySuccess("Updated Successfully");
       setOpenModal(false);
       setEditIndex(null);
-
-      notifySuccess("Updated Successfully");
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Update failed");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <>
-      <div className="mt-8">
+      <div className="mt-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -103,62 +105,56 @@ export default function EmployeeExpenseClaim() {
           </div>
         </div>
 
-        <div className="mt-3 bg-bgprimary rounded-2xl">
-          <div className="mt-3">
-            <CustomTable
-              loading={false}
-              height="60vh"
-              headers={[
-                "Edit",
-                "Transaction Date",
-                "Transaction Number",
-                "Location Name",
-                "Created From",
-                "Gross Amount",
-                "Documents Status ",
-                "Approved By",
-                "Approved Date",
-                "Item Rate",
-                "Byproduct Amount",
-                "Is What Issue",
-                "Gate Pass Returnable ",
-              ]}
-              data={rows.map((row: any, index: number) => [
-                <Icon
-                  icon="basil:edit-outline"
-                  className="text-lg cursor-pointer text-primary"
-                  onClick={() => handleEdit(index)}
-                />,
-
-                row.transactionDate,
-                row.transactionNumber,
-                row.locationName,
-                row.createdFrom,
-                row.grossAmount,
-                row.documentStatus,
-                row.approvedBy,
-                row.approvedDate,
-                row.itemRate,
-                row.byproductAmount,
-                row.isWhatIssue,
-                row.gatePassReturnable,
-              ])}
-            />
-          </div>
+        <div className="mt-3">
+          <CustomTable
+            loading={isLoading}
+            height="60vh"
+            headers={[
+              "Edit",
+              "Transaction Date",
+              "Transaction Number",
+              "Location Name",
+              "Created From",
+              "Gross Amount",
+              "Status",
+              "Approved By",
+              "Approved Date",
+              "Item Rate",
+              "Byproduct Amount",
+              "Issue",
+              "Gate Pass Returnable",
+            ]}
+            data={allExpenseClaim.map((row: any, index: number) => [
+              <Icon
+                icon="basil:edit-outline"
+                className="text-lg cursor-pointer text-primary"
+                onClick={() => handleEdit(index)}
+              />,
+              row.transactionDate,
+              row.transactionNumber,
+              row.locationName,
+              row.createdFrom,
+              row.grossAmount,
+              row.documentStatus,
+              row.approvedBy,
+              row.approvedDate,
+              row.itemRate,
+              row.byproductAmount,
+              row.isWhatIssue,
+              row.gatePassReturnable,
+            ])}
+          />
         </div>
       </div>
+
       {openModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-3xl p-5 bg-white rounded-xl">
-            <h2 className="mb-4 text-lg font-semibold">
-              {editIndex !== null
-                ? "Update Expense Claim"
-                : "Create Expense Claim"}
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold">Update Expense Claim</h2>
 
             <div className="grid grid-cols-2 gap-4">
-              <input
-                value={formData.transactionNumber}
+              <CustomInput
+                value={formData.transactionNumber || ""}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -169,28 +165,37 @@ export default function EmployeeExpenseClaim() {
                 className="p-2 border rounded"
               />
 
-              <input
-                value={formData.locationName}
+              <CustomInput
+                value={formData.locationName || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, locationName: e.target.value })
+                  setFormData({
+                    ...formData,
+                    locationName: e.target.value,
+                  })
                 }
                 placeholder="Location"
                 className="p-2 border rounded"
               />
 
-              <input
-                value={formData.grossAmount}
+              <CustomInput
+                value={formData.grossAmount || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, grossAmount: e.target.value })
+                  setFormData({
+                    ...formData,
+                    grossAmount: e.target.value,
+                  })
                 }
                 placeholder="Gross Amount"
                 className="p-2 border rounded"
               />
 
-              <input
-                value={formData.documentStatus}
+              <CustomInput
+                value={formData.documentStatus || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, documentStatus: e.target.value })
+                  setFormData({
+                    ...formData,
+                    documentStatus: e.target.value,
+                  })
                 }
                 placeholder="Status"
                 className="p-2 border rounded"
@@ -206,20 +211,14 @@ export default function EmployeeExpenseClaim() {
               </button>
 
               <button
-                onClick={() => {
-                  if (editIndex !== null) {
-                    const updated = [...rows];
-                    updated[editIndex] = formData;
-                    setRows(updated);
-                  } else {
-                    setRows([...rows, formData]);
-                  }
-
-                  setOpenModal(false);
-                }}
+                onClick={handleUpdate}
                 className="px-4 py-2 text-white rounded bg-primary"
               >
-                {loading ? "Update" : "Save"}
+                {loading ? (
+                  <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
+                ) : (
+                  "Save"
+                )}
               </button>
             </div>
           </div>

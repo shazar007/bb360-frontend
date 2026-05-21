@@ -148,6 +148,21 @@ export const addExpenseClaim = (values: any) => {
 export const getAllExpenseClaim = () => {
   return HTTP_CLIENT.get(ENDPOINTS.EXENSE_CLAIM);
 };
-export const updateExpenseClaim = (id: string | number, values: any) => {
+export const updateEmployeeExpenseClaim = (
+  id: string | number,
+  values: any,
+) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.EXENSE_CLAIM}/${id}`, values);
+};
+
+// --------------Employee Expense Claim-------------
+
+export const addAttendanceHolidays = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE_HOLIDAYS, values);
+};
+export const getAllAttendanceHolidays = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_HOLIDAYS);
+};
+export const updateAttendanceHolidays = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE_HOLIDAYS}/${id}`, values);
 };
