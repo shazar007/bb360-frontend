@@ -19,7 +19,11 @@ export default function EmployeeLeaveApplication() {
   const { goTo } = useAppNavigate();
   const [editData, setEditData] = useState<any>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { isLoading, refetch } = useQuery({
+  const {
+    isLoading,
+    refetch,
+    data: LeaveApplication,
+  } = useQuery({
     queryKey: ["getAllLeaveApplication"],
     queryFn: getAllLeaveApplication,
   });

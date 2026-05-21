@@ -12,7 +12,7 @@ import { InvoiceTemplate } from "../../../../components/temp-Invoice";
 export default function SalesInvoice() {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [showMenu, setShowMenu] = useState<number | null>(null);
-  const { goTo, goWithState } = useAppNavigate();
+  const { goTo } = useAppNavigate();
   const [selectedOrder, setSelectedOrder] = useState(null);
   const printRef = useRef(null);
 
