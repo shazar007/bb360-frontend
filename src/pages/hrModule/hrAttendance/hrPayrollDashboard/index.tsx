@@ -1,11 +1,9 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { useAppNavigate } from "../../../../hooks/navigation";
 import AttendanceDashboard from "./attendanceDashboard";
 import PayrollDashboard from "./payrollDashboard";
 import Filter from "../../../../components/customDatefilter";
 export default function HrPayrollDashboard() {
-  const { goTo } = useAppNavigate();
   const [openFilter, setOpenFilter] = useState(false);
   const [activeTab, setActiveTab] = useState("hr");
 

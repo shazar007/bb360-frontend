@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import CustomExpandableTable from "../../../../../components/customTable";
 export default function TimeAttendanceSummary() {
   const [openDepartment, setOpenDepartment] = useState("accounts");
 

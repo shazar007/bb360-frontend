@@ -48,7 +48,6 @@ export default function CreateCPL() {
         queryKey: ["getAllCPLApproved"],
       });
       notifySuccess("CPL Created Successfully");
-      setLoading(false);
       goBack();
     },
 
@@ -58,14 +57,10 @@ export default function CreateCPL() {
         error?.response?.data?.message ||
           "Something went wrong while creating CPL",
       );
-
-      setLoading(false);
     },
   });
 
   const handleSubmit = () => {
-    setLoading(true);
-
     const payload = {
       department: formData.department,
       employee: formData.employee,
