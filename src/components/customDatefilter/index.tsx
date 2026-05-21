@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
-import CustomDate from "../../../../../components/datePicker";
+import CustomDate from "../../components/datePicker";
 
 interface Props {
   onClose: () => void;
@@ -9,13 +9,13 @@ interface Props {
 export default function Filter({ onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] px-4">
-      <div className="w-full max-w-170 overflow-hidden bg-white shadow-xl rounded-2xl">
+      <div className="w-full max-w-150 overflow-hidden bg-white shadow-xl rounded-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-b-gray-400">
           <h2 className="text-sm font-semibold text-heading1">Filters</h2>
           <button
             onClick={onClose}
-            className="text-2xl cursor-pointer text-heading1"
+            className="text-2xl cursor-pointer text-[#302250]"
           >
             <Icon icon="mdi:close" />
           </button>
@@ -25,14 +25,14 @@ export default function Filter({ onClose }: Props) {
         <div className="p-6">
           {/* Radio Buttons */}
           <div>
-            <p className="mb-4 text-sm font-semibold text-heading1">
+            <p className="mb-1 text-sm font-semibold text-heading1 -mt-2 ml-0">
               Date Filter
             </p>
 
             <RadioGroup
               row
               defaultValue="today"
-              className="flex flex-wrap gap-6"
+              className="flex flex-wrap gap-6 -mt-2.5 -ml-3"
             >
               <FormControlLabel
                 value="today"
@@ -125,14 +125,14 @@ export default function Filter({ onClose }: Props) {
           </div>
 
           {/* Dates */}
-          <div className="grid grid-cols-1 gap-4 mt-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 mt-1 md:grid-cols-2">
             <CustomDate label="From Date" placeholder="01-Mar-2026" />
 
             <CustomDate label="To Date" placeholder="01-Mar-2026" />
           </div>
 
           {/* Buttons */}
-          <div className="flex items-center justify-between mt-8">
+          <div className="flex items-center justify-between mt-4">
             <button
               onClick={onClose}
               className="flex items-center justify-center h-10 px-8 text-sm bg-white rounded-md shadow-[0_1px_12px_#0000001F] text-heading1 cursor-pointer"

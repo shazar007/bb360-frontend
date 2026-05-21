@@ -19,14 +19,16 @@ import {
   getAllWorkCalendar,
 } from "../../../../api/hrServices";
 import { useQuery } from "@tanstack/react-query";
+import { getAllDepartments } from "../../../../api/classificationServices";
 
 const fetchHROptions = async () => {
-  const [typeRes, designationRes, gradesRes, workCalendarres] =
+  const [typeRes, designationRes, gradesRes, workCalendarres, departmentRep] =
     await Promise.all([
       getAllEmployeeType(),
       getAllEmployeeDesignation(),
       getAllEmployeeGrades(),
       getAllWorkCalendar(),
+      getAllDepartments(),
     ]);
 
   return {
@@ -45,6 +47,15 @@ const fetchHROptions = async () => {
     workCalendar: (workCalendarres?.data?.data || []).map((emp: any) => ({
       label: emp.name,
       value: emp._id,
+    })),
+
+    departOption: (departmentRep?.data?.data || []).map((depar: any) => ({
+      label:
+        depar.fullName ||
+        depar.name ||
+        depar.departmentName ||
+        "Unnamed Department",
+      value: depar._id,
     })),
   };
 };
@@ -71,7 +82,7 @@ export default function EmployeesCreate() {
     employeeType: "",
     workCalendar: "",
     email: "",
-    // departmentName: "",
+    departmentName: "",
     jobLocation: "",
   });
   const { refetch } = useQuery({
@@ -93,8 +104,8 @@ export default function EmployeesCreate() {
     employeeDesignation = [],
     employeeGrades = [],
     workCalendar = [],
+    departOption = [],
   } = hrOptions ?? {};
-
   const validateForm = () => {
     const hasEmpty = Object.values(formData).some((val) => !val);
     if (hasEmpty) {
@@ -103,7 +114,6 @@ export default function EmployeesCreate() {
     }
     return true;
   };
-
   const handleChange = (name: string, value: any) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -128,7 +138,13 @@ export default function EmployeesCreate() {
       setLoading(false);
     }
   };
-
+  const loadingState = {
+    designation: hrLoading,
+    department: hrLoading,
+    employeeType: hrLoading,
+    workCalendar: hrLoading,
+    employeeGrade: hrLoading,
+  };
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -283,24 +299,23 @@ export default function EmployeesCreate() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Job Detail</p>
         </div>
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25">
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
           <CustomSelectSearch
             label="Designation"
             placeholder="Select Designation"
             value={formData.designation}
             onChange={(value: any) => handleChange("designation", value)}
             options={employeeDesignation}
-            loading={hrLoading}
+            loading={loadingState.designation}
           />
-          {/* <CustomSelect
+          <CustomSelectSearch
             label="Department Name"
-            options={}
-            placeholder="Enter Department Name"
+            options={departOption}
+            loading={loadingState.department}
+            placeholder="Select Department"
             value={formData.departmentName}
-            onChange={(e: any) =>
-              handleChange("departmentName", e.target.value)
-            }
-          /> */}
+            onChange={(value: any) => handleChange("departmentName", value)}
+          />
           <CustomSelectSearch
             label="Employee Type"
             loading={hrLoading}

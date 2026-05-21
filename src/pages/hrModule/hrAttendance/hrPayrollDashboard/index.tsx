@@ -1,11 +1,9 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { useAppNavigate } from "../../../../hooks/navigation";
 import AttendanceDashboard from "./attendanceDashboard";
 import PayrollDashboard from "./payrollDashboard";
-import Filter from "./components/filter";
+import Filter from "../../../../components/customDatefilter";
 export default function HrPayrollDashboard() {
-  const { goTo } = useAppNavigate();
   const [openFilter, setOpenFilter] = useState(false);
   const [activeTab, setActiveTab] = useState("hr");
 
@@ -202,14 +200,7 @@ export default function HrPayrollDashboard() {
               Filters
             </button>
 
-            <button
-              onClick={() => {
-                goTo(
-                  "/hr-module/attendance-setup/define-attendance-holidays/create",
-                );
-              }}
-              className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
-            >
+            <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
               <Icon icon="basil:add-outline" className="w-5 h-5" />
               Create
             </button>

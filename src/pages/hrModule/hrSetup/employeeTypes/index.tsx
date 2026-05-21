@@ -23,10 +23,8 @@ export default function EmployeeTypes() {
   } = useQuery({
     queryKey: ["getAllEmployeeType"],
     queryFn: getAllEmployeeType,
-
     staleTime: Infinity,
     gcTime: 1000 * 60 * 10,
-
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -120,7 +118,7 @@ export default function EmployeeTypes() {
                     className={`cursor-pointer text-2xl ${
                       item.isActive ? "text-primary" : "text-gray-400"
                     }`}
-                    // onClick={() => handleStatusChange(item)}
+                    onClick={() => handleStatusChange(item)}
                   />,
                 ]) || []
               }
@@ -137,7 +135,7 @@ export default function EmployeeTypes() {
                 ✕
               </p>
             </div>
-            <div className="mx-auto w-80 mt-4">
+            <div className="mx-auto mt-4 w-80">
               <p className="text-2xl font-semibold text-center">
                 {" "}
                 Change Status
@@ -151,7 +149,7 @@ export default function EmployeeTypes() {
               </p>
             </div>
 
-            <div className="flex justify-between gap-2 mt-5 p-4 pt-0">
+            <div className="flex justify-between gap-2 p-4 pt-0 mt-5">
               <button
                 className="h-10 rounded-md cursor-pointer w-25"
                 style={{ boxShadow: "0px 1px 12px 0px #0000001F" }}
@@ -163,7 +161,7 @@ export default function EmployeeTypes() {
                 style={{
                   boxShadow: "0px 1px 12px 0px #0000001F",
                 }}
-                className="h-10 w-25 cursor-pointer rounded-md text-white bg-primary"
+                className="h-10 text-white rounded-md cursor-pointer w-25 bg-primary"
                 onClick={handleConfirmUpdate}
               >
                 {loading ? (

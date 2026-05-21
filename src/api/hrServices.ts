@@ -76,3 +76,93 @@ export const getAllEmployeeSalary = () => {
 export const updateEmployeeSalary = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEE_SALARY}/${id}`, values);
 };
+
+// --------------Employee Performance Criteria-------------
+export const addEmployeePerformanceCriteria = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_PERFORMANCE_CRITERIA, values);
+};
+export const getAllEmployeePerformanceCriteria = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_PERFORMANCE_CRITERIA);
+};
+export const updateEmployeePerformanceCriteria = (
+  id: string | number,
+  values: any,
+) => {
+  return HTTP_CLIENT.put(
+    `${ENDPOINTS.EMPLOYEE_PERFORMANCE_CRITERIA}/${id}`,
+    values,
+  );
+};
+
+// --------------Employee Performance Evaluation-------------
+export const addEmployeePerformanceEvaluation = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEE_PERFORMANCE_EVALUATION, values);
+};
+export const getAllEmployeePerformanceEvaluation = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEE_PERFORMANCE_EVALUATION);
+};
+export const updateEmployeePerformanceEvaluation = (
+  id: string | number,
+  values: any,
+) => {
+  return HTTP_CLIENT.put(
+    `${ENDPOINTS.EMPLOYEE_PERFORMANCE_EVALUATION}/${id}`,
+    values,
+  );
+};
+
+// --------------Employee Leave Application-------------
+export const addLeaveApplication = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.LEAVE_APPLICATION, values);
+};
+export const getAllLeaveApplication = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.LEAVE_APPLICATION);
+};
+export const updateLeaveApplication = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.LEAVE_APPLICATION}/${id}`, values);
+};
+export const updateStatusLeave = (id: string | number, values: any) => {
+  return HTTP_CLIENT.patch(
+    `${ENDPOINTS.LEAVE_APPLICATION}/${id}/status`,
+    values,
+  );
+};
+
+// --------------  CPL Approval-------------
+
+export const addCPLApproved = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.CPL_APPROVAL, values);
+};
+export const getAllCPLApproved = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.CPL_APPROVAL);
+};
+export const updateCPLApproved = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.CPL_APPROVAL}/${id}`, values);
+};
+
+// --------------Employee Expense Claim-------------
+
+export const addExpenseClaim = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.EXENSE_CLAIM, values);
+};
+export const getAllExpenseClaim = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.EXENSE_CLAIM);
+};
+export const updateEmployeeExpenseClaim = (
+  id: string | number,
+  values: any,
+) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.EXENSE_CLAIM}/${id}`, values);
+};
+
+// --------------Employee Expense Claim-------------
+
+export const addAttendanceHolidays = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE_HOLIDAYS, values);
+};
+export const getAllAttendanceHolidays = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_HOLIDAYS);
+};
+export const updateAttendanceHolidays = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE_HOLIDAYS}/${id}`, values);
+};

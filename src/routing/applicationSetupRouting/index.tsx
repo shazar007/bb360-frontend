@@ -3,6 +3,7 @@ import DataUploadRouting from "./dataUploadRouting";
 import DistributionSetupRoutes from "./distributionSetupRoutes";
 import VendorDefineRouting from "./vendorDefineRouting";
 import { useEffect } from "react";
+import ClassificationRoutes from "./classifications";
 export default function ApplicationSetupRouting() {
   useEffect(() => {
     document.title = "Application Setup — BB-360";
@@ -15,6 +16,7 @@ export default function ApplicationSetupRouting() {
         element={<DistributionSetupRoutes />}
       />
       <Route path="/vendor-define/*" element={<VendorDefineRouting />} />
+      <Route path="/classification/*" element={<ClassificationRoutes />} />
     </Routes>
   );
 }

@@ -14,6 +14,9 @@ export const ENDPOINTS = {
   // ------------Vendor-------------
   VENDORS: "/vendors",
 
+  // --------------Departments-------------
+  DEPARTMENTS: "/departments",
+
   // ------------Distributor-------------
   DISTRIBUTOR: "/distributors",
 
@@ -81,6 +84,24 @@ export const ENDPOINTS = {
 
   // --------------Employee Salary-------------
   EMPLOYEE_SALARY: "/employee-salaries",
+
+  // --------------Employee Performance Criteria-------------
+  EMPLOYEE_PERFORMANCE_CRITERIA: "/employee-performance-criteria",
+
+  // --------------Employee Performance Evaluation-------------
+  EMPLOYEE_PERFORMANCE_EVALUATION: "/employee-performance-evaluation",
+
+  // --------------Employee Leave Application-------------
+  LEAVE_APPLICATION: "/leave-applications",
+
+  // --------------CPL Approval-------------
+  CPL_APPROVAL: "/cpl",
+
+  // --------------Employee Expense Claim-------------
+  EXENSE_CLAIM: "/exense-claim",
+
+  // --------------Attendance Holidays-------------
+  ATTENDANCE_HOLIDAYS: "/holidays",
 
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
