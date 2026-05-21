@@ -1,15 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 
-import EmployeePayElements from "../../../pages/hrModule/payrollSetup/employeePayElements";
-import LoanDeductionSetup from "../../../pages/hrModule/payrollSetup/loanDeductionSetup";
+import { employeePayElementsRoutes } from "./employeePayElements";
+import { loanDeductionSetupRoutes } from "./loanDeductionSetup";
 import PayElementEntitlesUpload from "../../../pages/hrModule/payrollSetup/payElementEntitlesUpload";
 
 export default function PayrollSetupRouting() {
   return (
     <Routes>
-      <Route path="/employee-pay-elements" element={<EmployeePayElements />} />
+      {employeePayElementsRoutes}
 
-      <Route path="/loan-deduction-setup" element={<LoanDeductionSetup />} />
+      {loanDeductionSetupRoutes}
 
       <Route
         path="/pay-element-entitles-upload"
