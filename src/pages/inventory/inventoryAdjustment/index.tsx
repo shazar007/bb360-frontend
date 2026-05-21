@@ -164,7 +164,7 @@ export default function InventoryAdjustment() {
               height="700px"
               headers={[
                 "Edit",
-                "View",
+                // "View",
                 "Report",
                 "Transaction Number",
                 "Item Name",
@@ -213,11 +213,11 @@ export default function InventoryAdjustment() {
                     )}
                   </div>,
                   ,
-                  <Icon
-                    icon="hugeicons:view"
-                    className="text-lg cursor-pointer text-primary"
-                    onClick={() => handlePrintItem(item)}
-                  />,
+                  // <Icon
+                  //   icon="hugeicons:view"
+                  //   className="text-lg cursor-pointer text-primary"
+                  //   onClick={() => handlePrintItem(item)}
+                  // />,
 
                   <Icon
                     icon="ion:print-outline"

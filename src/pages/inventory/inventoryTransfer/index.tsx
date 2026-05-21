@@ -36,14 +36,12 @@ export default function InventoryTransfer() {
   });
 
   const allInventoryTransfer = data?.data?.transfers || [];
-  console.log(
-    "🚀 ~ InventoryTransfer ~ allInventoryTransfer:",
-    allInventoryTransfer,
-  );
+
   const handlePrintAll = useReactToPrint({
     contentRef: printAllRef,
     documentTitle: "Inventory Transfer",
   });
+
   const handlePrintItem = (item: any) => {
     setSelectedItem(item);
 
@@ -58,6 +56,7 @@ export default function InventoryTransfer() {
   });
 
   const queryClient = useQueryClient();
+  
   const deleteMutation = useMutation({
     mutationFn: deleteInventoryTransfer,
 
@@ -283,7 +282,7 @@ export default function InventoryTransfer() {
             height="60vh"
             headers={[
               "Edit",
-              "View",
+              // "View",
               "Report",
               "Transaction Number",
               "Transaction Date",
@@ -331,11 +330,11 @@ export default function InventoryTransfer() {
                   )}
                 </div>,
 
-                <Icon
-                  icon="hugeicons:view"
-                  className="text-lg cursor-pointer text-primary"
-                  onClick={() => handlePrintItem(item)}
-                />,
+                // <Icon
+                //   icon="hugeicons:view"
+                //   className="text-lg cursor-pointer text-primary"
+                //   onClick={() => handlePrintItem(item)}
+                // />,
 
                 <Icon
                   icon="ion:print-outline"
