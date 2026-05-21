@@ -117,9 +117,7 @@ export default function MaterialReturnNoteCreate() {
 
     try {
       setSaveLoading(true);
-
       await addMaterialReturnNote(payload);
-
       notifySuccess("Material Issue Note Saved Successfully");
       refetch();
       goBack();

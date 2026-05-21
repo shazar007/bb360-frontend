@@ -1,66 +1,68 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import Filter from "./components/filter";
+
 import { useState } from "react";
 import CustomInput from "../../../../components/customInput";
+import {
+  getAllCPLApproved,
+  updateCPLApproved,
+} from "../../../../api/hrServices";
 import { SyncLoader } from "react-spinners";
 import dayjs from "dayjs";
-const fallbackData = [
-  {
-    _id: "1",
-    department: "IT",
-    employee: "Ali Raza Awan",
-    workCalendar: "00002",
-    shiftHours: "8",
-    attendanceDate: "2026-03-25",
-    timeIn: "09:00",
-    timeOut: "18:00",
-    workingHours: "8",
-    cplApproved: "Yes",
-  },
-];
+import CustomTimePicker from "../../../../components/timePicker";
+import CustomSelect from "../../../../components/customSelect";
+import CustomDatePicker from "../../../../components/datePicker";
+import { notifyError, notifySuccess } from "../../../../components/toast";
+import Filter from "../../../../components/customDatefilter";
+import { useQuery } from "@tanstack/react-query";
 export default function CplLeaveApproval() {
   const { goTo } = useAppNavigate();
   const [editData, setEditData] = useState<any>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
-  // const { data, isLoading, refetch } = useQuery({
-  //   queryKey: ["getAllCPLApproved"],
-  //   queryFn: getAllCPLApproved,
-  // });
-  const rows = fallbackData;
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["getAllCPLApproved"],
+    queryFn: getAllCPLApproved,
+  });
+  const rows = data?.data?.data ?? [];
   const handleUpdate = async () => {
     try {
       setLoading(true);
 
       const payload = {
         _id: editData._id,
-        department: editData.department,
-        employee: editData.employee,
-        workCalendar: editData.workCalendar,
-        shiftHours: editData.shiftHours,
+        shiftHours: Number(editData.shiftHours),
         attendanceDate: editData.attendanceDate,
         timeIn: editData.timeIn,
         timeOut: editData.timeOut,
-        workingHours: editData.workingHours,
-        cplApproved: editData.cplApproved,
+        workingHours: Number(editData.workingHours),
+        cplApprovedStatus: editData.cplApprovedStatus,
       };
 
       console.log("UPDATE CPL PAYLOAD:", payload);
 
-      // await updateCplApproval(payload)
+      await updateCPLApproved(editData._id, payload);
 
-      // await refetch();
+      await refetch();
+
+      notifySuccess("CPL Updated Successfully");
+
       setIsEditOpen(false);
       setEditData(null);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+
+      notifyError(
+        error?.response?.data?.message ||
+          "Something went wrong while updating CPL",
+      );
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <>
       <div className="mt-8">
@@ -99,7 +101,7 @@ export default function CplLeaveApproval() {
               className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
             >
               <Icon icon="basil:add-outline" className="w-5 h-5" />
-              Manual Approved CPL
+              Create
             </button>
           </div>
         </div>
@@ -108,7 +110,7 @@ export default function CplLeaveApproval() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              // loading={isLoading}
+              loading={isLoading}
               height="60vh"
               headers={[
                 "Edit",
@@ -127,19 +129,22 @@ export default function CplLeaveApproval() {
                   icon="basil:edit-outline"
                   className="text-lg cursor-pointer text-primary"
                   onClick={() => {
-                    setEditData(row);
+                    setEditData({
+                      ...row,
+                    });
+
                     setIsEditOpen(true);
                   }}
                 />,
-                row.department || "-",
-                row.employee || "-",
-                row.workCalendar || "-",
+                row.department?.fullName || "-",
+                row.employee?.name || "-",
+                row.workCalendar?.name || "-",
                 row.shiftHours || "-",
                 dayjs(row.attendanceDate).format("DD-MMM-YYYY"),
                 row.timeIn || "-",
                 row.timeOut || "-",
                 row.workingHours || "-",
-                row.cplApproved || "-",
+                row.cplApprovedStatus || "-",
               ])}
             />
           </div>
@@ -150,7 +155,7 @@ export default function CplLeaveApproval() {
           <div className="w-full mx-3  max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
-                Update CPL Approval
+                Update CPLd
               </h2>
 
               <button
@@ -164,42 +169,54 @@ export default function CplLeaveApproval() {
             </div>
             <div className="grid grid-cols-1 p-4 bg-white gap-y-2 gap-x-5 md:grid-cols-2 rounded-xl">
               <CustomInput
-                label="Department"
-                value={editData.department || ""}
-                onChange={(e: any) =>
-                  setEditData({ ...editData, department: e.target.value })
-                }
-              />
-
-              <CustomInput
-                label="Employee"
-                value={editData.employee || ""}
-                onChange={(e: any) =>
-                  setEditData({ ...editData, employee: e.target.value })
-                }
-              />
-
-              <CustomInput
                 label="Shift Hours"
                 value={editData.shiftHours || ""}
                 onChange={(e: any) =>
                   setEditData({ ...editData, shiftHours: e.target.value })
                 }
+              />{" "}
+              <CustomDatePicker
+                label="Attendance Date"
+                value={editData.attendanceDate}
+                onChange={(value: any) =>
+                  setEditData({ ...editData, attendanceDate: value })
+                }
               />
-
-              <CustomInput
+              <CustomTimePicker
                 label="Time In"
                 value={editData.timeIn || ""}
                 onChange={(e: any) =>
                   setEditData({ ...editData, timeIn: e.target.value })
                 }
               />
-
-              <CustomInput
+              <CustomTimePicker
                 label="Time Out"
                 value={editData.timeOut || ""}
                 onChange={(e: any) =>
                   setEditData({ ...editData, timeOut: e.target.value })
+                }
+              />{" "}
+              <CustomInput
+                label="Working Hours"
+                placeholder="Auto / Manual"
+                value={editData.workingHours}
+                onChange={(e: any) =>
+                  setEditData({ ...editData, workingHours: e.target.value })
+                }
+              />{" "}
+              <CustomSelect
+                label="CPL Approved"
+                placeholder="Select"
+                value={editData.cplApprovedStatus}
+                options={[
+                  { label: "Yes", value: "Yes" },
+                  { label: "No", value: "No" },
+                ]}
+                onChange={(value: any) =>
+                  setEditData({
+                    ...editData,
+                    cplApprovedStatus: value,
+                  })
                 }
               />
             </div>{" "}

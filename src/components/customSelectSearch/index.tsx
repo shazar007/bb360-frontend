@@ -85,7 +85,7 @@ export default function CustomSelectSearch({
         ${white ? "bg-white" : "bg-[#ECF0F4]"}
         ${
           disabled || loading
-            ? "opacity-50 cursor-not-allowed"
+            ? "opacity-100 cursor-not-allowed"
             : "cursor-pointer"
         }
         ${className}`}
