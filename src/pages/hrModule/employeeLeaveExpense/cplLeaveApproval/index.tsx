@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import Filter from "./components/filter";
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import CustomInput from "../../../../components/customInput";
@@ -15,6 +15,7 @@ import CustomTimePicker from "../../../../components/timePicker";
 import CustomSelect from "../../../../components/customSelect";
 import CustomDatePicker from "../../../../components/datePicker";
 import { notifyError, notifySuccess } from "../../../../components/toast";
+import Filter from "../../../../components/customDatefilter";
 export default function CplLeaveApproval() {
   const { goTo } = useAppNavigate();
   const [editData, setEditData] = useState<any>(null);
