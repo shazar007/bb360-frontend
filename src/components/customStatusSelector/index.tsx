@@ -2,6 +2,7 @@ import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { updateStatusLeave } from "../../api/hrServices";
 import { Icon } from "@iconify/react";
+import { notifyError, notifySuccess } from "../toast";
 
 const statuses = ["Approved", "Rejected", "Cancelled"];
 
@@ -38,12 +39,16 @@ export default function StatusSelector({ id, defaultValue, refetch }: any) {
 
       await updateStatusLeave(id, { status: pendingStatus });
 
+      notifySuccess("Status updated successfully");
+
       setSelectedStatus(pendingStatus);
       setConfirmOpen(false);
       setPendingStatus(null);
 
       await refetch();
-    } catch (error) {
+    } catch (error: any) {
+      notifyError(error?.response?.data?.message || "Failed to update status");
+
       console.log(error);
     } finally {
       setLoading(false);
