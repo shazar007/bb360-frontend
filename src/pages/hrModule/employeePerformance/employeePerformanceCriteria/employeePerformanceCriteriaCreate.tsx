@@ -7,7 +7,6 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 
 import { getAllEmployees } from "../../../../api/employeesServices";
-import { getAllEmployeePerformanceCriteria } from "../../../../api/hrServices";
 
 export default function EmployeePerformanceCriteriaCreate() {
   const { goBack } = useAppNavigate();
