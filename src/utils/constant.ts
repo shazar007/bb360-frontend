@@ -527,7 +527,7 @@ export const navItems: NavItem[] = [
         name: "Inventory Transfer",
         path: "/inventory/inventory-transfer",
       },
-    
+
       // {
       //   name: "Transfer Orders",
       //   path: "/inventory/transfer-orders",
@@ -945,13 +945,190 @@ export const navItems: NavItem[] = [
     icon: "mdi:factory",
     children: [
       // { name: "No Data Found" },
-        {
+      {
         name: "Material Issue Note",
         path: "/manufacturing-module/material-issue-note",
       },
       {
         name: "Material Return Note",
         path: "/manufacturing-module/material-return-note",
+      },
+      {
+        name: "Master Data",
+        children: [
+          {
+            name: "Material Master",
+            path: "/manufacturing-module/master-data/material-master",
+          },
+          {
+            name: "BOM / Master Formula",
+            path: "/manufacturing-module/master-data/bom-master-formula",
+          },
+          {
+            name: "Equipment Master",
+            path: "/manufacturing-module/master-data/equipment-master",
+          },
+          {
+            name: "SOP Master",
+            path: "/manufacturing-module/master-data/sop-master",
+          },
+        ],
+      },
+      {
+        name: "Planning & Scheduling",
+        children: [
+          {
+            name: "Demand Planning",
+            path: "/manufacturing-module/planning-and-scheduling/demand-planning",
+          },
+          {
+            name: "MRP Planning",
+            path: "/manufacturing-module/planning-and-scheduling/mrp-planning",
+          },
+          {
+            name: "Batch Planning",
+            path: "/manufacturing-module/planning-and-scheduling/batch-planning",
+          },
+          {
+            name: "Work Orders",
+            path: "/manufacturing-module/planning-and-scheduling/work-orders",
+          },
+        ],
+      },
+      {
+        name: "Warehouse Controls",
+        children: [
+          {
+            name: "Goods Receipt (GRN)",
+            path: "/manufacturing-module/warehouse-controls/goods-receipt-grn",
+          },
+          {
+            name: "Inventory Management",
+            path: "/manufacturing-module/warehouse-controls/inventory-management",
+          },
+          {
+            name: "Material Status Management",
+            path: "/manufacturing-module/warehouse-controls/material-status-management",
+          },
+          {
+            name: "Weighing & Dispensing",
+            path: "/manufacturing-module/warehouse-controls/weighing-and-dispensing",
+          },
+        ],
+      },
+      {
+        name: "Production Execution",
+        children: [
+          {
+            name: "Batch Execution",
+            path: "/manufacturing-module/production-execution/batch-execution",
+          },
+          {
+            name: "Electronic Batch Record (eBMR)",
+            path: "/manufacturing-module/production-execution/electronic-batch-record-ebmr",
+          },
+          {
+            name: "Yield Reconciliation",
+            path: "/manufacturing-module/production-execution/yield-reconciliation",
+          },
+        ],
+      },
+      {
+        name: "Quality Control (QC)",
+        children: [
+          {
+            name: "Sampling Operations",
+            path: "/manufacturing-module/quality-control-qc/sampling-operations",
+          },
+          {
+            name: "QC Lab Testing Suite",
+            path: "/manufacturing-module/quality-control-qc/qc-lab-testing-suite",
+          },
+          {
+            name: "QC Review & Release",
+            path: "/manufacturing-module/quality-control-qc/qc-review-and-release",
+          },
+        ],
+      },
+      {
+        name: "Quality Assurance (QA)",
+        children: [
+          {
+            name: "Batch Release Control",
+            path: "/manufacturing-module/quality-assurance-qa/batch-release-control",
+          },
+          {
+            name: "Deviations Log",
+            path: "/manufacturing-module/quality-assurance-qa/deviations-log",
+          },
+          {
+            name: "CAPA Management",
+            path: "/manufacturing-module/quality-assurance-qa/capa-management",
+          },
+          {
+            name: "Change Control Vault",
+            path: "/manufacturing-module/quality-assurance-qa/change-control-vault",
+          },
+        ],
+      },
+      {
+        name: "Traceability & Compliance",
+        children: [
+          {
+            name: "Batch Genealogy",
+            path: "/manufacturing-module/traceability-and-compliance/batch-genealogy",
+          },
+          {
+            name: "Product Recall Management",
+            path: "/manufacturing-module/traceability-and-compliance/product-recall-management",
+          },
+          {
+            name: "SOP Control Hub",
+            path: "/manufacturing-module/traceability-and-compliance/sop-control-hub",
+          },
+          {
+            name: "E-Signatures Registry",
+            path: "/manufacturing-module/traceability-and-compliance/e-signatures-registry",
+          },
+          {
+            name: "Validation Protocols",
+            path: "/manufacturing-module/traceability-and-compliance/validation-protocols",
+          },
+        ],
+      },
+      {
+        name: "Reports Center",
+        children: [
+          {
+            name: "Operational Reports Submenu",
+            path: "/manufacturing-module/reports-center/operational-reports-submenu",
+          },
+          {
+            name: "GMP Compliance Reports Submenu",
+            path: "/manufacturing-module/reports-center/gmp-compliance-reports-submenu",
+          },
+          {
+            name: "QA Trends Reports Submenu",
+            path: "/manufacturing-module/reports-center/qa-trends-reports-submenu",
+          },
+        ],
+      },
+      {
+        name: "Administration & Settings",
+        children: [
+          {
+            name: "User & Roles Control",
+            path: "/manufacturing-module/administration-and-settings/user-and-roles-control",
+          },
+          {
+            name: "Workflow Engine Rules",
+            path: "/manufacturing-module/administration-and-settings/workflow-engine-rules",
+          },
+          {
+            name: "System Settings Configuration",
+            path: "/manufacturing-module/administration-and-settings/system-settings-configuration",
+          },
+        ],
       },
       // {
       //   name: "Manufacturing Setup",
