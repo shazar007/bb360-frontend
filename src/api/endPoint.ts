@@ -112,7 +112,6 @@ export const ENDPOINTS = {
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
 
-<<<<<<< Updated upstream
   // --------------------------------Manufacturing---------------------------------
   // --------------Material Mastern-------------
   MATERIRAL_MASTERN: "/material-mastern",
@@ -124,14 +123,11 @@ export const ENDPOINTS = {
   EQUIPMENT_MASTER: "/equipment-master",
 
   // -------------- SOP Master-------------
-  SAP_MASTER: "sop-master",
+  SAP_MASTER: "/sop-master",
 
   // -------------- Demand Planning-------------
-  DEMAND_PLANNING: "demand-planning",
-=======
+  DEMAND_PLANNING: "/demand-planning",
 
-    // --------------Upload-------------
+  // --------------Upload-------------
   PAYROLL_PROCESS: "/getAllPayrollProcess",
-  
->>>>>>> Stashed changes
 };
