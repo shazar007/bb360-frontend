@@ -209,7 +209,7 @@ export default function HrPayrollDashboard() {
         {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
         <div className="grid grid-cols-1 gap-3 mt-3 xl:grid-cols-12">
           <div className="xl:col-span-2">
-            <div className="p-4 bg-white rounded-2xl flex flex-col gap-3 sm:flex-row xl:flex-col">
+            <div className="flex flex-col gap-3 p-4 bg-white rounded-2xl sm:flex-row xl:flex-col">
               <button
                 onClick={() => setActiveTab("hr")}
                 className={`w-full h-10 rounded-md text-sm text-left px-4 cursor-pointer ${
@@ -232,7 +232,7 @@ export default function HrPayrollDashboard() {
                 Attendance Dashboard
               </button>
 
-              <button
+              {/* <button
                 onClick={() => setActiveTab("payroll")}
                 className={`w-full h-10 rounded-md text-sm text-left px-4 cursor-pointer ${
                   activeTab === "payroll"
@@ -241,7 +241,7 @@ export default function HrPayrollDashboard() {
                 }`}
               >
                 Payroll Dashboard
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -258,7 +258,7 @@ export default function HrPayrollDashboard() {
                         {item.title}
                       </p>
 
-                      <div className="flex items-center justify-center w-7 h-7 text-xs font-semibold bg-white rounded-md text-heading1">
+                      <div className="flex items-center justify-center text-xs font-semibold bg-white rounded-md w-7 h-7 text-heading1">
                         {item.value}
                       </div>
                     </div>

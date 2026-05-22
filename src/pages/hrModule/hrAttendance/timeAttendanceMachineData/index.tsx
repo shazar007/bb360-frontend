@@ -14,6 +14,11 @@ import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
+import {
+  addAttendanceSummary,
+  getAttendanceMachine,
+} from "../../../../api/hrServices";
+import dayjs from "dayjs";
 export default function TimeAttendanceMachineData() {
   const [activeTab, setActiveTab] = useState("machine");
   const [openFilter, setOpenFilter] = useState(false);
@@ -21,17 +26,26 @@ export default function TimeAttendanceMachineData() {
   const queryClient = useQueryClient();
   const [editId, setEditId] = useState(null);
   const [saveLoading, setSaveLoading] = useState(false);
-
   const [form, setForm] = useState({
     employee: "",
-    employeeId: "",
-    machineNumber: "",
+    workCalendar: "",
+    workCalendarName: "",
     attendanceDate: "",
-    employeeName: "",
-    attendanceTime: "",
-    attendanceMode: "",
-    machineIp: "",
+    timeIn: "",
+    timeOut: "",
+    totalBreakHours: "",
   });
+  const { data: attendanceMachine, isLoading: attendanceLoading } = useQuery({
+    queryKey: ["getAttendanceMachine"],
+    queryFn: getAttendanceMachine,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const tableData: any[] = attendanceMachine?.data?.data || [];
+
   const { goTo } = useAppNavigate();
   const { data: allEmployees, isLoading } = useQuery({
     queryKey: ["getAllEmployees"],
@@ -56,19 +70,18 @@ export default function TimeAttendanceMachineData() {
   const handleSave = async () => {
     try {
       setSaveLoading(true);
-
-      console.log("Payload =>", form);
-
-      if (editId) {
-        // await updateAttendanceMachineData(editId, form);
-        notifySuccess("Updated Successfully");
-      } else {
-        // await createAttendanceMachineData(form);
-        notifySuccess("Created Successfully");
-      }
-
+      const payload = {
+        employee: form.employee,
+        workCalendar: form.workCalendar,
+        attendanceDate: form.attendanceDate,
+        timeIn: form.timeIn,
+        timeOut: form.timeOut,
+        totalBreakHours: Number(form.totalBreakHours),
+      };
+      console.log("Payload =>", payload);
+      await addAttendanceSummary(payload);
       await queryClient.invalidateQueries({
-        queryKey: ["attendance-machine-data"],
+        queryKey: ["getAttendanceSummary"],
       });
 
       setOpenModel(false);
@@ -76,13 +89,12 @@ export default function TimeAttendanceMachineData() {
 
       setForm({
         employee: "",
-        employeeName: "",
-        employeeId: "",
-        machineNumber: "",
+        workCalendar: "",
+        workCalendarName: "",
         attendanceDate: "",
-        attendanceTime: "",
-        attendanceMode: "",
-        machineIp: "",
+        timeIn: "",
+        timeOut: "",
+        totalBreakHours: "",
       });
     } catch (error: any) {
       console.log(error);
@@ -91,39 +103,6 @@ export default function TimeAttendanceMachineData() {
       setSaveLoading(false);
     }
   };
-  const handleEdit = (item: any) => {
-    setEditId(item.id || item._id);
-
-    const emp = AllEmployee.find((e) => e._id === item.employee);
-
-    setForm({
-      employee: item.employee || "",
-      employeeId: emp?.employeeId || emp?.employeeCode || item.employeeId || "",
-      employeeName: emp?.name || item.employeeName || "",
-      machineNumber: item.machineNumber || "",
-      attendanceDate: item.attendanceDate || "",
-      attendanceTime: item.attendanceTime || "",
-      attendanceMode: item.attendanceMode || "",
-      machineIp: item.machineIp || "",
-    });
-
-    setOpenModel(true);
-  };
-  const dummyData = [
-    {
-      id: 1,
-      employee: "123",
-      employeeId: "EMP-0003",
-      employeeName: "Ali Khan",
-
-      machineNumber: "MN-01",
-      attendanceDate: "2026-05-20",
-      attendanceTime: "10:00",
-      attendanceMode: "Auto",
-      machineIp: "192.168.1.1",
-    },
-  ];
-  const tableData = dummyData;
 
   return (
     <>
@@ -157,6 +136,17 @@ export default function TimeAttendanceMachineData() {
               <Icon icon="mage:filter" className="w-5 h-5" />
               Filters
             </button>
+            {activeTab === "summary" && (
+              <button
+                onClick={() => {
+                  setOpenModel(true);
+                }}
+                className="flex items-center justify-center w-full h-10 gap-1 px-2 text-white rounded-md cursor-pointer md:w-28 bg-primary"
+              >
+                <Icon icon="basil:add-outline" className="w-5 h-5" />
+                Create
+              </button>
+            )}
             {activeTab === "machine" && (
               <>
                 <button
@@ -169,16 +159,6 @@ export default function TimeAttendanceMachineData() {
                 >
                   <Icon icon="basil:add-outline" className="w-5 h-5" />
                   Upload
-                </button>
-
-                <button
-                  onClick={() => {
-                    setOpenModel(true);
-                  }}
-                  className="flex items-center justify-center w-full h-10 gap-1 px-2 text-white rounded-md cursor-pointer md:w-auto bg-primary"
-                >
-                  <Icon icon="basil:add-outline" className="w-5 h-5" />
-                  Create
                 </button>
               </>
             )}
@@ -210,9 +190,9 @@ export default function TimeAttendanceMachineData() {
           {activeTab === "machine" && (
             <CustomTable
               norounded
+              loading={attendanceLoading}
               height="55vh"
               headers={[
-                "Edit",
                 "Employee Machine Number",
                 "Attendance Date",
                 "Attendance Datetime",
@@ -220,17 +200,11 @@ export default function TimeAttendanceMachineData() {
                 "Machine Ip",
               ]}
               data={tableData.map((item) => [
-                <Icon
-                  icon="basil:edit-outline"
-                  className="text-lg cursor-pointer text-primary"
-                  onClick={() => handleEdit(item)}
-                />,
-
-                item.machineNumber,
-                item.attendanceDate,
+                item.employeeMachineNumber,
+                dayjs(item.attendanceDate).format("DD-MMM-YYYY"),
                 item.attendanceTime,
                 item.attendanceMode,
-                item.machineIp,
+                item.machineIP,
               ])}
             />
           )}
@@ -243,9 +217,7 @@ export default function TimeAttendanceMachineData() {
           <div className="w-full mx-3  max-w-250 max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl">
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-xs font-semibold text-heading1">
-                {editId
-                  ? "Update Attendance Machine Data"
-                  : "Create Attendance Machine Data"}
+                Time Attendance Summary
               </h2>
 
               <button
@@ -267,21 +239,21 @@ export default function TimeAttendanceMachineData() {
                 options={employeeOptions}
                 onChange={(value) => {
                   const emp = AllEmployee.find((e) => e._id === value);
-
                   setForm((prev) => ({
                     ...prev,
                     employee: value,
+                    workCalendar: emp?.workCalendar?._id || "",
+                    workCalendarName: emp?.workCalendar?.name,
                     employeeId: emp?.employeeId || emp?.employeeCode || "",
                     employeeName: emp?.name || "",
                   }));
                 }}
               />
               <CustomInput
-                name="machineNumber"
-                value={form.machineNumber}
-                onChange={handleChange}
-                placeholder="Enter Employee Machine Number"
-                label="Employee Machine Number"
+                name="workCalendar"
+                value={form.workCalendarName}
+                disabled
+                label="Work Calendar"
               />
 
               <CustomDatePicker
@@ -293,26 +265,26 @@ export default function TimeAttendanceMachineData() {
                 label="Attendance Date"
               />
               <CustomTimePicker
-                name="attendanceTime"
-                value={form.attendanceTime}
+                name="timeIn"
+                value={form.timeIn}
                 onChange={(val) =>
-                  setForm((prev) => ({ ...prev, attendanceTime: val }))
+                  setForm((prev) => ({ ...prev, timeIn: val }))
                 }
-                label="Attendance Time"
+                label="Time In"
+              />
+              <CustomTimePicker
+                name="timeOut"
+                value={form.timeOut}
+                label="Time Out"
+                onChange={(val) =>
+                  setForm((prev) => ({ ...prev, timeOut: val }))
+                }
               />
               <CustomInput
-                name="attendanceMode"
-                value={form.attendanceMode}
+                name="totalBreakHours"
+                value={form.totalBreakHours}
                 onChange={handleChange}
-                placeholder="Attendance Mode"
-                label="Attendance Mode"
-              />
-              <CustomInput
-                name="machineIp"
-                value={form.machineIp}
-                onChange={handleChange}
-                placeholder="Machine Ip"
-                label="Machine Ip"
+                label="Total Break Hours"
               />
             </div>
             <div className="flex items-center justify-end p-4">

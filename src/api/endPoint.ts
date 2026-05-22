@@ -108,7 +108,8 @@ export const ENDPOINTS = {
 
   // --------------get attendance-summary-------------
   ATTENDANCE_SUMMARY: "/attendance/summary",
-
+  // -------------- ATTENDANCE_MACHINE-------------
+  ATTENDANCE_MACHINE: "/attendance/machine",
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
 

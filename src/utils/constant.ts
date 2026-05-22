@@ -1344,49 +1344,49 @@ export const navItems: NavItem[] = [
             name: "Time Attendance Machine Data",
             path: "/hr-module/hr-attendance/time-attendance-machine-data",
           },
-          {
-            name: "Time Attendance Register",
-            path: "/hr-module/hr-attendance/time-attendance-register",
-          },
-          {
-            name: "Accrual Plan Balances",
-            path: "/hr-module/hr-attendance/accrual-plan-balances",
-          },
+          // {
+          //   name: "Time Attendance Register",
+          //   path: "/hr-module/hr-attendance/time-attendance-register",
+          // },
+          // {
+          //   name: "Accrual Plan Balances",
+          //   path: "/hr-module/hr-attendance/accrual-plan-balances",
+          // },
           {
             name: "Overtime Approval",
             path: "/hr-module/hr-attendance/overtime-approval",
           },
-          {
-            name: "Outdoor Duty",
-            path: "/hr-module/hr-attendance/outdoor-duty",
-          },
-          {
-            name: "Late Deduction",
-            path: "/hr-module/hr-attendance/late-deduction",
-          },
+          // {
+          //   name: "Outdoor Duty",
+          //   path: "/hr-module/hr-attendance/outdoor-duty",
+          // },
+          // {
+          //   name: "Late Deduction",
+          //   path: "/hr-module/hr-attendance/late-deduction",
+          // },
         ],
       },
-      {
-        name: "Employee Attendance Reports",
-        children: [
-          {
-            name: "Time Attendance Summary",
-            path: "/hr-module/employee-attendance-reports/time-attendance-summary",
-          },
-          {
-            name: "Employee Attendance Register",
-            path: "/hr-module/employee-attendance-reports/employee-attendance-register",
-          },
-          {
-            name: "Employee Register Detail Report",
-            path: "/hr-module/employee-attendance-reports/employee-register-detail-report",
-          },
-          {
-            name: "Employee Overtime Report",
-            path: "/hr-module/employee-attendance-reports/employee-overtime-report",
-          },
-        ],
-      },
+      // {
+      //   name: "Employee Attendance Reports",
+      //   children: [
+      //     {
+      //       name: "Time Attendance Summary",
+      //       path: "/hr-module/employee-attendance-reports/time-attendance-summary",
+      //     },
+      //     {
+      //       name: "Employee Attendance Register",
+      //       path: "/hr-module/employee-attendance-reports/employee-attendance-register",
+      //     },
+      //     {
+      //       name: "Employee Register Detail Report",
+      //       path: "/hr-module/employee-attendance-reports/employee-register-detail-report",
+      //     },
+      //     {
+      //       name: "Employee Overtime Report",
+      //       path: "/hr-module/employee-attendance-reports/employee-overtime-report",
+      //     },
+      //   ],
+      // },
       {
         name: "Payroll Setup",
         children: [
@@ -1425,39 +1425,39 @@ export const navItems: NavItem[] = [
           },
         ],
       },
-      {
-        name: "Employee Payroll Reports",
-        children: [
-          {
-            name: "Employee Salary Sheet",
-            path: "/hr-module/employee-payroll-reports/employee-salary-sheet",
-          },
-          {
-            name: "Salary Slip",
-            path: "/hr-module/employee-payroll-reports/salary-slip",
-          },
-          {
-            name: "Employees Closing Report",
-            path: "/hr-module/employee-payroll-reports/employees-closing-report",
-          },
-          {
-            name: "Employee Ledger",
-            path: "/hr-module/employee-payroll-reports/employee-ledger",
-          },
-          {
-            name: "Employee Advance Report",
-            path: "/hr-module/employee-payroll-reports/employee-advance-report",
-          },
-          {
-            name: "Employee Loan Summary",
-            path: "/hr-module/employee-payroll-reports/employee-loan-summary",
-          },
-          {
-            name: "Employee Loan & Advance Summary Report",
-            path: "/hr-module/employee-payroll-reports/employee-loan-advance-summary-report",
-          },
-        ],
-      },
+      // {
+      //   name: "Employee Payroll Reports",
+      //   children: [
+      //     {
+      //       name: "Employee Salary Sheet",
+      //       path: "/hr-module/employee-payroll-reports/employee-salary-sheet",
+      //     },
+      //     {
+      //       name: "Salary Slip",
+      //       path: "/hr-module/employee-payroll-reports/salary-slip",
+      //     },
+      //     {
+      //       name: "Employees Closing Report",
+      //       path: "/hr-module/employee-payroll-reports/employees-closing-report",
+      //     },
+      //     {
+      //       name: "Employee Ledger",
+      //       path: "/hr-module/employee-payroll-reports/employee-ledger",
+      //     },
+      //     {
+      //       name: "Employee Advance Report",
+      //       path: "/hr-module/employee-payroll-reports/employee-advance-report",
+      //     },
+      //     {
+      //       name: "Employee Loan Summary",
+      //       path: "/hr-module/employee-payroll-reports/employee-loan-summary",
+      //     },
+      //     {
+      //       name: "Employee Loan & Advance Summary Report",
+      //       path: "/hr-module/employee-payroll-reports/employee-loan-advance-summary-report",
+      //     },
+      //   ],
+      // },
       {
         name: "Employee Reports",
         children: [

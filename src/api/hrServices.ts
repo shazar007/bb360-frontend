@@ -180,3 +180,10 @@ export const uploadAttendance = (values: any) => {
 export const getAttendanceSummary = () => {
   return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_SUMMARY);
 };
+export const addAttendanceSummary = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE_SUMMARY, values);
+};
+// --------------get attendanceMachine-------------
+export const getAttendanceMachine = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_MACHINE);
+};
