@@ -527,7 +527,7 @@ export const navItems: NavItem[] = [
         name: "Inventory Transfer",
         path: "/inventory/inventory-transfer",
       },
-    
+
       // {
       //   name: "Transfer Orders",
       //   path: "/inventory/transfer-orders",
@@ -945,7 +945,7 @@ export const navItems: NavItem[] = [
     icon: "mdi:factory",
     children: [
       // { name: "No Data Found" },
-        {
+      {
         name: "Material Issue Note",
         path: "/manufacturing-module/material-issue-note",
       },
@@ -1141,10 +1141,10 @@ export const navItems: NavItem[] = [
             name: "CPL Approval",
             path: "/hr-module/employee-leave-expense/cpl-approval",
           },
-          {
-            name: "Employee Expense Claim",
-            path: "/hr-module/employee-leave-expense/expense-claim",
-          },
+          // {
+          //   name: "Employee Expense Claim",
+          //   path: "/hr-module/employee-leave-expense/expense-claim",
+          // },
         ],
       },
       {
