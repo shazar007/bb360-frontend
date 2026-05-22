@@ -124,13 +124,7 @@ export default function TimeAttendanceMachineData() {
     },
   ];
   const tableData = dummyData;
-  const getEmployeeName = (item: any) => {
-    const emp =
-      AllEmployee.find((e) => e._id === item.employee) ||
-      AllEmployee.find((e) => e.name === item.employee);
 
-    return emp?.name || "-";
-  };
   return (
     <>
       <div className="mt-2">
@@ -177,11 +171,6 @@ export default function TimeAttendanceMachineData() {
                   Upload
                 </button>
 
-                <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-2 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F]">
-                  <Icon icon="basil:add-outline" className="w-5 h-5" />
-                  Auto Generated Attendance
-                </button>
-
                 <button
                   onClick={() => {
                     setOpenModel(true);
@@ -224,7 +213,6 @@ export default function TimeAttendanceMachineData() {
               height="55vh"
               headers={[
                 "Edit",
-                "Employee Name",
                 "Employee Machine Number",
                 "Attendance Date",
                 "Attendance Datetime",
@@ -238,7 +226,6 @@ export default function TimeAttendanceMachineData() {
                   onClick={() => handleEdit(item)}
                 />,
 
-                getEmployeeName(item),
                 item.machineNumber,
                 item.attendanceDate,
                 item.attendanceTime,

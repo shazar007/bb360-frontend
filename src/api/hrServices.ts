@@ -166,3 +166,13 @@ export const getAllAttendanceHolidays = () => {
 export const updateAttendanceHolidays = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.ATTENDANCE_HOLIDAYS}/${id}`, values);
 };
+
+// --------------Attendance Upload-------------
+export const uploadAttendance = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE_UPLOAD, values);
+};
+
+// --------------get attendance-summary-------------
+export const getAttendanceSummary = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_SUMMARY);
+};

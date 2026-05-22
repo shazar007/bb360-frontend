@@ -1,19 +1,9 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+import { getAttendanceSummary } from "../../../../../api/hrServices";
+import { useQuery } from "@tanstack/react-query";
 export default function TimeAttendanceSummary() {
   const [openDepartment, setOpenDepartment] = useState("accounts");
-
-  const tableData = Array(6).fill({
-    employee: "EMP-1236",
-    workCalendar: "Day Shift",
-    attendanceDate: "19-May-2026",
-    timeIn: "10:32AM",
-    timeOut: "06:45PM",
-    workingHours: "8:30",
-    breakHours: "00:30",
-    overtimePaid: "Nill",
-    overtimeApproved: "Nill",
-  });
 
   const departments = [
     {
@@ -41,11 +31,21 @@ export default function TimeAttendanceSummary() {
       name: "Department: Marketing",
     },
   ];
-
+  const { data: attendanceSummary, isLoading: attendanceLoading } = useQuery({
+    queryKey: ["getAttendanceSummary"],
+    queryFn: getAttendanceSummary,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const tableData: any[] = attendanceSummary?.data?.data || [];
+  console.log("🚀 ~ tableData:", tableData);
   return (
-    <div className="mt-0 bg-white  overflow-hidden">
+    <div className="mt-0 overflow-hidden bg-white">
       <div className="overflow-x-auto">
-        <table className="min-w-300 w-full">
+        <table className="w-full min-w-300">
           <thead>
             <tr className="bg-[#ECF0F4]">
               {[
@@ -103,11 +103,11 @@ export default function TimeAttendanceSummary() {
                   tableData.map((item, index) => (
                     <tr key={index} className="border-b border-[#E5E7EB]">
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.employee}
+                        {item.employee?.employeeId}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.workCalendar}
+                        {item.workCalendar?.name}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
@@ -119,23 +119,23 @@ export default function TimeAttendanceSummary() {
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.timeOut}
+                        {item.timeIn}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.workingHours}
+                        {item.workCalendar?.workHoursPerDay}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.breakHours}
+                        {item.totalBreakHours}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                        {item.overtimePaid}
+                        {item.overtimePaid ? "Yes" : "False"}
                       </td>
 
                       <td className="h-12 px-4 text-xs text-center text-heading1">
-                        {item.overtimeApproved}
+                        {item.overtimeApproved ? "Yes" : "False"}
                       </td>
                     </tr>
                   ))}

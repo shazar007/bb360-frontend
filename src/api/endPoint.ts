@@ -103,6 +103,28 @@ export const ENDPOINTS = {
   // --------------Attendance Holidays-------------
   ATTENDANCE_HOLIDAYS: "/holidays",
 
+  // --------------Attendance Upload-------------
+  ATTENDANCE_UPLOAD: "/attendance/upload",
+
+  // --------------get attendance-summary-------------
+  ATTENDANCE_SUMMARY: "/attendance/summary",
+
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
+
+  // --------------------------------Manufacturing---------------------------------
+  // --------------Material Mastern-------------
+  MATERIRAL_MASTERN: "/material-mastern",
+
+  // --------------Bill Of Material-------------
+  BILL_MATERIAL: "/bill-material",
+
+  // --------------Equipment Master-------------
+  EQUIPMENT_MASTER: "/equipment-master",
+
+  // -------------- SOP Master-------------
+  SAP_MASTER: "sop-master",
+
+  // -------------- Demand Planning-------------
+  DEMAND_PLANNING: "demand-planning",
 };
