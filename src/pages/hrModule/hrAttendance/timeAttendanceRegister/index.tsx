@@ -12,7 +12,6 @@ export default function TimeAttendanceRegister() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -22,9 +21,7 @@ export default function TimeAttendanceRegister() {
           </p>
         </div>
 
-        {/* TOP BUTTONS */}
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-          {/* MACHINE TAB */}
           {activeTab === "machine" && (
             <>
               <div className="relative w-full md:w-40">
@@ -53,8 +50,6 @@ export default function TimeAttendanceRegister() {
               </button>
             </>
           )}
-
-          {/* SUMMARY TAB */}
           {activeTab === "summary" && (
             <>
               <button className="flex items-center justify-center w-full h-10 gap-2 px-4 text-white rounded-md cursor-pointer md:w-auto bg-secondary">
@@ -77,9 +72,6 @@ export default function TimeAttendanceRegister() {
       </div>
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
-
-      {/* FORM SECTION */}
-
       <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl overflow-hidden">
           <div className="bg-[#ECF0F4] p-4">
@@ -98,10 +90,7 @@ export default function TimeAttendanceRegister() {
           </div>
         </div>
       </div>
-
-      {/* TABLE SECTION */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
-        {/* TABS */}
         <div className="flex flex-wrap gap-4 p-4">
           <button
             onClick={() => setActiveTab("machine")}
@@ -121,8 +110,6 @@ export default function TimeAttendanceRegister() {
             Attendance Register Summary
           </button>
         </div>
-
-        {/* MACHINE TAB TABLE */}
         {activeTab === "machine" && (
           <CustomTable
             norounded
@@ -162,7 +149,6 @@ export default function TimeAttendanceRegister() {
           />
         )}
 
-        {/* SUMMARY TAB */}
         {activeTab === "summary" && <AttendanceRegisterSummary />}
       </div>
     </div>

@@ -50,11 +50,7 @@ const fetchHROptions = async () => {
     })),
 
     departOption: (departmentRep?.data?.data || []).map((depar: any) => ({
-      label:
-        depar.fullName ||
-        depar.name ||
-        depar.departmentName ||
-        "Unnamed Department",
+      label: depar.fullName,
       value: depar._id,
     })),
   };
@@ -81,8 +77,9 @@ export default function EmployeesCreate() {
     employeeGrade: "",
     employeeType: "",
     workCalendar: "",
+    machineId: "",
     email: "",
-    departmentName: "",
+    department: "",
     jobLocation: "",
   });
   const { refetch } = useQuery({
@@ -106,6 +103,7 @@ export default function EmployeesCreate() {
     workCalendar = [],
     departOption = [],
   } = hrOptions ?? {};
+
   const validateForm = () => {
     const hasEmpty = Object.values(formData).some((val) => !val);
     if (hasEmpty) {
@@ -126,6 +124,7 @@ export default function EmployeesCreate() {
     try {
       setLoading(true);
       await addEmployee(payload);
+      console.log("🚀 ~ payload:", payload);
       notifySuccess("Employee Created Successfully");
       refetch();
       goBack();
@@ -200,7 +199,7 @@ export default function EmployeesCreate() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25">
             <CustomInput
               label="Name"
-              placeholder="Lorem Ipsum"
+              placeholder="Enter Employee Name"
               value={formData.name}
               onChange={(e: any) => handleChange("name", e.target.value)}
             />
@@ -241,7 +240,7 @@ export default function EmployeesCreate() {
             />
             <CustomInput
               label="CNIC"
-              placeholder="12345-1234567-8"
+              placeholder="1234512345678"
               value={formData.cnic}
               onChange={(e: any) => handleChange("cnic", e.target.value)}
             />
@@ -287,7 +286,7 @@ export default function EmployeesCreate() {
             />{" "}
             <CustomInput
               label="Email"
-              placeholder="Lorem Ipsum"
+              placeholder="Enter Email"
               value={formData.email}
               onChange={(e: any) => handleChange("email", e.target.value)}
             />
@@ -313,8 +312,8 @@ export default function EmployeesCreate() {
             options={departOption}
             loading={loadingState.department}
             placeholder="Select Department"
-            value={formData.departmentName}
-            onChange={(value: any) => handleChange("departmentName", value)}
+            value={formData.department}
+            onChange={(value: any) => handleChange("department", value)}
           />
           <CustomSelectSearch
             label="Employee Type"
@@ -324,7 +323,6 @@ export default function EmployeesCreate() {
             value={formData.employeeType}
             onChange={(value: any) => handleChange("employeeType", value)}
           />
-
           <CustomSelectSearch
             label="Work Calendar"
             placeholder="Select workCalendar"
@@ -360,6 +358,12 @@ export default function EmployeesCreate() {
                 value: "regular monthly payroll",
               },
             ]}
+          />{" "}
+          <CustomInput
+            label="Employee Mechine No"
+            placeholder="Employee Mechine No"
+            value={formData.machineId}
+            onChange={(e: any) => handleChange("machineId", e.target.value)}
           />
         </div>
       </div>

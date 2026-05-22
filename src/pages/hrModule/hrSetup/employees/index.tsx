@@ -196,6 +196,8 @@ export default function Employees() {
         jobLocation: editData.jobLocation,
         status: editData.status,
         email: editData.email,
+        machineId: editData.machineId,
+        department: editData.department,
       };
       console.log("Update Payload =>", payload);
       await updateAllEmployee(editData._id, payload);
@@ -291,6 +293,7 @@ export default function Employees() {
                 "View",
                 "Report",
                 "Employee ID",
+                "Mechine ID",
                 "Employee Name",
                 "DOB",
                 "Hire Date",
@@ -359,6 +362,7 @@ export default function Employees() {
                 />,
 
                 row.employeeId,
+                row.machineId,
                 row.name,
                 row.dob ? dayjs(row.dob).format("DD-MMM-YYYY") : "-",
                 row.hireDate ? dayjs(row.hireDate).format("DD-MMM-YYYY") : "-",

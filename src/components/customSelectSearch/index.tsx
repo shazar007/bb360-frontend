@@ -108,7 +108,7 @@ export default function CustomSelectSearch({
       </div>
 
       {open && (
-        <div className="absolute z-50 w-full py-2 mt-1 bg-white rounded-md shadow-md top-full">
+        <div className="absolute  z-[9999] w-full py-2 mt-1 bg-white rounded-md shadow-md top-full">
           <div className="p-2 border-b">
             <input
               ref={inputRef}
