@@ -59,6 +59,10 @@ export const addAllEmployee = (values: any) => {
 export const getAllEmployee = () => {
   return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEES_ALL);
 };
+export const getAllPayrollProcess = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS);
+};
+
 export const updateAllEmployee = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`, values);
 };

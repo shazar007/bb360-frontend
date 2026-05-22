@@ -112,6 +112,7 @@ export const ENDPOINTS = {
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
 
+<<<<<<< Updated upstream
   // --------------------------------Manufacturing---------------------------------
   // --------------Material Mastern-------------
   MATERIRAL_MASTERN: "/material-mastern",
@@ -127,4 +128,10 @@ export const ENDPOINTS = {
 
   // -------------- Demand Planning-------------
   DEMAND_PLANNING: "demand-planning",
+=======
+
+    // --------------Upload-------------
+  PAYROLL_PROCESS: "/getAllPayrollProcess",
+  
+>>>>>>> Stashed changes
 };
