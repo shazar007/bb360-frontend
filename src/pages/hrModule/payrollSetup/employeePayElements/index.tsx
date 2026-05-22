@@ -39,11 +39,8 @@ const dummySalaryData = [
 export default function EmployeePayElements() {
   const [openFilter, setOpenFilter] = useState(false);
   const [openPolicyBuilder, setOpenPolicyBuilder] = useState(false);
-  const [salaryData, setSalaryData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editId, setEditId] = useState(null);
-  const { goBack } = useAppNavigate();
 
   const [form, setForm] = useState({
     employeeId: "",
@@ -63,8 +60,6 @@ export default function EmployeePayElements() {
   // });
 
   const handleEdit = (item: any) => {
-    setEditId(item.id);
-
     setForm({
       employeeId: item.employeeId || "",
       employeeName: item.employeeName || "",

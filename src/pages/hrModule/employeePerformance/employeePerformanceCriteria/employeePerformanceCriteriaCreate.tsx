@@ -26,13 +26,6 @@ export default function EmployeePerformanceCriteriaCreate() {
     staleTime: Infinity,
   });
 
-  const { data } = useQuery({
-    queryKey: ["EMPLOYEE_PERFORMANCE_CRITERIA"],
-    queryFn: getAllEmployeePerformanceCriteria,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
-
   const employees = employeesData?.data?.data || [];
 
   const employeeOptions = employees.map((emp: any) => ({

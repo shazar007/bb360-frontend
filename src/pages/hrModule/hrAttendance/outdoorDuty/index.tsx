@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomInput from "../../../../components/customInput";
 import { SyncLoader } from "react-spinners";

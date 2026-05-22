@@ -4,7 +4,6 @@ import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-import { useQuery } from "@tanstack/react-query";
 import CustomInput from "../../../../components/customInput";
 
 const dummyData = [
@@ -21,7 +20,6 @@ export default function LoanDeductionSetup() {
 
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [editId, setEditId] = useState(null);
 
   const [form, setForm] = useState({
     payroll: "",
@@ -37,8 +35,6 @@ export default function LoanDeductionSetup() {
   const tableData = dummyData;
 
   const handleEdit = (item: any) => {
-    setEditId(item.id);
-
     setForm({
       payroll: item.payroll || "",
       period: item.period || "",

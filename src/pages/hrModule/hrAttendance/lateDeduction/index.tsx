@@ -6,7 +6,6 @@ import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import PolicyRulesBuilder from "../../../../components/policyRulesBuilder";
 import LateArrivalCountDetails from "./components/lateArrivalCountDetails";
-import { useQuery } from "@tanstack/react-query";
 const dummyLateDeductions = [
   {
     id: 1,

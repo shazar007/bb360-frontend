@@ -12,7 +12,7 @@ import CustomTimePicker from "../../../../components/timePicker";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { notifyError, notifySuccess } from "../../../../components/toast";
+import { notifyError } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import {
   addAttendanceSummary,
@@ -24,7 +24,6 @@ export default function TimeAttendanceMachineData() {
   const [openFilter, setOpenFilter] = useState(false);
   const [openModel, setOpenModel] = useState(false);
   const queryClient = useQueryClient();
-  const [editId, setEditId] = useState(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [form, setForm] = useState({
     employee: "",
@@ -85,7 +84,6 @@ export default function TimeAttendanceMachineData() {
       });
 
       setOpenModel(false);
-      setEditId(null);
 
       setForm({
         employee: "",
