@@ -85,6 +85,7 @@ export default function Employees() {
     workCalendar = [],
   } = hrOptions ?? {};
   const AllEmployee: any[] = allEmployees?.data?.data || [];
+
   const handleChange = (name: string, value: any) => {
     setEditData((prev: any) => ({ ...prev, [name]: value }));
   };

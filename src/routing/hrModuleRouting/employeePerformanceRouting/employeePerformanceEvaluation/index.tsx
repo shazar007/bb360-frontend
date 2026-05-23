@@ -2,6 +2,7 @@ import { Route } from "react-router-dom";
 
 import EmployeePerformanceEvaluation from "../../../../pages/hrModule/employeePerformance/employeePerformanceEvaluation";
 import EmployeePerformanceEvaluationCreate from "../../../../pages/hrModule/employeePerformance/employeePerformanceEvaluation/employeePerformanceEvaluationCreate";
+import PerformanceEvaluation from "../../../../pages/hrModule/employeePerformance/employeePerformanceEvaluation/performanceEvaluation";
 
 export const employeePerformanceEvaluationRoutes = (
   <>
@@ -11,5 +12,6 @@ export const employeePerformanceEvaluationRoutes = (
       path="/evaluation/create"
       element={<EmployeePerformanceEvaluationCreate />}
     />
+    <Route path="/evaluation/details" element={<PerformanceEvaluation />} />
   </>
 );

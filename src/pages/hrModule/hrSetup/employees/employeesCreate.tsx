@@ -124,7 +124,6 @@ export default function EmployeesCreate() {
     try {
       setLoading(true);
       await addEmployee(payload);
-      console.log("🚀 ~ payload:", payload);
       notifySuccess("Employee Created Successfully");
       refetch();
       goBack();

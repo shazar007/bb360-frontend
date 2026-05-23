@@ -15,7 +15,6 @@ export default function OvertimeApproval() {
     refetchOnReconnect: false,
   });
   const tableData: any[] = attendanceSummary?.data?.data || [];
-  console.log("🚀 ~ tableData:", tableData);
   return (
     <>
       <div className="mt-2">

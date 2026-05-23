@@ -1394,10 +1394,10 @@ export const navItems: NavItem[] = [
             name: "Employee Pay Elements",
             path: "/hr-module/payroll-setup/employee-pay-elements",
           },
-          {
-            name: "Loan Deduction Setup",
-            path: "/hr-module/payroll-setup/loan-deduction-setup",
-          },
+          // {
+          //   name: "Loan Deduction Setup",
+          //   path: "/hr-module/payroll-setup/loan-deduction-setup",
+          // },
           {
             name: "Pay Element Entitles Upload",
             path: "/hr-module/payroll-setup/pay-element-entitles-upload",

@@ -53,7 +53,6 @@ export default function OutdoorDuty() {
       setLoading(true);
 
       // await updateOutdoorDuty(selectedItem.id, selectedItem);
-      console.log("🚀 ~ selectedItem:", selectedItem);
 
       notifySuccess("Updated successfully");
 

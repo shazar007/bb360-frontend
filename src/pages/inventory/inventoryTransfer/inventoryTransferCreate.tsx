@@ -22,7 +22,6 @@ export default function InventoryTransferCreate() {
   const [activeTab, setActiveTab] = useState("Transaction Lines");
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [rows, setRows] = useState<any[]>([]);
-  console.log("🚀 ~ InventoryTransferCreate ~ rows:", rows);
   const [openModal, setOpenModal] = useState(false);
   const rowInitialForm = {
     item: "",
