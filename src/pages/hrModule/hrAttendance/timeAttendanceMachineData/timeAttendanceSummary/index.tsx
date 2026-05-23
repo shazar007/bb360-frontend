@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import { getAttendanceSummary } from "../../../../../api/hrServices";
 import { useQuery } from "@tanstack/react-query";
 import { SyncLoader } from "react-spinners";
+import dayjs from "dayjs";
 export default function TimeAttendanceSummary() {
   const [openDepartment, setOpenDepartment] = useState("accounts");
 
@@ -106,7 +107,7 @@ export default function TimeAttendanceSummary() {
                           </td>
 
                           <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">
-                            dayjs(item.attendanceDate).format("DD-MMM-YYYY"),
+                            {dayjs(item.attendanceDate).format("DD-MMM-YYYY")}
                           </td>
 
                           <td className="h-12 px-4 text-xs text-center text-heading1 border-r border-[#E5E7EB]">

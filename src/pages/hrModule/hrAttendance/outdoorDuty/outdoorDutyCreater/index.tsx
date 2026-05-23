@@ -27,7 +27,6 @@ export default function OutdoorDutyCreater() {
   const handleSave = async () => {
     try {
       // await mutateAsync(formData);
-      console.log("🚀 ~ formData:", formData);
 
       notifySuccess("Outdoor Duty created successfully");
 

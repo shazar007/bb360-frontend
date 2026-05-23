@@ -6,17 +6,14 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { useQuery } from "@tanstack/react-query";
 import CustomInput from "../../../../components/customInput";
+import {
+  getAllLoanDeductions,
+  updateLoanDeductions,
+} from "../../../../api/hrServices";
 
-const dummyData = [
-  {
-    id: 1,
-    payroll: "Regular Monthly Payroll",
-    period: "30-Jun-2026",
-  },
-];
 export default function LoanDeductionSetup() {
   const [openFilter, setOpenFilter] = useState(false);
-  const { goTo, goBack } = useAppNavigate();
+  const { goTo } = useAppNavigate();
   // const queryClient = useQueryClient();
 
   const [openModal, setOpenModal] = useState(false);
@@ -28,13 +25,18 @@ export default function LoanDeductionSetup() {
     period: "",
   });
 
-  // const { data } = useQuery({
-  //   queryKey: ["loan-deduction-setup"],
-  //   queryFn: getLoanDeductionSetup,
-  // });
+  const { data } = useQuery({
+    queryKey: ["getAllLoanDeductions"],
+    queryFn: getAllLoanDeductions,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
 
-  // const tableData = data?.data?.length > 0 ? data.data : dummyData;
-  const tableData = dummyData;
+  const tableData = data?.data?.data;
+  console.log("🚀 ~ tableData:", tableData);
 
   const handleEdit = (item: any) => {
     setEditId(item.id);
@@ -54,28 +56,28 @@ export default function LoanDeductionSetup() {
     });
   };
 
-  const handleUpdate = async () => {
-    try {
-      setLoading(true);
+  // const handleUpdate = async () => {
+  //   try {
+  //     setLoading(true);
 
-      // await updateLoanDeductionSetup(editId, form);
+  //     await updateLoanDeductions(editId, form);
 
-      notifySuccess("Updated Successfully");
+  //     notifySuccess("Updated Successfully");
 
-      setOpenModal(false);
+  //     setOpenModal(false);
 
-      // await queryClient.invalidateQueries({
-      //   queryKey: ["loan-deduction-setup"],
-      // });
+  //     // await queryClient.invalidateQueries({
+  //     //   queryKey: ["loan-deduction-setup"],
+  //     // });
 
-      goBack();
-    } catch (error) {
-      console.log(error);
-      notifyError("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     goBack();
+  //   } catch (error) {
+  //     console.log(error);
+  //     notifyError("Something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   return (
     <>
       <div className="mt-2">
@@ -128,14 +130,14 @@ export default function LoanDeductionSetup() {
             norounded
             height="60vh"
             headers={["Edit", "Payroll", "Payroll Period"]}
-            data={tableData.map((item) => [
+            data={tableData.map((item: any) => [
               <Icon
                 icon="basil:edit-outline"
                 className="text-lg cursor-pointer text-primary"
                 onClick={() => handleEdit(item)}
               />,
               item.payroll,
-              item.period,
+              item.payrollPeriod,
             ])}
           />
         </div>
@@ -174,7 +176,7 @@ export default function LoanDeductionSetup() {
             </div>
             <div className="flex justify-end p-4">
               <button
-                onClick={handleUpdate}
+                // onClick={handleUpdate}
                 disabled={loading}
                 className="flex items-center justify-center cursor-pointer h-10 gap-2 px-8 text-white rounded-md bg-primary"
               >

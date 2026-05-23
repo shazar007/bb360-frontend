@@ -43,7 +43,6 @@ export default function SalesInvoice() {
   });
 
   const triggerPrint = (item: any) => {
-    console.log("🚀 ~ triggerPrint ~ item:", item);
     setSelectedOrder(item);
 
     setTimeout(() => {
