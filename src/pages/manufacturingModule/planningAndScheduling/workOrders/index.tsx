@@ -74,17 +74,11 @@ export default function WorkOrders() {
                 <p>Amoxicillin 500mg</p>
                 <p>Capsule</p>
               </div>,
-
               "BT-240871",
-
               "Line 1 - Compression",
-
-              "60,000 units", 
-
+              "60,000 units",
               "12-May 06:00 AM",
-
               "12-May 06:00 AM",
-
               <div className="w-40">
                 <div
                   className="flex items-center gap-2 text-xs mb-1"
