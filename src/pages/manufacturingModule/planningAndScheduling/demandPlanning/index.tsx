@@ -15,6 +15,7 @@ export default function DemandPlanning() {
     "Nov-2026",
     "Dec-2026",
   ];
+  
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">

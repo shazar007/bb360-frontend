@@ -2,58 +2,65 @@ import { Icon } from "@iconify/react";
 import CustomInput from "../../../../../components/customInput";
 import { useAppNavigate } from "../../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../../components/toast";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 import { getAllEmployees } from "../../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../../components/customSelectSearch";
-
+import {
+  addPayElementEntries,
+  getAllPayElementEntries,
+} from "../../../../../api/hrServices";
+type FormState = {
+  employee: string;
+  houseRentAllowance: number;
+  fuelAllowance: number;
+  incomeTax: number;
+  basicSalary: number;
+  medicalAllowance: number;
+  providentFund: number;
+};
 export default function EmployeePayElementsCreate() {
   const { goBack } = useAppNavigate();
-  const queryClient = useQueryClient();
-
+  const { refetch } = useQuery({
+    queryKey: ["getAllPayElementEntries"],
+    queryFn: getAllPayElementEntries,
+  });
   const [loading, setLoading] = useState(false);
 
-  const [form, setForm] = useState({
-    employeeName: "",
-    houseRentAllowance: "",
-    fuelAllowance: "",
-    incomeTax: "",
-    basicSalary: "",
-    medicalAllowance: "",
-    providentFund: "",
-    totalEarnings: "",
+  const [form, setForm] = useState<FormState>({
+    employee: "",
+    houseRentAllowance: 0,
+    fuelAllowance: 0,
+    incomeTax: 0,
+    basicSalary: 0,
+    medicalAllowance: 0,
+    providentFund: 0,
   });
-
-  // ================= HANDLE CHANGE =================
+  const handleChange2 = (field: string, value: any) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
   const handleChange = (e: any) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: isNaN(Number(value)) ? 0 : Number(value),
+    }));
   };
 
-  // ================= SAVE =================
   const handleSave = async () => {
     try {
       setLoading(true);
-
-      console.log("Payload =>", form);
-
-      // await addEmployeePayElements(form);
-
+      await addPayElementEntries(form);
       notifySuccess("Employee Pay Elements Added Successfully");
-
-      // refetch
-      await queryClient.invalidateQueries({
-        queryKey: ["employee-pay-elements"],
-      });
-
-      // goback
+      refetch();
       goBack();
     } catch (error: any) {
       console.log(error);
-
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -69,6 +76,7 @@ export default function EmployeePayElementsCreate() {
     refetchOnReconnect: false,
   });
   const AllEmployee: any[] = allEmployees?.data?.data || [];
+  console.log("🚀 ~ AllEmployee:", AllEmployee);
   const employeeOptions = AllEmployee.map((emp: any) => ({
     label: emp.name,
     value: emp._id,
@@ -119,83 +127,66 @@ export default function EmployeePayElementsCreate() {
             Create Employee Pay Elements
           </p>
         </div>
+        <div className="bg-white rounded-b-2xl">
+          <div className="p-4 grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-7xl lg:w-230 gap-y-2">
+            <CustomSelectSearch
+              label="Employee Name"
+              loading={isLoading}
+              placeholder="Select Employee"
+              options={employeeOptions}
+              value={form.employee}
+              onChange={(option: any) =>
+                handleChange2("employee", option?.value ?? option)
+              }
+            />
+            <CustomInput
+              label="House Rent Allowance"
+              name="houseRentAllowance"
+              value={form.houseRentAllowance}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
 
-        <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-7xl lg:w-230 gap-y-2">
-          <CustomSelectSearch
-            label="Employee Name"
-            loading={isLoading}
-            placeholder="Select Employee"
-            value={form.employeeName}
-            options={employeeOptions}
-            onChange={(value: any) => {
-              const selectedEmployee = AllEmployee.find(
-                (emp: any) => emp._id === value,
-              );
+            <CustomInput
+              label="Fuel Allowance"
+              name="fuelAllowance"
+              value={form.fuelAllowance}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
 
-              setForm((prev) => ({
-                ...prev,
-                employee: value,
+            <CustomInput
+              label="Income Tax"
+              name="incomeTax"
+              value={form.incomeTax}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
 
-                employeeName: selectedEmployee?.name || "",
-                employeeId: selectedEmployee?.employeeId || "",
-              }));
-            }}
-          />
-          <CustomInput
-            label="House Rent Allowance"
-            name="houseRentAllowance"
-            value={form.houseRentAllowance}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
+            <CustomInput
+              label="Basic Salary"
+              name="basicSalary"
+              value={form.basicSalary}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
 
-          <CustomInput
-            label="Fuel Allowance"
-            name="fuelAllowance"
-            value={form.fuelAllowance}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
+            <CustomInput
+              label="Medical Allowance"
+              name="medicalAllowance"
+              value={form.medicalAllowance}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
 
-          <CustomInput
-            label="Income Tax"
-            name="incomeTax"
-            value={form.incomeTax}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
-
-          <CustomInput
-            label="Basic Salary"
-            name="basicSalary"
-            value={form.basicSalary}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
-
-          <CustomInput
-            label="Medical Allowance"
-            name="medicalAllowance"
-            value={form.medicalAllowance}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
-
-          <CustomInput
-            label="Provident Fund"
-            name="providentFund"
-            value={form.providentFund}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
-
-          <CustomInput
-            label="Total Earnings"
-            name="totalEarnings"
-            value={form.totalEarnings}
-            onChange={handleChange}
-            placeholder="Rs.60,000"
-          />
+            <CustomInput
+              label="Provident Fund"
+              name="providentFund"
+              value={form.providentFund}
+              onChange={handleChange}
+              placeholder="Rs.60,000"
+            />
+          </div>
         </div>
       </div>
     </div>

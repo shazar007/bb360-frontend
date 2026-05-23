@@ -92,7 +92,6 @@ export default function EmployeeExpenseClaimCreate() {
         ...formData,
         rows,
       };
-      console.log("🚀 ~ handleSubmit ~ payload:", payload)
       await addExpenseClaim(payload);
       notifySuccess("Expense Claim Created");
       localStorage.removeItem("expenseClaimRows");

@@ -18,7 +18,6 @@ export default function AppLoader() {
         ]);
 
         dispatch(setEmployees(emp.data.data));
-        console.log("🚀 ~ emp.data.data:", emp.data.data);
         dispatch(setDepartments(dep.data.data));
         dispatch(setWorkCalendars(cal.data.data));
       } catch (err) {

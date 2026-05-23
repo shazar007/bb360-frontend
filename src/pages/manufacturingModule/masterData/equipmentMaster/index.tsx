@@ -1,12 +1,28 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { getAllEquipmentMaster } from "../../../../api/manufacturingSerives";
+
 export default function EquipmentMaster() {
   const [openFilter, setOpenFilter] = useState(false);
   const { goTo } = useAppNavigate();
+
+  /* =========================
+     API CALL
+  ========================= */
+  const { data: equipmentData, isLoading } = useQuery({
+    queryKey: ["getAllEquipment"],
+    queryFn: getAllEquipmentMaster,
+    staleTime: Infinity,
+  });
+
+  const equipmentList = equipmentData?.data?.data || [];
+  console.log("🚀 ~ EquipmentMaster ~ equipmentList:", equipmentList);
+
   return (
     <div className="mt-2">
       {/* HEADER */}
@@ -32,13 +48,13 @@ export default function EquipmentMaster() {
             />
           </div>
 
-          <button
+          {/* <button
             onClick={() => setOpenFilter(!openFilter)}
-            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
+            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer"
           >
             <Icon icon="mage:filter" className="w-5 h-5" />
             Filters
-          </button>
+          </button> */}
 
           <button
             onClick={() =>
@@ -54,8 +70,10 @@ export default function EquipmentMaster() {
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
+      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
+          loading={isLoading}
           norounded
           height="60vh"
           headers={[
@@ -69,41 +87,37 @@ export default function EquipmentMaster() {
             "Cleaning Status",
             "Operational State",
           ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
+          data={equipmentList?.map((item: any) => [
+            <Icon
+              icon="basil:edit-outline"
+              className="text-lg cursor-pointer text-primary"
+            />,
 
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
-              />,
+            <Icon
+              icon="fluent:checkbox-checked-16-regular"
+              className="text-lg cursor-pointer text-primary"
+            />,
 
-              "Machin-2259",
+            item.assertId || "-",
+            item.equipmentName || "-",
+            item.equipmentLocation || "-",
+            item.lastCalibration || "-",
+            item.nextDueDate || "-",
+            item.cleaningStatus || "-",
 
-              "High-Shear Granulator Mixer",
-
-              "Line 2, Hall No 3",
-
-              "01-Jan-2026",
-
-              "01-Jan-2027",
-
-              "Dirty",
-
-              <span
-                className="px-2 py-1 rounded-md text-xs font-medium"
-                style={{
-                  backgroundColor: "#00F2001F",
-                  color: "#1E9B1E",
-                }}
-              >
-                Active
-              </span>,
-            ],
-          ]}
+            <span
+              className="px-2 py-1 rounded-md text-xs font-medium"
+              style={{
+                backgroundColor:
+                  item.operationalState === "Active"
+                    ? "#00F2001F"
+                    : "#F200001A",
+                color: item.operationalState === "Active" ? "#1E9B1E" : "red",
+              }}
+            >
+              {item.operationalState || "-"}
+            </span>,
+          ])}
         />
       </div>
     </div>

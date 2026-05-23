@@ -43,6 +43,7 @@ export default function CreateReceivingChallan() {
   });
 
   let purchaseOrderData = (order as any)?.data?.po;
+  // console.log("🚀 ~ CreateReceivingChallan ~ purchaseOrderData:", purchaseOrderData)
   createReceivingChallan;
   const handleIdChange = async () => {
     if (!poNumber.trim()) {
@@ -79,7 +80,7 @@ export default function CreateReceivingChallan() {
 
     setCreateChallan(false);
     setEditIndex(null);
-    setEditRow(null);
+    // setEditRow(null);
   };
 
   const handleEdit = (item: any, index: number) => {
@@ -116,6 +117,8 @@ export default function CreateReceivingChallan() {
       setTableItems(purchaseOrderData.items);
     }
   }, [purchaseOrderData]);
+
+  
   const handleSaveInvoice = async () => {
     if (loading) return;
 
@@ -183,6 +186,7 @@ export default function CreateReceivingChallan() {
           amount: Number(item?.amount || 0),
         })),
       };
+      console.log("🚀 ~ handleSaveInvoice ~ payload:", payload)
 
       await createReceivingChallan(payload);
 

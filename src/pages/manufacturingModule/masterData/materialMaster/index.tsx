@@ -1,12 +1,31 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { getAllMaterialMastern } from "../../../../api/manufacturingSerives";
+import { useNavigate } from "react-router-dom";
+
 export default function MaterialMaster() {
   const [openFilter, setOpenFilter] = useState(false);
   const { goTo } = useAppNavigate();
+  const navigate = useNavigate();
+
+  /* =========================
+     API CALL
+  ========================= */
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["getAllMaterialMaster"],
+    queryFn: getAllMaterialMastern,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const materials = data?.data?.data || [];
+
   return (
     <div className="mt-2">
       {/* HEADER */}
@@ -33,14 +52,6 @@ export default function MaterialMaster() {
           </div>
 
           <button
-            onClick={() => setOpenFilter(!openFilter)}
-            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
-          >
-            <Icon icon="mage:filter" className="w-5 h-5" />
-            Filters
-          </button>
-
-          <button
             onClick={() =>
               goTo("/manufacturing-module/master-data/material-master/create")
             }
@@ -54,8 +65,10 @@ export default function MaterialMaster() {
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
+      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
+          loading={isLoading}
           norounded
           height="60vh"
           headers={[
@@ -65,45 +78,48 @@ export default function MaterialMaster() {
             "Material Name",
             "Material Type",
             "UOM",
-            "Shelf Life (Days)",
+            "Shelf Life",
             "Vendor",
             "QC Disposition",
           ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
+          data={materials.map((item: any) => [
+            <Icon
+              icon="basil:edit-outline"
+              className="text-lg cursor-pointer text-primary"
+              onClick={() =>
+                navigate(
+                  "/manufacturing-module/master-data/material-master/create",
+                  {
+                    state: {
+                      rowData: item,
+                      type: "edit",
+                    },
+                  },
+                )
+              }
+            />,
 
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
-              />,
+            <Icon
+              icon="fluent:checkbox-checked-16-regular"
+              className="text-lg cursor-pointer text-primary"
+            />,
 
-              "MAT-5589P",
-
-              "Paracetamol",
-
-              "Raw Material",
-
-              "Kgs",
-
-              "120 Days",
-
-              "Xi-Pong, China",
-
-              <span
-                className="px-2 py-1 rounded-md text-xs font-medium"
-                style={{
-                  backgroundColor: "#E6F20029",
-                  color: "#B5B800",
-                }}
-              >
-                Quarantine
-              </span>,
-            ],
-          ]}
+            item.materialCode || "-",
+            item.materialName || "-",
+            item.materialType || "-",
+            item.uom || "-",
+            item.shelfLife || "-",
+            item.vendor || "-",
+            <span
+              className="px-2 py-1 rounded-md text-xs font-medium"
+              style={{
+                backgroundColor: "#E6F20029",
+                color: "#B5B800",
+              }}
+            >
+              {item.qcDisposition || "-"}
+            </span>,
+          ])}
         />
       </div>
     </div>

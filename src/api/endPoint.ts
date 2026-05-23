@@ -62,8 +62,7 @@ export const ENDPOINTS = {
   // --------------Debit / Credit Note-------------
   DEBIT_CREDIT_NOTE: "/ledgers/journal-voucher",
 
-  // --------------Employees-------------
-  EMPLOYEES: "/employees",
+  // ------------------------------------- hr Module --------------------------------
 
   // --------------Employees Designation-------------
   DESIGNATION: "/designation",
@@ -80,16 +79,16 @@ export const ENDPOINTS = {
   LOYEE_JOBS: "/employee-jobs",
 
   // --------------EMPLOYEES-------------
-  EMPLOYEES_ALL: "/employees",
+  EMPLOYEES: "/employees",
 
   // --------------Employee Salary-------------
   EMPLOYEE_SALARY: "/employee-salaries",
 
   // --------------Employee Performance Criteria-------------
-  EMPLOYEE_PERFORMANCE_CRITERIA: "/employee-performance-criteria",
+  EMPLOYEE_PERFORMANCE_CRITERIA: "/performance-criteria",
 
   // --------------Employee Performance Evaluation-------------
-  EMPLOYEE_PERFORMANCE_EVALUATION: "/employee-performance-evaluation",
+  EMPLOYEE_PERFORMANCE_EVALUATION: "/performance-evaluation",
 
   // --------------Employee Leave Application-------------
   LEAVE_APPLICATION: "/leave-applications",
@@ -109,12 +108,28 @@ export const ENDPOINTS = {
   // --------------get attendance-summary-------------
   ATTENDANCE_SUMMARY: "/attendance/summary",
 
+  // -------------- ATTENDANCE_MACHINE-------------
+  ATTENDANCE_MACHINE: "/attendance/machine",
+
+  // -------------- HR DASHOARD-------------
+  DASHBOARD_HR: "/dashboard/stats",
+  DASHBOARD_Attendance: "/dashboard/attendance-stats",
+
   // --------------Upload-------------
   UPLOAD_IMAGE: "/image-upload/upload",
 
+  // --------------Employee Pay Elements-------------
+  PAY_ENTRIES: "/employee-pay-elements/bulk",
+
+  // --------------Pay Element-Entries-------------
+  PAY_ELEMENT_ENTRIES: "/employee-pay-elements",
+
+  // -------------Loan Deductions-------------
+  LOAN_DEDUCTION: "/loan-deductions",
+
   // --------------------------------Manufacturing---------------------------------
   // --------------Material Mastern-------------
-  MATERIRAL_MASTERN: "/material-mastern",
+  MATERIRAL_MASTERN: "/material-master",
 
   // --------------Bill Of Material-------------
   BILL_MATERIAL: "/bill-material",
@@ -127,6 +142,15 @@ export const ENDPOINTS = {
 
   // -------------- Demand Planning-------------
   DEMAND_PLANNING: "/demand-planning",
+
+    // -------------- MRP Planning-------------
+  MRP_PLANNING: "/mrp-planning",
+
+    // -------------- Batch Planning-------------
+  BATCH_PLANNING: "/batch-planning",
+
+  // -------------- Work Orders-------------
+  WORK_ORDERS: "/work-orders",
 
   // --------------Upload-------------
   PAYROLL_PROCESS: "/getAllPayrollProcess",

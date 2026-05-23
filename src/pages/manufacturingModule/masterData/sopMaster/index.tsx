@@ -1,12 +1,28 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { getAllSOPMaster } from "../../../../api/manufacturingSerives";
+
+
 export default function SopMaster() {
   const [openFilter, setOpenFilter] = useState(false);
   const { goTo } = useAppNavigate();
+
+  /* =========================
+     GET API
+  ========================= */
+  const { data: sopData, isLoading } = useQuery({
+    queryKey: ["getAllSOPMaster"],
+    queryFn: getAllSOPMaster,
+    staleTime: Infinity,
+  });
+
+  const sopList = sopData?.data || [];
+
   return (
     <div className="mt-2">
       {/* HEADER */}
@@ -20,6 +36,7 @@ export default function SopMaster() {
         </div>
 
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
+          {/* SEARCH */}
           <div className="relative w-full md:w-40">
             <input
               placeholder="Search"
@@ -32,14 +49,16 @@ export default function SopMaster() {
             />
           </div>
 
-          <button
+          {/* FILTER */}
+          {/* <button
             onClick={() => setOpenFilter(!openFilter)}
-            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
+            className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer"
           >
             <Icon icon="mage:filter" className="w-5 h-5" />
             Filters
-          </button>
+          </button> */}
 
+          {/* CREATE */}
           <button
             onClick={() =>
               goTo("/manufacturing-module/master-data/sop-master/create")
@@ -52,10 +71,13 @@ export default function SopMaster() {
         </div>
       </div>
 
+      {/* FILTER */}
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
+      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
+          loading={isLoading}
           norounded
           height="60vh"
           headers={[
@@ -69,38 +91,36 @@ export default function SopMaster() {
             "Review Cycle",
             "Attachment",
           ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
+          data={sopList.map((item: any) => [
+            <Icon
+              icon="basil:edit-outline"
+              className="text-lg cursor-pointer text-primary"
+            />,
 
-              <Icon
-                icon="fluent:checkbox-checked-16-regular"
-                className="text-lg cursor-pointer text-primary"
-              />,
+            <Icon
+              icon="fluent:checkbox-checked-16-regular"
+              className="text-lg cursor-pointer text-primary"
+            />,
 
-              "SOP-Panadol25",
+            item.sopNumber || "-",
 
-              "Sanitization Protocol for Fluid Bed Dryers",
+            item.documentTitle || "-",
 
-              "Production",
+            item.department || "-",
 
-              "v2.0",
+            item.currentVersion || "-",
 
-              "01-Jan-2026",
+            item.effectiveDate || "-",
 
-              "Every 6 Months",
+            item.reviewCycle || "-",
 
-              <span
-                className="text-xs underline cursor-pointer"
-                style={{ color: "#0088FF" }}
-              >
-                Protocol.pdf
-              </span>,
-            ],
-          ]}
+            <span
+              className="text-xs underline cursor-pointer"
+              style={{ color: "#0088FF" }}
+            >
+              {item.attachment || "View File"}
+            </span>,
+          ])}
         />
       </div>
     </div>
