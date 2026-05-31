@@ -8,7 +8,7 @@ import {
 } from "../../../api/inventoryServices";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
-import { notifyError, notifySuccess } from "../../../components/toast";
+import { notifyError, notifySuccess } from "../../../components/toast"; 
 import { SyncLoader } from "react-spinners";
 import { useReactToPrint } from "react-to-print";
 import { PrintByAll } from "./printByAll";

@@ -998,14 +998,14 @@ export const navItems: NavItem[] = [
       {
         name: "Warehouse Controls",
         children: [
-          {
-            name: "Goods Receipt (GRN)",
-            path: "/manufacturing-module/warehouse-controls/goods-receipt-grn",
-          },
-          {
-            name: "Inventory Management",
-            path: "/manufacturing-module/warehouse-controls/inventory-management",
-          },
+          // {
+          //   name: "Goods Receipt (GRN)",
+          //   path: "/manufacturing-module/warehouse-controls/goods-receipt-grn",
+          // },
+          // {
+          //   name: "Inventory Management",
+          //   path: "/manufacturing-module/warehouse-controls/inventory-management",
+          // },
           {
             name: "Material Status Management",
             path: "/manufacturing-module/warehouse-controls/material-status-management",
