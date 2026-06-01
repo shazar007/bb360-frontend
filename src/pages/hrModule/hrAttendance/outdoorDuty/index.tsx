@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomInput from "../../../../components/customInput";
 import { SyncLoader } from "react-spinners";
@@ -124,7 +123,7 @@ export default function OutdoorDuty() {
         <div className="mt-3 bg-white rounded-2xl overflow-hidden">
           <CustomTable
             norounded
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "Select",

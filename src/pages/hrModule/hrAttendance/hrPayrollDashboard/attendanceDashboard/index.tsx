@@ -68,7 +68,7 @@ export default function AttendanceDashboard() {
 
           <CustomTable
             norounded
-            height="45vh"
+            height="auto"
             loading={isLoading}
             headers={[
               "Employee ID",

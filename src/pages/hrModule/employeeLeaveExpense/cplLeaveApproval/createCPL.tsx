@@ -7,10 +7,11 @@ import CustomDatePicker from "../../../../components/datePicker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { getAllDepartments } from "../../../../api/classificationServices";
 import { addCPLApproved, getAllWorkCalendar } from "../../../../api/hrServices";
 import CustomTimePicker from "../../../../components/timePicker";
 import { notifyError, notifySuccess } from "../../../../components/toast";
+import { selectDepartments } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
 export default function CreateCPL() {
   const { goBack } = useAppNavigate();
@@ -85,14 +86,10 @@ export default function CreateCPL() {
       value: cal._id,
     }),
   );
-  const { data: alldepartment } = useQuery({
-    queryKey: ["getAllDepartments"],
-    queryFn: getAllDepartments,
-  });
+  const departments = useSelector(selectDepartments);
 
-  const AllgetDepartment = alldepartment?.data?.data || [];
-  const departmentOptions = AllgetDepartment.map((dep: any) => ({
-    label: dep.fullName || dep.name || "Unnamed",
+  const departmentOptions = departments.map((dep: any) => ({
+    label: dep.name,
     value: dep._id,
   }));
   return (

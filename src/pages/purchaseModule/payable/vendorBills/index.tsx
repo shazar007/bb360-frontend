@@ -71,7 +71,7 @@ export default function VendorBills() {
       <div className="mt-2">
         <CustomTable
           loading={isLoading}
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "View",

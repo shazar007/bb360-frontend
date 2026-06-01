@@ -67,7 +67,6 @@ export default function PayElementEntitlesUpload() {
     }
   };
 
-  // ================= FILE UPLOAD =================
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -115,7 +114,6 @@ export default function PayElementEntitlesUpload() {
     queryKey: ["getAllPayElementEntries"],
     queryFn: getAllPayElementEntries,
   });
-  // ================= UPLOAD =================
   const handleUpload = async () => {
     if (tableData.length === 0) {
       notifyError("Please select file first");

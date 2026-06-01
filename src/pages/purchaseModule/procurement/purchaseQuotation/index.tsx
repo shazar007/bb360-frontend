@@ -48,7 +48,7 @@ export default function PurchaseQuotation() {
       </div>
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "View",

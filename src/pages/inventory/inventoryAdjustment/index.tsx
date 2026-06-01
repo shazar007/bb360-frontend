@@ -25,7 +25,6 @@ export default function InventoryAdjustment() {
   const { goTo } = useAppNavigate();
 
   const { data, isLoading } = useQuery({
-
     queryKey: ["getAllInventoryAdjustments"],
     queryFn: getAllInventoryAdjustments,
 
@@ -94,7 +93,7 @@ export default function InventoryAdjustment() {
     contentRef: printItemRef,
     documentTitle: "Inventory Adjustment",
   });
-  
+
   const isDeleting = deleteMutation.isPending;
   return (
     <>

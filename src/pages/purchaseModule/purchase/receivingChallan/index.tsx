@@ -84,7 +84,7 @@ export default function ReceivingChallan() {
         </div>
         <div className="mt-2">
           <CustomTable
-            height="60vh"
+            height="auto"
             loading={isLoading}
             headers={[
               "Details",

@@ -55,11 +55,11 @@ export default function OvertimeApproval() {
           </div>
         </div>
 
-        <div className="mt-3 overflow-hidden bg-white rounded-2xl">
+        <div className="mt-3  bg-white rounded-2xl">
           <CustomTable
             norounded
             loading={attendanceLoading}
-            height="55vh"
+            height="auto"
             headers={[
               "Department",
               "Employee",

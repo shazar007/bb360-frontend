@@ -12,6 +12,8 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import CustomDatePicker from "../../../../components/datePicker";
 import { addEmployeePerformanceEvaluation } from "../../../../api/hrServices";
 import { SyncLoader } from "react-spinners";
+import { selectEmployees } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
 const tabs = ["Employee Evaluation Lines"];
 
@@ -34,17 +36,9 @@ export default function EmployeePerformanceEvaluationCreate() {
   });
 
   const [tableRows, setTableRows] = useState<any[]>([]);
-  const { data: allEmployees, isLoading } = useQuery({
-    queryKey: ["getAllEmployees"],
-    queryFn: getAllEmployees,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-  const AllEmployee: any[] = allEmployees?.data?.data || [];
-  const employeeOptions = AllEmployee.map((emp: any) => ({
+  const employees = useSelector(selectEmployees);
+
+  const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
@@ -213,7 +207,7 @@ export default function EmployeePerformanceEvaluationCreate() {
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-260 lg:w-full gap-y-2">
               <CustomSelectSearch
                 label="Employee"
-                loading={isLoading}
+                loading={employees.length === 0}
                 placeholder="Select Employee"
                 value={formData.employeeId}
                 options={employeeOptions}
@@ -290,6 +284,7 @@ export default function EmployeePerformanceEvaluationCreate() {
 
           {activeTab === "Employee Evaluation Lines" && (
             <CustomTable
+              height="auto"
               norounded
               headers={[
                 "Select",

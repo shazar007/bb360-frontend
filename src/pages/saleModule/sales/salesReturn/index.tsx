@@ -79,7 +79,7 @@ export default function SalesReturn() {
         <CustomTable
           norounded
           loading={isLoading}
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "Select",

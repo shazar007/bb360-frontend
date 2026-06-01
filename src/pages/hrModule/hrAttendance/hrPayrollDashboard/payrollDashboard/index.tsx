@@ -52,7 +52,7 @@ export default function PayrollDashboard() {
           <CustomTable
             norounded
             loading={false}
-            height="55vh"
+            height="auto"
             headers={[
               "Employee ID",
               "Employee Name",

@@ -55,7 +55,7 @@ export default function CustomImagePicker({
   };
 
   const handleClear = (e: React.MouseEvent) => {
-    e.stopPropagation(); // prevent opening file picker
+    e.stopPropagation();
     if (onChange) {
       onChange(null);
     }

@@ -104,7 +104,7 @@ export default function DefineEmployeeSalaryUpload() {
           <CustomTable
             norounded
             loading={false}
-            height="55vh"
+            height="auto"
             headers={[
               "Edit",
               "Employee ID",

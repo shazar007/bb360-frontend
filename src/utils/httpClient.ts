@@ -14,7 +14,7 @@ export const setupInterceptors = (navigate: any) => {
     (config: any) => {
       const token = Cookies.get("token") || localStorage.getItem("token");
 
-      console.log("TOKEN FROM COOKIE:", token); // is this null?
+      // console.log("TOKEN FROM COOKIE:", token);
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;

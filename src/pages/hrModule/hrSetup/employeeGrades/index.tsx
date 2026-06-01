@@ -131,7 +131,7 @@ export default function EmployeeGrades() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={["Edit", "Grade Name", "Description", "Status"]}
               data={
                 allGrades?.map((item: any) => [

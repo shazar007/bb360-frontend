@@ -144,7 +144,7 @@ export default function PurchaseOrder() {
         <div className="mt-2">
           <CustomTable
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={[
               "Details",
               "View",

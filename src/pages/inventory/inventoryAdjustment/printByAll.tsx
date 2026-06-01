@@ -36,12 +36,8 @@ export const PrintByAll = forwardRef(
           `}
         </style>
 
-        {/* TITLE */}
-        <h2 className="text-2xl font-bold mb-4">
-          {title || "Report"}
-        </h2>
+        <h2 className="text-2xl font-bold mb-4">{title || "Report"}</h2>
 
-        {/* TABLE */}
         <table>
           <thead>
             <tr>
@@ -56,9 +52,7 @@ export const PrintByAll = forwardRef(
               <tr key={rowIndex}>
                 {(columns || []).map((col: any, colIndex: number) => (
                   <td key={colIndex}>
-                    {col.render
-                      ? col.render(row)
-                      : row?.[col.key] ?? "-"}
+                    {col.render ? col.render(row) : (row?.[col.key] ?? "-")}
                   </td>
                 ))}
               </tr>

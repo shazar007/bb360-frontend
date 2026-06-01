@@ -23,7 +23,6 @@ export default function ManufacturingRouting() {
 
   return (
     <Routes>
-      {/* OLD ROUTES */}
       <Route path="/material-issue-note" element={<MaterialIssueNote />} />
 
       <Route
@@ -38,7 +37,6 @@ export default function ManufacturingRouting() {
         element={<MaterialReturnNoteCreate />}
       />
 
-      {/* NEW ROUTES */}
       <Route path="/master-data/*" element={<MasterDataRouting />} />
 
       <Route

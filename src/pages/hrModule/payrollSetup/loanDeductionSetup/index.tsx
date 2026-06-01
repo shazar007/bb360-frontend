@@ -128,7 +128,7 @@ export default function LoanDeductionSetup() {
         <div className="mt-3 bg-white rounded-2xl overflow-hidden">
           <CustomTable
             norounded
-            height="60vh"
+            height="auto"
             headers={["Edit", "Payroll", "Payroll Period"]}
             data={tableData.map((item: any) => [
               <Icon

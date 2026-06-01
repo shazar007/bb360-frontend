@@ -61,7 +61,7 @@ export default function Venders() {
       </div>
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "Name",

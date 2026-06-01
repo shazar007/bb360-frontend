@@ -19,17 +19,28 @@ import {
   getAllWorkCalendar,
 } from "../../../../api/hrServices";
 import { useQuery } from "@tanstack/react-query";
-import { getAllDepartments } from "../../../../api/classificationServices";
+import {
+  getAllDepartments,
+  getAllJobLocations,
+} from "../../../../api/classificationServices";
 
 const fetchHROptions = async () => {
-  const [typeRes, designationRes, gradesRes, workCalendarres, departmentRep] =
-    await Promise.all([
-      getAllEmployeeType(),
-      getAllEmployeeDesignation(),
-      getAllEmployeeGrades(),
-      getAllWorkCalendar(),
-      getAllDepartments(),
-    ]);
+  const [
+    typeRes,
+    designationRes,
+    gradesRes,
+    workCalendarres,
+    departmentRep,
+    jobLocationRes,
+  ] = await Promise.all([
+    getAllEmployeeType(),
+    getAllEmployeeDesignation(),
+    getAllEmployeeGrades(),
+    getAllWorkCalendar(),
+    getAllDepartments(),
+    getAllJobLocations(),
+  ]);
+  console.log("🚀 ~ departmentRep:", departmentRep);
 
   return {
     employeeTypeOptions: (typeRes?.data?.data || []).map((emp: any) => ({
@@ -52,6 +63,10 @@ const fetchHROptions = async () => {
     departOption: (departmentRep?.data?.data || []).map((depar: any) => ({
       label: depar.fullName,
       value: depar._id,
+    })),
+    jobLocationOption: (jobLocationRes?.data?.data || []).map((job: any) => ({
+      label: job.name,
+      value: job._id,
     })),
   };
 };
@@ -101,6 +116,7 @@ export default function EmployeesCreate() {
     employeeDesignation = [],
     employeeGrades = [],
     workCalendar = [],
+    jobLocationOption = [],
     departOption = [],
   } = hrOptions ?? {};
 
@@ -338,11 +354,13 @@ export default function EmployeesCreate() {
             value={formData.employeeGrade}
             onChange={(value: any) => handleChange("employeeGrade", value)}
           />
-          <CustomInput
+          <CustomSelectSearch
             label="Job Location"
-            placeholder="Enter Location"
+            placeholder="Select Job Location"
             value={formData.jobLocation}
-            onChange={(e: any) => handleChange("jobLocation", e.target.value)}
+            onChange={(value: any) => handleChange("jobLocation", value)}
+            options={jobLocationOption}
+            loading={hrLoading}
           />
           <CustomSelect
             label="Define Payroll"

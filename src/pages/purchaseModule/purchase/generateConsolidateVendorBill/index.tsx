@@ -71,7 +71,7 @@ export default function GenerateConsolidateVendorBill() {
         </div>
         <div className="mt-2">
           <CustomTable
-            height="60vh"
+            height="auto"
             headers={[
               "Select",
               "PO No.",

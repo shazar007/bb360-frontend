@@ -5,12 +5,13 @@ import { notifyError, notifySuccess } from "../../../../../components/toast";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
-import { getAllEmployees } from "../../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../../components/customSelectSearch";
 import {
   addPayElementEntries,
   getAllPayElementEntries,
 } from "../../../../../api/hrServices";
+import { selectEmployees } from "../../../../../redux/store";
+import { useSelector } from "react-redux";
 type FormState = {
   employee: string;
   houseRentAllowance: number;
@@ -66,18 +67,9 @@ export default function EmployeePayElementsCreate() {
       setLoading(false);
     }
   };
-  const { data: allEmployees, isLoading } = useQuery({
-    queryKey: ["getAllEmployees"],
-    queryFn: getAllEmployees,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-  const AllEmployee: any[] = allEmployees?.data?.data || [];
-  console.log("🚀 ~ AllEmployee:", AllEmployee);
-  const employeeOptions = AllEmployee.map((emp: any) => ({
+  const employees = useSelector(selectEmployees);
+
+  const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
@@ -131,7 +123,7 @@ export default function EmployeePayElementsCreate() {
           <div className="p-4 grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-7xl lg:w-230 gap-y-2">
             <CustomSelectSearch
               label="Employee Name"
-              loading={isLoading}
+              loading={employees.length === 0}
               placeholder="Select Employee"
               options={employeeOptions}
               value={form.employee}

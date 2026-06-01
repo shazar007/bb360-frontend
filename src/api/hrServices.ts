@@ -59,9 +59,6 @@ export const addAllEmployee = (values: any) => {
 export const getAllEmployee = () => {
   return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEES);
 };
-export const getAllPayrollProcess = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS);
-};
 
 export const updateAllEmployee = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES}/${id}`, values);
@@ -221,4 +218,27 @@ export const getAllStatHRDashboard = () => {
 };
 export const getAllStatAttendanceDashboard = () => {
   return HTTP_CLIENT.get(ENDPOINTS.DASHBOARD_Attendance);
+};
+
+// ------------------------PayRoll----------------------------------
+
+// -------------- Payroll Process Run-------------
+export const CreatePayrollProcessRun = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.PAYROLL_PROCESS_CREATE, values);
+};
+export const approvePayrollRun = (id: string | number) => {
+  return HTTP_CLIENT.patch(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/approve`);
+};
+export const getPayrollProcessRun = (params: any) => {
+  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS, {
+    params: {
+      payrollType: params.payrollType,
+      periodMonth: Number(params.periodMonth),
+      periodYear: Number(params.periodYear),
+    },
+  });
+};
+
+export const SalaryPayableProcessSubmit = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.SALARY_PAYABLE_SUBMIT, values);
 };

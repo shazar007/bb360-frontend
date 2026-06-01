@@ -180,7 +180,7 @@ export default function MaterialIssueNote() {
 
         <div className="mt-3">
           <CustomTable
-            height="60vh"
+            height="auto"
             loading={isLoading}
             headers={[
               "Edit",

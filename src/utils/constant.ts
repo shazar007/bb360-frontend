@@ -39,6 +39,10 @@ export const navItems: NavItem[] = [
             name: "Departments",
             path: "/application-setup/classification/departments",
           },
+          {
+            name: "Job Locations",
+            path: "/application-setup/classification/job-locations",
+          },
           // {
           //   name: "Classes",
           //   path: "/application-setup/classification/classes",
@@ -1419,10 +1423,10 @@ export const navItems: NavItem[] = [
             name: "Salary Payment Process",
             path: "/hr-module/payroll-process/salary-payment-process",
           },
-          {
-            name: "Payroll Process Run Result",
-            path: "/hr-module/payroll-process/payroll-process-run-result",
-          },
+          // {
+          //   name: "Payroll Process Run Result",
+          //   path: "/hr-module/payroll-process/payroll-process-run-result",
+          // },
         ],
       },
       // {
@@ -1458,43 +1462,43 @@ export const navItems: NavItem[] = [
       //     },
       //   ],
       // },
-      {
-        name: "Employee Reports",
-        children: [
-          {
-            name: "Department Wise Employee Summary",
-            path: "/hr-module/employee-reports/department-wise-employee-summary",
-          },
-          {
-            name: "Employee Card",
-            path: "/hr-module/employee-reports/employee-card",
-          },
-          {
-            name: "Uploaded Documents Status",
-            path: "/hr-module/employee-reports/uploaded-documents-status",
-          },
-          {
-            name: "Provident Fund Contribution Report",
-            path: "/hr-module/employee-reports/provident-fund-contribution-report",
-          },
-          {
-            name: "Department Wise Attendance",
-            path: "/hr-module/employee-reports/department-wise-attendance",
-          },
-          {
-            name: "Daily Attendance Register",
-            path: "/hr-module/employee-reports/daily-attendance-register",
-          },
-          {
-            name: "Employee Late Arrival Report",
-            path: "/hr-module/employee-reports/employee-late-arrival-report",
-          },
-          {
-            name: "Salary Increment Report",
-            path: "/hr-module/employee-reports/salary-increment-report",
-          },
-        ],
-      },
+      // {
+      //   name: "Employee Reports",
+      //   children: [
+      //     {
+      //       name: "Department Wise Employee Summary",
+      //       path: "/hr-module/employee-reports/department-wise-employee-summary",
+      //     },
+      //     {
+      //       name: "Employee Card",
+      //       path: "/hr-module/employee-reports/employee-card",
+      //     },
+      //     {
+      //       name: "Uploaded Documents Status",
+      //       path: "/hr-module/employee-reports/uploaded-documents-status",
+      //     },
+      //     {
+      //       name: "Provident Fund Contribution Report",
+      //       path: "/hr-module/employee-reports/provident-fund-contribution-report",
+      //     },
+      //     {
+      //       name: "Department Wise Attendance",
+      //       path: "/hr-module/employee-reports/department-wise-attendance",
+      //     },
+      //     {
+      //       name: "Daily Attendance Register",
+      //       path: "/hr-module/employee-reports/daily-attendance-register",
+      //     },
+      //     {
+      //       name: "Employee Late Arrival Report",
+      //       path: "/hr-module/employee-reports/employee-late-arrival-report",
+      //     },
+      //     {
+      //       name: "Salary Increment Report",
+      //       path: "/hr-module/employee-reports/salary-increment-report",
+      //     },
+      //   ],
+      // },
     ],
   },
 ];

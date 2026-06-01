@@ -51,7 +51,7 @@ export default function VenderType() {
       </div>
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={["Edit", "Name", "Parent Name", "Is Inactive"]}
           data={[
             [

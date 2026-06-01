@@ -62,7 +62,7 @@ export default function PendingReceiveOrdersList() {
         </div>
         <div className="mt-2">
           <CustomTable
-            height="60vh"
+            height="auto"
             headers={[
               "Select",
               "Seq. ID",

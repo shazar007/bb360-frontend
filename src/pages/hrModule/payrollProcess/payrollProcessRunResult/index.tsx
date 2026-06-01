@@ -12,7 +12,7 @@ export default function PayrollProcessRunResult() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Payroll Process Run Results
+            Payroll Process Run Resultss
           </p>
         </div>
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
@@ -44,7 +44,7 @@ export default function PayrollProcessRunResult() {
       </div>
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      <div className="mt-3 overflow-hidden bg-white rounded-2xl">
+      <div className="mt-3  bg-white rounded-2xl">
         <div className="px-4 py-3 bg-[#ECF0F4] border-b border-[#304250]/10">
           <p className="text-xs font-semibold text-heading1">
             Payroll Process Run Results

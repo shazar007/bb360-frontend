@@ -174,7 +174,7 @@ export default function DistributorUpdate() {
           <CustomTable
             norounded
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "Distributor Code",

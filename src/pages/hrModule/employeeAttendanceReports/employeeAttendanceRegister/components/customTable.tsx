@@ -48,7 +48,6 @@ export default function CustomTable({ headers, data, height }: Props) {
       style={{ height: height || "60vh" }}
       className="flex flex-col justify-between overflow-hidden bg-white rounded-2xl"
     >
-      {/* TABLE AREA */}
       <div
         ref={scrollRef}
         onMouseDown={handleMouseDown}
@@ -58,7 +57,6 @@ export default function CustomTable({ headers, data, height }: Props) {
         className="flex-1 overflow-x-auto overflow-y-auto cursor active:cursor-grabbing select-none scrollbar-hide"
       >
         <table className="border-separate border-spacing-0 min-w-650">
-          {/* HEADER */}
           <thead>
             <tr className="bg-[#ECF0F4]">
               {headers.map((header, idx) => (
@@ -82,7 +80,6 @@ export default function CustomTable({ headers, data, height }: Props) {
             </tr>
           </thead>
 
-          {/* BODY */}
           <tbody>
             {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
@@ -114,7 +111,6 @@ export default function CustomTable({ headers, data, height }: Props) {
         </table>
       </div>
 
-      {/* LEGENDS */}
       <div className="flex items-center gap-6 px-6 py-3 border-t border-[#304250]/10">
         <p className="text-[11px] font-medium text-heading1 whitespace-nowrap">
           Legends
@@ -133,7 +129,6 @@ export default function CustomTable({ headers, data, height }: Props) {
         <Legend color="#F5DAFA" text="OD" label="Outdoor Duty" />
       </div>
 
-      {/* PAGINATION */}
       <div className="flex items-center justify-between p-4 border-t border-[#304250]/10">
         <p className="text-sm text-heading2">1 row selected</p>
 

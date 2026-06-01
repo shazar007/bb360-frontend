@@ -50,7 +50,7 @@ export default function EmployeeLoanSummary() {
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      <div className="mt-3 overflow-hidden bg-white rounded-2xl">
+      <div className="mt-3  bg-white rounded-2xl">
         <div className="px-4 py-3 bg-[#ECF0F4] border-b border-[#304250]/10">
           <p className="text-xs font-semibold text-heading1">
             Select Employee Loan
@@ -76,7 +76,7 @@ export default function EmployeeLoanSummary() {
         <CustomTable
           norounded
           loading={false}
-          height="55vh"
+          height="auto"
           headers={[
             "Transaction Number",
             "Transaction Date",

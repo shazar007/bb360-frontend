@@ -56,7 +56,7 @@ export default function InventoryTransfer() {
   });
 
   const queryClient = useQueryClient();
-  
+
   const deleteMutation = useMutation({
     mutationFn: deleteInventoryTransfer,
 
@@ -171,7 +171,7 @@ export default function InventoryTransfer() {
             ref={printItemRef}
             data={selectedItem}
             title="Inventory Transfer"
-             sections={[
+            sections={[
               {
                 title: "Basic Info",
                 type: "info",
@@ -199,7 +199,7 @@ export default function InventoryTransfer() {
                     label: "Transaction Name",
                     key: "transactionName",
                   },
-                   {
+                  {
                     label: "Transfer To",
                     key: "transferTo",
                   },
@@ -241,7 +241,6 @@ export default function InventoryTransfer() {
                     label: "UOM",
                     render: (row: any) => row?.item?.uom || "-",
                   },
-
                 ],
 
                 data: (item: any) => item?.items || [],
@@ -279,7 +278,7 @@ export default function InventoryTransfer() {
         <div className="mt-3">
           <CustomTable
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               // "View",

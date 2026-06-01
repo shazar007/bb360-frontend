@@ -166,7 +166,7 @@ export default function TimeAttendanceMachineData() {
         </div>
         {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-        <div className="mt-3 overflow-hidden bg-white rounded-2xl">
+        <div className="mt-3  bg-white rounded-2xl">
           <div className="flex flex-wrap gap-4 p-4">
             <button
               onClick={() => setActiveTab("machine")}
@@ -191,7 +191,7 @@ export default function TimeAttendanceMachineData() {
             <CustomTable
               norounded
               loading={attendanceLoading}
-              height="55vh"
+              height="auto"
               headers={[
                 "Employee Machine Number",
                 "Attendance Date",

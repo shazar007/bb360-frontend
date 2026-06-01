@@ -41,11 +41,8 @@ export default function EmployeePayElements() {
         notifyError("Please select at least one item first");
         return;
       }
-
       setDeleteLoading(true);
-
       await deletePayElement(selectedId);
-
       notifySuccess("Deleted successfully");
 
       setSelectedId(null);

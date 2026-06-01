@@ -143,6 +143,10 @@ export const ENDPOINTS = {
   // -------------- Demand Planning-------------
   DEMAND_PLANNING: "/demand-planning",
 
-  // --------------Upload-------------
-  PAYROLL_PROCESS: "/getAllPayrollProcess",
+  // -------------- Payroll Process Run-------------
+  PAYROLL_PROCESS: "/payroll/runs",
+  PAYROLL_PROCESS_CREATE: "/payroll/run",
+  SALARY_PAYABLE_SUBMIT: "/payroll/salary-payable",
+  // --------------------------------JOB Location---------------------------------
+  JOB_LOCATIONS: "/job-locations",
 };

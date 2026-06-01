@@ -19,14 +19,16 @@ import {
   updateAllEmployee,
 } from "../../../../api/hrServices";
 import CustomSelect from "../../../../components/customSelect";
+import { getAllJobLocations } from "../../../../api/classificationServices";
 
 const fetchHROptions = async () => {
-  const [typeRes, designationRes, gradesRes, workCalendarres] =
+  const [typeRes, designationRes, gradesRes, workCalendarres, jobLocationRes] =
     await Promise.all([
       getAllEmployeeType(),
       getAllEmployeeDesignation(),
       getAllEmployeeGrades(),
       getAllWorkCalendar(),
+      getAllJobLocations(),
     ]);
 
   return {
@@ -45,6 +47,10 @@ const fetchHROptions = async () => {
     workCalendar: (workCalendarres?.data?.data || []).map((emp: any) => ({
       label: emp.name,
       value: emp._id,
+    })),
+    jobLocationOption: (jobLocationRes?.data?.data || []).map((job: any) => ({
+      label: job.name,
+      value: job._id,
     })),
   };
 };
@@ -83,6 +89,7 @@ export default function Employees() {
     employeeDesignation = [],
     employeeGrades = [],
     workCalendar = [],
+    jobLocationOption = [],
   } = hrOptions ?? {};
   const AllEmployee: any[] = allEmployees?.data?.data || [];
 
@@ -288,7 +295,7 @@ export default function Employees() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={[
                 "Edit",
                 "View",
@@ -471,7 +478,6 @@ export default function Employees() {
                   setEditData({ ...editData, address: e.target.value })
                 }
               />
-
               <CustomSelectSearch
                 label="Designation"
                 placeholder="Select Designation"
@@ -487,6 +493,14 @@ export default function Employees() {
                 options={employeeGrades}
                 value={editData?.employeeGrade || ""}
                 onChange={(value: any) => handleChange("employeeGrade", value)}
+              />{" "}
+              <CustomSelectSearch
+                label="Job Location"
+                placeholder="Select Job Location"
+                value={editData?.jobLocation || ""}
+                onChange={(value: any) => handleChange("jobLocation", value)}
+                options={jobLocationOption}
+                loading={hrLoading}
               />
               <CustomSelectSearch
                 label="Employee Type"

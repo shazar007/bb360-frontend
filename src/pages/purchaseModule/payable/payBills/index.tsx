@@ -47,7 +47,7 @@ export default function PayBills() {
 
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "View",

@@ -445,6 +445,8 @@ export default function CreateSalesReturn() {
                 onClick={handleAddRow}
                 className="px-6 py-2 text-white rounded-md cursor-pointer bg-primary"
               >
+                {" "}
+                <Icon icon="mynaui:save" className="w-5 h-5" />
                 Save
               </button>
             </div>

@@ -455,6 +455,8 @@ export default function InventoryTransferCreate() {
                 onClick={handleSaveRow}
                 className="px-4 py-2 text-white rounded-md cursor-pointer bg-primary"
               >
+                {" "}
+                <Icon icon="mynaui:save" className="w-5 h-5" />
                 Save
               </button>
             </div>

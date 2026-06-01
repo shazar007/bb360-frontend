@@ -22,7 +22,6 @@ export default function SummaryTable({ data, grouped = false }: Props) {
       <div className="min-h-[48vh]">
         {data.map((group, groupIndex) => (
           <div key={groupIndex}>
-            {/* EMPLOYEE TITLE */}
             {grouped && (
               <div className="px-6 py-5 bg-[#ECF0F4] border-b border-[#304250]/10">
                 <p className="text-[12px] font-semibold text-heading1">

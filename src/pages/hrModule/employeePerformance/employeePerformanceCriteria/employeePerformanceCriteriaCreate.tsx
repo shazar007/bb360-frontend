@@ -49,9 +49,9 @@ export default function EmployeePerformanceCriteriaCreate() {
 
       notifySuccess("Saved Successfully");
 
-      await refetch(); // refresh list data
+      await refetch();
 
-      goBack(); // navigate back after success
+      goBack();
     } catch (error: any) {
       notifyError(error?.response?.data?.message || "Something went wrong");
     } finally {
@@ -97,7 +97,7 @@ export default function EmployeePerformanceCriteriaCreate() {
         <div className="flex flex-col w-full gap-2 md:w-auto md:flex-row">
           <button
             onClick={goBack}
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
           >
             <Icon icon="ion:play-back-outline" />
             Back
@@ -125,7 +125,6 @@ export default function EmployeePerformanceCriteriaCreate() {
         </div>
       </div>
 
-      {/* Form */}
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="rounded-t-2xl bg-[#ECF0F4] p-4">

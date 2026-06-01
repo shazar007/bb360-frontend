@@ -60,7 +60,7 @@ export default function EmployeePerformanceCriteria() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={[
                 "Parent",
                 "Criteria",

@@ -112,7 +112,7 @@ export default function SalesInvoice() {
         </div>
         <CustomTable
           norounded
-          height="60vh"
+          height="auto"
           loading={isLoading}
           headers={[
             "Edit",

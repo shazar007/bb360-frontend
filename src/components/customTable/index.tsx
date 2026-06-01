@@ -36,7 +36,7 @@ export default function CustomTable({
             {headers?.map((header, idx) => (
               <th
                 key={idx}
-                className="p-4 text-sm font-semibold text-left border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 last:border-r-0"
+                className="p-4 text-xs font-semibold text-left border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 last:border-r-0"
               >
                 {header}
               </th>
@@ -59,7 +59,7 @@ export default function CustomTable({
                 {row.map((cell, cellIndex) => (
                   <td
                     key={cellIndex}
-                    className="p-4 text-sm border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 text-heading1 last:border-r-0"
+                    className="p-4 text-xs border-b-[0.5px] border-r-[0.5px] border-[#304250]/36 text-heading1 last:border-r-0"
                   >
                     {cell}
                   </td>

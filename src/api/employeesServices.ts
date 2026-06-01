@@ -15,7 +15,7 @@ export const uploadFile = (file: File, fileType: string = "images") => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const token = localStorage.getItem("token"); // or cookies
+  const token = localStorage.getItem("token");
 
   return HTTP_CLIENT.post(
     `${ENDPOINTS.UPLOAD_IMAGE}?fileType=${fileType}`,
@@ -23,7 +23,7 @@ export const uploadFile = (file: File, fileType: string = "images") => {
     {
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${token}`, // ✅ ADD THIS
+        Authorization: `Bearer ${token}`,
       },
     },
   );

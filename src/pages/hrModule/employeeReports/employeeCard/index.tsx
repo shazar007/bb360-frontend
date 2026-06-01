@@ -39,17 +39,6 @@ export default function EmployeeCard() {
     value: emp._id,
   }));
 
-  const { data: allDepartments } = useQuery({
-    queryKey: ["getAllDepartments"],
-    queryFn: getAllDepartments,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-
-  const AllDepartments: any[] = allDepartments?.data?.data || [];
   const selectedEmp = AllEmployee.find((e) => e._id === formData.employee);
 
   const employee = {
@@ -62,7 +51,6 @@ export default function EmployeeCard() {
     avatarUrl: selectedEmp?.profilePic || "",
   };
 
-  // helper: load any URL as a base64 data-URL via a canvas proxy
   const toDataURL = (src: string): Promise<string> =>
     new Promise((resolve) => {
       const img = new Image();
@@ -78,27 +66,33 @@ export default function EmployeeCard() {
       img.src = src;
     });
 
-  // Load an image URL → HTMLImageElement (waits for load)
   const loadImg = (src: string): Promise<HTMLImageElement> =>
     new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.onload  = () => resolve(img);
+      img.onload = () => resolve(img);
       img.onerror = reject;
       img.src = src;
     });
 
-  // Draw a rounded-rect clipping path on ctx
   const roundedClip = (
     ctx: CanvasRenderingContext2D,
-    x: number, y: number, w: number, h: number, r: number
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number,
   ) => {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);     ctx.quadraticCurveTo(x + w, y,     x + w, y + r);
-    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);     ctx.quadraticCurveTo(x,     y + h, x,     y + h - r);
-    ctx.lineTo(x, y + r);         ctx.quadraticCurveTo(x,     y,     x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
     ctx.closePath();
     ctx.clip();
   };
@@ -108,52 +102,44 @@ export default function EmployeeCard() {
       setDownloading(true);
       await document.fonts.ready;
 
-      // ── Dimensions (px, scale 3 for high-DPI) ──────────────────────────────
-      const SCALE  = 3;
-      const CW     = 170 * SCALE;   // card width  px
-      const CH     = 271 * SCALE;   // card height px
-      const RADIUS = 16  * SCALE;   // border-radius px
+      const SCALE = 3;
+      const CW = 170 * SCALE;
+      const CH = 271 * SCALE;
+      const RADIUS = 16 * SCALE;
 
-      // ── Pre-load all images ─────────────────────────────────────────────────
       const qrDataUrl = await QRCode.toDataURL(`BBERP360-${employee.idNo}`, {
-        width: 200, margin: 1, color: { dark: "#000000", light: "#ffffff" },
+        width: 200,
+        margin: 1,
+        color: { dark: "#000000", light: "#ffffff" },
       });
 
-      const logoImgEl   = await loadImg(Logo).catch(() => null);
-      const qrImgEl     = await loadImg(qrDataUrl).catch(() => null);
+      const logoImgEl = await loadImg(Logo).catch(() => null);
+      const qrImgEl = await loadImg(qrDataUrl).catch(() => null);
       const avatarImgEl = employee.avatarUrl
         ? await loadImg(await toDataURL(employee.avatarUrl)).catch(() => null)
         : null;
 
-      // ── Wave SVG → image ────────────────────────────────────────────────────
       const waveSvgString = `
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 153 72" preserveAspectRatio="none"
              width="${170 * SCALE}" height="${72 * SCALE}">
           <path d="M-5,55 C20,20 80,50 158,15 L158,72 L-5,72 Z" fill="#14CCC3"/>
           <path d="M-5,65 C20,32 80,60 158,28 L158,72 L-5,72 Z" fill="#122E3F"/>
         </svg>`;
-      const waveBlob   = new Blob([waveSvgString], { type: "image/svg+xml" });
-      const waveUrl    = URL.createObjectURL(waveBlob);
-      const waveImgEl  = await loadImg(waveUrl).catch(() => null);
+      const waveBlob = new Blob([waveSvgString], { type: "image/svg+xml" });
+      const waveUrl = URL.createObjectURL(waveBlob);
+      const waveImgEl = await loadImg(waveUrl).catch(() => null);
       URL.revokeObjectURL(waveUrl);
-
-      // ══════════════════════════════════════════════════════════════════════════
-      // DRAW FRONT CARD
-      // ══════════════════════════════════════════════════════════════════════════
       const frontCanvas = document.createElement("canvas");
-      frontCanvas.width  = CW;
+      frontCanvas.width = CW;
       frontCanvas.height = CH;
       const fc = frontCanvas.getContext("2d")!;
-
-      // Background + rounded clip
       fc.save();
       roundedClip(fc, 0, 0, CW, CH, RADIUS);
       fc.fillStyle = "#FBFBF3";
       fc.fillRect(0, 0, CW, CH);
-
-      // Top-left teal strip (left-aligned pill: left=0, width=149px scaled, height=20px scaled)
       fc.fillStyle = "#14CCC3";
-      const stripW = 149 * SCALE, stripH = 20 * SCALE;
+      const stripW = 149 * SCALE,
+        stripH = 20 * SCALE;
       fc.beginPath();
       fc.moveTo(0, 0);
       fc.lineTo(stripW - stripH / 2, 0);
@@ -164,41 +150,44 @@ export default function EmployeeCard() {
       fc.fill();
       fc.restore();
 
-      // ── Content area (starts at top:23px scaled) ───────────────────────────
       fc.save();
       roundedClip(fc, 0, 0, CW, CH, RADIUS);
 
-      const pad  = 14 * SCALE;
-      let   curY = 23 * SCALE + 8 * SCALE; // top + padding
-
-      // Logo + company name
+      const pad = 14 * SCALE;
+      let curY = 23 * SCALE + 8 * SCALE;
       if (logoImgEl) {
         fc.drawImage(logoImgEl, pad, curY, 25 * SCALE, 25 * SCALE);
       }
       fc.fillStyle = "#181918";
-      fc.font      = `600 ${9 * SCALE}px Montserrat, sans-serif`;
+      fc.font = `600 ${9 * SCALE}px Montserrat, sans-serif`;
       fc.fillText("Berry Boost 360", pad + 31 * SCALE, curY + 11 * SCALE);
       fc.font = `400 ${6.66 * SCALE}px Montserrat, sans-serif`;
       fc.fillText("Boosting Business", pad + 31 * SCALE, curY + 22 * SCALE);
       curY += 25 * SCALE + 8 * SCALE;
-
-      // Avatar circle
       const avatarSize = 79 * SCALE;
-      const avatarX    = (CW - avatarSize) / 2;
+      const avatarX = (CW - avatarSize) / 2;
       fc.save();
       fc.beginPath();
-      fc.arc(avatarX + avatarSize / 2, curY + avatarSize / 2, avatarSize / 2, 0, Math.PI * 2);
+      fc.arc(
+        avatarX + avatarSize / 2,
+        curY + avatarSize / 2,
+        avatarSize / 2,
+        0,
+        Math.PI * 2,
+      );
       fc.clip();
       if (avatarImgEl) {
         fc.drawImage(avatarImgEl, avatarX, curY, avatarSize, avatarSize);
       } else {
         fc.fillStyle = "#CCCBCA";
         fc.fillRect(avatarX, curY, avatarSize, avatarSize);
-        // Person icon
         fc.fillStyle = "#ffffff";
-        const cx = avatarX + avatarSize / 2, cy = curY + avatarSize / 2;
+        const cx = avatarX + avatarSize / 2,
+          cy = curY + avatarSize / 2;
         const hr = 13 * SCALE;
-        fc.beginPath(); fc.arc(cx, cy - hr * 0.6, hr, 0, Math.PI * 2); fc.fill();
+        fc.beginPath();
+        fc.arc(cx, cy - hr * 0.6, hr, 0, Math.PI * 2);
+        fc.fill();
         fc.beginPath();
         fc.ellipse(cx, cy + hr * 1.4, hr * 1.4, hr * 1.1, 0, Math.PI, 0, true);
         fc.fill();
@@ -206,30 +195,27 @@ export default function EmployeeCard() {
       fc.restore();
       curY += avatarSize + 6 * SCALE;
 
-      // Name
-      fc.fillStyle  = "#181918";
-      fc.font       = `600 ${12 * SCALE}px Montserrat, sans-serif`;
-      fc.textAlign  = "center";
+      fc.fillStyle = "#181918";
+      fc.font = `600 ${12 * SCALE}px Montserrat, sans-serif`;
+      fc.textAlign = "center";
       const maxTextW = 140 * SCALE;
       fc.fillText(employee.name, CW / 2, curY + 12 * SCALE, maxTextW);
       curY += 18 * SCALE + 2 * SCALE;
 
-      // Role
       fc.font = `400 ${8 * SCALE}px Montserrat, sans-serif`;
       fc.fillText(employee.role, CW / 2, curY + 8 * SCALE, maxTextW);
       curY += 10 * SCALE + 8 * SCALE;
 
-      // Info rows
       fc.textAlign = "left";
-      fc.font      = `400 ${7.69 * SCALE}px Montserrat, sans-serif`;
-      const labelX  = pad;
-      const colonX  = pad + 34 * SCALE;
-      const valueX  = colonX + 5 * SCALE;
-      const rowGap  = 9 * SCALE + 3.5 * SCALE;
-      const rows    = [
-        { label: "Dept",   value: employee.department },
-        { label: "Email",  value: employee.email },
-        { label: "Phone",  value: employee.phone },
+      fc.font = `400 ${7.69 * SCALE}px Montserrat, sans-serif`;
+      const labelX = pad;
+      const colonX = pad + 34 * SCALE;
+      const valueX = colonX + 5 * SCALE;
+      const rowGap = 9 * SCALE + 3.5 * SCALE;
+      const rows = [
+        { label: "Dept", value: employee.department },
+        { label: "Email", value: employee.email },
+        { label: "Phone", value: employee.phone },
         { label: "ID no.", value: employee.idNo },
       ];
       rows.forEach(({ label, value }) => {
@@ -241,61 +227,78 @@ export default function EmployeeCard() {
       });
 
       fc.restore();
-
-      // ══════════════════════════════════════════════════════════════════════════
-      // DRAW BACK CARD
-      // ══════════════════════════════════════════════════════════════════════════
       const backCanvas = document.createElement("canvas");
-      backCanvas.width  = CW;
+      backCanvas.width = CW;
       backCanvas.height = CH;
       const bc = backCanvas.getContext("2d")!;
-
-      // Background + rounded clip
       bc.save();
       roundedClip(bc, 0, 0, CW, CH, RADIUS);
       bc.fillStyle = "#FBFBF3";
       bc.fillRect(0, 0, CW, CH);
-
-      // Top centered pill
-      const pillW = 149 * SCALE, pillH = 23 * SCALE;
+      const pillW = 149 * SCALE,
+        pillH = 23 * SCALE;
       const pillX = (CW - pillW) / 2;
       bc.fillStyle = "#14CCC3";
       bc.beginPath();
       bc.moveTo(pillX, 0);
       bc.lineTo(pillX + pillW, 0);
       bc.lineTo(pillX + pillW, pillH / 2);
-      bc.quadraticCurveTo(pillX + pillW, pillH, pillX + pillW - pillH / 2, pillH);
+      bc.quadraticCurveTo(
+        pillX + pillW,
+        pillH,
+        pillX + pillW - pillH / 2,
+        pillH,
+      );
       bc.lineTo(pillX + pillH / 2, pillH);
       bc.quadraticCurveTo(pillX, pillH, pillX, pillH / 2);
       bc.closePath();
       bc.fill();
-
-      // Wave at bottom
       if (waveImgEl) {
         bc.drawImage(waveImgEl, 0, CH - 72 * SCALE, CW, 72 * SCALE);
       }
-
-      // QR code centered
       if (qrImgEl) {
         const qrSize = 100 * SCALE;
-        bc.drawImage(qrImgEl, (CW - qrSize) / 2, (CH - qrSize) / 2, qrSize, qrSize);
+        bc.drawImage(
+          qrImgEl,
+          (CW - qrSize) / 2,
+          (CH - qrSize) / 2,
+          qrSize,
+          qrSize,
+        );
       }
 
       bc.restore();
+      const cardW = 54,
+        cardH = 86,
+        margin = 6,
+        gap = 6;
+      const pageW = margin + cardW + gap + cardW + margin;
+      const pageH = margin + cardH + margin;
 
-      // ══════════════════════════════════════════════════════════════════════════
-      // BUILD PDF
-      // ══════════════════════════════════════════════════════════════════════════
-      const cardW  = 54, cardH = 86, margin = 6, gap = 6;
-      const pageW  = margin + cardW + gap + cardW + margin;
-      const pageH  = margin + cardH + margin;
-
-      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: [pageH, pageW] });
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: [pageH, pageW],
+      });
       pdf.setFillColor(255, 255, 255);
       pdf.rect(0, 0, pageW, pageH, "F");
 
-      pdf.addImage(frontCanvas.toDataURL("image/png"), "PNG", margin, margin, cardW, cardH);
-      pdf.addImage(backCanvas.toDataURL("image/png"),  "PNG", margin + cardW + gap, margin, cardW, cardH);
+      pdf.addImage(
+        frontCanvas.toDataURL("image/png"),
+        "PNG",
+        margin,
+        margin,
+        cardW,
+        cardH,
+      );
+      pdf.addImage(
+        backCanvas.toDataURL("image/png"),
+        "PNG",
+        margin + cardW + gap,
+        margin,
+        cardW,
+        cardH,
+      );
 
       pdf.save(`employee-card-${employee.name}.pdf`);
     } catch (err) {
@@ -336,7 +339,9 @@ export default function EmployeeCard() {
           </button>
 
           <button
-            onClick={() => setFormData({ employee: "", department: "", payroll: "" })}
+            onClick={() =>
+              setFormData({ employee: "", department: "", payroll: "" })
+            }
             className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F]"
           >
             <Icon icon="ion:refresh-outline" className="w-5 h-5" />
@@ -360,7 +365,9 @@ export default function EmployeeCard() {
             options={employeeOptions}
             onChange={(value) => {
               const emp = AllEmployee.find((e) => e._id === value);
-              const dept = AllDepartments.find((d) => d._id === emp?.department?._id);
+              const dept = AllDepartments.find(
+                (d) => d._id === emp?.department?._id,
+              );
               setFormData((prev) => ({
                 ...prev,
                 employee: value,
@@ -369,8 +376,16 @@ export default function EmployeeCard() {
               }));
             }}
           />
-          <CustomInput label="Department" value={formData.department || ""} disabled />
-          <CustomInput label="Payroll"    value={formData.payroll    || ""} disabled />
+          <CustomInput
+            label="Department"
+            value={formData.department || ""}
+            disabled
+          />
+          <CustomInput
+            label="Payroll"
+            value={formData.payroll || ""}
+            disabled
+          />
         </div>
       </div>
 
@@ -394,7 +409,6 @@ export default function EmployeeCard() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-16 py-10">
-          {/* ── FRONT CARD ── */}
           <div
             ref={cardRef}
             className="relative shrink-0"
@@ -409,7 +423,6 @@ export default function EmployeeCard() {
               overflow: "hidden",
             }}
           >
-            {/* Top teal strip */}
             <div
               style={{
                 position: "absolute",
@@ -437,77 +450,140 @@ export default function EmployeeCard() {
                 zIndex: 2,
               }}
             >
-              {/* Logo row */}
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", width: "100%", marginBottom: "8px" }}>
-                <img src={Logo} alt="logo" style={{ width: "25px", height: "25px", objectFit: "contain" }} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  width: "100%",
+                  marginBottom: "8px",
+                }}
+              >
+                <img
+                  src={Logo}
+                  alt="logo"
+                  style={{
+                    width: "25px",
+                    height: "25px",
+                    objectFit: "contain",
+                  }}
+                />
                 <div>
-                  <p style={{ fontSize: "9px", fontWeight: 600, color: "#181918", lineHeight: "11px", margin: 0 }}>
+                  <p
+                    style={{
+                      fontSize: "9px",
+                      fontWeight: 600,
+                      color: "#181918",
+                      lineHeight: "11px",
+                      margin: 0,
+                    }}
+                  >
                     Berry Boost 360
                   </p>
-                  <p style={{ fontSize: "6.66px", fontWeight: 400, color: "#181918", lineHeight: "6px", margin: 0 }}>
+                  <p
+                    style={{
+                      fontSize: "6.66px",
+                      fontWeight: 400,
+                      color: "#181918",
+                      lineHeight: "6px",
+                      margin: 0,
+                    }}
+                  >
                     Boosting Business
                   </p>
                 </div>
               </div>
-
-              {/* Avatar */}
               {employee.avatarUrl ? (
                 <img
                   src={employee.avatarUrl}
                   alt="employee"
                   style={{
-                    width: "79px", height: "79px", borderRadius: "50%",
-                    objectFit: "cover", background: "#CCCBCA",
-                    marginBottom: "6px", flexShrink: 0,
+                    width: "79px",
+                    height: "79px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    background: "#CCCBCA",
+                    marginBottom: "6px",
+                    flexShrink: 0,
                   }}
                 />
               ) : (
                 <div
                   style={{
-                    width: "79px", height: "79px", borderRadius: "50%",
-                    background: "#CCCBCA", marginBottom: "6px", flexShrink: 0,
-                    display: "flex", alignItems: "center", justifyContent: "center",
+                    width: "79px",
+                    height: "79px",
+                    borderRadius: "50%",
+                    background: "#CCCBCA",
+                    marginBottom: "6px",
+                    flexShrink: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                    style={{ width: "40px", height: "40px", fill: "#ffffff" }}>
+                  <svg
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{ width: "40px", height: "40px", fill: "#ffffff" }}
+                  >
                     <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.337 0-10 1.676-10 5v2h20v-2c0-3.324-6.663-5-10-5z" />
                   </svg>
                 </div>
               )}
-
-              {/* Name */}
-              <p style={{
-                fontSize: "12px", fontWeight: 600, color: "#181918",
-                lineHeight: "18px", margin: "0 0 2px", textAlign: "center",
-                letterSpacing: "0.3px", whiteSpace: "normal", wordBreak: "break-word",
-                maxWidth: "140px",
-              }}>
+              <p
+                style={{
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  color: "#181918",
+                  lineHeight: "18px",
+                  margin: "0 0 2px",
+                  textAlign: "center",
+                  letterSpacing: "0.3px",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                  maxWidth: "140px",
+                }}
+              >
                 {employee.name}
               </p>
-
-              {/* Role */}
-              <p style={{
-                fontSize: "8px", fontWeight: 400, color: "#181918",
-                lineHeight: "10px", margin: "0 0 8px", textAlign: "center",
-                maxWidth: "140px", whiteSpace: "normal", wordBreak: "break-word",
-              }}>
+              <p
+                style={{
+                  fontSize: "8px",
+                  fontWeight: 400,
+                  color: "#181918",
+                  lineHeight: "10px",
+                  margin: "0 0 8px",
+                  textAlign: "center",
+                  maxWidth: "140px",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                }}
+              >
                 {employee.role}
               </p>
 
-              {/* Info rows */}
               <div style={{ width: "100%" }}>
                 {[
-                  { label: "Dept",   value: employee.department },
-                  { label: "Email",  value: employee.email },
-                  { label: "Phone",  value: employee.phone },
+                  { label: "Dept", value: employee.department },
+                  { label: "Email", value: employee.email },
+                  { label: "Phone", value: employee.phone },
                   { label: "ID no.", value: employee.idNo },
                 ].map(({ label, value }) => (
-                  <div key={label} style={{
-                    display: "flex", alignItems: "flex-start", marginBottom: "3.5px",
-                    fontSize: "7.69px", fontWeight: 400, color: "#181918", lineHeight: "9px",
-                  }}>
-                    <span style={{ minWidth: "34px", flexShrink: 0 }}>{label}</span>
+                  <div
+                    key={label}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      marginBottom: "3.5px",
+                      fontSize: "7.69px",
+                      fontWeight: 400,
+                      color: "#181918",
+                      lineHeight: "9px",
+                    }}
+                  >
+                    <span style={{ minWidth: "34px", flexShrink: 0 }}>
+                      {label}
+                    </span>
                     <span style={{ marginRight: "3px", flexShrink: 0 }}>:</span>
                     <span style={{ wordBreak: "break-all" }}>{value}</span>
                   </div>
@@ -515,8 +591,6 @@ export default function EmployeeCard() {
               </div>
             </div>
           </div>
-
-          {/* ── BACK CARD ── */}
           <div
             ref={backRef}
             className="relative shrink-0"
@@ -533,31 +607,53 @@ export default function EmployeeCard() {
               justifyContent: "center",
             }}
           >
-            {/* Top pill */}
             <div
               style={{
-                position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)",
-                width: "149px", height: "23px", background: "#14CCC3",
-                borderRadius: "0 0 999px 999px", zIndex: 4,
+                position: "absolute",
+                top: 0,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: "149px",
+                height: "23px",
+                background: "#14CCC3",
+                borderRadius: "0 0 999px 999px",
+                zIndex: 4,
               }}
             />
 
-            {/* Bottom wave */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 153 72"
               preserveAspectRatio="none"
-              style={{ position: "absolute", bottom: 0, left: 0, width: "170px", height: "72px", zIndex: 3 }}
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "170px",
+                height: "72px",
+                zIndex: 3,
+              }}
             >
-              <path d="M-5,55 C20,20 80,50 158,15 L158,72 L-5,72 Z" fill="#14CCC3" />
-              <path d="M-5,65 C20,32 80,60 158,28 L158,72 L-5,72 Z" fill="#122E3F" />
+              <path
+                d="M-5,55 C20,20 80,50 158,15 L158,72 L-5,72 Z"
+                fill="#14CCC3"
+              />
+              <path
+                d="M-5,65 C20,32 80,60 158,28 L158,72 L-5,72 Z"
+                fill="#122E3F"
+              />
             </svg>
 
-            {/* QR — swapped to local data-URL before capture */}
             <img
               src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=BBERP360-${employee.idNo}`}
               alt="QR"
-              style={{ width: "100px", height: "100px", display: "block", zIndex: 2, position: "relative" }}
+              style={{
+                width: "100px",
+                height: "100px",
+                display: "block",
+                zIndex: 2,
+                position: "relative",
+              }}
             />
           </div>
         </div>
