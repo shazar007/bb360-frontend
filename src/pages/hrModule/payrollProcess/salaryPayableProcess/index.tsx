@@ -15,6 +15,7 @@ import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
 import StatusSelector from "../../../../components/customStatusSelector";
 import CustomSelectStatus from "./components/customSelectStatus";
+import { useNavigate } from "react-router-dom";
 
 const today = new Date();
 const initialFilters = {
@@ -25,6 +26,7 @@ const initialFilters = {
 
 export default function SalaryPayableProcess() {
   const [activeTab] = useState("Pay Cost Detail");
+  const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string>("");
   const getCurrentPeriod = () => {
     const now = dayjs();
@@ -74,7 +76,6 @@ export default function SalaryPayableProcess() {
     refetchOnReconnect: false,
   });
   const AllprocesRun: any[] = procesRun?.data?.data || [];
-  console.log("🚀 ~ AllprocesRun:", AllprocesRun);
   const handleCheckboxChange = (id: string, checked: boolean) => {
     if (checked) {
       setSelectedId(id);
@@ -237,6 +238,7 @@ export default function SalaryPayableProcess() {
               height="auto"
               loading={hprocesRunLoading}
               headers={[
+                "Action",
                 "Select",
                 "Period Name",
                 "Payroll Type",
@@ -250,6 +252,15 @@ export default function SalaryPayableProcess() {
                 "Status",
               ]}
               data={AllprocesRun.map((item: any) => [
+                <Icon
+                  icon="ant-design:eye-twotone"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={() =>
+                    navigate(
+                      `/hr-module/payroll-process/salary-payable-process/details/${item._id}`,
+                    )
+                  }
+                />,
                 <CustomCheckbox
                   checked={selectedId === item._id}
                   onChange={(checked: boolean) =>

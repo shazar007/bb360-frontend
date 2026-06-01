@@ -242,3 +242,7 @@ export const getPayrollProcessRun = (params: any) => {
 export const SalaryPayableProcessSubmit = (values: any) => {
   return HTTP_CLIENT.post(ENDPOINTS.SALARY_PAYABLE_SUBMIT, values);
 };
+
+export const getPayableProcessDetails = (id: string | number) => {
+  return HTTP_CLIENT.get(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/result`);
+};

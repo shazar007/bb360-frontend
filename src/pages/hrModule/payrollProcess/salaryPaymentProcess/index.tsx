@@ -7,18 +7,16 @@ import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { selectDepartments, selectEmployees } from "../../../../redux/store";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
 
 export default function SalaryPaymentProcess() {
   const [openFilter, setOpenFilter] = useState(false);
-
   const employees = useSelector(selectEmployees);
-
   const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
   const departments = useSelector(selectDepartments);
-
   const departmentOptions = departments.map((dep: any) => ({
     label: dep.name,
     value: dep._id,
@@ -44,6 +42,16 @@ export default function SalaryPaymentProcess() {
     );
     console.log("PAYLOAD:", payload);
   };
+  // const { data: salaryPayment, isLoading: salaryPaymentLoading } = useQuery({
+  //   queryKey: ["getAllSalaryPaymentProcess"],
+  //   queryFn: () => getAllSalaryPaymentProcess,
+  //   staleTime: Infinity,
+  //   gcTime: 1000 * 60 * 10,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnMount: false,
+  //   refetchOnReconnect: false,
+  // });
+  // const AllsalaryPayment: any[] = salaryPayment?.data?.data || [];
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -54,7 +62,6 @@ export default function SalaryPaymentProcess() {
             Salary Payment Process
           </p>
         </div>
-
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <>
             <div className="relative w-full md:w-40">
@@ -170,7 +177,7 @@ export default function SalaryPaymentProcess() {
 
         <CustomTable
           norounded
-          loading={false}
+          // loading={salaryPaymentLoading}
           height="50vh"
           headers={[
             "Edit",
@@ -186,25 +193,30 @@ export default function SalaryPaymentProcess() {
             "Payable",
             "Pay Amount",
           ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              "EMP-1226",
-              "Mohamed Sayah",
-              "Fuel Allowance",
-              "01-Jan-2026",
-              "01-Jan-2026",
-              "Amount",
-              "Rs.5000",
-              "Rs.5000",
-              "Rs.5000",
-              "Rs.5000",
-              "Rs.5000",
-            ],
-          ]}
+          // data={AllsalaryPayment?.map((item: any, index: number) => [
+          //   <Icon
+          //     key={`edit-${index}`}
+          //     icon="basil:edit-outline"
+          //     className="text-lg cursor-pointer text-primary"
+          //     onClick={() => console.log(item)}
+          //   />,
+
+          //   item.employeeCode || "-",
+          //   item.employeeName || "-",
+          //   item.allowanceType || "-",
+
+          //   item.fromDate ? new Date(item.fromDate).toLocaleDateString() : "-",
+
+          //   item.toDate ? new Date(item.toDate).toLocaleDateString() : "-",
+
+          //   item.amountType || "-",
+
+          //   `Rs.${item.amount || 0}`,
+          //   `Rs.${item.gross || 0}`,
+          //   `Rs.${item.deduction || 0}`,
+          //   `Rs.${item.netPay || 0}`,
+          //   `Rs.${item.total || 0}`,
+          // ])}
         />
       </div>
     </div>

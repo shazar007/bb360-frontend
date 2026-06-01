@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useMutation } from "@tanstack/react-query";
 import { SyncLoader } from "react-spinners";
@@ -16,10 +16,13 @@ export default function CustomSelectStatus({
   defaultValue,
   refetch,
 }: Props) {
-  const [status, setStatus] = useState(defaultValue);
   const [open, setOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [status, setStatus] = useState(defaultValue);
 
+  useEffect(() => {
+    setStatus(defaultValue);
+  }, [defaultValue]);
   const { mutate, isPending } = useMutation({
     mutationFn: () => approvePayrollRun(id),
     onSuccess: () => {
@@ -53,7 +56,7 @@ export default function CustomSelectStatus({
             if (status === "APPROVED") return;
             setOpen(!open);
           }}
-          className={`px-3 py-1 text-xs flex justify-between border rounded-md  items-center gap-2 transition ${
+          className={`px-3 py-2 text-xs flex justify-between border rounded-md  items-center gap-2 transition ${
             status === "APPROVED"
               ? "bg-green-100 text-green-600 border-green-500 cursor-not-allowed"
               : status === "CALCULATED"

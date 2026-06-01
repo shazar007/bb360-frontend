@@ -159,5 +159,6 @@ export const ENDPOINTS = {
   WORK_ORDERS: "/work-orders",
 
   // --------------Upload-------------
-  PAYROLL_PROCESS_GET: "/getAllPayrollProcess",
+  PAYROLL_PROCESS_GET: "/payroll/runs",
+  SALARY_PAYMENT_PROCESS: "/payroll/salary-payment",
 };

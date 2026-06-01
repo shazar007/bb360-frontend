@@ -16,22 +16,18 @@ export default function TopBar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-
   const toggleMenu = (index: number) => {
     setOpenMenu(openMenu === index ? null : index);
   };
-
   const toggleSubMenu = (key: string) => {
     setOpenSubMenu((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
   const isParentActive = (item: any): boolean => {
     if (item.path?.trim() && location.pathname.startsWith(item.path))
       return true;
     if (item.children) {
       return item.children.some((child: any) => isParentActive(child));
     }
-
     return false;
   };
   useEffect(() => {
@@ -42,7 +38,6 @@ export default function TopBar() {
         setMobileMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -53,17 +48,15 @@ export default function TopBar() {
     <div className=" items-center lg:gap-13.75 gap-8 justify-between relative">
       <div className="flex items-center justify-between py-2 px-4">
         <img src={Logo} alt="logo" className="h-auto w-14 mix-blend-multiply" />
-
         <div className="flex items-center gap-3">
           <ProfileImage />
-
           <div className="flex items-center justify-center w-10 h-10 bg-white rounded-md">
             <Icon
               icon="iconoir:bell-notification-solid"
               className="text-base text-primary"
             />
           </div>
-          <div className="lg:hidden">
+          <div className="xl:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 bg-white rounded-md"
@@ -76,7 +69,7 @@ export default function TopBar() {
           </div>
         </div>
       </div>
-      <div className="flex-wrap items-center  bg-secondary/80  hidden gap-2 justify-center lg:flex">
+      <div className="flex-wrap items-center  bg-secondary/80  hidden gap-2 justify-center xl:flex">
         {navItems.map((item: any, index) => (
           <div key={index} className="relative">
             {item.children ? (
@@ -132,7 +125,6 @@ export default function TopBar() {
                     onMouseEnter={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
                       const submenuWidth = 320;
-
                       const willOverflowRight =
                         rect.right + submenuWidth > window.innerWidth;
 
@@ -210,7 +202,7 @@ export default function TopBar() {
         ))}
       </div>
       <div
-        className={` fixed top-0 left-0 h-full rounded-tr-2xl rounded-br-2xl w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 lg:hidden ${
+        className={` fixed top-0 left-0 h-full rounded-tr-2xl rounded-br-2xl w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 xl:hidden ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
