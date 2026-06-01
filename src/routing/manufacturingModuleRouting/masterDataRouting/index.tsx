@@ -10,7 +10,7 @@ import EquipmentMaster from "../../../pages/manufacturingModule/masterData/equip
 import EquipmentMasterCreate from "../../../pages/manufacturingModule/masterData/equipmentMaster/equipmentMasterCreate";
 
 import SopMaster from "../../../pages/manufacturingModule/masterData/sopMaster";
-
+import SopMasterCreate from "../../../pages/manufacturingModule/masterData/sopMaster/sopMasterCreate";
 export default function MasterDataRouting() {
   return (
     <Routes>
@@ -33,6 +33,7 @@ export default function MasterDataRouting() {
       />
 
       <Route path="/sop-master" element={<SopMaster />} />
+      <Route path="/sop-master/create" element={<SopMasterCreate />} />
     </Routes>
   );
 }

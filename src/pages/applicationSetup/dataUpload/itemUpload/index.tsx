@@ -148,8 +148,9 @@ export default function DataUpload() {
         uom: item.uom,
         tp: Number(item.tp),
         mrp: Number(item.mrp),
-        expiryDate: formatExcelDate(item.expiryDate),
+        // expiryDate: formatExcelDate(item.expiryDate),
       }));
+      console.log("🚀 ~ handleUpload ~ payload:", payload)
 
       console.log("FINAL PAYLOAD:", payload);
 

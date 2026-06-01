@@ -129,7 +129,7 @@ export const ENDPOINTS = {
 
   // --------------------------------Manufacturing---------------------------------
   // --------------Material Mastern-------------
-  MATERIRAL_MASTERN: "/material-mastern",
+  MATERIRAL_MASTERN: "/material-master",
 
   // --------------Bill Of Material-------------
   BILL_MATERIAL: "/bill-material",
@@ -149,4 +149,15 @@ export const ENDPOINTS = {
   SALARY_PAYABLE_SUBMIT: "/payroll/salary-payable",
   // --------------------------------JOB Location---------------------------------
   JOB_LOCATIONS: "/job-locations",
+  // -------------- MRP Planning-------------
+  MRP_PLANNING: "/mrp-planning",
+
+  // -------------- Batch Planning-------------
+  BATCH_PLANNING: "/batch-planning",
+
+  // -------------- Work Orders-------------
+  WORK_ORDERS: "/work-orders",
+
+  // --------------Upload-------------
+  PAYROLL_PROCESS_GET: "/getAllPayrollProcess",
 };

@@ -230,7 +230,7 @@ export const approvePayrollRun = (id: string | number) => {
   return HTTP_CLIENT.patch(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/approve`);
 };
 export const getPayrollProcessRun = (params: any) => {
-  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS, {
+  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS_GET, {
     params: {
       payrollType: params.payrollType,
       periodMonth: Number(params.periodMonth),
