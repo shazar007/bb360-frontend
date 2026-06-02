@@ -43,17 +43,17 @@ export default function SalaryPaymentProcess() {
     queryFn: getAllJobLocations,
   });
   const AllJobLocations: any[] = getJobLocations?.data?.data || [];
-  const locationsOptions = AllJobLocations.map((emp) => ({
+  const locationsOptions = AllJobLocations?.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
   const [period, setPeriod] = useState<any>(getCurrentPeriod());
-  const employeeOptions = employees.map((emp) => ({
+  const employeeOptions = employees?.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
   const departments = useSelector(selectDepartments);
-  const departmentOptions = departments.map((dep: any) => ({
+  const departmentOptions = departments?.map((dep: any) => ({
     label: dep.fullName,
     value: dep._id,
   }));
@@ -81,7 +81,7 @@ export default function SalaryPaymentProcess() {
     refetchOnWindowFocus: false,
   });
   const AllsalaryPayment: any[] = salaryPayment?.data?.data?.results || [];
-  const runID: any[] = salaryPayment?.data?.data?.runIds[0] || [];
+  const runID: any[] = salaryPayment?.data?.data?.runIds?.[0] || [];
 
   const userId = useSelector(selectUserId);
 
@@ -275,21 +275,21 @@ export default function SalaryPaymentProcess() {
             item.employee?.designation?.name || "-",
             item.payrollType || "-",
 
-            `Rs.${item.basicSalary || 0}`,
-            `Rs.${item.fuelAllowance || 0}`,
-            `Rs.${item.houseRentAllowance || 0}`,
-            `Rs.${item.medicalAllowance || 0}`,
-            `Rs.${item.bonus || 0}`,
-            `Rs.${item.overtime || 0}`,
-            `Rs.${item.incomeTax || 0}`,
-            `Rs.${item.providentFund || 0}`,
-            `Rs.${item.loanRecovery || 0}`,
-            `Rs.${item.otherDeductions || 0}`,
+            `Rs.${item?.basicSalary || 0}`,
+            `Rs.${item?.fuelAllowance || 0}`,
+            `Rs.${item?.houseRentAllowance || 0}`,
+            `Rs.${item?.medicalAllowance || 0}`,
+            `Rs.${item?.bonus || 0}`,
+            `Rs.${item?.overtime || 0}`,
+            `Rs.${item?.incomeTax || 0}`,
+            `Rs.${item?.providentFund || 0}`,
+            `Rs.${item?.loanRecovery || 0}`,
+            `Rs.${item?.otherDeductions || 0}`,
 
-            `Rs.${item.totalEarnings || 0}`,
-            `Rs.${item.totalDeductions || 0}`,
-            `Rs.${item.netPay || 0}`,
-            `Rs.${item.absenceDeduction || 0}`,
+            `Rs.${item?.totalEarnings || 0}`,
+            `Rs.${item?.totalDeductions || 0}`,
+            `Rs.${item?.netPay || 0}`,
+            `Rs.${item?.absenceDeduction || 0}`,
           ])}
         />
       </div>
