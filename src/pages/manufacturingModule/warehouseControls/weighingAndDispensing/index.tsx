@@ -2,10 +2,8 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
-import { useAppNavigate } from "../../../../hooks/navigation";
 export default function WeighingAndDispensing() {
   const [openFilter, setOpenFilter] = useState(false);
-  const { goTo } = useAppNavigate();
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
