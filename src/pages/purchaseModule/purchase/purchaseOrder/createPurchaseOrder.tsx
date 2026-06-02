@@ -519,7 +519,6 @@ export default function CreatePurchaseOrder() {
                     }))
                   }
                 />
-
                 <CustomInput
                   label="Item Category"
                   value={form.itemCategory}
@@ -539,7 +538,6 @@ export default function CreatePurchaseOrder() {
                     setForm((prev) => ({ ...prev, uom: e.target.value }))
                   }
                 />
-
                 <CustomInput
                   label="Quantity"
                   placeholder="Enter Quantity"
@@ -547,6 +545,11 @@ export default function CreatePurchaseOrder() {
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, quantity: e.target.value }))
                   }
+                />{" "}
+                <CustomInput
+                  label="Amount"
+                  placeholder="Enter Amount"
+                  value={form.amount}
                 />
                 <CustomInput
                   label="Purchase Rate"
@@ -567,12 +570,6 @@ export default function CreatePurchaseOrder() {
                       }));
                     }
                   }}
-                />
-
-                <CustomInput
-                  label="Amount"
-                  placeholder="Enter Amount"
-                  value={form.amount}
                 />
               </div>
 

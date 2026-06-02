@@ -31,11 +31,13 @@ const QC_OPTIONS = [
 ];
 
 const validationSchema = Yup.object({
-  item:         Yup.string().required("Material Name is required"),
+  item: Yup.string().required("Material Name is required"),
   materialType: Yup.string().required("Material Type is required"),
-  shelfLife:    Yup.number().min(1, "Shelf Life must be at least 1").required("Shelf Life is required"),
-  qcDisposition:Yup.string().required("QC Disposition is required"),
-  vendor:       Yup.string().required("Vendor is required"),
+  shelfLife: Yup.number()
+    .min(1, "Shelf Life must be at least 1")
+    .required("Shelf Life is required"),
+  qcDisposition: Yup.string().required("QC Disposition is required"),
+  vendor: Yup.string().required("Vendor is required"),
 });
 
 export default function MaterialMasterCreate() {
@@ -72,17 +74,27 @@ export default function MaterialMasterCreate() {
   const items = AllItems?.data?.items || [];
   const vendors = AllVendors?.data?.vendors || [];
 
-  const itemOptions = items.map((i: any) => ({ label: i.itemName ?? "", value: i._id ?? "" }));
-  const vendorOptions = vendors.map((v: any) => ({ label: v.vendorName || v.name, value: v._id }));
+  const itemOptions = items.map((i: any) => ({
+    label: i.itemName ?? "",
+    value: i._id ?? "",
+  }));
+  const vendorOptions = vendors.map((v: any) => ({
+    label: v.vendorName || v.name,
+    value: v._id,
+  }));
 
   /* =========================
      Mutation
   ========================= */
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: any) =>
-      isEdit ? updateMaterialMaster(itemData?._id, payload) : addMaterialMaster(payload),
+      isEdit
+        ? updateMaterialMaster(itemData?._id, payload)
+        : addMaterialMaster(payload),
     onSuccess: async () => {
-      notifySuccess(isEdit ? "Material Master Updated" : "Material Master Created");
+      notifySuccess(
+        isEdit ? "Material Master Updated" : "Material Master Created",
+      );
       await refetch();
       goBack();
     },
@@ -95,20 +107,17 @@ export default function MaterialMasterCreate() {
   ========================= */
   const formik = useFormik({
     initialValues: {
-    item:          itemData?.item?._id || itemData?.item || "",  // ✅ edit me ID set karo
-      materialName:  itemData?.materialName  || "",
-      materialType:  itemData?.materialType  || "",
-      shelfLife:     itemData?.shelfLife     || "",
+      item: itemData?.item?._id || itemData?.item || "", // ✅ edit me ID set karo
+      materialName: itemData?.materialName || "",
+      materialType: itemData?.materialType || "",
+      shelfLife: itemData?.shelfLife || "",
       qcDisposition: itemData?.qcDisposition || "",
-      uom:           itemData?.uom           || "",
-      vendor:        itemData?.vendor?._id || itemData?.vendor || "",
+      uom: itemData?.uom || "",
+      vendor: itemData?.vendor?._id || itemData?.vendor || "",
     },
     validationSchema,
     onSubmit: (values) => mutate(values),
   });
-  // console.log("🚀 ~ MaterialMasterCreate ~ formik:", formik?.values)
-  console.log("🚀 ~ MaterialMasterCreate ~ itemData:", itemData)
-
 
   // helper — error sirf touched hone ke baad dikhao
   const err = (field: string) =>
@@ -163,7 +172,6 @@ export default function MaterialMasterCreate() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-4">
-
             <CustomInput
               disabled
               label="Material Code"
@@ -179,7 +187,11 @@ export default function MaterialMasterCreate() {
                 value={formik.values.materialType}
                 onChange={(val) => formik.setFieldValue("materialType", val)}
               />
-              {err("materialType") && <p className="text-[11px] text-red-500">{err("materialType")}</p>}
+              {err("materialType") && (
+                <p className="text-[11px] text-red-500">
+                  {err("materialType")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -188,10 +200,14 @@ export default function MaterialMasterCreate() {
                 type="number"
                 placeholder="30"
                 value={formik.values.shelfLife}
-                onChange={(e: any) => formik.setFieldValue("shelfLife", Number(e.target.value))}
+                onChange={(e: any) =>
+                  formik.setFieldValue("shelfLife", Number(e.target.value))
+                }
                 onBlur={() => formik.setFieldTouched("shelfLife", true)}
               />
-              {err("shelfLife") && <p className="text-[11px] text-red-500">{err("shelfLife")}</p>}
+              {err("shelfLife") && (
+                <p className="text-[11px] text-red-500">{err("shelfLife")}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -202,7 +218,11 @@ export default function MaterialMasterCreate() {
                 value={formik.values.qcDisposition}
                 onChange={(val) => formik.setFieldValue("qcDisposition", val)}
               />
-              {err("qcDisposition") && <p className="text-[11px] text-red-500">{err("qcDisposition")}</p>}
+              {err("qcDisposition") && (
+                <p className="text-[11px] text-red-500">
+                  {err("qcDisposition")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -213,11 +233,16 @@ export default function MaterialMasterCreate() {
                 onChange={(val) => {
                   const selected = items.find((i: any) => i._id === val);
                   formik.setFieldValue("item", val);
-                  formik.setFieldValue("materialName", selected?.itemName || "");
+                  formik.setFieldValue(
+                    "materialName",
+                    selected?.itemName || "",
+                  );
                   formik.setFieldValue("uom", selected?.uom || "");
                 }}
               />
-              {err("item") && <p className="text-[11px] text-red-500">{err("item")}</p>}
+              {err("item") && (
+                <p className="text-[11px] text-red-500">{err("item")}</p>
+              )}
             </div>
 
             <CustomInput
@@ -234,9 +259,10 @@ export default function MaterialMasterCreate() {
                 value={formik.values.vendor}
                 onChange={(val) => formik.setFieldValue("vendor", val)}
               />
-              {err("vendor") && <p className="text-[11px] text-red-500">{err("vendor")}</p>}
+              {err("vendor") && (
+                <p className="text-[11px] text-red-500">{err("vendor")}</p>
+              )}
             </div>
-
           </div>
         </div>
       </div>

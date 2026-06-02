@@ -59,9 +59,11 @@ export default function CustomSelectStatus({
           className={`px-3 py-2 text-xs flex justify-between border rounded-md  items-center gap-2 transition ${
             status === "APPROVED"
               ? "bg-green-100 text-green-600 border-green-500 cursor-not-allowed"
-              : status === "CALCULATED"
-                ? "bg-blue-100 text-blue-600 border-blue-500 cursor-pointer"
-                : "bg-gray-100 text-gray-600 border-gray-300 cursor-pointer"
+              : status === "PAYABLE_POSTED"
+                ? "bg-yellow-100 text-yellow-600 border-yellow-500 cursor-not-allowed"
+                : status === "CALCULATED"
+                  ? "bg-blue-100 text-blue-600 border-blue-500 cursor-pointer"
+                  : "bg-gray-100 text-gray-600 border-gray-300 cursor-pointer"
           }`}
         >
           <span className="text-xs">{status}</span>
@@ -69,8 +71,8 @@ export default function CustomSelectStatus({
           <Icon icon="mdi:chevron-down" className="text-xl" />
         </div>
 
-        {open && (
-          <div className="absolute z-50 mt-1 w-40  bg-white  rounded shadow">
+        {open && !["APPROVED", "PAYABLE_POSTED"].includes(status) && (
+          <div className="absolute z-50 mt-1 w-40 bg-white rounded shadow">
             {["Approved"].map((item) => (
               <div
                 key={item}

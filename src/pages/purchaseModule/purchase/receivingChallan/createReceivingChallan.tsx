@@ -118,7 +118,6 @@ export default function CreateReceivingChallan() {
     }
   }, [purchaseOrderData]);
 
-  
   const handleSaveInvoice = async () => {
     if (loading) return;
 
@@ -186,7 +185,6 @@ export default function CreateReceivingChallan() {
           amount: Number(item?.amount || 0),
         })),
       };
-      console.log("🚀 ~ handleSaveInvoice ~ payload:", payload)
 
       await createReceivingChallan(payload);
 

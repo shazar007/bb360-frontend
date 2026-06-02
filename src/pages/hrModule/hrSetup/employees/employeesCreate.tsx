@@ -40,7 +40,6 @@ const fetchHROptions = async () => {
     getAllDepartments(),
     getAllJobLocations(),
   ]);
-  console.log("🚀 ~ departmentRep:", departmentRep);
 
   return {
     employeeTypeOptions: (typeRes?.data?.data || []).map((emp: any) => ({

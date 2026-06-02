@@ -17,7 +17,6 @@ export default function EmployeePayElements() {
   const [openFilter, setOpenFilter] = useState(false);
   const [openPolicyBuilder, setOpenPolicyBuilder] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  console.log("🚀 ~ selectedId:", selectedId);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 

@@ -10,6 +10,8 @@ import { getAccountLedger } from "../../../api/ledgerServices";
 import { getAllDistributor } from "../../../api/distributorServices";
 import { getAllVendors } from "../../../api/vendorServices";
 import { SyncLoader } from "react-spinners";
+import { useSelector } from "react-redux";
+import { selectEmployees } from "../../../redux/store";
 
 export default function AccountLedger() {
   const { goBack } = useAppNavigate();
@@ -19,6 +21,7 @@ export default function AccountLedger() {
   const [filterLoading, setFilterLoading] = useState(false);
   const [fromDate, setFromDate] = useState("2026-05-01");
   const [toDate, setToDate] = useState("2026-05-10");
+  const employees = useSelector(selectEmployees);
 
   const { data: AllDistributors } = useQuery({
     queryKey: ["getAllDistributor"],
@@ -50,7 +53,12 @@ export default function AccountLedger() {
             label: item.distributorName,
             value: item._id,
           }))
-        : [];
+        : ledgerType === "Employee"
+          ? employees.map((item: any) => ({
+              label: item.name,
+              value: item._id,
+            }))
+          : [];
 
   const { data: ledgerData, isLoading } = useQuery({
     queryKey: ["account-ledger", partyId, fromDate, toDate],
@@ -125,6 +133,7 @@ export default function AccountLedger() {
                 options={[
                   { label: "Vendor", value: "Vendor" },
                   { label: "Distributor", value: "Distributor" },
+                  { label: "Employee", value: "Employee" },
                 ]}
                 value={ledgerType}
                 onChange={(selectedOption: any) => {
@@ -188,6 +197,8 @@ export default function AccountLedger() {
                 "Date",
                 "Voucher No.",
                 "Account Name",
+                "Party Type",
+                "Type",
                 "Description",
                 "Debit",
                 "Credit",
@@ -200,7 +211,10 @@ export default function AccountLedger() {
                       item?.voucherNo || "-",
                       item?.partyAccount?.vendorName ||
                         item?.partyAccount?.distributorName ||
+                        item?.partyAccount?.name ||
                         "-",
+                      item?.partyType || "-",
+                      item?.type || "-",
                       item?.description || "-",
                       item?.debit || "0",
                       item?.credit || "0",

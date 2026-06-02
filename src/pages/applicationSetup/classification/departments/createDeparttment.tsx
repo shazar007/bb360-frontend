@@ -24,6 +24,7 @@ export default function CreateDeparttment() {
     queryFn: getAllDepartments,
   });
   const getAlldepartment: any[] = getdepartment?.data?.data || [];
+
   const departmentsOptions = getAlldepartment.map((emp: any) => ({
     label: emp.fullName,
     value: emp._id,

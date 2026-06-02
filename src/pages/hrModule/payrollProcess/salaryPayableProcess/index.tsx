@@ -13,9 +13,10 @@ import dayjs from "dayjs";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import { SyncLoader } from "react-spinners";
-import StatusSelector from "../../../../components/customStatusSelector";
 import CustomSelectStatus from "./components/customSelectStatus";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUserId } from "../../../../redux/store";
 
 const today = new Date();
 const initialFilters = {
@@ -87,6 +88,7 @@ export default function SalaryPayableProcess() {
     mutationFn: (data: any) => SalaryPayableProcessSubmit(data),
     onSuccess: () => {
       notifySuccess("Submitted successfully");
+      refetch();
     },
     onError: (error: any) => {
       notifyError(
@@ -96,6 +98,7 @@ export default function SalaryPayableProcess() {
       );
     },
   });
+  const userId = useSelector(selectUserId);
   const handleSubmit = () => {
     if (!selectedId) {
       notifyError("Please select at least one record");
@@ -104,6 +107,7 @@ export default function SalaryPayableProcess() {
 
     const payload = {
       runId: selectedId,
+      userId: userId,
     };
 
     mutate(payload);
@@ -195,21 +199,6 @@ export default function SalaryPayableProcess() {
               onChange={setPeriod}
               label="Period"
             />
-            {/* <CustomDatePicker
-              label="Period"
-              placeholder="01-Mar-2026"
-              value={`${filters.periodYear}-${String(filters.payrollMonth).padStart(2, "0")}-01`}
-              onChange={(val: any) => {
-                if (val) {
-                  const date = new Date(val);
-                  setFilters({
-                    ...filters,
-                    payrollMonth: date.getMonth() + 1,
-                    periodYear: date.getFullYear(),
-                  });
-                }
-              }}
-            /> */}
           </div>
         </div>
 

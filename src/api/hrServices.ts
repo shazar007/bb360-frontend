@@ -246,3 +246,15 @@ export const SalaryPayableProcessSubmit = (values: any) => {
 export const getPayableProcessDetails = (id: string | number) => {
   return HTTP_CLIENT.get(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/result`);
 };
+
+export const getAllSalaryPaymentProcess = (params: any) => {
+  return HTTP_CLIENT.get(
+    `${ENDPOINTS.PAYROLL_PROCESS_CREATE}/result-for-payment`,
+    {
+      params,
+    },
+  );
+};
+export const SalaryPaymentProcessSubmit = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.SALARY_PAYMENT_PROCESS, values);
+};

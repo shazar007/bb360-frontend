@@ -3,22 +3,58 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import CustomSelect from "../../../../components/customSelect";
 import Filter from "../../../../components/customDatefilter";
-import CustomDatePicker from "../../../../components/datePicker";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { selectDepartments, selectEmployees } from "../../../../redux/store";
+import {
+  selectDepartments,
+  selectEmployees,
+  selectUserId,
+} from "../../../../redux/store";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import CustomMonthPicker from "../../../../components/customMonthPicker";
+import dayjs from "dayjs";
+import {
+  getAllSalaryPaymentProcess,
+  SalaryPaymentProcessSubmit,
+} from "../../../../api/hrServices";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getAllJobLocations } from "../../../../api/classificationServices";
+import { SyncLoader } from "react-spinners";
+import { notifyError, notifySuccess } from "../../../../components/toast";
 
 export default function SalaryPaymentProcess() {
   const [openFilter, setOpenFilter] = useState(false);
   const employees = useSelector(selectEmployees);
+  const getCurrentPeriod = () => {
+    const now = dayjs();
+    const year = now.year();
+    const month = now.month() + 1;
+    const daysInMonth = now.daysInMonth();
+
+    return {
+      periodName: now.format("MMM YYYY"),
+      periodMonth: month,
+      periodYear: year,
+      fromDate: `${year}-${String(month).padStart(2, "0")}-01`,
+      toDate: `${year}-${String(month).padStart(2, "0")}-${daysInMonth}`,
+    };
+  };
+  const { data: getJobLocations, isLoading } = useQuery({
+    queryKey: ["getAllJobLocations"],
+    queryFn: getAllJobLocations,
+  });
+  const AllJobLocations: any[] = getJobLocations?.data?.data || [];
+  const locationsOptions = AllJobLocations.map((emp) => ({
+    label: emp.name,
+    value: emp._id,
+  }));
+  const [period, setPeriod] = useState<any>(getCurrentPeriod());
   const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
   const departments = useSelector(selectDepartments);
   const departmentOptions = departments.map((dep: any) => ({
-    label: dep.name,
+    label: dep.fullName,
     value: dep._id,
   }));
   const [formData, setFormData] = useState({
@@ -28,30 +64,59 @@ export default function SalaryPaymentProcess() {
     payroll: "",
     employeeName: "",
   });
+  const filters = {
+    employee: formData.employeeName || undefined,
+    departmentId: formData.department || undefined,
+    location: formData.location || undefined,
+    payrollType: formData.payroll || undefined,
+    periodMonth: period?.periodMonth,
+    periodYear: period?.periodYear,
+  };
+
+  const { data: salaryPayment, isLoading: salaryPaymentLoading } = useQuery({
+    queryKey: ["getAllSalaryPaymentProcess", filters],
+    queryFn: () => getAllSalaryPaymentProcess(filters),
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+  });
+  const AllsalaryPayment: any[] = salaryPayment?.data?.data?.results || [];
+  const runID: any[] = salaryPayment?.data?.data?.runIds[0] || [];
+
+  const userId = useSelector(selectUserId);
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: any) => SalaryPaymentProcessSubmit(data),
+    onSuccess: () => {
+      notifySuccess("Submitted successfully");
+    },
+    onError: (error: any) => {
+      notifyError(
+        error?.response?.data?.message ||
+          error?.message ||
+          "Something went wrong",
+      );
+    },
+  });
+
   const handleSubmit = () => {
-    const rawPayload = {
-      employeeId: formData.employeeName,
-      departmentId: formData.department,
-      location: formData.location,
-      period: formData.period,
-      payrollType: formData.payroll,
+    if (!runID) {
+      notifyError("Please select at least one row");
+      return;
+    }
+
+    if (!userId) {
+      notifyError("User not found. Please login again.");
+      return;
+    }
+
+    const payload = {
+      runId: runID,
+      userId: userId,
     };
 
-    const payload = Object.fromEntries(
-      Object.entries(rawPayload).filter(([_, value]) => value),
-    );
-    console.log("PAYLOAD:", payload);
+    mutate(payload);
   };
-  // const { data: salaryPayment, isLoading: salaryPaymentLoading } = useQuery({
-  //   queryKey: ["getAllSalaryPaymentProcess"],
-  //   queryFn: () => getAllSalaryPaymentProcess,
-  //   staleTime: Infinity,
-  //   gcTime: 1000 * 60 * 10,
-  //   refetchOnWindowFocus: false,
-  //   refetchOnMount: false,
-  //   refetchOnReconnect: false,
-  // });
-  // const AllsalaryPayment: any[] = salaryPayment?.data?.data || [];
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -85,12 +150,17 @@ export default function SalaryPaymentProcess() {
             <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-4 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F]">
               <Icon icon="ion:refresh-outline" className="w-5 h-5" />
               Reset
-            </button>
+            </button>{" "}
             <button
               onClick={handleSubmit}
-              className="w-full md:w-25 flex items-center justify-center h-10 gap-2 px-4 bg-primary rounded-md text-white cursor-pointer shadow-[0_1px_12px_#0000001F]"
+              disabled={isPending}
+              className="w-full md:w-25 flex items-center justify-center h-10 gap-2 px-4 bg-primary rounded-md text-white cursor-pointer"
             >
-              Save
+              {isPending ? (
+                <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+              ) : (
+                "Submit"
+              )}
             </button>
           </>
         </div>
@@ -103,6 +173,34 @@ export default function SalaryPaymentProcess() {
           </p>
         </div>
         <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25 xl:w-250 lg:w-220 gap-y-2">
+          <CustomMonthPicker
+            value={period}
+            onChange={setPeriod}
+            label="Period"
+          />
+
+          <CustomSelect
+            label="Payroll"
+            placeholder="Select option"
+            options={[
+              {
+                label: "Hourly",
+                value: "HOURLY",
+              },
+              { label: "Daily", value: "DAILY" },
+              {
+                label: "Monthly",
+                value: "MONTHLY",
+              },
+            ]}
+            value={formData.payroll}
+            onChange={(value: string) =>
+              setFormData((prev) => ({
+                ...prev,
+                payroll: value,
+              }))
+            }
+          />
           <CustomSelectSearch
             label="Employee Name"
             loading={employees.length === 0}
@@ -124,44 +222,16 @@ export default function SalaryPaymentProcess() {
               }))
             }
           />
-          <CustomSelect
+
+          <CustomSelectSearch
             label="Location"
-            placeholder="Select location"
-            options={[
-              { label: "Factory", value: "factory" },
-              { label: "Office", value: "office" },
-              { label: "Warehouse", value: "warehouse" },
-            ]}
+            loading={isLoading}
             value={formData.location}
+            options={locationsOptions}
             onChange={(value: string) =>
               setFormData((prev) => ({
                 ...prev,
                 location: value,
-              }))
-            }
-          />
-          <CustomDatePicker
-            label="Period"
-            value={formData.period}
-            onChange={(value: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                period: value,
-              }))
-            }
-          />
-          <CustomSelect
-            label="Payroll"
-            placeholder="Daily Wages"
-            options={[
-              { label: "Daily Wages", value: "daily" },
-              { label: "Monthly Salary", value: "monthly" },
-            ]}
-            value={formData.payroll}
-            onChange={(value: string) =>
-              setFormData((prev) => ({
-                ...prev,
-                payroll: value,
               }))
             }
           />
@@ -177,46 +247,50 @@ export default function SalaryPaymentProcess() {
 
         <CustomTable
           norounded
-          // loading={salaryPaymentLoading}
+          loading={salaryPaymentLoading}
           height="50vh"
           headers={[
-            "Edit",
-            "Sequence ID",
             "Employee Name",
-            "Payroll Period",
             "Department",
-            "Payment Mode",
+            "Designation",
+            "Payroll Type",
             "Basic Salary",
-            "Earnings",
-            "Deductions",
-            "Net Salary",
-            "Payable",
-            "Pay Amount",
+            "Fuel Allowance",
+            "House Rent Allowance",
+            "Medical Allowance",
+            "Bonus",
+            "Overtime",
+            "Income Tax",
+            "Provident Fund",
+            "Loan Recovery",
+            "Other Deductions",
+            "Total Earnings",
+            "Total Deductions",
+            "Net Pay",
+            "Absence Deduction",
           ]}
-          // data={AllsalaryPayment?.map((item: any, index: number) => [
-          //   <Icon
-          //     key={`edit-${index}`}
-          //     icon="basil:edit-outline"
-          //     className="text-lg cursor-pointer text-primary"
-          //     onClick={() => console.log(item)}
-          //   />,
+          data={AllsalaryPayment?.map((item: any) => [
+            item.employee?.name || "-",
+            item.employee?.department?.fullName || "-",
+            item.employee?.designation?.name || "-",
+            item.payrollType || "-",
 
-          //   item.employeeCode || "-",
-          //   item.employeeName || "-",
-          //   item.allowanceType || "-",
+            `Rs.${item.basicSalary || 0}`,
+            `Rs.${item.fuelAllowance || 0}`,
+            `Rs.${item.houseRentAllowance || 0}`,
+            `Rs.${item.medicalAllowance || 0}`,
+            `Rs.${item.bonus || 0}`,
+            `Rs.${item.overtime || 0}`,
+            `Rs.${item.incomeTax || 0}`,
+            `Rs.${item.providentFund || 0}`,
+            `Rs.${item.loanRecovery || 0}`,
+            `Rs.${item.otherDeductions || 0}`,
 
-          //   item.fromDate ? new Date(item.fromDate).toLocaleDateString() : "-",
-
-          //   item.toDate ? new Date(item.toDate).toLocaleDateString() : "-",
-
-          //   item.amountType || "-",
-
-          //   `Rs.${item.amount || 0}`,
-          //   `Rs.${item.gross || 0}`,
-          //   `Rs.${item.deduction || 0}`,
-          //   `Rs.${item.netPay || 0}`,
-          //   `Rs.${item.total || 0}`,
-          // ])}
+            `Rs.${item.totalEarnings || 0}`,
+            `Rs.${item.totalDeductions || 0}`,
+            `Rs.${item.netPay || 0}`,
+            `Rs.${item.absenceDeduction || 0}`,
+          ])}
         />
       </div>
     </div>

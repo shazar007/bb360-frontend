@@ -13,7 +13,6 @@ export default function PayableProcessDetails() {
   });
   const run = data?.data?.data?.run || {};
   const results = data?.data?.data?.results || [];
-  console.log("🚀 ~ results:", results);
 
   return (
     <div className="mt-2">

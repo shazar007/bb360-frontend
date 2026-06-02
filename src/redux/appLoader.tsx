@@ -13,7 +13,7 @@ export default function AppLoader() {
 
   useEffect(() => {
     if (!isLoggedIn || employees.length > 0) return;
-    console.log("🚀 ~ isLoggedIn: han chanle ");
+
     const load = async () => {
       try {
         const [emp, dep, cal] = await Promise.all([
@@ -21,7 +21,6 @@ export default function AppLoader() {
           getAllDepartments(),
           getAllWorkCalendar(),
         ]);
-        console.log("🚀 ~ dep:", dep);
 
         const mappedEmployees = emp.data.data.map(
           (e: { _id: string; name: string }) => ({

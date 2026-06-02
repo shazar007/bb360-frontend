@@ -12,6 +12,10 @@ export interface EmployeeOption {
 interface UserState {
   isLoggedIn: boolean;
   token: string | null;
+  user: {
+    _id: string | null;
+  } | null;
+
   employees: EmployeeOption[];
   departments: any[];
   workCalendars: any[];
@@ -20,6 +24,9 @@ interface UserState {
 const initialState: UserState = {
   isLoggedIn: !!token,
   token: token,
+
+  user: null,
+
   employees: [],
   departments: [],
   workCalendars: [],
@@ -40,6 +47,9 @@ const userSlice = createSlice({
         Cookies.remove("token");
       }
     },
+    setUser: (state, action: PayloadAction<{ _id: string }>) => {
+      state.user = action.payload;
+    },
     logout: (state) => {
       state.isLoggedIn = false;
       state.token = null;
@@ -49,7 +59,6 @@ const userSlice = createSlice({
       state.workCalendars = [];
     },
 
-    // ✅ Store only _id and name
     setEmployees: (state, action: PayloadAction<EmployeeOption[]>) => {
       state.employees = action.payload;
     },
@@ -75,6 +84,7 @@ export const {
   setEmployees,
   setDepartments,
   setWorkCalendars,
+  setUser,
   clearMasterData,
 } = userSlice.actions;
 

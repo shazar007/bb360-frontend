@@ -37,3 +37,4 @@ export const selectWorkCalendars = (state: RootState) =>
   state.user.workCalendars;
 export const selectWorkCalendarById = (id: string) => (state: RootState) =>
   state.user.workCalendars.find((w: any) => w._id === id);
+export const selectUserId = (state: RootState) => state.user.user?._id;

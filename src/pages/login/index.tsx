@@ -5,7 +5,7 @@ import berryboostlogo from "../../assets/BerryBoost Logo.jpg";
 import CustomInput from "../../components/customInput";
 import CustomToggles from "../../components/custontogles";
 import { useDispatch } from "react-redux";
-import { setIsLoggedIn, setToken } from "../../redux/userSlice";
+import { setIsLoggedIn, setToken, setUser } from "../../redux/userSlice";
 import PasswordFeild from "../../components/passwordFeild";
 import { LoginvalidationSchema } from "../../utils/validations";
 import { useEffect, useState } from "react";
@@ -34,6 +34,7 @@ export default function Login() {
         notifySuccess("Login successful!");
         dispatch(setToken(data.token));
         dispatch(setIsLoggedIn(true));
+        dispatch(setUser({ _id: data.user._id }));
         localStorage.setItem("token", data.token);
         goTo("/360-dashboard");
       } catch (error: any) {
@@ -98,7 +99,14 @@ export default function Login() {
             </div>
             <div className="flex items-center justify-between mt-5">
               <div className="flex items-center gap-2">
-                <CustomToggles />
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <CustomToggles />
+                </div>
                 <p className="text-xs text-[#1A1A1A]">Remember me</p>
               </div>
               <p className="text-xs text-[#007AFF]">Forgot password?</p>
