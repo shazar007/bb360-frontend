@@ -120,7 +120,7 @@ export default function QcLabTestingSuite() {
                 );
 
                 goTo(
-                  "/manufacturing-module/quality-control-qc/sampling-operations/create",
+                  "/manufacturing-module/quality-control-qc/qc-lab-testing-suite/create",
                 );
               }}
             />,

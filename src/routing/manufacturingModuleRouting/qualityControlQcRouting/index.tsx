@@ -4,6 +4,8 @@ import SamplingOperations from "../../../pages/manufacturingModule/qualityContro
 import QcLabTestingSuite from "../../../pages/manufacturingModule/qualityControlQc/qcLabTestingSuite";
 import QcReviewAndRelease from "../../../pages/manufacturingModule/qualityControlQc/qcReviewAndRelease";
 import SamplingOperationsCreate from "../../../pages/manufacturingModule/qualityControlQc/samplingOperations/samplingOperationsCreate";
+import QcLabTestingSuiteCreate from "../../../pages/manufacturingModule/qualityControlQc/qcLabTestingSuite/qcLabTestingSuiteCreate";
+
 export default function QualityControlQcRouting() {
   return (
     <Routes>
@@ -13,9 +15,11 @@ export default function QualityControlQcRouting() {
         path="/sampling-operations/create"
         element={<SamplingOperationsCreate />}
       />
-
       <Route path="/qc-lab-testing-suite" element={<QcLabTestingSuite />} />
-
+      <Route
+        path="/qc-lab-testing-suite/create"
+        element={<QcLabTestingSuiteCreate />}
+      />
       <Route path="/qc-review-and-release" element={<QcReviewAndRelease />} />
     </Routes>
   );
