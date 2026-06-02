@@ -76,33 +76,31 @@ export default function EmployeePerformanceCriteria() {
                 "Obtain Score",
                 "Percentage",
               ]}
-              data={ALLgetEmployeePerformanceEvaluation.map(
-                (item: any, index: number) => {
-                  return [
-                    <Icon
-                      onClick={() =>
-                        goWithState(
-                          "/hr-module/employee-performance/evaluation/details",
-                          {
-                            id: item._id,
-                            mode: "edit",
-                            item: item,
-                          },
-                        )
-                      }
-                      icon="ant-design:eye-twotone"
-                      className="text-xl text-primary cursor-pointer"
-                    />,
-                    item?.supervisor?.name || item?.supervisor?._id || "-",
-                    item?.employee?.name || item?.employee?._id || "-",
-                    item?.transactionNo || "-",
-                    dayjs(item.evaluationDate).format("DD-MMM-YYYY"),
-                    item?.totalScore ?? 0,
-                    item?.obtainedTotal ?? 0,
-                    item?.percentage || "-",
-                  ];
-                },
-              )}
+              data={ALLgetEmployeePerformanceEvaluation.map((item: any) => {
+                return [
+                  <Icon
+                    onClick={() =>
+                      goWithState(
+                        "/hr-module/employee-performance/evaluation/details",
+                        {
+                          id: item._id,
+                          mode: "edit",
+                          item: item,
+                        },
+                      )
+                    }
+                    icon="ant-design:eye-twotone"
+                    className="text-xl text-primary cursor-pointer"
+                  />,
+                  item?.supervisor?.name || item?.supervisor?._id || "-",
+                  item?.employee?.name || item?.employee?._id || "-",
+                  item?.transactionNo || "-",
+                  dayjs(item.evaluationDate).format("DD-MMM-YYYY"),
+                  item?.totalScore ?? 0,
+                  item?.obtainedTotal ?? 0,
+                  item?.percentage || "-",
+                ];
+              })}
             />
           </div>
         </div>

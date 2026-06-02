@@ -3,13 +3,9 @@ import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { notifyError, notifySuccess } from "../../../../components/toast";
-import { useQuery } from "@tanstack/react-query";
 import CustomInput from "../../../../components/customInput";
-import {
-  getAllLoanDeductions,
-  updateLoanDeductions,
-} from "../../../../api/hrServices";
+import { getAllLoanDeductions } from "../../../../api/hrServices";
+import { useQuery } from "@tanstack/react-query";
 
 export default function LoanDeductionSetup() {
   const [openFilter, setOpenFilter] = useState(false);
@@ -17,8 +13,7 @@ export default function LoanDeductionSetup() {
   // const queryClient = useQueryClient();
 
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [editId, setEditId] = useState(null);
+  const [loading] = useState(false);
 
   const [form, setForm] = useState({
     payroll: "",
@@ -39,8 +34,6 @@ export default function LoanDeductionSetup() {
   console.log("🚀 ~ tableData:", tableData);
 
   const handleEdit = (item: any) => {
-    setEditId(item.id);
-
     setForm({
       payroll: item.payroll || "",
       period: item.period || "",

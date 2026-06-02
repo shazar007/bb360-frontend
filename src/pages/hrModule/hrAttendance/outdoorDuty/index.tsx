@@ -35,7 +35,6 @@ export default function OutdoorDuty() {
   const [openFilter, setOpenFilter] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [formData, setFormData] = useState<any>(null);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const { goTo } = useAppNavigate();
   // const { data, isLoading, isError } = useQuery({
@@ -57,7 +56,6 @@ export default function OutdoorDuty() {
       notifySuccess("Updated successfully");
 
       setOpenEdit(false);
-      setSelectedItem(null);
 
       // refetch();
     } catch (error) {
