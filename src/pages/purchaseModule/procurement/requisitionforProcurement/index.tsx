@@ -61,7 +61,7 @@ export default function RequisitionProcurement() {
       </div>
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={[
             "Select",
             "Seq. ID",

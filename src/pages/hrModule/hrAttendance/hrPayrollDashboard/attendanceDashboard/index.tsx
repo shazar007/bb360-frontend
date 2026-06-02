@@ -1,29 +1,44 @@
 // attendanceDashboard/index.tsx
 
+import { useQuery } from "@tanstack/react-query";
+import { getAllStatAttendanceDashboard } from "../../../../../api/hrServices";
 import CustomTable from "../../../../../components/customTable";
 
 export default function AttendanceDashboard() {
+  const { data: getStatAttendanceDashboard, isLoading } = useQuery({
+    queryKey: ["getAllStatAttendanceDashboard"],
+    queryFn: getAllStatAttendanceDashboard,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const ALLStatAttendanceDashboard: any[] =
+    getStatAttendanceDashboard?.data || [];
+  const summary = (ALLStatAttendanceDashboard as any)?.summary;
+  const tableData = (ALLStatAttendanceDashboard as any)?.table;
   const topCards = [
     {
       title: "Overall Attendance",
       value: (
         <>
-          42<span className="text-heading2">/47</span>
+          {summary?.totalEmployees}
+          <span className="text-heading2">/ {summary?.totalPresent}</span>
         </>
       ),
     },
 
     {
       title: "Approved Leaves",
-      value: "5",
+      value: summary?.totalApprovedLeaves,
     },
 
     {
       title: "Unapproved Leaves",
-      value: "2",
+      value: summary?.totalUnapprovedLeaves,
     },
   ];
-
   return (
     <>
       <div className="p-4 bg-white rounded-2xl">
@@ -53,7 +68,8 @@ export default function AttendanceDashboard() {
 
           <CustomTable
             norounded
-            height="45vh"
+            height="auto"
+            loading={isLoading}
             headers={[
               "Employee ID",
               "Employee Name",
@@ -61,7 +77,17 @@ export default function AttendanceDashboard() {
               "Location",
               "Status",
             ]}
-            data={[["-", "-", "-", "-", "-"]]}
+            data={
+              tableData?.length > 0
+                ? tableData.map((item: any) => [
+                    item.employeeId || "-",
+                    item.employeeName || "-",
+                    item.department || "-",
+                    item.location || "-",
+                    item.status || "-",
+                  ])
+                : [["-", "-", "-", "-", "-"]]
+            }
           />
         </div>
       </div>

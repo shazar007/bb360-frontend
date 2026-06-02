@@ -56,7 +56,7 @@ export default function ItemDetails() {
         <CustomTable
           norounded
           noPagination
-          height="30vh"
+          height="auto"
           headers={[
             "Batch Number",
             "Expiry Date",

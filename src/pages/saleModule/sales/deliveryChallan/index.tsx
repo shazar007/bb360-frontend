@@ -60,7 +60,7 @@ export default function DeliveryChallan() {
         <CustomTable
           norounded
           loading={isLoading}
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "View",

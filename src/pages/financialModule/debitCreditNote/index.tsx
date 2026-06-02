@@ -285,6 +285,7 @@ export default function DebitCreditNote() {
         </div>
         <div className="mt-3">
           <CustomTable
+            height="auto"
             norounded
             headers={[
               "Date",

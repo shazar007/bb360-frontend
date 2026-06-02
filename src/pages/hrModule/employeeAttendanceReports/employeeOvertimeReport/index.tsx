@@ -39,14 +39,12 @@ export default function EmployeeOvertimeReport() {
         </div>
       </div>
 
-      {/* FILTER */}
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
           norounded
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "Employee ID",

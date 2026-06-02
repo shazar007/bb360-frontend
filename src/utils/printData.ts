@@ -46,8 +46,6 @@ export const printData = {
         },
       ],
     },
-
-    // ITEMS TABLE
     {
       title: "Items",
       type: "table",
@@ -72,7 +70,6 @@ export const printData = {
       data: (item: any) => item?.items || [],
     },
 
-    // BATCHES TABLE
     {
       title: "Batches",
       type: "table",
@@ -214,8 +211,6 @@ export const printData = {
         // },
       ],
     },
-
-    // ITEMS TABLE
     {
       title: "Item",
       type: "table",
@@ -246,8 +241,6 @@ export const printData = {
 
       data: (item: any) => [item],
     },
-
-    // BATCHES TABLE
     {
       title: "Batches",
       type: "table",

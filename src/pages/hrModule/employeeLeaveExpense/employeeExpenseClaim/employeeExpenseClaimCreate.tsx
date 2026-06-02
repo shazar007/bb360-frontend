@@ -10,12 +10,12 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomCheckbox from "../../../../components/customCheckbox";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import { getAllEmployees } from "../../../../api/employeesServices";
-import { getAllDepartments } from "../../../../api/classificationServices";
 import {
   addExpenseClaim,
   getAllExpenseClaim,
 } from "../../../../api/hrServices";
+import { useSelector } from "react-redux";
+import { selectDepartments, selectEmployees } from "../../../../redux/store";
 
 const tabs = ["Employee Evaluation Lines", "System Information", "Attachments"];
 
@@ -92,7 +92,6 @@ export default function EmployeeExpenseClaimCreate() {
         ...formData,
         rows,
       };
-      console.log("🚀 ~ handleSubmit ~ payload:", payload)
       await addExpenseClaim(payload);
       notifySuccess("Expense Claim Created");
       localStorage.removeItem("expenseClaimRows");
@@ -112,33 +111,17 @@ export default function EmployeeExpenseClaimCreate() {
         : [...prev, index],
     );
   };
-  const { data: allEmployees, isLoading } = useQuery({
-    queryKey: ["getAllEmployees"],
-    queryFn: getAllEmployees,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-  const AllEmployee: any[] = allEmployees?.data?.data || [];
-  const employeeOptions = AllEmployee.map((emp: any) => ({
+  const employees = useSelector(selectEmployees);
+
+  const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
-  const { data: alldepartment, isLoading: departLoading } = useQuery({
-    queryKey: ["getAllDepartments"],
-    queryFn: getAllDepartments,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-  const AllgetDepartment: any[] = alldepartment?.data?.data || [];
-  const departmentOptions = AllgetDepartment.map((emp: any) => ({
-    label: emp.fullName,
-    value: emp._id,
+  const departments = useSelector(selectDepartments);
+
+  const departmentOptions = departments.map((dep: any) => ({
+    label: dep.name,
+    value: dep._id,
   }));
   return (
     <div className="mt-2">
@@ -193,7 +176,7 @@ export default function EmployeeExpenseClaimCreate() {
           <div className="p-4 grid md:grid-cols-2 grid-cols-1 lg:grid-cols-3 gap-10 lg:gapx-x-29.25 gap-y-4">
             <CustomSelectSearch
               label="Department"
-              loading={departLoading}
+              loading={departmentOptions.length === 0}
               placeholder="Select Department"
               value={formData.department}
               options={departmentOptions}
@@ -305,6 +288,7 @@ export default function EmployeeExpenseClaimCreate() {
         </div>
         {activeTab === "Employee Evaluation Lines" && (
           <CustomTable
+            height="auto"
             norounded
             headers={[
               "Edit",
@@ -371,7 +355,7 @@ export default function EmployeeExpenseClaimCreate() {
             <div className="grid grid-cols-1 gap-4 p-4 mt-4 md:grid-cols-2">
               <CustomSelectSearch
                 label="Employee Name"
-                loading={isLoading}
+                loading={employees.length === 0}
                 placeholder="Select Employee"
                 value={rowForm.employeeName}
                 options={employeeOptions}

@@ -85,7 +85,7 @@ export default function AccrualPlanBalances() {
         </div>
         <CustomTable
           norounded
-          height="45vh"
+          height="auto"
           headers={[
             "Employee Name",
             "Accrual Plan Name",

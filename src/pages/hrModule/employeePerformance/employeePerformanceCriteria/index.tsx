@@ -1,8 +1,21 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getAllEmployeePerformanceCriteria } from "../../../../api/hrServices";
 export default function EmployeePerformanceCriteria() {
   const { goTo } = useAppNavigate();
+  const { data: getALLPerformanceCriteria, isLoading } = useQuery({
+    queryKey: ["getAllEmployeePerformanceCriteria"],
+    queryFn: getAllEmployeePerformanceCriteria,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const performanceCriteria: any[] =
+    getALLPerformanceCriteria?.data?.data || [];
   return (
     <>
       <div className="mt-8">
@@ -46,29 +59,22 @@ export default function EmployeePerformanceCriteria() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
-              height="60vh"
+              loading={isLoading}
+              height="auto"
               headers={[
-                "Edit",
                 "Parent",
                 "Criteria",
                 "Total Score",
                 "Is Group",
                 "Type",
               ]}
-              data={[
-                [
-                  <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
-                  />,
-                  "Job Knowledge and Skills",
-                  "Understand job responsibilities",
-                  "5",
-                  "N",
-                  "Prohibition Period",
-                ],
-              ]}
+              data={performanceCriteria.map((item) => [
+                item.parent?.criteria || item.parent?.name || "-",
+                item.criteria || "-",
+                item.total || "-",
+                item.isGroup || "-",
+                item.employeeType?.name || "-",
+              ])}
             />
           </div>
         </div>

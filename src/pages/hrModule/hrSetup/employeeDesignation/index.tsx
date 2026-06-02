@@ -112,7 +112,7 @@ export default function EmployeeDesignation() {
           <div className="pb-3 mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={["Edit", "Designation Name", "Job Description"]}
               data={
                 allDesignation?.map((item: any) => [

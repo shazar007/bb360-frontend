@@ -7,26 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 import { SyncLoader } from "react-spinners";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
-import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
 import {
   addLeaveApplication,
   getAllLeaveApplication,
 } from "../../../../api/hrServices";
+import { selectEmployees } from "../../../../redux/store";
+import { useSelector } from "react-redux";
 
 export default function EmployeeLeaveApplicationCreate() {
   const { goBack } = useAppNavigate();
-  const { data: allEmployees, isLoading } = useQuery({
-    queryKey: ["getAllEmployees"],
-    queryFn: getAllEmployees,
-    staleTime: Infinity,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-  const AllEmployee: any[] = allEmployees?.data?.data || [];
-  const employeeOptions = AllEmployee.map((emp: any) => ({
+  const employees = useSelector(selectEmployees);
+
+  const employeeOptions = employees.map((emp) => ({
     label: emp.name,
     value: emp._id,
   }));
@@ -135,7 +128,7 @@ export default function EmployeeLeaveApplicationCreate() {
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 xl:gap-y-2 xl:gap-x-40.25  gap-y-2">
             <CustomSelectSearch
               label="Employee"
-              loading={isLoading}
+              loading={employees.length === 0}
               placeholder="Select Employee"
               value={formData.employeeId}
               options={employeeOptions}

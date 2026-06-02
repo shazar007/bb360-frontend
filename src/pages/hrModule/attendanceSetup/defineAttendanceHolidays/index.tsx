@@ -37,7 +37,6 @@ export default function DefineAttendanceHolidays() {
     queryFn: getAllAttendanceHolidays,
   });
   const GetAllholidays: any[] = holidaysData?.data?.data || [];
-  console.log("🚀 ~ GetAllholidays:", GetAllholidays);
 
   const { mutate: updateHoliday, isPending: updateLoading } = useMutation({
     mutationFn: ({ id, values }: any) => updateAttendanceHolidays(id, values),
@@ -151,7 +150,7 @@ export default function DefineAttendanceHolidays() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={[
                 "Edit",
                 "Name",

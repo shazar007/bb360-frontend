@@ -126,7 +126,6 @@ export default function UploadAttendanceMachineData() {
   return (
     <>
       <div className="mt-2">
-        {/* ── Header ── */}
         <div className="flex flex-wrap items-center justify-between">
           <div className="flex items-center gap-2">
             <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -186,7 +185,6 @@ export default function UploadAttendanceMachineData() {
           </div>
         </div>
 
-        {/* ── File Drop Area ── */}
         <div className="w-full mt-2">
           <div className="p-4 bg-[#ECF0F4] rounded-t-2xl">
             <p className="text-xs font-semibold text-heading1">

@@ -54,20 +54,17 @@ export const updateWorkCalendar = (id: string | number, values: any) => {
 // --------------EMPLOYEE-------------
 
 export const addAllEmployee = (values: any) => {
-  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEES_ALL, values);
+  return HTTP_CLIENT.post(ENDPOINTS.EMPLOYEES, values);
 };
 export const getAllEmployee = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEES_ALL);
-};
-export const getAllPayrollProcess = () => {
-  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS);
+  return HTTP_CLIENT.get(ENDPOINTS.EMPLOYEES);
 };
 
 export const updateAllEmployee = (id: string | number, values: any) => {
-  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`, values);
+  return HTTP_CLIENT.put(`${ENDPOINTS.EMPLOYEES}/${id}`, values);
 };
 export const deleteEmployee = (id: string | number) => {
-  return HTTP_CLIENT.delete(`${ENDPOINTS.EMPLOYEES_ALL}/${id}`);
+  return HTTP_CLIENT.delete(`${ENDPOINTS.EMPLOYEES}/${id}`);
 };
 
 // --------------Employee Salary-------------
@@ -159,6 +156,31 @@ export const updateEmployeeExpenseClaim = (
   return HTTP_CLIENT.put(`${ENDPOINTS.EXENSE_CLAIM}/${id}`, values);
 };
 
+// --------------Pay Element-Entries-------------
+export const addPayElementEntries = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.PAY_ELEMENT_ENTRIES, values);
+};
+export const getAllPayElementEntries = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.PAY_ELEMENT_ENTRIES);
+};
+
+export const deletePayElement = (id: string | number) => {
+  return HTTP_CLIENT.delete(`${ENDPOINTS.PAY_ELEMENT_ENTRIES}/${id}`);
+};
+
+export const uploadPayElementEntries = (data: any) =>
+  HTTP_CLIENT.post(ENDPOINTS.PAY_ENTRIES, data);
+
+// -------------Loan Deductions-------------
+export const addLoanDeductions = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.LOAN_DEDUCTION, values);
+};
+export const getAllLoanDeductions = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.LOAN_DEDUCTION);
+};
+export const updateLoanDeductions = (id: string | number, values: any) => {
+  return HTTP_CLIENT.put(`${ENDPOINTS.LOAN_DEDUCTION}/${id}`, values);
+};
 // --------------Employee Expense Claim-------------
 
 export const addAttendanceHolidays = (values: any) => {
@@ -179,4 +201,60 @@ export const uploadAttendance = (values: any) => {
 // --------------get attendance-summary-------------
 export const getAttendanceSummary = () => {
   return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_SUMMARY);
+};
+export const addAttendanceSummary = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.ATTENDANCE_SUMMARY, values);
+};
+// --------------get attendanceMachine-------------
+export const getAttendanceMachine = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.ATTENDANCE_MACHINE);
+};
+
+// --------------Performance Criteria-------------
+
+// -------------- HR DASHOARD-------------
+export const getAllStatHRDashboard = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.DASHBOARD_HR);
+};
+export const getAllStatAttendanceDashboard = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.DASHBOARD_Attendance);
+};
+
+// ------------------------PayRoll----------------------------------
+
+// -------------- Payroll Process Run-------------
+export const CreatePayrollProcessRun = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.PAYROLL_PROCESS_CREATE, values);
+};
+export const approvePayrollRun = (id: string | number) => {
+  return HTTP_CLIENT.patch(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/approve`);
+};
+export const getPayrollProcessRun = (params: any) => {
+  return HTTP_CLIENT.get(ENDPOINTS.PAYROLL_PROCESS_GET, {
+    params: {
+      payrollType: params.payrollType,
+      periodMonth: Number(params.periodMonth),
+      periodYear: Number(params.periodYear),
+    },
+  });
+};
+
+export const SalaryPayableProcessSubmit = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.SALARY_PAYABLE_SUBMIT, values);
+};
+
+export const getPayableProcessDetails = (id: string | number) => {
+  return HTTP_CLIENT.get(`${ENDPOINTS.PAYROLL_PROCESS_CREATE}/${id}/result`);
+};
+
+export const getAllSalaryPaymentProcess = (params: any) => {
+  return HTTP_CLIENT.get(
+    `${ENDPOINTS.PAYROLL_PROCESS_CREATE}/result-for-payment`,
+    {
+      params,
+    },
+  );
+};
+export const SalaryPaymentProcessSubmit = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.SALARY_PAYMENT_PROCESS, values);
 };

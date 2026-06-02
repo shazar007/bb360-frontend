@@ -50,66 +50,52 @@ export const PrintByItem = forwardRef(
           `}
         </style>
 
-        {/* TITLE */}
-        <h2 className="text-2xl font-bold">
-          {title || "Report"}
-        </h2>
+        <h2 className="text-2xl font-bold">{title || "Report"}</h2>
 
-        {/* DYNAMIC SECTIONS */}
         {(sections || []).map((section: any, sIndex: number) => (
           <div key={sIndex}>
-            <h3 className="mt-4 mb-2 font-semibold">
-              {section.title}
-            </h3>
+            <h3 className="mt-4 mb-2 font-semibold">{section.title}</h3>
 
-            {/* INFO TYPE */}
             {section.type === "info" && (
               <div>
                 {section.fields.map((field: any, i: number) => (
                   <div key={i} className="info-row">
-                    <span className="label">
-                      {field.label}:
-                    </span>
+                    <span className="label">{field.label}:</span>
 
                     <span>
                       {field.render
                         ? field.render(item)
-                        : item?.[field.key] ?? "-"}
+                        : (item?.[field.key] ?? "-")}
                     </span>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* TABLE TYPE */}
             {section.type === "table" && (
               <table>
                 <thead>
                   <tr>
-                    {section.columns.map(
-                      (col: any, i: number) => (
-                        <th key={i}>{col.label}</th>
-                      ),
-                    )}
+                    {section.columns.map((col: any, i: number) => (
+                      <th key={i}>{col.label}</th>
+                    ))}
                   </tr>
                 </thead>
 
                 <tbody>
-                  {(section.data
-                    ? section.data(item)
-                    : []
-                  ).map((row: any, rIndex: number) => (
-                    <tr key={rIndex}>
-                      {section.columns.map((col: any, cIndex: number) => (
+                  {(section.data ? section.data(item) : []).map(
+                    (row: any, rIndex: number) => (
+                      <tr key={rIndex}>
+                        {section.columns.map((col: any, cIndex: number) => (
                           <td key={cIndex}>
                             {col.render
                               ? col.render(row)
-                              : row?.[col.key] ?? "-"}
+                              : (row?.[col.key] ?? "-")}
                           </td>
-                        ),
-                      )}
-                    </tr>
-                  ))}
+                        ))}
+                      </tr>
+                    ),
+                  )}
                 </tbody>
               </table>
             )}

@@ -46,7 +46,7 @@ export default function RFQ() {
       </div>
       <div className="mt-2">
         <CustomTable
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "View",

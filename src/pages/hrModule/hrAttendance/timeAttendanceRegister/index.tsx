@@ -113,7 +113,7 @@ export default function TimeAttendanceRegister() {
         {activeTab === "machine" && (
           <CustomTable
             norounded
-            height="45vh"
+            height="auto"
             headers={[
               "Edit",
               "Employee Name",

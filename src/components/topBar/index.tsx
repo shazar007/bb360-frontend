@@ -16,22 +16,18 @@ export default function TopBar() {
   const menuRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-
   const toggleMenu = (index: number) => {
     setOpenMenu(openMenu === index ? null : index);
   };
-
   const toggleSubMenu = (key: string) => {
     setOpenSubMenu((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
   const isParentActive = (item: any): boolean => {
     if (item.path?.trim() && location.pathname.startsWith(item.path))
       return true;
     if (item.children) {
       return item.children.some((child: any) => isParentActive(child));
     }
-
     return false;
   };
   useEffect(() => {
@@ -42,7 +38,6 @@ export default function TopBar() {
         setMobileMenuOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -50,18 +45,40 @@ export default function TopBar() {
   }, []);
 
   return (
-    <div className="flex fles-wrap items-center lg:gap-13.75 gap-8 justify-between h-22 relative">
-      <img src={Logo} alt="logo" className="h-auto w-21 mix-blend-multiply" />
-      <div className="flex-wrap items-center hidden gap-2 xl:justify-start lg:justify-center lg:flex">
+    <div className=" items-center lg:gap-13.75 gap-8 justify-between relative">
+      <div className="flex items-center justify-between py-2 px-4">
+        <img src={Logo} alt="logo" className="h-auto w-14 mix-blend-multiply" />
+        <div className="flex items-center gap-3">
+          <ProfileImage />
+          <div className="flex items-center justify-center w-10 h-10 bg-white rounded-md">
+            <Icon
+              icon="iconoir:bell-notification-solid"
+              className="text-base text-primary"
+            />
+          </div>
+          <div className="xl:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 bg-white rounded-md"
+            >
+              <Icon
+                icon={mobileMenuOpen ? "mdi:close" : "mdi:menu"}
+                className="text-2xl text-heading1"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="flex-wrap items-center  bg-secondary/80  hidden gap-2 justify-center xl:flex">
         {navItems.map((item: any, index) => (
           <div key={index} className="relative">
             {item.children ? (
               <button
                 onClick={() => setOpenMenu(openMenu === index ? null : index)}
-                className={`flex items-center h-10 gap-2 px-2 rounded-md cursor-pointer transition-all ${
+                className={`flex items-center h-9 gap-2 px-5 py-6 rounded-0 cursor-pointer transition-all ${
                   isParentActive(item)
                     ? "bg-secondary text-white"
-                    : "bg-white text-heading1"
+                    : " text-white"
                 }`}
               >
                 {isParentActive(item) && (
@@ -108,7 +125,6 @@ export default function TopBar() {
                     onMouseEnter={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
                       const submenuWidth = 320;
-
                       const willOverflowRight =
                         rect.right + submenuWidth > window.innerWidth;
 
@@ -185,30 +201,8 @@ export default function TopBar() {
           </div>
         ))}
       </div>
-      <div className="flex items-center gap-3">
-        <ProfileImage />
-
-        <div className="flex items-center justify-center w-10 h-10 bg-white rounded-md">
-          <Icon
-            icon="iconoir:bell-notification-solid"
-            className="text-base text-primary"
-          />
-        </div>
-        <div className="lg:hidden">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 bg-white rounded-md"
-          >
-            <Icon
-              icon={mobileMenuOpen ? "mdi:close" : "mdi:menu"}
-              className="text-2xl text-heading1"
-            />
-          </button>
-        </div>
-      </div>
-
       <div
-        className={` fixed top-0 left-0 h-full rounded-tr-2xl rounded-br-2xl w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 lg:hidden ${
+        className={` fixed top-0 left-0 h-full rounded-tr-2xl rounded-br-2xl w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 xl:hidden ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -224,7 +218,7 @@ export default function TopBar() {
           </button>
         </div>
 
-        <div className="flex flex-col mt-4">
+        <div className="flex flex-col mt-4 h-[86vh] overflow-y-auto">
           {navItems.map((item, index) => (
             <div key={index} className="relative">
               {item.children ? (

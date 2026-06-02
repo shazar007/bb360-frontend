@@ -67,7 +67,7 @@ export default function Requisition() {
         </div>
         <div className="mt-2">
           <CustomTable
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "View",

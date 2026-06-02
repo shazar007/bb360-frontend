@@ -97,7 +97,7 @@ export default function EmployeeTypes() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={["Edit", "Employee Type", "Is Active"]}
               data={
                 AllEmployeType?.map((item: any) => [

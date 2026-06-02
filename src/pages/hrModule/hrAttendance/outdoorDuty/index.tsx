@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
 import { useAppNavigate } from "../../../../hooks/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomInput from "../../../../components/customInput";
 import { SyncLoader } from "react-spinners";
@@ -36,7 +35,6 @@ export default function OutdoorDuty() {
   const [openFilter, setOpenFilter] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [formData, setFormData] = useState<any>(null);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const { goTo } = useAppNavigate();
   // const { data, isLoading, isError } = useQuery({
@@ -54,12 +52,10 @@ export default function OutdoorDuty() {
       setLoading(true);
 
       // await updateOutdoorDuty(selectedItem.id, selectedItem);
-      console.log("🚀 ~ selectedItem:", selectedItem);
 
       notifySuccess("Updated successfully");
 
       setOpenEdit(false);
-      setSelectedItem(null);
 
       // refetch();
     } catch (error) {
@@ -125,7 +121,7 @@ export default function OutdoorDuty() {
         <div className="mt-3 bg-white rounded-2xl overflow-hidden">
           <CustomTable
             norounded
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "Select",

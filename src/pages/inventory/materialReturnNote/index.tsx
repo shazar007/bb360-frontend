@@ -193,10 +193,10 @@ export default function MaterialReturnNote() {
               />
             </div>
 
-            <button className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27">
+            {/* <button className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-secondary md:w-27">
               <Icon icon="mage:filter" className="text-lg" />
               Filters
-            </button>
+            </button> */}
 
             <button
               onClick={() => {
@@ -212,7 +212,7 @@ export default function MaterialReturnNote() {
 
         <div className="mt-3">
           <CustomTable
-            height="60vh"
+            height="auto"
             loading={isLoading}
             headers={[
               "Edit",

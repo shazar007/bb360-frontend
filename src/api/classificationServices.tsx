@@ -18,3 +18,17 @@ export const updateDepartmentsStatus = (id: string | number, values: any) => {
     values,
   );
 };
+
+export const addJobLocations = (values: any) => {
+  return HTTP_CLIENT.post(ENDPOINTS.JOB_LOCATIONS, values);
+};
+
+export const getAllJobLocations = () => {
+  return HTTP_CLIENT.get(ENDPOINTS.JOB_LOCATIONS);
+};
+export const updateJobLocationsStatus = (id: string | number, values: any) => {
+  return HTTP_CLIENT.patch(
+    `${ENDPOINTS.JOB_LOCATIONS}/${id}/toggle-status`,
+    values,
+  );
+};

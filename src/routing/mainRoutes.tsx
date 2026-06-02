@@ -11,13 +11,13 @@ import HrModuleRouting from "./hrModuleRouting";
 import ManufacturingRouting from "./manufacturingModuleRouting/ManufacturingRouting";
 function MainRoutes() {
   return (
-    <div className="flex flex-col w-full h-screen p-5 md:p-8 bg-bgprimary">
+    <div className="flex flex-col w-full h-screen  bg-bgprimary">
       <div className="shrink-0">
         <TopBar />
       </div>
       <div
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        className="flex-1 overflow-y-auto "
+        className="flex-1 overflow-y-auto p-4"
       >
         <Routes>
           <Route path="/" element={<Navigate to="/360-dashboard" replace />} />

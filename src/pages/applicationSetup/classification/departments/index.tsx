@@ -95,7 +95,7 @@ export default function Departments() {
           <CustomTable
             norounded
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={["Department Name", "Parent Name", "Date", "Status"]}
             data={getAlldepartment.map((dept) => {
               return [

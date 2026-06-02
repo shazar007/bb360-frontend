@@ -10,7 +10,6 @@ export default function Filter({ onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] px-4">
       <div className="w-full max-w-150 overflow-hidden bg-white shadow-xl rounded-2xl">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-b-gray-400">
           <h2 className="text-sm font-semibold text-heading1">Filters</h2>
           <button
@@ -21,9 +20,7 @@ export default function Filter({ onClose }: Props) {
           </button>
         </div>
 
-        {/* Body */}
         <div className="p-6">
-          {/* Radio Buttons */}
           <div>
             <p className="mb-1 text-sm font-semibold text-heading1 -mt-2 ml-0">
               Date Filter
@@ -124,14 +121,11 @@ export default function Filter({ onClose }: Props) {
             </RadioGroup>
           </div>
 
-          {/* Dates */}
           <div className="grid grid-cols-1 gap-4 mt-1 md:grid-cols-2">
             <CustomDate label="From Date" placeholder="01-Mar-2026" />
 
             <CustomDate label="To Date" placeholder="01-Mar-2026" />
           </div>
-
-          {/* Buttons */}
           <div className="flex items-center justify-between mt-4">
             <button
               onClick={onClose}

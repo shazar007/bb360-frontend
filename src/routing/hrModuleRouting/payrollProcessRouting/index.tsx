@@ -4,22 +4,25 @@ import PayrollProcessRun from "../../../pages/hrModule/payrollProcess/payrollPro
 import SalaryPayableProcess from "../../../pages/hrModule/payrollProcess/salaryPayableProcess";
 import SalaryPaymentProcess from "../../../pages/hrModule/payrollProcess/salaryPaymentProcess";
 import PayrollProcessRunResult from "../../../pages/hrModule/payrollProcess/payrollProcessRunResult";
+import PayableProcessDetails from "../../../pages/hrModule/payrollProcess/salaryPayableProcess/payableProcessDetails";
 
 export default function PayrollProcessRouting() {
   return (
     <Routes>
       <Route path="/payroll-process-run" element={<PayrollProcessRun />} />
-
       <Route
         path="/salary-payable-process"
         element={<SalaryPayableProcess />}
+      />
+      <Route
+        path="/salary-payable-process/details/:id"
+        element={<PayableProcessDetails />}
       />
 
       <Route
         path="/salary-payment-process"
         element={<SalaryPaymentProcess />}
       />
-
       <Route
         path="/payroll-process-run-result"
         element={<PayrollProcessRunResult />}

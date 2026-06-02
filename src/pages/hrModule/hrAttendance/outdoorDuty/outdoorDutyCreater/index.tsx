@@ -6,10 +6,11 @@ import CustomDatePicker from "../../../../../components/datePicker";
 import { useAppNavigate } from "../../../../../hooks/navigation";
 import { useState } from "react";
 import { notifyError, notifySuccess } from "../../../../../components/toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllDepartments } from "../../../../../api/classificationServices";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import CustomSelectSearch from "../../../../../components/customSelectSearch";
 import { getAllEmployees } from "../../../../../api/employeesServices";
+import { useSelector } from "react-redux";
+import { selectDepartments } from "../../../../../redux/store";
 export default function OutdoorDutyCreater() {
   const { goTo } = useAppNavigate();
   const [formData, setFormData] = useState({
@@ -27,7 +28,6 @@ export default function OutdoorDutyCreater() {
   const handleSave = async () => {
     try {
       // await mutateAsync(formData);
-      console.log("🚀 ~ formData:", formData);
 
       notifySuccess("Outdoor Duty created successfully");
 
@@ -42,14 +42,10 @@ export default function OutdoorDutyCreater() {
       console.log("Request finished");
     }
   };
-  const { data: alldepartment } = useQuery({
-    queryKey: ["getAllDepartments"],
-    queryFn: getAllDepartments,
-  });
+  const departments = useSelector(selectDepartments);
 
-  const AllgetDepartment = alldepartment?.data?.data || [];
-  const departmentOptions = AllgetDepartment.map((dep: any) => ({
-    label: dep.fullName || dep.name || "Unnamed",
+  const departmentOptions = departments.map((dep: any) => ({
+    label: dep.name,
     value: dep._id,
   }));
   const { data: allEmployees, isLoading } = useQuery({

@@ -117,7 +117,7 @@ export default function ItemUpdate() {
           <CustomTable
             norounded
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "Expand",

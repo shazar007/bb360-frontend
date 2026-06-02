@@ -38,7 +38,6 @@ export default function StockTakingDetails() {
 
   return (
     <div className="mt-8">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -67,7 +66,6 @@ export default function StockTakingDetails() {
         </div>
       </div>
 
-      {/* Item Info */}
       <div className="mt-3 rounded-2xl bg-white">
         <div className="rounded-t-2xl bg-[#ECF0F4] p-4">
           <p className="text-xs font-semibold text-heading1">Stock Item</p>
@@ -85,7 +83,6 @@ export default function StockTakingDetails() {
         </div>
       </div>
 
-      {/* Hidden Print */}
       <div style={{ display: "none" }}>
         <PrintByItem
           ref={printItemRef}
@@ -95,7 +92,6 @@ export default function StockTakingDetails() {
         />
       </div>
 
-      {/* Table */}
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <CustomTable
           height="700px"

@@ -183,7 +183,7 @@ export default function VendorUpdate() {
           <CustomTable
             norounded
             loading={isLoading}
-            height="60vh"
+            height="auto"
             headers={[
               "Edit",
               "Vendor Code",

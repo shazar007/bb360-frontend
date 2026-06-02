@@ -1,8 +1,26 @@
 import { Icon } from "@iconify/react";
 import CustomTable from "../../../../components/customTable";
 import { useAppNavigate } from "../../../../hooks/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getAllEmployeePerformanceEvaluation } from "../../../../api/hrServices";
+import dayjs from "dayjs";
 export default function EmployeePerformanceCriteria() {
-  const { goTo } = useAppNavigate();
+  const { goTo, goWithState } = useAppNavigate();
+  const { data: getEmployeePerformanceEvaluation, isLoading } = useQuery({
+    queryKey: ["getAllEmployeePerformanceEvaluation"],
+    queryFn: getAllEmployeePerformanceEvaluation,
+    staleTime: Infinity,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+  });
+  const ALLgetEmployeePerformanceEvaluation: any[] =
+    getEmployeePerformanceEvaluation?.data?.data || [];
+  console.log(
+    "🚀 ~ ALLgetEmployeePerformanceEvaluation:",
+    ALLgetEmployeePerformanceEvaluation,
+  );
   return (
     <>
       <div className="mt-8">
@@ -46,10 +64,10 @@ export default function EmployeePerformanceCriteria() {
         <div className="mt-3 bg-bgprimary rounded-2xl">
           <div className="mt-3">
             <CustomTable
-              loading={false}
-              height="60vh"
+              loading={isLoading}
+              height="auto"
               headers={[
-                "Edit",
+                "View",
                 "Supervisor",
                 "Employee",
                 "Transaction Number",
@@ -58,21 +76,31 @@ export default function EmployeePerformanceCriteria() {
                 "Obtain Score",
                 "Percentage",
               ]}
-              data={[
-                [
+              data={ALLgetEmployeePerformanceEvaluation.map((item: any) => {
+                return [
                   <Icon
-                    icon="basil:edit-outline"
-                    className="text-lg cursor-pointer text-primary"
+                    onClick={() =>
+                      goWithState(
+                        "/hr-module/employee-performance/evaluation/details",
+                        {
+                          id: item._id,
+                          mode: "edit",
+                          item: item,
+                        },
+                      )
+                    }
+                    icon="ant-design:eye-twotone"
+                    className="text-xl text-primary cursor-pointer"
                   />,
-                  "EMP1125-Ali Raza Awan",
-                  "EMP1125-Afzal Iqbal",
-                  "00002",
-                  "25-Mar-2026",
-                  "185",
-                  "124",
-                  "67.03%",
-                ],
-              ]}
+                  item?.supervisor?.name || item?.supervisor?._id || "-",
+                  item?.employee?.name || item?.employee?._id || "-",
+                  item?.transactionNo || "-",
+                  dayjs(item.evaluationDate).format("DD-MMM-YYYY"),
+                  item?.totalScore ?? 0,
+                  item?.obtainedTotal ?? 0,
+                  item?.percentage || "-",
+                ];
+              })}
             />
           </div>
         </div>

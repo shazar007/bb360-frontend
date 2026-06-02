@@ -37,7 +37,6 @@ export default function LateArrivalCountDetails({ onClose }: Props) {
           showDrawer ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#D8DEE6] ">
           <p className="text-base font-semibold text-heading1">
             Late Arrival Count Details
@@ -51,14 +50,12 @@ export default function LateArrivalCountDetails({ onClose }: Props) {
           </button>
         </div>
 
-        {/* STATUS */}
         <div className="p-6">
           <div className="w-full md:w-60">
             <CustomSelect label="Status" placeholder="Pending" />
           </div>
         </div>
 
-        {/* TABLE */}
         <div className="w-full">
           <table className="w-full table-fixed">
             <thead>

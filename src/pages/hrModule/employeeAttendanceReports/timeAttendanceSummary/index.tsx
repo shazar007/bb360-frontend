@@ -9,7 +9,6 @@ export default function TimeAttendanceSummary() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -19,9 +18,7 @@ export default function TimeAttendanceSummary() {
           </p>
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-          {/* SEARCH */}
           <div className="relative w-full md:w-40">
             <input
               placeholder="Search"
@@ -34,7 +31,6 @@ export default function TimeAttendanceSummary() {
             />
           </div>
 
-          {/* FILTER */}
           <button
             onClick={() => setOpenFilter(!openFilter)}
             className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
@@ -43,13 +39,11 @@ export default function TimeAttendanceSummary() {
             Filters
           </button>
 
-          {/* PRINT */}
           <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-white rounded-md text-heading1 cursor-pointer shadow-[0_1px_12px_#0000001F]">
             <Icon icon="ion:print-outline" className="w-5 h-5" />
             Print
           </button>
 
-          {/* SEND TO PAYROLL */}
           <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary">
             <Icon icon="basil:add-outline" className="w-5 h-5" />
             Send to Payroll
@@ -57,14 +51,12 @@ export default function TimeAttendanceSummary() {
         </div>
       </div>
 
-      {/* FILTER */}
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
           norounded
-          height="60vh"
+          height="auto"
           headers={[
             "Edit",
             "Employee ID",

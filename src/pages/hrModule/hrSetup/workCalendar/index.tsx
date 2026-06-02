@@ -149,7 +149,7 @@ export default function WorkCalendar() {
           <div className="mt-3">
             <CustomTable
               loading={isLoading}
-              height="60vh"
+              height="auto"
               headers={[
                 "Edit",
                 "Name",

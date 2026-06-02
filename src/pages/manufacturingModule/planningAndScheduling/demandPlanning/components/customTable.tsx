@@ -57,7 +57,7 @@ export default function CustomTable({ headers, data, height }: Props) {
         onMouseMove={handleMouseMove}
         className="flex-1 overflow-x-auto overflow-y-auto cursor active:cursor-grabbing select-none scrollbar-hide"
       >
-        <table className="border-separate border-spacing-0 min-w-max">
+<table className="border-separate border-spacing-0 min-w-max w-full">
           {/* HEADER */}
           <thead>
             <tr className="bg-[#ECF0F4]">
@@ -88,25 +88,21 @@ export default function CustomTable({ headers, data, height }: Props) {
               <tr key={rowIndex}>
                 {row.map((cell, cellIndex) => (
                   <td
-                    key={cellIndex}
-                    className={`
-                      h-16 px-4 text-sm text-heading1
-                      border-r border-b border-[#304250]/20
-                      bg-white
+  key={cellIndex}
+  className={`
+    h-16 px-4 text-sm text-heading1
+    border-r border-b border-[#304250]/20
+    bg-white
 
-                      ${cellIndex === 0 ? "sticky left-0 z-10 min-w-22.5" : ""}
-
-                      ${
-                        cellIndex === 1
-                          ? "sticky left-22.5 z-10 min-w-32.5"
-                          : ""
-                      }
-
-                      ${cellIndex === 2 ? "sticky left-55 z-10 min-w-45" : ""}
-                    `}
-                  >
-                    {cell}
-                  </td>
+    ${cellIndex === 0 ? "sticky left-0 z-10 min-w-22.5" : ""}
+    ${cellIndex === 1 ? "sticky left-22.5 z-10 min-w-32.5" : ""}
+    ${cellIndex === 2 ? "sticky left-55 z-10 min-w-45" : ""}
+  `}
+>
+  <div className="flex items-center justify-center w-full h-full">  {/* ✅ */}
+    {cell}
+  </div>
+</td>
                 ))}
               </tr>
             ))}

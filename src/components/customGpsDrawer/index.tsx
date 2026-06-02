@@ -35,7 +35,6 @@ export default function CustomGpsDrawer({ onClose }: Props) {
           showDrawer ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-[#D8DEE6]">
           <p className="text-base font-semibold text-heading1">
             GPS Verification
@@ -49,9 +48,7 @@ export default function CustomGpsDrawer({ onClose }: Props) {
           </button>
         </div>
 
-        {/* BODY */}
         <div className="p-6 space-y-6">
-          {/* EMPLOYEE INFO */}
           <div className="grid grid-cols-2 gap-5">
             <div>
               <p className="mb-1 text-xs text-heading1/60">Employee Name</p>
@@ -70,7 +67,6 @@ export default function CustomGpsDrawer({ onClose }: Props) {
             </div>
           </div>
 
-          {/* LOCATION */}
           <div>
             <p className="mb-1 text-xs text-heading1/60">Location</p>
 
@@ -79,7 +75,6 @@ export default function CustomGpsDrawer({ onClose }: Props) {
             </div>
           </div>
 
-          {/* TIME */}
           <div className="grid grid-cols-2 gap-5">
             <div>
               <p className="mb-1 text-xs text-heading1/60">First In</p>
@@ -98,7 +93,6 @@ export default function CustomGpsDrawer({ onClose }: Props) {
             </div>
           </div>
 
-          {/* MAP */}
           <div>
             <p className="mb-3 text-sm font-medium text-heading1">
               Live Location
