@@ -14,7 +14,11 @@ import {
 import { BASE_URL } from "../../../../api/endPoint";
 
 const getFileName = (path: string) => path?.split("/").pop() || path;
-const getFileUrl = (path: string) => `${BASE_URL}/${path}`;
+const getFileUrl = (path: string) => {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return `${BASE_URL}/${path}`;
+};
 
 export default function SopMaster() {
   const [openFilter, setOpenFilter] = useState(false);
@@ -62,6 +66,18 @@ export default function SopMaster() {
 
   const toggleSelect = (id: string) =>
     setSelectedId((prev) => (prev === id ? null : id));
+
+  const handleDownload = async (url: string, fileName: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   return (
     <div className="mt-2">
@@ -128,53 +144,83 @@ export default function SopMaster() {
             "Current Version",
             "Effective Date",
             "Review Cycle",
-            "Attachment",
+            <span className="w-full text-center block">Attachment</span>,
           ]}
-          data={filteredList?.map((item: any) => [
-            <Icon
-              icon="basil:edit-outline"
-              className="cursor-pointer text-lg text-primary"
-              onClick={() =>
-                navigate(
-                  "/manufacturing-module/master-data/sop-master/create",
-                  {
-                    state: { rowData: item, type: "edit" },
-                  },
-                )
-              }
-            />,
-
-            <div className="flex items-center justify-center">
-              <div
-                onClick={() => toggleSelect(item._id)}
-                className={`w-4 h-4 rounded border-2 flex items-center justify-center cursor-pointer transition-colors
-                  ${selectedId === item._id ? "bg-primary border-primary" : "border-gray-400"}`}
-              >
-                {selectedId === item._id && (
-                  <Icon icon="mdi:check" className="text-white text-[10px]" />
-                )}
-              </div>
-            </div>,
-
-            item?.sopNumber || "-",
-            item?.documentTitle || "-",
-            item?.department?.fullName || "-",
-            item?.currentVersion || "-",
-            item?.effectiveDate || "-",
-            item?.reviewCycle || "-",
-
-            <span
-              className="text-xs underline cursor-pointer"
-              style={{ color: "#0088FF" }}
-              onClick={() => {
-                if (item?.attachment) {
-                  window.open(getFileUrl(item.attachment), "_blank");
+          data={filteredList?.map((item: any) => {
+            console.log("🚀 ~ SopMaster ~ item:...", item);
+            return [
+              <Icon
+                icon="basil:edit-outline"
+                className="cursor-pointer text-lg text-primary"
+                onClick={() =>
+                  navigate(
+                    "/manufacturing-module/master-data/sop-master/create",
+                    {
+                      state: { rowData: item, type: "edit" },
+                    },
+                  )
                 }
-              }}
-            >
-              {item?.attachment ? getFileName(item.attachment) : "-"}
-            </span>,
-          ])}
+              />,
+
+              <div className="flex items-center justify-center">
+                <div
+                  onClick={() => toggleSelect(item._id)}
+                  className={`w-4 h-4 rounded border-2 flex items-center justify-center cursor-pointer transition-colors
+                  ${selectedId === item._id ? "bg-primary border-primary" : "border-gray-400"}`}
+                >
+                  {selectedId === item._id && (
+                    <Icon icon="mdi:check" className="text-white text-[10px]" />
+                  )}
+                </div>
+              </div>,
+
+              item?.sopNumber || "-",
+              item?.documentTitle || "-",
+              item?.department?.fullName || "-",
+              item?.currentVersion || "-",
+              item?.effectiveDate || "-",
+              item?.reviewCycle || "-",
+
+              item?.attachment ? (
+                <div className="flex items-center justify-end w-full gap-3">
+                  {/* File Name Badge */}
+                  <div
+                    className="max-w-[140px] truncate text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700"
+                    title={getFileName(item.attachment)}
+                  >
+                    {getFileName(item.attachment)}
+                  </div>
+
+                  {/* View Button */}
+                  <button
+                    onClick={() =>
+                      window.open(getFileUrl(item.attachment), "_blank")
+                    }
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border border-blue-200 text-blue-600 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
+                  >
+                    <Icon icon="mdi:eye-outline" width="16" />
+                    View
+                  </button>
+
+                  {/* Download Button */}
+                  <button
+                    onClick={() =>
+                      handleDownload(
+                        getFileUrl(item.attachment),
+                        getFileName(item.attachment),
+                      )
+                    }
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border border-green-200 text-green-600 hover:bg-green-50 hover:border-green-300 transition-all duration-200"
+                  >
+                    <Icon icon="mdi:download" width="16" />
+                    Download
+                  </button>
+                </div>
+              ) : (
+                <span className="text-xs text-gray-400">No file</span>
+              ),
+            ];
+          })}
         />
       </div>
     </div>
