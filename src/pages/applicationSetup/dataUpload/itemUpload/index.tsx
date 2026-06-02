@@ -108,31 +108,7 @@ export default function DataUpload() {
     updated[index].selected = value;
     setTableData(updated);
   };
-  const formatExcelDate = (val: any) => {
-    if (!val) return null;
 
-    if (typeof val === "string" && val.includes("-")) {
-      return val;
-    }
-
-    if (typeof val === "string" && val.includes("/")) {
-      const [month, day, year] = val.split("/");
-      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-    }
-
-    if (typeof val === "number") {
-      const excelEpoch = new Date(1899, 11, 30);
-      const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
-
-      return jsDate.toISOString().split("T")[0];
-    }
-    const d = new Date(val);
-    if (!isNaN(d.getTime())) {
-      return d.toISOString().split("T")[0];
-    }
-
-    return null;
-  };
   const handleUpload = async () => {
     try {
       if (!tableData.length) {
@@ -150,7 +126,7 @@ export default function DataUpload() {
         mrp: Number(item.mrp),
         // expiryDate: formatExcelDate(item.expiryDate),
       }));
-      console.log("🚀 ~ handleUpload ~ payload:", payload)
+      console.log("🚀 ~ handleUpload ~ payload:", payload);
 
       console.log("FINAL PAYLOAD:", payload);
 

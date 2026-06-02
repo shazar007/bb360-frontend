@@ -4,11 +4,9 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import Logo from "../../../../assets/logo.png";
 import Filter from "../../../../components/customDatefilter";
-import CustomSelectSearch from "../../../../components/customSelectSearch";
 import { useQuery } from "@tanstack/react-query";
 import { getAllEmployees } from "../../../../api/employeesServices";
 import CustomInput from "../../../../components/customInput";
-import { getAllDepartments } from "../../../../api/classificationServices";
 import { SyncLoader } from "react-spinners";
 
 export default function EmployeeCard() {
@@ -23,7 +21,7 @@ export default function EmployeeCard() {
     payroll: "",
   });
 
-  const { data: allEmployees, isLoading } = useQuery({
+  const { data: allEmployees } = useQuery({
     queryKey: ["getAllEmployees"],
     queryFn: getAllEmployees,
     staleTime: Infinity,
@@ -34,10 +32,10 @@ export default function EmployeeCard() {
   });
 
   const AllEmployee: any[] = allEmployees?.data?.data || [];
-  const employeeOptions = AllEmployee.map((emp: any) => ({
-    label: emp.name,
-    value: emp._id,
-  }));
+  // const employeeOptions = AllEmployee.map((emp: any) => ({
+  //   label: emp.name,
+  //   value: emp._id,
+  // }));
 
   const selectedEmp = AllEmployee.find((e) => e._id === formData.employee);
 
@@ -357,7 +355,7 @@ export default function EmployeeCard() {
           <p className="text-xs font-semibold text-heading1">Select Employee</p>
         </div>
         <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-3 xl:gap-y-2 xl:gap-x-24 xl:w-220 lg:gap-x-20 lg:w-210 gap-y-2">
-          <CustomSelectSearch
+          {/* <CustomSelectSearch
             label="Employee"
             loading={isLoading}
             placeholder="Select Employee"
@@ -375,7 +373,7 @@ export default function EmployeeCard() {
                 payroll: emp?.definePayroll || "",
               }));
             }}
-          />
+          /> */}
           <CustomInput
             label="Department"
             value={formData.department || ""}

@@ -203,7 +203,6 @@ export default function MaterialMasterCreate() {
                 onChange={(e: any) =>
                   formik.setFieldValue("shelfLife", Number(e.target.value))
                 }
-                onBlur={() => formik.setFieldTouched("shelfLife", true)}
               />
               {err("shelfLife") && (
                 <p className="text-[11px] text-red-500">{err("shelfLife")}</p>

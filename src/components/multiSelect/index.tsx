@@ -77,11 +77,6 @@ export default function MultiSelect({
     onChange([]);
   };
 
-  // Selected options with full data (for showing rows below)
-  const selectedOptions = value
-    .map((v) => options.find((o) => o.value === v))
-    .filter(Boolean) as Option[];
-
   return (
     <div className="flex flex-col gap-1" ref={dropdownRef}>
       {label && (

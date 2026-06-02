@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { selectDepartments, selectEmployees } from "../../../../redux/store";
 
 export default function EmployeeLateArrivalReport() {
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
 
   const departments = useSelector(selectDepartments);

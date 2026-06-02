@@ -1,6 +1,5 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import dayjs from "dayjs";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import CustomTable from "./components/customTable";
@@ -22,7 +21,7 @@ export default function DemandPlanning() {
   /* =========================
      GET API
   ========================= */
-  const { data, isLoading, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ["getAllDemandPlanning"],
     queryFn: getAllDemandPlanning,
     staleTime: 1000 * 60 * 5,
@@ -96,7 +95,7 @@ export default function DemandPlanning() {
     setEditingId(row._id);
   };
 
-  const handleSave = (row: any) => {
+  const handleSave = () => {
     if (!editingId) return;
     const currentRow = planningList.find((r: any) => r._id === editingId);
     if (!currentRow) return;

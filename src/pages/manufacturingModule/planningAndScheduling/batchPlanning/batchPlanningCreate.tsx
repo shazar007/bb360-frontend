@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 import CustomInput from "../../../../components/customInput";
 import CustomSelect from "../../../../components/customSelect";
 import CustomSelectSearch from "../../../../components/customSelectSearch";
-import CustomDatePicker from "../../../../components/datePicker";
 import { useAppNavigate } from "../../../../hooks/navigation";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import {
@@ -199,29 +198,41 @@ export default function BatchPlanningCreate() {
               )}
             </div>
 
-       <div className="flex flex-col gap-1">
-  <label className="text-xs text-heading1">Start Timestamp</label>
-  <input
-    type="time"
-    value={formik.values.startTimestamp}
-    onChange={(e) => formik.setFieldValue("startTimestamp", e.target.value)}
-    onBlur={() => formik.setFieldTouched("startTimestamp", true)}
-    className="h-10 px-3 rounded-md bg-[#ECF0F4] text-xs text-heading1 outline-none cursor-pointer"
-  />
-  {err("startTimestamp") && <p className="text-[11px] text-red-500">{err("startTimestamp")}</p>}
-</div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-heading1">Start Timestamp</label>
+              <input
+                type="time"
+                value={formik.values.startTimestamp}
+                onChange={(e) =>
+                  formik.setFieldValue("startTimestamp", e.target.value)
+                }
+                onBlur={() => formik.setFieldTouched("startTimestamp", true)}
+                className="h-10 px-3 rounded-md bg-[#ECF0F4] text-xs text-heading1 outline-none cursor-pointer"
+              />
+              {err("startTimestamp") && (
+                <p className="text-[11px] text-red-500">
+                  {err("startTimestamp")}
+                </p>
+              )}
+            </div>
 
-<div className="flex flex-col gap-1">
-  <label className="text-xs text-heading1">End Timestamp</label>
-  <input
-    type="time"
-    value={formik.values.endTimestamp}
-    onChange={(e) => formik.setFieldValue("endTimestamp", e.target.value)}
-    onBlur={() => formik.setFieldTouched("endTimestamp", true)}
-    className="h-10 px-3 rounded-md bg-[#ECF0F4] text-xs text-heading1 outline-none cursor-pointer"
-  />
-  {err("endTimestamp") && <p className="text-[11px] text-red-500">{err("endTimestamp")}</p>}
-</div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs text-heading1">End Timestamp</label>
+              <input
+                type="time"
+                value={formik.values.endTimestamp}
+                onChange={(e) =>
+                  formik.setFieldValue("endTimestamp", e.target.value)
+                }
+                onBlur={() => formik.setFieldTouched("endTimestamp", true)}
+                className="h-10 px-3 rounded-md bg-[#ECF0F4] text-xs text-heading1 outline-none cursor-pointer"
+              />
+              {err("endTimestamp") && (
+                <p className="text-[11px] text-red-500">
+                  {err("endTimestamp")}
+                </p>
+              )}
+            </div>
 
             <div className="flex flex-col gap-1">
               <CustomSelectSearch
