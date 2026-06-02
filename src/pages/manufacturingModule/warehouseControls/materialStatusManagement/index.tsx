@@ -30,7 +30,7 @@ export default function MaterialStatusManagement() {
               className="absolute text-[20px] text-heading1/36 top-2.5 left-3"
             />
           </div>
-    
+
           {/* <button
             onClick={() => setOpenFilter(!openFilter)}
             className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
@@ -38,6 +38,11 @@ export default function MaterialStatusManagement() {
             <Icon icon="mage:filter" className="w-5 h-5" />
             Filters
           </button> */}
+ 
+          <button className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-primary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none">
+            <Icon icon="basil:add-outline" className="w-5 h-5" />
+            Approve Lot
+          </button>
         </div>
       </div>
 

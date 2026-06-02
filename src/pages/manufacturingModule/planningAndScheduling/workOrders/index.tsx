@@ -33,6 +33,11 @@ export default function WorkOrders() {
             <Icon icon="mage:filter" className="h-5 w-5" />
             Filters
           </button> */}
+
+          <button className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary">
+            <Icon icon="basil:add-outline" className="w-5 h-5" />
+            Release Selected to Floor
+          </button>
         </div>
       </div>
 
@@ -115,11 +120,10 @@ export default function WorkOrders() {
               </div>,
 
               "Running",
-              <select
-                disabled
-                className="cursor-pointer  h-8 px-4 text-xs bg-white  border border-[#304250]/80 rounded-md focus:outline-none"
-              >
+              <select className="cursor-pointer  h-8 px-4 text-xs bg-white  border border-[#304250]/80 rounded-md focus:outline-none">
                 <option className="cursor-pointer ">Pause</option>
+                <option className="cursor-pointer ">Resume</option>
+                <option className="cursor-pointer ">Stop</option>
               </select>,
             ],
           ]}

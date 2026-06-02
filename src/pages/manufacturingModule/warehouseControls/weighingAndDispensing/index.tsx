@@ -2,9 +2,10 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
+import { useAppNavigate } from "../../../../hooks/navigation";
 export default function WeighingAndDispensing() {
   const [openFilter, setOpenFilter] = useState(false);
-  // const { goTo } = useAppNavigate();
+  const { goTo } = useAppNavigate();
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -17,7 +18,7 @@ export default function WeighingAndDispensing() {
         </div>
 
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
-          <div className="relative w-full md:w-40">
+          <div className="relative w-f ull md:w-40">
             <input
               placeholder="Search"
               className="w-full h-10 pl-10 pr-4 bg-white rounded-sm focus:outline-none placeholder:text-heading1/36 placeholder:text-sm"
@@ -36,6 +37,18 @@ export default function WeighingAndDispensing() {
             <Icon icon="mage:filter" className="w-5 h-5" />
             Filters
           </button> */}
+
+          <button
+            // onClick={() =>
+            //   goTo(
+            //     "/manufacturing-module/planning-and-scheduling/batch-planning/create",
+            //   )
+            // }
+            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
+          >
+            <Icon icon="basil:add-outline" className="w-5 h-5" />
+            Confirm & Print Material Tag
+          </button>
         </div>
       </div>
 
@@ -58,6 +71,11 @@ export default function WeighingAndDispensing() {
             "Live Weight (Real-Time)",
             "Tolerance Accuracy",
             "Deviation & (Live Match)",
+            "Scale Assert ID (Calibration)",
+            "Operator Sign-off",
+            "Supervisor Witness",
+            "Step Status Badge",
+            "Actions Buttons",
           ]}
           data={[
             [
@@ -81,6 +99,16 @@ export default function WeighingAndDispensing() {
               "± 0.05 %",
 
               "+0.04 %",
+
+              "SCL-BOOTH4-02",
+
+              "Ali Raza",
+
+              "Sarah K.",
+
+              "Completed",
+
+              "View eBMR",
             ],
           ]}
         />
