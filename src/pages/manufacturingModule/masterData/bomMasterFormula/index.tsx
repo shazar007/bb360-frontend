@@ -99,7 +99,7 @@ export default function BomMasterFormula() {
           <button
             onClick={() =>
               goTo(
-                "/manufacturing-module/manufacturing-setup/bom-master-formula/create",
+                "/manufacturing-module/manufacturing-setup/bill-of-material/create",
               )
             }
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
@@ -136,7 +136,7 @@ export default function BomMasterFormula() {
               className="text-lg cursor-pointer text-primary"
               onClick={() =>
                 navigate(
-                  "/manufacturing-module/manufacturing-setup/bom-master-formula/create",
+                  "/manufacturing-module/manufacturing-setup/bill-of-material/create",
                   {
                     state: { rowData: item, type: "edit" },
                   },
@@ -146,10 +146,10 @@ export default function BomMasterFormula() {
 
             // ✅ Per row checkbox
             <div className="flex items-center justify-center">
-            <CustomCheckbox
-  checked={selectedIds.includes(item._id)}
-  onChange={() => toggleSelect(item._id)}
-/>
+              <CustomCheckbox
+                checked={selectedIds.includes(item._id)}
+                onChange={() => toggleSelect(item._id)}
+              />
             </div>,
 
             item.formulaId || "-",

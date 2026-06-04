@@ -140,7 +140,7 @@ export const ENDPOINTS = {
   // --------------Equipment Master-------------
   EQUIPMENT_MASTER: "/equipment-master",
 
-  // -------------- SOP Master-------------
+  // -------------- SOP Master  work-instructions-------------
   SOP_MASTER: "/sop-master",
 
   // -------------- Demand Planning-------------

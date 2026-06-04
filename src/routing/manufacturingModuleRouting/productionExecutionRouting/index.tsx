@@ -7,10 +7,10 @@ import YieldReconciliation from "../../../pages/manufacturingModule/productionEx
 export default function ProductionExecutionRouting() {
   return (
     <Routes>
-      <Route path="/batch-execution" element={<BatchExecution />} />
+      <Route path="/production-execution" element={<BatchExecution />} />
 
       <Route
-        path="/electronic-batch-record-ebmr"
+        path="/work-order-record-ebmr"
         element={<ElectronicBatchRecordEbmr />}
       />
 

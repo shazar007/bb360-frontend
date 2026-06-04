@@ -13,12 +13,12 @@ export default function WarehouseControlsRouting() {
       <Route path="/inventory-management" element={<InventoryManagement />} />
 
       <Route
-        path="/material-status-management"
+        path="/stock-status-management"
         element={<MaterialStatusManagement />}
       />
 
       <Route
-        path="/weighing-and-dispensing"
+        path="/measuring-and-dispensing"
         element={<WeighingAndDispensing />}
       />
     </Routes>

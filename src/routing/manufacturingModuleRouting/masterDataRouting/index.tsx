@@ -20,9 +20,9 @@ export default function MasterDataRouting() {
         element={<MaterialMasterCreate />}
       />
 
-      <Route path="/bom-master-formula" element={<BomMasterFormula />} />
+      <Route path="/bill-of-material" element={<BomMasterFormula />} />
       <Route
-        path="/bom-master-formula/create"
+        path="/bill-of-material/create"
         element={<BomMasterFormulaCreate />}
       />
 
@@ -32,8 +32,8 @@ export default function MasterDataRouting() {
         element={<EquipmentMasterCreate />}
       />
 
-      <Route path="/sop-master" element={<SopMaster />} />
-      <Route path="/sop-master/create" element={<SopMasterCreate />} />
+      <Route path="/work-instructions" element={<SopMaster />} />
+      <Route path="/work-instructions/create" element={<SopMasterCreate />} />
     </Routes>
   );
 }

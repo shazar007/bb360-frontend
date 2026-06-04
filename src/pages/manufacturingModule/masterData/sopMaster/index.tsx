@@ -119,7 +119,7 @@ export default function SopMaster() {
           <button
             onClick={() =>
               goTo(
-                "/manufacturing-module/manufacturing-setup/sop-master/create",
+                "/manufacturing-module/manufacturing-setup/work-instructions/create",
               )
             }
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
@@ -157,7 +157,7 @@ export default function SopMaster() {
                 className="text-lg cursor-pointer text-primary"
                 onClick={() =>
                   navigate(
-                    "/manufacturing-module/manufacturing-setup/sop-master/create",
+                    "/manufacturing-module/manufacturing-setup/work-instructions/create",
                     {
                       state: { rowData: item, type: "edit" },
                     },

@@ -9,18 +9,21 @@ import ValidationProtocols from "../../../pages/manufacturingModule/traceability
 export default function TraceabilityAndComplianceRouting() {
   return (
     <Routes>
-      <Route path="/batch-genealogy" element={<BatchGenealogy />} />
+      <Route path="/production-genealogy" element={<BatchGenealogy />} />
 
       <Route
         path="/product-recall-management"
         element={<ProductRecallManagement />}
       />
 
-      <Route path="/sop-control-hub" element={<SopControlHub />} />
+      <Route path="/document-control" element={<SopControlHub />} />
 
-      <Route path="/e-signatures-registry" element={<ESignaturesRegistry />} />
+      <Route path="/digital-signatures" element={<ESignaturesRegistry />} />
 
-      <Route path="/validation-protocols" element={<ValidationProtocols />} />
+      <Route
+        path="/qualification-protocols"
+        element={<ValidationProtocols />}
+      />
     </Routes>
   );
 }

@@ -10,11 +10,11 @@ export default function QualityAssuranceQaRouting() {
     <Routes>
       <Route path="/batch-release-control" element={<BatchReleaseControl />} />
 
-      <Route path="/deviations-log" element={<DeviationsLog />} />
+      <Route path="/none-conformance-log" element={<DeviationsLog />} />
 
       <Route path="/capa-management" element={<CapaManagement />} />
 
-      <Route path="/change-control-vault" element={<ChangeControlVault />} />
+      <Route path="/change-control" element={<ChangeControlVault />} />
     </Routes>
   );
 }

@@ -1,5 +1,5 @@
 const DeviationsLog = () => {
-  return <div>Welcome to Deviations Log</div>;
+  return <div>Welcome to none-conformance-log</div>;
 };
 
 export default DeviationsLog;

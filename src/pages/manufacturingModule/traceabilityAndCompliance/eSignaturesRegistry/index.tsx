@@ -1,5 +1,5 @@
 const ESignaturesRegistry = () => {
-  return <div>Welcome to E Signatures Registry</div>;
+  return <div>Welcome to Digital Signatures</div>;
 };
 
 export default ESignaturesRegistry;

@@ -957,7 +957,7 @@ export const navItems: NavItem[] = [
           },
           {
             name: "Bill Of Material (BOM)",
-            path: "/manufacturing-module/manufacturing-setup/bom-master-formula",
+            path: "/manufacturing-module/manufacturing-setup/bill-of-material",
           },
           {
             name: "Equipment Master",
@@ -965,7 +965,7 @@ export const navItems: NavItem[] = [
           },
           {
             name: "Work Instructions",
-            path: "/manufacturing-module/manufacturing-setup/sop-master",
+            path: "/manufacturing-module/manufacturing-setup/work-instructions",
           },
         ],
       },
@@ -1018,11 +1018,11 @@ export const navItems: NavItem[] = [
           // },
           {
             name: "Stock Status Management",
-            path: "/manufacturing-module/warehouse-controls/material-status-management",
+            path: "/manufacturing-module/warehouse-controls/stock-status-management",
           },
           {
             name: "Measuring & Dispensing",
-            path: "/manufacturing-module/warehouse-controls/weighing-and-dispensing",
+            path: "/manufacturing-module/warehouse-controls/measuring-and-dispensing",
           },
         ],
       },
@@ -1031,11 +1031,11 @@ export const navItems: NavItem[] = [
         children: [
           {
             name: "Production Execution",
-            path: "/manufacturing-module/production-execution/batch-execution",
+            path: "/manufacturing-module/production-execution/production-execution",
           },
           {
             name: "Work Order Record (eBMR)",
-            path: "/manufacturing-module/production-execution/electronic-batch-record-ebmr",
+            path: "/manufacturing-module/production-execution/work-order-record-ebmr",
           },
           {
             name: "Yield Reconciliation",
@@ -1069,7 +1069,7 @@ export const navItems: NavItem[] = [
           },
           {
             name: "Non-Conformance Log",
-            path: "/manufacturing-module/quality-assurance-qa/deviations-log",
+            path: "/manufacturing-module/quality-assurance-qa/none-conformance-log",
           },
           {
             name: "CAPA Management",
@@ -1077,7 +1077,7 @@ export const navItems: NavItem[] = [
           },
           {
             name: "Change Control",
-            path: "/manufacturing-module/quality-assurance-qa/change-control-vault",
+            path: "/manufacturing-module/quality-assurance-qa/change-control",
           },
         ],
       },
@@ -1086,7 +1086,7 @@ export const navItems: NavItem[] = [
         children: [
           {
             name: "Production Genealogy",
-            path: "/manufacturing-module/traceability-and-compliance/batch-genealogy",
+            path: "/manufacturing-module/traceability-and-compliance/production-genealogy",
           },
           {
             name: "Product Recall Management",
@@ -1094,15 +1094,15 @@ export const navItems: NavItem[] = [
           },
           {
             name: "Document Control",
-            path: "/manufacturing-module/traceability-and-compliance/sop-control-hub",
+            path: "/manufacturing-module/traceability-and-compliance/document-control",
           },
           {
             name: "Digital Signatures",
-            path: "/manufacturing-module/traceability-and-compliance/e-signatures-registry",
+            path: "/manufacturing-module/traceability-and-compliance/digital-signatures",
           },
           {
             name: "Qualification Protocols",
-            path: "/manufacturing-module/traceability-and-compliance/validation-protocols",
+            path: "/manufacturing-module/traceability-and-compliance/qualification-protocols",
           },
         ],
       },

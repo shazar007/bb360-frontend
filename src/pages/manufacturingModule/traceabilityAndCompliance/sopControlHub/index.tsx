@@ -1,5 +1,5 @@
 const SopControlHub = () => {
-  return <div>Welcome to Sop Control Hub</div>;
+  return <div>Welcome to document-control</div>;
 };
 
 export default SopControlHub;

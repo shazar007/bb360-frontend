@@ -1,5 +1,5 @@
 const BatchGenealogy = () => {
-  return <div>Welcome to Batch Genealogy</div>;
+  return <div>Welcome to Document Genealogy</div>;
 };
 
 export default BatchGenealogy;
