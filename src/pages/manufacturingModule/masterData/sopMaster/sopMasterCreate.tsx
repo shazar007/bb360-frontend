@@ -23,7 +23,7 @@ const REVIEW_CYCLE_OPTIONS = [
   { label: "3 Months", value: "3 Months" },
   { label: "6 Months", value: "6 Months" },
   { label: "1 Year", value: "1 Year" },
-  { label: "2 Years", value: "2 Years" }
+  { label: "2 Years", value: "2 Years" },
 ];
 
 const validationSchema = Yup.object({
@@ -97,7 +97,6 @@ export default function SopMasterCreate() {
     },
     validationSchema,
     onSubmit: (values) => {
-<<<<<<< Updated upstream
       const payload = new FormData();
       Object.entries(values).forEach(([key, val]) => {
         payload.append(key, String(val));
@@ -108,12 +107,8 @@ export default function SopMasterCreate() {
         console.log(pair[0], "=>", pair[1]);
       }
 
-=======
       console.log("Formik Values:", values);
       console.log("Attachment:", attachmentFile);
-
-      const payload = new FormData();
-      console.log("🚀 ~ SopMasterCreate ~ payload:", payload);
 
       Object.entries(values).forEach(([key, val]) => {
         if (key !== "attachment") payload.append(key, String(val));
@@ -129,7 +124,6 @@ export default function SopMasterCreate() {
         console.log(pair[0], pair[1]);
       }
 
->>>>>>> Stashed changes
       mutate(payload);
     },
   });
@@ -172,10 +166,7 @@ export default function SopMasterCreate() {
         </div>
       </div>
 
-<<<<<<< Updated upstream
       {/* FORM */}
-=======
->>>>>>> Stashed changes
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 rounded-2xl bg-white">
           <div className="rounded-t-2xl bg-[#ECF0F4] p-4">
@@ -218,11 +209,8 @@ export default function SopMasterCreate() {
               )}
             </div>
 
-<<<<<<< Updated upstream
             {/* Attachment */}
             {/* Attachment */}
-=======
->>>>>>> Stashed changes
             <div className="flex flex-col gap-1">
               <label className="text-xs text-heading1">Attachment</label>
               <div

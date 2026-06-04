@@ -137,22 +137,11 @@ export default function MaterialMaster() {
             />,
 
             <div className="flex items-center justify-center">
-<<<<<<< Updated upstream
-             <CustomCheckbox
-  checked={selectedId === item._id}
-  onChange={() => toggleSelect(item._id)}
-/>,
-=======
-              <div
-                onClick={() => toggleSelect(item._id)}
-                className={`w-4 h-4 rounded border flex items-center  cursor-pointer transition-colors
-                  ${selectedId === item._id ? "bg-primary border-primary" : "border-gray-400"}`}
-              >
-                {selectedId === item._id && (
-                  <Icon icon="mdi:check" className="text-white text-[10px]" />
-                )}
-              </div>
->>>>>>> Stashed changes
+              <CustomCheckbox
+                checked={selectedId === item._id}
+                onChange={() => toggleSelect(item._id)}
+              />
+              ,
             </div>,
 
             item.materialCode || "-",
