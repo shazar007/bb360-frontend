@@ -481,6 +481,10 @@ export default function DataUpload() {
                 options={[
                   { value: "RAW_MATERIAL", label: "Raw Material" },
                   { value: "FINISHED_GOODS", label: "Finished Goods" },
+                  { value: "PACKAGING_MATERIAL", label: "Packaging Material" },
+                  { value: "WORK_IN_PROGRESS", label: "Work in Progress" },
+                  { value: "CONSUMABLE", label: "Consumable" },
+                  { value: "SPARE_PART", label: "Spare Part" },
                 ]}
                 value={form.itemCategory}
                 onChange={(val: any) =>
