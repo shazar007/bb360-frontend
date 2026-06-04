@@ -98,7 +98,7 @@ export default function ElectronicBatchRecordEbmr() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold text-heading1 md:text-lg">
-            Electronic Batch Record (eBMR)
+            Work Order Record (eBMR)
           </p>
         </div>
         <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
@@ -227,7 +227,6 @@ export default function ElectronicBatchRecordEbmr() {
             </p>
 
             <div className="mt-4 space-y-4">
-              {/* Step 01 */}
               <div className="flex items-center justify-between p-4 border border-[#304250]/20 rounded-xl">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary/10 text-primary text-sm font-semibold">
@@ -274,7 +273,6 @@ export default function ElectronicBatchRecordEbmr() {
                 </span>
               </div>
 
-              {/* Step 02 */}
               <div className="flex items-center justify-between p-4 border border-[#304250]/20 rounded-xl">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary/10 text-primary text-sm font-semibold">

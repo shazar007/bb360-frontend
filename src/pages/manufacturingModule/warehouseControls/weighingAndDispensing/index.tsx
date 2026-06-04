@@ -11,7 +11,7 @@ export default function WeighingAndDispensing() {
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
 
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Weighing & Dispensing
+            Measuring & Dispensing
           </p>
         </div>
 

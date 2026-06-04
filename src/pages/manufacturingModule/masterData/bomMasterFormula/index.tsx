@@ -70,13 +70,13 @@ export default function BomMasterFormula() {
           </p>
         </div>
 
-        <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
+        <div className="flex flex-col w-full gap-2 md:w-auto md:flex-row md:items-center">
           <div className="relative w-full md:w-40">
             <input
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-10 w-full rounded-sm bg-white pl-10 pr-4 placeholder:text-sm placeholder:text-heading1/36 focus:outline-none"
+              className="w-full h-10 pl-10 pr-4 bg-white rounded-sm placeholder:text-sm placeholder:text-heading1/36 focus:outline-none"
             />
             <Icon
               icon="mynaui:search"
@@ -89,9 +89,9 @@ export default function BomMasterFormula() {
             <button
               onClick={() => deleteItems(selectedIds)}
               disabled={isPending}
-              className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-red-500 px-6 text-white md:w-auto"
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white bg-red-500 rounded-md md:w-auto"
             >
-              <Icon icon="mdi:trash-can-outline" className="h-5 w-5" />
+              <Icon icon="mdi:trash-can-outline" className="w-5 h-5" />
               Delete ({selectedIds.length})
             </button>
           )}
@@ -99,12 +99,12 @@ export default function BomMasterFormula() {
           <button
             onClick={() =>
               goTo(
-                "/manufacturing-module/master-data/bom-master-formula/create",
+                "/manufacturing-module/manufacturing-setup/bom-master-formula/create",
               )
             }
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
+            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
           >
-            <Icon icon="basil:add-outline" className="h-5 w-5" />
+            <Icon icon="basil:add-outline" className="w-5 h-5" />
             Create
           </button>
         </div>
@@ -113,7 +113,7 @@ export default function BomMasterFormula() {
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
       {/* TABLE */}
-      <div className="mt-3 overflow-hidden rounded-2xl bg-white">
+      <div className="mt-3 overflow-hidden bg-white rounded-2xl">
         <CustomTable
           loading={isLoading}
           norounded
@@ -133,10 +133,10 @@ export default function BomMasterFormula() {
           data={filteredList.map((item: any) => [
             <Icon
               icon="basil:edit-outline"
-              className="cursor-pointer text-lg text-primary"
+              className="text-lg cursor-pointer text-primary"
               onClick={() =>
                 navigate(
-                  "/manufacturing-module/master-data/bom-master-formula/create",
+                  "/manufacturing-module/manufacturing-setup/bom-master-formula/create",
                   {
                     state: { rowData: item, type: "edit" },
                   },
@@ -173,7 +173,7 @@ export default function BomMasterFormula() {
             dayjs(item?.lastModified).format("DD-MM-YYYY") || "-",
 
             <span
-              className="px-2 py-1 rounded-md text-xs font-medium"
+              className="px-2 py-1 text-xs font-medium rounded-md"
               style={{
                 backgroundColor:
                   item.workflowState === "approved"

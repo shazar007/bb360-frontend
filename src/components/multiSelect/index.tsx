@@ -85,7 +85,6 @@ export default function MultiSelect({
         </label>
       )}
 
-      {/* Trigger */}
       <div
         onClick={() => {
           if (!disabled) setOpen((p) => !p);
@@ -121,10 +120,9 @@ export default function MultiSelect({
         <Icon
           icon="mdi:chevron-down"
           width="18"
-          className={`flex-shrink-0 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
 
-        {/* Dropdown */}
         {open && (
           <div
             onClick={(e) => e.stopPropagation()}
@@ -134,7 +132,7 @@ export default function MultiSelect({
               <Icon
                 icon="mdi:magnify"
                 width="16"
-                className="text-gray-400 flex-shrink-0"
+                className="text-gray-400 shrink-0"
               />
               <input
                 ref={searchRef}
@@ -145,7 +143,6 @@ export default function MultiSelect({
               />
             </div>
 
-            {/* Options */}
             <div className="max-h-48 overflow-y-auto">
               {filtered.length === 0 ? (
                 <p className="text-xs text-gray-400 text-center py-3">
@@ -159,10 +156,9 @@ export default function MultiSelect({
                       selected.has(opt.value) ? "bg-blue-50" : ""
                     }`}
                   >
-                    {/* Checkbox */}
                     <div
                       onClick={() => toggle(opt.value)}
-                      className={`w-4 h-4 rounded flex items-center justify-center flex-shrink-0 border transition-colors cursor-pointer
+                      className={`w-4 h-4 rounded flex items-center justify-center shrink-0 border transition-colors cursor-pointer
             ${selected.has(opt.value) ? "bg-blue-500 border-blue-500" : "border-gray-300"}`}
                     >
                       {selected.has(opt.value) && (
@@ -174,7 +170,6 @@ export default function MultiSelect({
                       )}
                     </div>
 
-                    {/* Label */}
                     <span
                       onClick={() => toggle(opt.value)}
                       className="text-xs flex-1 cursor-pointer"
@@ -182,7 +177,6 @@ export default function MultiSelect({
                       {opt.label}
                     </span>
 
-                    {/* Quantity Input + UOM — sirf selected hone pe active */}
                     <div
                       className="flex items-center gap-1.5"
                       onClick={(e) => e.stopPropagation()}

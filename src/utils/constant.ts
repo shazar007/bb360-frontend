@@ -948,33 +948,24 @@ export const navItems: NavItem[] = [
     name: "Manufacturing Module",
     icon: "mdi:factory",
     children: [
-      // { name: "No Data Found" },
       {
-        name: "Material Issue Note",
-        path: "/manufacturing-module/material-issue-note",
-      },
-      {
-        name: "Material Return Note",
-        path: "/manufacturing-module/material-return-note",
-      },
-      {
-        name: "Master Data",
+        name: "Manufacturing Setup",
         children: [
           {
             name: "Material Master",
-            path: "/manufacturing-module/master-data/material-master",
+            path: "/manufacturing-module/manufacturing-setup/material-master",
           },
           {
-            name: "BOM / Master Formula",
-            path: "/manufacturing-module/master-data/bom-master-formula",
+            name: "Bill Of Material (BOM)",
+            path: "/manufacturing-module/manufacturing-setup/bom-master-formula",
           },
           {
             name: "Equipment Master",
-            path: "/manufacturing-module/master-data/equipment-master",
+            path: "/manufacturing-module/manufacturing-setup/equipment-master",
           },
           {
-            name: "SOP Master",
-            path: "/manufacturing-module/master-data/sop-master",
+            name: "Work Instructions",
+            path: "/manufacturing-module/manufacturing-setup/sop-master",
           },
         ],
       },
@@ -990,7 +981,7 @@ export const navItems: NavItem[] = [
             path: "/manufacturing-module/planning-and-scheduling/mrp-planning",
           },
           {
-            name: "Batch Planning",
+            name: "Production Order",
             path: "/manufacturing-module/planning-and-scheduling/batch-planning",
           },
           {
@@ -999,6 +990,21 @@ export const navItems: NavItem[] = [
           },
         ],
       },
+      {
+        name: "Material Movement",
+        // path: "/manufacturing-module/material-movement",
+        children: [
+          {
+            name: "Material Issue Note",
+            path: "/manufacturing-module/material-movement/material-issue-note",
+          },
+          {
+            name: "Material Return Note",
+            path: "/manufacturing-module/material-movement/material-return-note",
+          },
+        ],
+      },
+
       {
         name: "Warehouse Controls",
         children: [
@@ -1011,11 +1017,11 @@ export const navItems: NavItem[] = [
           //   path: "/manufacturing-module/warehouse-controls/inventory-management",
           // },
           {
-            name: "Material Status Management",
+            name: "Stock Status Management",
             path: "/manufacturing-module/warehouse-controls/material-status-management",
           },
           {
-            name: "Weighing & Dispensing",
+            name: "Measuring & Dispensing",
             path: "/manufacturing-module/warehouse-controls/weighing-and-dispensing",
           },
         ],
@@ -1024,11 +1030,11 @@ export const navItems: NavItem[] = [
         name: "Production Execution",
         children: [
           {
-            name: "Batch Execution",
+            name: "Production Execution",
             path: "/manufacturing-module/production-execution/batch-execution",
           },
           {
-            name: "Electronic Batch Record (eBMR)",
+            name: "Work Order Record (eBMR)",
             path: "/manufacturing-module/production-execution/electronic-batch-record-ebmr",
           },
           {
@@ -1058,11 +1064,11 @@ export const navItems: NavItem[] = [
         name: "Quality Assurance (QA)",
         children: [
           {
-            name: "Batch Release Control",
+            name: "Final Release Control",
             path: "/manufacturing-module/quality-assurance-qa/batch-release-control",
           },
           {
-            name: "Deviations Log",
+            name: "Non-Conformance Log",
             path: "/manufacturing-module/quality-assurance-qa/deviations-log",
           },
           {
@@ -1070,7 +1076,7 @@ export const navItems: NavItem[] = [
             path: "/manufacturing-module/quality-assurance-qa/capa-management",
           },
           {
-            name: "Change Control Vault",
+            name: "Change Control",
             path: "/manufacturing-module/quality-assurance-qa/change-control-vault",
           },
         ],
@@ -1079,7 +1085,7 @@ export const navItems: NavItem[] = [
         name: "Traceability & Compliance",
         children: [
           {
-            name: "Batch Genealogy",
+            name: "Production Genealogy",
             path: "/manufacturing-module/traceability-and-compliance/batch-genealogy",
           },
           {
@@ -1087,15 +1093,15 @@ export const navItems: NavItem[] = [
             path: "/manufacturing-module/traceability-and-compliance/product-recall-management",
           },
           {
-            name: "SOP Control Hub",
+            name: "Document Control",
             path: "/manufacturing-module/traceability-and-compliance/sop-control-hub",
           },
           {
-            name: "E-Signatures Registry",
+            name: "Digital Signatures",
             path: "/manufacturing-module/traceability-and-compliance/e-signatures-registry",
           },
           {
-            name: "Validation Protocols",
+            name: "Qualification Protocols",
             path: "/manufacturing-module/traceability-and-compliance/validation-protocols",
           },
         ],

@@ -87,7 +87,7 @@ export default function SopMaster() {
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            SOP Master
+            Work Instructions
           </p>
         </div>
 
@@ -109,7 +109,7 @@ export default function SopMaster() {
             <button
               onClick={() => deleteItem(selectedId)}
               disabled={isPending}
-              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md md:w-auto bg-red-500"
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white bg-red-500 rounded-md md:w-auto"
             >
               <Icon icon="mdi:trash-can-outline" className="w-5 h-5" />
               {isPending ? "Deleting..." : "Delete"}
@@ -118,7 +118,9 @@ export default function SopMaster() {
 
           <button
             onClick={() =>
-              goTo("/manufacturing-module/master-data/sop-master/create")
+              goTo(
+                "/manufacturing-module/manufacturing-setup/sop-master/create",
+              )
             }
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
           >
@@ -131,7 +133,7 @@ export default function SopMaster() {
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
       {/* TABLE */}
-      <div className="mt-3 bg-white rounded-2xl overflow-hidden">
+      <div className="mt-3 overflow-hidden bg-white rounded-2xl">
         <CustomTable
           loading={isLoading}
           norounded
@@ -145,17 +147,17 @@ export default function SopMaster() {
             "Current Version",
             "Effective Date",
             "Review Cycle",
-            <span className="w-full text-center block">Attachment</span>,
+            <span className="block w-full text-center">Attachment</span>,
           ]}
           data={filteredList?.map((item: any) => {
             console.log("🚀 ~ SopMaster ~ item:...", item);
             return [
               <Icon
                 icon="basil:edit-outline"
-                className="cursor-pointer text-lg text-primary"
+                className="text-lg cursor-pointer text-primary"
                 onClick={() =>
                   navigate(
-                    "/manufacturing-module/master-data/sop-master/create",
+                    "/manufacturing-module/manufacturing-setup/sop-master/create",
                     {
                       state: { rowData: item, type: "edit" },
                     },
@@ -198,7 +200,6 @@ export default function SopMaster() {
                     View
                   </button>
 
-                  {/* Download Button */}
                   <button
                     onClick={() =>
                       handleDownload(

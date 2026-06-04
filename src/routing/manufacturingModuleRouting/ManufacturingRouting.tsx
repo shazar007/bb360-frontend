@@ -23,21 +23,27 @@ export default function ManufacturingRouting() {
 
   return (
     <Routes>
-      <Route path="/material-issue-note" element={<MaterialIssueNote />} />
+      <Route
+        path="/material-movement/material-issue-note"
+        element={<MaterialIssueNote />}
+      />
 
       <Route
-        path="/material-issue-note/create"
+        path="/material-movement/material-issue-note/create"
         element={<MaterialIssueNoteCreate />}
       />
 
-      <Route path="/material-return-note" element={<MaterialReturnNote />} />
+      <Route
+        path="/material-movement/material-return-note"
+        element={<MaterialReturnNote />}
+      />
 
       <Route
-        path="/material-return-note/create"
+        path="/material-movement/material-return-note/create"
         element={<MaterialReturnNoteCreate />}
       />
 
-      <Route path="/master-data/*" element={<MasterDataRouting />} />
+      <Route path="/manufacturing-setup/*" element={<MasterDataRouting />} />
 
       <Route
         path="/planning-and-scheduling/*"

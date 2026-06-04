@@ -81,7 +81,9 @@ export default function CreateSalesInvoice() {
     queryFn: getAllItems,
   });
 
-  const items = AllItems?.data?.items || [];
+  const items = (AllItems?.data?.items || []).filter(
+    (item: any) => item.itemCategory === "FINISHED_GOODS",
+  );
 
   const itemOptions =
     items.map((item: any) => ({
@@ -253,7 +255,7 @@ export default function CreateSalesInvoice() {
         <div className="bg-[#ECF0F4] rounded-t-2xl p-4">
           <p className="text-xs font-semibold text-heading1">Create Invoice</p>
         </div>
-        
+
         <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-4 ">
           <CustomSelectSearch
             label="Distributor Name"

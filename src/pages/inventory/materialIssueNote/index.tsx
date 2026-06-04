@@ -168,7 +168,9 @@ export default function MaterialIssueNote() {
 
             <button
               onClick={() => {
-                goTo("/manufacturing-module/material-issue-note/create");
+                goTo(
+                  "/manufacturing-module/material-movement/material-issue-note/create",
+                );
               }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >

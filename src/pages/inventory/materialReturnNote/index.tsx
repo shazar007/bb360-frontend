@@ -200,7 +200,9 @@ export default function MaterialReturnNote() {
 
             <button
               onClick={() => {
-                goTo("/manufacturing-module/material-return-note/create");
+                goTo(
+                  "/manufacturing-module/material-movement/material-return-note/create",
+                );
               }}
               className="flex items-center justify-center w-full h-10 gap-2 text-sm text-white rounded-md cursor-pointer bg-primary md:w-27"
             >

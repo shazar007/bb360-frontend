@@ -125,12 +125,11 @@ export default function BatchPlanningCreate() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
           <p className="text-base font-semibold md:text-lg text-heading1">
-            {isEdit ? "Edit Batch Planning" : "Create Batch Planning"}
+            {isEdit ? "Edit Production Order" : "Create Production Order"}
           </p>
         </div>
 
@@ -152,7 +151,6 @@ export default function BatchPlanningCreate() {
         </div>
       </div>
 
-      {/* FORM */}
       <div className="mt-3 bg-bgprimary rounded-2xl">
         <div className="mt-2 bg-white rounded-2xl">
           <div className="bg-[#ECF0F4] rounded-t-2xl p-4">

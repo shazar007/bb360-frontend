@@ -13,7 +13,7 @@ export default function BatchExecution() {
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
 
           <p className="text-base font-semibold md:text-lg text-heading1">
-            Batch Execution
+            Production Execution
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function BatchExecution() {
 
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <div className="flex flex-wrap gap-4 p-4 text-primary">
-          Batch Execution
+          Production Execution
         </div>
         <CustomTable
           norounded

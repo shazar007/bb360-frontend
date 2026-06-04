@@ -126,7 +126,6 @@ export default function DemandPlanning() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -161,7 +160,6 @@ export default function DemandPlanning() {
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      {/* TABLE */}
       <div className="mt-3 bg-white rounded-2xl overflow-hidden">
         <CustomTable
           height="70vh"

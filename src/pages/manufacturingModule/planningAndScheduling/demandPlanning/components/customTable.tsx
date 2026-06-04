@@ -48,7 +48,6 @@ export default function CustomTable({ headers, data, height }: Props) {
       style={{ height: height || "60vh" }}
       className="flex flex-col justify-between overflow-hidden bg-white rounded-2xl"
     >
-      {/* TABLE AREA */}
       <div
         ref={scrollRef}
         onMouseDown={handleMouseDown}
@@ -57,8 +56,7 @@ export default function CustomTable({ headers, data, height }: Props) {
         onMouseMove={handleMouseMove}
         className="flex-1 overflow-x-auto overflow-y-auto cursor active:cursor-grabbing select-none scrollbar-hide"
       >
-<table className="border-separate border-spacing-0 min-w-max w-full">
-          {/* HEADER */}
+        <table className="border-separate border-spacing-0 min-w-max w-full">
           <thead>
             <tr className="bg-[#ECF0F4]">
               {headers.map((header, idx) => (
@@ -82,14 +80,13 @@ export default function CustomTable({ headers, data, height }: Props) {
             </tr>
           </thead>
 
-          {/* BODY */}
           <tbody>
             {data.map((row, rowIndex) => (
               <tr key={rowIndex}>
                 {row.map((cell, cellIndex) => (
                   <td
-  key={cellIndex}
-  className={`
+                    key={cellIndex}
+                    className={`
     h-16 px-4 text-sm text-heading1
     border-r border-b border-[#304250]/20
     bg-white
@@ -98,11 +95,11 @@ export default function CustomTable({ headers, data, height }: Props) {
     ${cellIndex === 1 ? "sticky left-22.5 z-10 min-w-32.5" : ""}
     ${cellIndex === 2 ? "sticky left-55 z-10 min-w-45" : ""}
   `}
->
-  <div className="flex items-center justify-center w-full h-full">  {/* ✅ */}
-    {cell}
-  </div>
-</td>
+                  >
+                    <div className="flex items-center justify-center w-full h-full">
+                      {cell}
+                    </div>
+                  </td>
                 ))}
               </tr>
             ))}
@@ -110,7 +107,6 @@ export default function CustomTable({ headers, data, height }: Props) {
         </table>
       </div>
 
-      {/* PAGINATION */}
       <div className="flex items-center justify-between p-4 border-t border-[#304250]/10">
         <p className="text-sm text-heading2">1 row selected</p>
 

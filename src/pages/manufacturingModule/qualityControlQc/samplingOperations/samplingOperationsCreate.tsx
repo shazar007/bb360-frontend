@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react";
 import CustomInput from "../../../../components/customInput";
 import { useAppNavigate } from "../../../../hooks/navigation";
-
 import CustomSelect from "../../../../components/customSelect";
 import { useEffect, useState } from "react";
 export default function SamplingOperationsCreate() {
   const { goBack } = useAppNavigate();
   const [errors, setErrors] = useState<any>({});
-
   const [formData, setFormData] = useState({
     samplingId: "",
     vendorLotId: "",
@@ -21,13 +19,10 @@ export default function SamplingOperationsCreate() {
   const [isEditMode, setIsEditMode] = useState(false);
   useEffect(() => {
     const editData = localStorage.getItem("samplingEditData");
-
     if (editData) {
       const parsed = JSON.parse(editData);
-
       setEditIndex(parsed.editIndex);
       setIsEditMode(true);
-
       setFormData({
         samplingId: parsed.samplingId || "",
         vendorLotId: parsed.vendorLotId || "",
@@ -37,7 +32,6 @@ export default function SamplingOperationsCreate() {
         targetLab: parsed.targetLab || "",
         materialName: parsed.materialName || "",
         sampleWt: parsed.sampleWt ? parsed.sampleWt.split(" ")[0] : "",
-
         storageState: parsed.storageState || "",
       });
     }
@@ -61,21 +55,15 @@ export default function SamplingOperationsCreate() {
 
     if (!formData.samplingId.trim())
       newErrors.samplingId = "Sampling ID is required";
-
     if (!formData.vendorLotId.trim())
       newErrors.vendorLotId = "Vendor LOT ID is required";
-
     if (!formData.sampleWtUom.trim())
       newErrors.sampleWtUom = "Sample WT UOM is required";
-
     if (!formData.targetLab.trim())
       newErrors.targetLab = "Target Lab is required";
-
     if (!formData.materialName.trim())
       newErrors.materialName = "Material Name is required";
-
     if (!formData.sampleWt.trim()) newErrors.sampleWt = "Sample WT is required";
-
     if (!formData.storageState.trim())
       newErrors.storageState = "Storage State is required";
 
@@ -91,11 +79,8 @@ export default function SamplingOperationsCreate() {
     if (editIndex !== null) {
       existingData[editIndex] = {
         ...existingData[editIndex],
-
         sampleWt: `${formData.sampleWt} ${formData.sampleWtUom}`,
-
         storageState: formData.storageState,
-
         targetLab: formData.targetLab,
       };
     } else {
@@ -103,26 +88,17 @@ export default function SamplingOperationsCreate() {
         samplingId: formData.samplingId,
         materialName: formData.materialName,
         vendorLotId: formData.vendorLotId,
-
         totalMaterial: "",
-
         sampleWt: `${formData.sampleWt} ${formData.sampleWtUom}`,
-
         storageState: formData.storageState,
         targetLab: formData.targetLab,
       });
     }
-
     localStorage.setItem("samplingTableData", JSON.stringify(existingData));
-
     localStorage.removeItem("samplingEditData");
-
     alert("Data Saved Successfully");
-
     goBack();
-
     console.log("Saved Data:", formData);
-
     alert("Data Saved Successfully");
   };
   return (
@@ -130,12 +106,10 @@ export default function SamplingOperationsCreate() {
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
-
           <p className="text-base font-semibold md:text-lg text-heading1">
             Create Sampling
           </p>
         </div>
-
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:items-center md:w-auto">
           <button
             onClick={goBack}
@@ -177,7 +151,6 @@ export default function SamplingOperationsCreate() {
                 <p className="mt-1 text-xs text-red-500">{errors.samplingId}</p>
               )}
             </div>
-
             <div>
               <CustomSelect
                 label="Vendor LOT ID"
@@ -207,7 +180,6 @@ export default function SamplingOperationsCreate() {
                 </p>
               )}
             </div>
-
             <div>
               <CustomSelect
                 label="Sample Wt UOM"

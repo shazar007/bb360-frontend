@@ -86,7 +86,7 @@ export default function EquipmentMaster() {
             <button
               onClick={() => deleteItem(selectedId)}
               disabled={isPending}
-              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md md:w-auto bg-red-500"
+              className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white bg-red-500 rounded-md md:w-auto"
             >
               <Icon icon="mdi:trash-can-outline" className="w-5 h-5" />
               {isPending ? "Deleting..." : "Delete"}
@@ -95,7 +95,9 @@ export default function EquipmentMaster() {
 
           <button
             onClick={() =>
-              goTo("/manufacturing-module/master-data/equipment-master/create")
+              goTo(
+                "/manufacturing-module/manufacturing-setup/equipment-master/create",
+              )
             }
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
           >
@@ -108,7 +110,7 @@ export default function EquipmentMaster() {
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
       {/* TABLE */}
-      <div className="mt-3 bg-white rounded-2xl overflow-hidden">
+      <div className="mt-3 overflow-hidden bg-white rounded-2xl">
         <CustomTable
           loading={isLoading}
           norounded
@@ -127,10 +129,10 @@ export default function EquipmentMaster() {
           data={filteredList?.map((item: any) => [
             <Icon
               icon="basil:edit-outline"
-              className="cursor-pointer text-lg text-primary"
+              className="text-lg cursor-pointer text-primary"
               onClick={() =>
                 navigate(
-                  "/manufacturing-module/master-data/equipment-master/create",
+                  "/manufacturing-module/manufacturing-setup/equipment-master/create",
                   {
                     state: { rowData: item, type: "edit" },
                   },
@@ -153,7 +155,7 @@ export default function EquipmentMaster() {
             item.cleaningStatus || "-",
 
             <span
-              className="px-2 py-1 rounded-md text-xs font-medium"
+              className="px-2 py-1 text-xs font-medium rounded-md"
               style={{
                 backgroundColor:
                   item.workflowState === "approved"

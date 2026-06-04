@@ -97,6 +97,7 @@ export default function SopMasterCreate() {
     },
     validationSchema,
     onSubmit: (values) => {
+<<<<<<< Updated upstream
       const payload = new FormData();
       Object.entries(values).forEach(([key, val]) => {
         payload.append(key, String(val));
@@ -107,6 +108,28 @@ export default function SopMasterCreate() {
         console.log(pair[0], "=>", pair[1]);
       }
 
+=======
+      console.log("Formik Values:", values);
+      console.log("Attachment:", attachmentFile);
+
+      const payload = new FormData();
+      console.log("🚀 ~ SopMasterCreate ~ payload:", payload);
+
+      Object.entries(values).forEach(([key, val]) => {
+        if (key !== "attachment") payload.append(key, String(val));
+      });
+
+      if (attachmentFile) {
+        payload.append("attachment", attachmentFile);
+      } else if (values.attachment) {
+        payload.append("attachment", values.attachment);
+      }
+
+      for (const pair of payload.entries()) {
+        console.log(pair[0], pair[1]);
+      }
+
+>>>>>>> Stashed changes
       mutate(payload);
     },
   });
@@ -122,7 +145,6 @@ export default function SopMasterCreate() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -150,7 +172,10 @@ export default function SopMasterCreate() {
         </div>
       </div>
 
+<<<<<<< Updated upstream
       {/* FORM */}
+=======
+>>>>>>> Stashed changes
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 rounded-2xl bg-white">
           <div className="rounded-t-2xl bg-[#ECF0F4] p-4">
@@ -193,8 +218,11 @@ export default function SopMasterCreate() {
               )}
             </div>
 
+<<<<<<< Updated upstream
             {/* Attachment */}
             {/* Attachment */}
+=======
+>>>>>>> Stashed changes
             <div className="flex flex-col gap-1">
               <label className="text-xs text-heading1">Attachment</label>
               <div
