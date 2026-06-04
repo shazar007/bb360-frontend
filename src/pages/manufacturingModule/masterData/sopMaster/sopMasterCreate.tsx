@@ -16,11 +16,14 @@ import {
   updateSOPMaster,
 } from "../../../../api/manufacturingSerives";
 import { useRef, useState } from "react";
+import { uploadFile } from "../../../../api/employeesServices";
 
 const REVIEW_CYCLE_OPTIONS = [
+  { label: "1 Month", value: "1 Month" },
   { label: "3 Months", value: "3 Months" },
   { label: "6 Months", value: "6 Months" },
-  { label: "12 Months", value: "12 Months" },
+  { label: "1 Year", value: "1 Year" },
+  { label: "2 Years", value: "2 Years" }
 ];
 
 const validationSchema = Yup.object({
@@ -36,9 +39,8 @@ export default function SopMasterCreate() {
   const { state } = useLocation();
   const isEdit = state?.type === "edit";
   const itemData = state?.rowData;
-  console.log("🚀 ~ SopMasterCreate ~ itemData:", itemData);
   const { goBack } = useAppNavigate();
-
+  const [uploading, setUploading] = useState(false);
   /* =========================
      Queries
   ========================= */
@@ -66,7 +68,6 @@ export default function SopMasterCreate() {
   ========================= */
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: FormData) => {
-      console.log("🚀 ~ SopMasterCreate ~ payload:", payload);
       return isEdit
         ? updateSOPMaster(itemData?._id, payload)
         : addSOPMaster(payload);
@@ -95,29 +96,19 @@ export default function SopMasterCreate() {
       reviewCycle: itemData?.reviewCycle || "",
     },
     validationSchema,
-   onSubmit: (values) => {
-  console.log("Formik Values:", values);
-  console.log("Attachment:", attachmentFile);
+    onSubmit: (values) => {
+      const payload = new FormData();
+      Object.entries(values).forEach(([key, val]) => {
+        payload.append(key, String(val));
+      });
 
-  const payload = new FormData();
-  console.log("🚀 ~ SopMasterCreate ~ payload:", payload)
+      // ✅ Payload check karo
+      for (const pair of payload.entries()) {
+        console.log(pair[0], "=>", pair[1]);
+      }
 
-  Object.entries(values).forEach(([key, val]) => {
-    if (key !== "attachment") payload.append(key, String(val));
-  });
-
-  if (attachmentFile) {
-    payload.append("attachment", attachmentFile);
-  } else if (values.attachment) {
-    payload.append("attachment", values.attachment);
-  }
-
-  for (const pair of payload.entries()) {
-    console.log(pair[0], pair[1]);
-  }
-
-  mutate(payload);
-}
+      mutate(payload);
+    },
   });
 
   const err = (field: string) =>
@@ -128,7 +119,6 @@ export default function SopMasterCreate() {
   const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const getFileName = (path: string) => path?.split("/").pop() || path;
-  
 
   return (
     <div className="mt-2">
@@ -159,7 +149,7 @@ export default function SopMasterCreate() {
           </button>
         </div>
       </div>
- 
+
       {/* FORM */}
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 rounded-2xl bg-white">
@@ -204,42 +194,60 @@ export default function SopMasterCreate() {
             </div>
 
             {/* Attachment */}
+            {/* Attachment */}
             <div className="flex flex-col gap-1">
               <label className="text-xs text-heading1">Attachment</label>
               <div
-                onClick={() => fileInputRef.current?.click()}
-                className="flex items-center justify-between h-10 px-3 rounded-md bg-[#ECF0F4] cursor-pointer"
+                onClick={() => {
+                  if (!uploading) fileInputRef.current?.click();
+                }}
+                className={`flex items-center justify-between h-10 px-3 rounded-md bg-[#ECF0F4] ${uploading ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
               >
                 <div className="flex items-center gap-2 flex-1 min-w-0">
-                  {(attachmentFile || formik.values.attachment) && (
-                    <Icon
-                      icon={
-                        attachmentFile?.type === "application/pdf" ||
-                        formik.values.attachment?.endsWith(".pdf")
-                          ? "mdi:file-pdf-box"
-                          : "mdi:image"
-                      }
-                      className={
-                        attachmentFile?.type === "application/pdf" ||
-                        formik.values.attachment?.endsWith(".pdf")
-                          ? "text-red-500"
-                          : "text-blue-500"
-                      }
-                      width="18"
-                    />
+                  {uploading ? (
+                    <>
+                      <Icon
+                        icon="mdi:loading"
+                        className="animate-spin text-primary"
+                        width="18"
+                      />
+                      <span className="text-xs text-gray-400">
+                        Uploading...
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {(attachmentFile || formik.values.attachment) && (
+                        <Icon
+                          icon={
+                            attachmentFile?.type === "application/pdf" ||
+                            formik.values.attachment?.endsWith(".pdf")
+                              ? "mdi:file-pdf-box"
+                              : "mdi:image"
+                          }
+                          className={
+                            attachmentFile?.type === "application/pdf" ||
+                            formik.values.attachment?.endsWith(".pdf")
+                              ? "text-red-500"
+                              : "text-blue-500"
+                          }
+                          width="18"
+                        />
+                      )}
+                      <span
+                        className={`text-xs truncate ${attachmentFile || formik.values.attachment ? "text-heading1" : "text-gray-400"}`}
+                      >
+                        {attachmentFile
+                          ? attachmentFile.name
+                          : formik.values.attachment
+                            ? getFileName(formik.values.attachment)
+                            : "Upload PDF or Image..."}
+                      </span>
+                    </>
                   )}
-                  <span
-                    className={`text-xs truncate ${attachmentFile || formik.values.attachment ? "text-heading1" : "text-gray-400"}`}
-                  >
-                    {attachmentFile
-                      ? attachmentFile.name
-                      : formik.values.attachment
-                        ? getFileName(formik.values.attachment) // ✅ path se filename nikalo
-                        : "Upload PDF or Image..."}
-                  </span>
                 </div>
 
-                {attachmentFile || formik.values.attachment ? (
+                {!uploading && (attachmentFile || formik.values.attachment) ? (
                   <Icon
                     icon="mdi:close"
                     width="16"
@@ -251,25 +259,49 @@ export default function SopMasterCreate() {
                       if (fileInputRef.current) fileInputRef.current.value = "";
                     }}
                   />
-                ) : (
+                ) : !uploading ? (
                   <Icon
                     icon="mdi:paperclip"
                     className="text-gray-400 flex-shrink-0"
                     width="18"
                   />
-                )}
+                ) : null}
               </div>
 
+              {/* ✅ Input element — yeh zaroori tha jo missing tha */}
               <input
                 ref={fileInputRef}
                 type="file"
-                accept=".pdf,image/*"
+                accept="image/*"
                 className="hidden"
-                onChange={(e) => {
+                onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (file) {
-                    setAttachmentFile(file);
-                    formik.setFieldValue("attachment", file.name);
+                  if (!file) return;
+
+                  if (!file.type.startsWith("image/")) {
+                    notifyError("Only image files are allowed");
+                    e.target.value = "";
+                    return;
+                  }
+
+                  try {
+                    setUploading(true);
+
+                    const response = await uploadFile(file, "sop");
+
+                    const fileUrl =
+                      response?.data?.data?.url || response?.data?.url;
+
+                    if (fileUrl) {
+                      setAttachmentFile(file);
+                      formik.setFieldValue("attachment", fileUrl);
+                      formik.setFieldTouched("attachment", true);
+                    }
+                  } catch {
+                    notifyError("File upload failed");
+                  } finally {
+                    setUploading(false);
+                    e.target.value = "";
                   }
                 }}
               />
