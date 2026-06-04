@@ -6,36 +6,83 @@ import { useAppNavigate } from "../../../../hooks/navigation";
 export default function QcLabTestingSuite() {
   const [openFilter, setOpenFilter] = useState(false);
   const { goTo } = useAppNavigate();
-  const [samplingData, setSamplingData] = useState<any[]>([]);
+  const [labTestingData, setLabTestingData] = useState<any[]>([]);
 
   useEffect(() => {
     const savedData = JSON.parse(
-      localStorage.getItem("samplingTableData") || "[]",
+      localStorage.getItem("qcLabTestingData") || "[]",
     );
     const sampleData = [
       {
-        samplingId: "SMP-2026-02",
-        materialName: "Lactose Mono",
-        vendorLotId: "LOT-2026-90A",
-        totalMaterial: "10,000 Kg",
-        sampleWt: "50 gm",
-        storageState: "Dry Space",
-        targetLab: "QC-Micro Lab",
+        labTestId: "Lab-2026-44",
+        batchLotId: "LOT-2026-90A",
+        materialName: "Lactose",
+        testType: "Assay Purity",
+        specificationLimit: "98%",
+        resultValue: "99.42%",
+        instrumentId: "HPLC-LAB-02",
+        testingTime: "02h : 15min",
+        errorStatus: "OOT Alert (Out Of Trend)",
+        testingStatus: "Completed",
       },
       {
-        samplingId: "SMP-2026-04",
-        materialName: "Liquid API Base",
-        vendorLotId: "LOT-2026-44X",
-        totalMaterial: "6 Totes",
-        sampleWt: "500 ml",
-        storageState: "Cold Freezer",
-        targetLab: "QC-Chemical Lab",
+        labTestId: "Lab-2026-45",
+        batchLotId: "LOT-2026-11B",
+        materialName: "Acetaminophen",
+        testType: "Dissolution",
+        specificationLimit: "80%",
+        resultValue: "-",
+        instrumentId: "DIS-LAB2-01",
+        testingTime: "00h : 10min",
+        errorStatus: "Complaint",
+        testingStatus: "Testing",
       },
     ];
-
-    setSamplingData([...sampleData, ...savedData]);
+    setLabTestingData([...sampleData, ...savedData]);
   }, []);
+  const ERROR_STATUS_STYLES: Record<string, any> = {
+    Complaint: {
+      backgroundColor: "#00F2001F",
+      color: "#1E9B1E",
+    },
 
+    "OOS Alert (Out Of Specification)": {
+      backgroundColor: "#FFF5CC",
+      color: "#A89507",
+    },
+
+    "OOT Alert (Out Of Trend)": {
+      backgroundColor: "#075AA829",
+      color: "#075AA8",
+    },
+
+    Invalid: {
+      backgroundColor: "#FFE5E5",
+      color: "#FF0000",
+    },
+  };
+
+  const TESTING_STATUS_STYLES: Record<string, any> = {
+    Completed: {
+      backgroundColor: "#00F2001F",
+      color: "#1E9B1E",
+    },
+
+    Testing: {
+      backgroundColor: "#FFF5CC",
+      color: "#A89507",
+    },
+
+    Staged: {
+      backgroundColor: "#D8E9FF",
+      color: "#075AA8",
+    },
+
+    Failed: {
+      backgroundColor: "#FFE5E5",
+      color: "#FF0000",
+    },
+  };
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
@@ -66,10 +113,10 @@ export default function QcLabTestingSuite() {
 
           <button
             onClick={() => {
-              localStorage.removeItem("samplingEditData");
+              localStorage.removeItem("qcLabTestingEditData");
 
               goTo(
-                "/manufacturing-module/quality-control-qc/sampling-operations/create",
+                "/manufacturing-module/quality-control-qc/qc-lab-testing-suite/create",
               );
             }}
             className="flex items-center justify-center w-full h-10 gap-2 px-4 text-white rounded-md cursor-pointer md:w-auto bg-primary"
@@ -105,13 +152,13 @@ export default function QcLabTestingSuite() {
             "Testing Status",
             "Action",
           ]}
-          data={samplingData.map((row, index) => [
+          data={labTestingData.map((row, index) => [
             <Icon
               icon="basil:edit-outline"
               className="cursor-pointer text-lg text-primary"
               onClick={() => {
                 localStorage.setItem(
-                  "samplingEditData",
+                  "qcLabTestingEditData",
                   JSON.stringify({
                     ...row,
                     editIndex: index,
@@ -125,13 +172,58 @@ export default function QcLabTestingSuite() {
               }}
             />,
 
-            row.samplingId,
+            row.labTestId,
+
+            row.batchLotId,
+
             row.materialName,
-            row.vendorLotId,
-            row.totalMaterial,
-            row.sampleWt,
-            row.storageState,
-            row.targetLab,
+
+            row.testType,
+
+            row.specificationLimit,
+
+            row.resultValue,
+
+            row.instrumentId,
+
+            row.testingTime,
+
+            <span
+              className="px-2 py-1 text-[9px] rounded"
+              style={
+                ERROR_STATUS_STYLES[row.errorStatus] || {
+                  backgroundColor: "#E5E7EB",
+                  color: "#374151",
+                }
+              }
+            >
+              {row.errorStatus}
+            </span>,
+
+            <span
+              className="px-2 py-1 text-[9px] rounded"
+              style={
+                TESTING_STATUS_STYLES[row.testingStatus] || {
+                  backgroundColor: "#E5E7EB",
+                  color: "#374151",
+                }
+              }
+            >
+              {row.testingStatus}
+            </span>,
+
+            row.testingStatus === "Testing" ? (
+              <button
+                className="px-2 py-1 text-xs text-white rounded"
+                style={{
+                  backgroundColor: "#14CCC3",
+                }}
+              >
+                Enter Result
+              </button>
+            ) : (
+              "-"
+            ),
           ])}
         />
       </div>

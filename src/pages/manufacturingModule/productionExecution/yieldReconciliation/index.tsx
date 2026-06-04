@@ -2,16 +2,30 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import CustomTable from "../../../../components/customTable";
 import Filter from "../../../../components/customDatefilter";
+import { useAppNavigate } from "../../../../hooks/navigation";
 // import { useAppNavigate } from "../../../../hooks/navigation";
 export default function YieldReconciliation() {
   const [openFilter, setOpenFilter] = useState(false);
-  // const { goTo } = useAppNavigate();
+  const [selectedBatch, setSelectedBatch] = useState<any>(null);
+  const { goBack } = useAppNavigate();
+  const openBatchDetail = () => {
+    setSelectedBatch({
+      batchId: "BAT-44X",
+      product: "Paracetamol 500mg",
+    });
+  };
+
+  const clickableCell = (value: React.ReactNode) => (
+    <div onClick={openBatchDetail} className="cursor-pointer w-full h-full">
+      {value}
+    </div>
+  );
   return (
     <div className="mt-2">
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
- 
+
           <p className="text-base font-semibold md:text-lg text-heading1">
             Yield Reconciliation
           </p>
@@ -31,75 +45,139 @@ export default function YieldReconciliation() {
           </div>
 
           {/* <button
-            onClick={() => setOpenFilter(!openFilter)}
+            onClick={() => setOpenFilter(!open Filter)}
             className="w-full md:w-auto flex items-center justify-center h-10 gap-2 px-6 bg-secondary text-white rounded-md cursor-pointer shadow-[0_1px_12px_#0000001F] focus:outline-none"
           >
             <Icon icon="mage:filter" className="w-5 h-5" />
             Filters
           </button> */}
-
-          {/* <button
-            onClick={() =>
-              goTo(
-                "/manufacturing-module/planning-and-scheduling/batch-planning/create",
-              )
-            }
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md cursor-pointer md:w-auto bg-primary"
-          >
-            <Icon icon="basil:add-outline" className="w-5 h-5" />
-            Create
-          </button> */}
+          {selectedBatch && (
+            <button
+              onClick={() => {
+                if (selectedBatch) {
+                  setSelectedBatch(null);
+                } else {
+                  goBack();
+                }
+              }}
+              className="flex items-center justify-center h-11 gap-2 px-8 text-white rounded-lg cursor-pointer bg-secondary"
+            >
+              <Icon icon="ion:play-back-outline" className="w-5 h-5" />
+              Back
+            </button>
+          )}
         </div>
       </div>
 
       {openFilter && <Filter onClose={() => setOpenFilter(false)} />}
 
-      <div className="mt-3 bg-white rounded-2xl overflow-hidden">
-        <div className="flex flex-wrap gap-4 p-4 text-primary">
-          Yield Reconciliation
-        </div>
-        <CustomTable
-          norounded
-          height="60vh"
-          headers={[
-            "Edit",
-            "Dispense ID",
-            "Work Order ID",
-            "Material Name",
-            "Batch ID",
-            "Target WT",
-            "Live Weight (Real-Time)",
-            "Tolerance Accuracy",
-            "Deviation & (Live Math)",
-            "Scale Assert ID (Calibration)",
-            "Operator Sign-off",
-            "Supervisor Witness",
-            "Step Status Badge",
-            "Actions Buttons",
-          ]}
-          data={[
-            [
-              <Icon
-                icon="basil:edit-outline"
-                className="text-lg cursor-pointer text-primary"
-              />,
-              "Disp-092221",
-              "WO-2026-0812",
-              "Lactose Mono",
-              "Lot-2026-90A",
-              "50.00 kg",
-              "50.04 kg",
-              "±0.05 %",
-              "+0.04 %",
-              "SCL-BOOTH4-02",
-              "Ali Raza",
-              "Sarah K.",
-              "Completed",
-              "View eBMR",
-            ],
-          ]}
-        />
-      </div>
+      {!selectedBatch ? (
+        <>
+          <div className="flex flex-wrap gap-4 p-4 text-primary">
+            Yield Reconciliation
+          </div>
+
+          <CustomTable
+            norounded
+            height="60vh"
+            headers={[
+              "View",
+              "Batch ID",
+              "Target Product",
+              "Theoretical Wt",
+              "Actual Wt",
+              "Variance Wt",
+              "Stabilization Status",
+              "Data Source",
+              "Verified By",
+            ]}
+            data={[
+              [
+                <Icon
+                  icon="hugeicons:view"
+                  className="text-lg cursor-pointer text-primary"
+                  onClick={openBatchDetail}
+                />,
+
+                clickableCell("BAT-44X"),
+
+                clickableCell("Paracetamol 500mg"),
+
+                clickableCell("500 Kg"),
+
+                clickableCell("491.50 Kg"),
+
+                clickableCell("8.5 kg"),
+
+                clickableCell("-1.70 % Deviation"),
+
+                clickableCell("Packaging Line"),
+
+                clickableCell("Sarah K."),
+              ],
+            ]}
+          />
+        </>
+      ) : (
+        <>
+          <div className="flex flex-wrap gap-4 p-4 text-primary">
+            {selectedBatch.batchId} / {selectedBatch.product}
+          </div>
+
+          <CustomTable
+            norounded
+            height="60vh"
+            headers={[
+              "Segments",
+              "Material Code",
+              "Item Name",
+              "LOT / Batch Number",
+              "Theoretical Wt",
+              "Actual Wt",
+              "Variance Wt",
+              "Data Source",
+              "Verified By",
+            ]}
+            data={[
+              [
+                "Inputs",
+                "MAT-RAW-0042",
+                "Lactose Monohydrate",
+                "LOT-2026-90A",
+                "250 Kg",
+                "250 Kg",
+                "0.0 Kg",
+                "Weigh & Disp.",
+                "Sarah K.",
+              ],
+
+              [
+                "Inputs",
+                "MAT-RAW-558kl",
+                "Acetamido API",
+                "LOT-2026-515B",
+                "200 Kg",
+                "198 Kg",
+                "2.0 Kg",
+                "Weigh & Disp.",
+                "Bilal H.",
+              ],
+
+              [
+                "Output",
+                "SKU-TAB-PAR",
+                "Paracetamol 400mg",
+                "BAT-55258",
+                "500 Kg",
+                "491.50 Kg",
+                "8.5 Kg",
+                "Packaging Line",
+                "Muzaffar A.",
+              ],
+            ]}
+          />
+        </>
+      )}
     </div>
   );
 }
