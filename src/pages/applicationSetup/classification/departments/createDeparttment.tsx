@@ -1,7 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { SyncLoader } from "react-spinners";
-
 import CustomInput from "../../../../components/customInput";
 import { useQuery } from "@tanstack/react-query";
 import {

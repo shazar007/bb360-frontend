@@ -120,10 +120,6 @@ export default function SamplingOperationsCreate() {
     alert("Data Saved Successfully");
 
     goBack();
-
-    console.log("Saved Data:", formData);
-
-    alert("Data Saved Successfully");
   };
   return (
     <div className="mt-2">
