@@ -12,6 +12,7 @@ import {
   deleteSOPMaster, // ✅ apni API file mein add karo
 } from "../../../../api/manufacturingSerives";
 import { BASE_URL } from "../../../../api/endPoint";
+import CustomCheckbox from "../../../../components/customCheckbox";
 
 const getFileName = (path: string) => path?.split("/").pop() || path;
 const getFileUrl = (path: string) => {
@@ -163,15 +164,10 @@ export default function SopMaster() {
               />,
 
               <div className="flex items-center justify-center">
-                <div
-                  onClick={() => toggleSelect(item._id)}
-                  className={`w-4 h-4 rounded border-2 flex items-center justify-center cursor-pointer transition-colors
-                  ${selectedId === item._id ? "bg-primary border-primary" : "border-gray-400"}`}
-                >
-                  {selectedId === item._id && (
-                    <Icon icon="mdi:check" className="text-white text-[10px]" />
-                  )}
-                </div>
+                <CustomCheckbox
+                  checked={selectedId === item._id}
+                  onChange={() => toggleSelect(item._id)}
+                />
               </div>,
 
               item?.sopNumber || "-",

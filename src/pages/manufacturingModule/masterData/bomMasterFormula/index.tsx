@@ -12,6 +12,7 @@ import {
   deleteBillOfMaterial,
   getAllBillOfMaterial,
 } from "../../../../api/manufacturingSerives";
+import CustomCheckbox from "../../../../components/customCheckbox";
 
 export default function BomMasterFormula() {
   const [openFilter, setOpenFilter] = useState(false);
@@ -145,19 +146,10 @@ export default function BomMasterFormula() {
 
             // ✅ Per row checkbox
             <div className="flex items-center justify-center">
-              <div
-                onClick={() => toggleSelect(item._id)}
-                className={`w-4 h-4 rounded border-2 flex items-center justify-center cursor-pointer transition-colors
-                  ${
-                    selectedIds.includes(item._id)
-                      ? "bg-primary border-primary"
-                      : "border-gray-400"
-                  }`}
-              >
-                {selectedIds.includes(item._id) && (
-                  <Icon icon="mdi:check" className="text-white text-[10px]" />
-                )}
-              </div>
+            <CustomCheckbox
+  checked={selectedIds.includes(item._id)}
+  onChange={() => toggleSelect(item._id)}
+/>
             </div>,
 
             item.formulaId || "-",
