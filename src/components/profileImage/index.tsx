@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import profile from "../../assets/Avatar.jpg";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/userSlice";
 import Cookies from "js-cookie";
 import { Avatar } from "@mui/material";
@@ -9,7 +8,7 @@ import { UserLogout } from "../../api/userServices";
 import { SyncLoader } from "react-spinners";
 export default function ProfileImage() {
   const [open, setOpen] = useState(false);
-  const [image] = useState(profile);
+  const user = useSelector((state: any) => state.user.user);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -44,7 +43,10 @@ export default function ProfileImage() {
     <div className="relative profile-menu">
       <Avatar
         onClick={() => setOpen(!open)}
-        src={image}
+        src={
+          user?.image ||
+          "https://img.magnific.com/premium-vector/man-professional-business-casual-young-avatar-icon-illustration_1277826-623.jpg?semt=ais_hybrid&w=740&q=80"
+        }
         alt="profile"
         className="rounded-md cursor-pointer"
         variant="rounded"

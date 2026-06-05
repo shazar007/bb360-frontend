@@ -13,6 +13,7 @@ export default function TopBar() {
   const [openSubMenu, setOpenSubMenu] = useState<{ [key: string]: boolean }>(
     {},
   );
+
   const menuRef = useRef<HTMLDivElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();

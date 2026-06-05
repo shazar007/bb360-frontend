@@ -96,6 +96,7 @@ export default function EmployeesCreate() {
     department: "",
     jobLocation: "",
   });
+  console.log("🚀 ~ formData:", formData);
   const { refetch } = useQuery({
     queryKey: ["getAllEmployees"],
     queryFn: getAllEmployees,

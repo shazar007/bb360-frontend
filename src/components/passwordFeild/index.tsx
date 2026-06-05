@@ -10,8 +10,6 @@ type CustomInputProps = {
   name?: string;
   required?: boolean;
   disabled?: boolean;
-  className?: string;
-  white?: boolean;
 };
 
 export default function PasswordFeild({
@@ -23,8 +21,6 @@ export default function PasswordFeild({
   name,
   required = false,
   disabled = false,
-  className = "",
-  white = false,
 }: CustomInputProps) {
   const [show, setShow] = useState(false);
 
@@ -33,12 +29,12 @@ export default function PasswordFeild({
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="mb-1 text-xs font-normal leading-3 text-heading1">
+        <label className="mb-1 text-xs font-normal leading-3 text-white">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
 
-      <div className="relative">
+      <div className="relative ">
         <input
           type={isPassword ? (show ? "text" : "password") : type}
           name={name}
@@ -47,16 +43,14 @@ export default function PasswordFeild({
           placeholder={placeholder}
           required={required}
           disabled={disabled}
-          className={`placeholder:text-heading1/36 placeholder:text-xs text-xs rounded-md p-4 h-10 w-full focus:outline-none pr-10 ${
-            white ? "bg-white" : "bg-[#ECF0F4]"
-          } ${className}`}
+          className="placeholder:text-white/50 placeholder:text-xs text-xs text-white  p-4 h-10 border-b border-white/70 w-full focus:outline-none pr-10 bg-transparent"
         />
 
         {isPassword && (
           <button
             type="button"
             onClick={() => setShow(!show)}
-            className="absolute text-gray-500 -translate-y-1/2 cursor-pointer right-3 top-1/2"
+            className="absolute text-white -translate-y-1/2 cursor-pointer right-3 top-1/2"
           >
             {show ? (
               <Icon

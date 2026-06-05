@@ -9,6 +9,7 @@ type CustomInputProps = {
   disabled?: boolean;
   className?: string;
   white?: boolean;
+  whitelabel?: boolean;
 };
 
 export default function CustomInput({
@@ -22,11 +23,16 @@ export default function CustomInput({
   disabled = false,
   className = "",
   white = false,
+  whitelabel = false,
 }: CustomInputProps) {
   return (
     <div className="flex flex-col">
       {label && (
-        <label className="mb-1 text-xs font-normal leading-3 text-heading1">
+        <label
+          className={`mb-1 text-xs font-normal leading-3 ${
+            whitelabel ? "text-white" : "text-heading1"
+          }`}
+        >
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
