@@ -11,13 +11,12 @@ export const getAllMaterialMastern = () => {
 export const updateMaterialMaster = (id: string | number, values: any) => {
   return HTTP_CLIENT.put(`${ENDPOINTS.MATERIRAL_MASTERN}/${id}`, values);
 };
-export const deleteMaterialMaster = (id: string ) => {
+export const deleteMaterialMaster = (id: string) => {
   return HTTP_CLIENT.delete(`${ENDPOINTS.MATERIRAL_MASTERN}/${id}`);
 };
 
 // -------------- Bill Of Material-------------
 export const addBillOfMaterial = (values: any) => {
-  console.log("🚀 ~ addBillOfMaterial ~ values:", values)
   return HTTP_CLIENT.post(ENDPOINTS.BILL_MATERIAL, values);
 };
 export const getAllBillOfMaterial = () => {

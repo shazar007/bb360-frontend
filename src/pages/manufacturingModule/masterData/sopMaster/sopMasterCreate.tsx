@@ -150,7 +150,7 @@ export default function SopMasterCreate() {
         <div className="flex w-full flex-col items-stretch gap-2 md:w-auto md:flex-row md:items-center">
           <button
             onClick={goBack}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-secondary px-6 text-white md:w-auto"
+            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-secondary px-6 text-white md:w-auto"
           >
             <Icon icon="ion:play-back-outline" className="h-5 w-5" /> Back
           </button>
@@ -158,7 +158,7 @@ export default function SopMasterCreate() {
           <button
             onClick={() => formik.handleSubmit()}
             disabled={isPending}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
+            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
           >
             <Icon icon="mynaui:save" className="h-5 w-5" />
             {isEdit ? "Update" : "Save"}

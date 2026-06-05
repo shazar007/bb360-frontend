@@ -102,7 +102,7 @@ export default function BomMasterFormula() {
                 "/manufacturing-module/manufacturing-setup/bill-of-material/create",
               )
             }
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
           >
             <Icon icon="basil:add-outline" className="w-5 h-5" />
             Create

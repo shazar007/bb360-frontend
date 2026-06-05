@@ -48,14 +48,14 @@ export default function ItemUpdate() {
     setConfirm(true);
     setOpenMenuIndex(null);
   };
-  console.log("DELETING ID:", selectedId);
+  // console.log("DELETING ID:", selectedId);
   const handleDelete = () => {
     if (!selectedId) {
       console.log("NO ID FOUND ❌");
       return;
     }
     setDeleteLoading(true);
-    console.log("DELETING ID:", selectedId);
+    // console.log("DELETING ID:", selectedId);
     deleteItem(selectedId)
       .then(() => {
         notifySuccess("Item deleted successfully ✅");
@@ -127,6 +127,12 @@ export default function ItemUpdate() {
               "Units of Measure (UOM)",
               "T.P",
               "M.R.P",
+              "Reorder Level",
+              "Lead Time Days",
+              "Reorder Qty",
+              "Shelf Life Days",
+              "Standard Cost",
+              "Storage Conditions",
               "Status",
             ]}
             data={items.map((item: any, index: number) => {
@@ -180,9 +186,18 @@ export default function ItemUpdate() {
                 item.tp || "-",
                 item.mrp || "-",
 
-                <div className="bg-[#228422]/12 w-max px-2 py-0.5 rounded-sm text-[#228422]">
-                  Good
-                </div>,
+                item.reorderLevel || "-",
+                item.leadTimeDays || "-",
+                item.reorderQty || "-",
+                item.shelfLifeDays || "-",
+                item.standardCost || "-",
+                item.storageConditions || "-",
+                <span
+                  className={`px-2 py-1 text-xs font-semibold rounded-full
+  ${item.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+                >
+                  {item.isActive ? "Active" : "Inactive"}
+                </span>,
               ];
             })}
           />

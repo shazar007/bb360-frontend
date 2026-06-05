@@ -43,7 +43,6 @@ export default function CreateReceivingChallan() {
   });
 
   let purchaseOrderData = (order as any)?.data?.po;
-  // console.log("🚀 ~ CreateReceivingChallan ~ purchaseOrderData:", purchaseOrderData)
   createReceivingChallan;
   const handleIdChange = async () => {
     if (!poNumber.trim()) {

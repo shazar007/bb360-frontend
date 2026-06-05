@@ -6,13 +6,111 @@ import { addItems } from "../../../../api/itemServices";
 import { notifyError, notifySuccess } from "../../../../components/toast";
 import CustomInput from "../../../../components/customInput";
 import CustomSelect from "../../../../components/customSelect";
-import CustomDatePicker from "../../../../components/datePicker";
 import { SyncLoader } from "react-spinners";
 import type { AxiosError } from "axios";
 import * as XLSX from "xlsx";
-import dayjs from "dayjs";
 import { useQueryClient } from "@tanstack/react-query";
+import BatchManager from "../../../../components/BatchManager";
 
+const getCategoryRule = (category: string) => itemCategoryRules?.[category];
+const isFieldAllowed = (category: string, field: string) => {
+  const rule = getCategoryRule(category);
+  return !!rule?.fields?.[field];
+};
+const shouldHaveBatches = (category: string) => {
+  const rule = getCategoryRule(category);
+  return !!rule?.requireBatches;
+};
+const itemCategoryRules: Record<string, any> = {
+  FINISHED_GOODS: {
+    fields: {
+      tp: true,
+      mrp: true,
+      standardCost: true,
+      shelfLifeDays: true,
+      storageConditions: true,
+      inspectionRequired: true,
+      hazardous: true,
+    },
+    showMeta: true,
+  },
+
+  RAW_MATERIAL: {
+    fields: {
+      standardCost: true,
+      reorderLevel: true,
+      reorderQty: true,
+      leadTimeDays: true,
+      shelfLifeDays: true,
+      storageConditions: true,
+      inspectionRequired: true,
+      hazardous: true,
+      batches: true,
+    },
+    requireBatches: true,
+  },
+
+  PACKAGING_MATERIAL: {
+    fields: {
+      standardCost: true,
+      reorderLevel: true,
+      reorderQty: true,
+      leadTimeDays: true,
+      shelfLifeDays: true,
+      storageConditions: true,
+      inspectionRequired: false,
+      hazardous: true,
+      batches: true,
+    },
+    requireBatches: true,
+  },
+
+  WORK_IN_PROGRESS: {
+    fields: {
+      standardCost: true,
+      shelfLifeDays: true,
+      storageConditions: true,
+      inspectionRequired: true,
+      hazardous: true,
+      batches: false,
+      reorderLevel: false,
+      reorderQty: false,
+      leadTimeDays: false,
+      tp: false,
+      mrp: false,
+    },
+    requireBatches: false,
+  },
+
+  CONSUMABLE: {
+    fields: {
+      standardCost: true,
+      reorderLevel: true,
+      reorderQty: true,
+      leadTimeDays: true,
+      shelfLifeDays: true,
+      storageConditions: true,
+      inspectionRequired: false,
+      hazardous: true,
+      batches: true,
+    },
+    requireBatches: true,
+  },
+
+  SPARE_PART: {
+    fields: {
+      standardCost: true,
+      reorderLevel: true,
+      reorderQty: true,
+      leadTimeDays: true,
+      storageConditions: true,
+      inspectionRequired: true,
+      hazardous: true,
+      batches: true,
+    },
+    requireBatches: true,
+  },
+};
 const STORAGE_KEY = "temp_items_upload";
 
 export default function DataUpload() {
@@ -31,7 +129,16 @@ export default function DataUpload() {
     uom: "",
     tp: "",
     mrp: "",
-    expiryDate: "",
+    standardCost: "",
+    reorderLevel: "",
+    reorderQty: "",
+    leadTimeDays: "",
+    shelfLifeDays: "",
+    storageConditions: "",
+    hazardous: false,
+    inspectionRequired: false,
+    isActive: true,
+    batches: [],
   });
 
   useEffect(() => {
@@ -52,25 +159,49 @@ export default function DataUpload() {
   };
 
   const handleSave = () => {
+    const category = form.itemCategory;
+
     if (!form.itemName) {
-      notifyError("Please fill required fields");
+      notifyError("Item Name is required");
       return;
     }
 
-    const newItem = {
-      ...form,
-      selected: false,
-    };
+    const batches = shouldHaveBatches(category) ? form.batches || [] : [];
 
+    const newItem = {
+      itemName: form.itemName,
+      itemCategory: category,
+      uom: form.uom,
+
+      tp: isFieldAllowed(category, "tp") ? Number(form.tp) || 0 : undefined,
+      mrp: isFieldAllowed(category, "mrp") ? Number(form.mrp) || 0 : undefined,
+
+      standardCost: Number(form.standardCost) || 0,
+
+      reorderLevel: isFieldAllowed(category, "reorderLevel")
+        ? Number(form.reorderLevel) || 0
+        : undefined,
+
+      reorderQty: isFieldAllowed(category, "reorderQty")
+        ? Number(form.reorderQty) || 0
+        : undefined,
+
+      leadTimeDays: isFieldAllowed(category, "leadTimeDays")
+        ? Number(form.leadTimeDays) || 0
+        : undefined,
+
+      shelfLifeDays: Number(form.shelfLifeDays) || 0,
+      storageConditions: form.storageConditions || "",
+      hazardous: Boolean(form.hazardous),
+      inspectionRequired: Boolean(form.inspectionRequired),
+      isActive: true,
+
+      batches,
+    };
     setTableData((prev) => {
       const updated = [...prev];
-
-      if (editIndex !== null) {
-        updated[editIndex] = newItem;
-      } else {
-        updated.push(newItem);
-      }
-
+      if (editIndex !== null) updated[editIndex] = newItem;
+      else updated.push(newItem);
       return updated;
     });
 
@@ -80,7 +211,16 @@ export default function DataUpload() {
       uom: "",
       tp: "",
       mrp: "",
-      expiryDate: "",
+      standardCost: "",
+      reorderLevel: "",
+      reorderQty: "",
+      leadTimeDays: "",
+      shelfLifeDays: "",
+      storageConditions: "",
+      hazardous: false,
+      inspectionRequired: false,
+      isActive: true,
+      batches: [],
     });
 
     setEditIndex(null);
@@ -118,31 +258,83 @@ export default function DataUpload() {
 
       setLoading(true);
 
-      const payload = tableData.map((item) => ({
-        itemName: item.itemName?.trim(),
-        itemCategory: item.itemCategory,
-        uom: item.uom,
-        tp: Number(item.tp),
-        mrp: Number(item.mrp),
-        // expiryDate: formatExcelDate(item.expiryDate),
-      }));
-      console.log("🚀 ~ handleUpload ~ payload:", payload);
+      const buildPayloadItem = (item: any) => {
+        const base = {
+          itemName: item.itemName?.trim(),
+          itemCategory: item.itemCategory,
+          uom: item.uom,
+          standardCost: Number(item.standardCost) || 0,
+          shelfLifeDays: Number(item.shelfLifeDays) || 0,
+          storageConditions: item.storageConditions || "",
+          hazardous: Boolean(item.hazardous),
+          inspectionRequired: Boolean(item.inspectionRequired),
+          isActive: item.isActive ?? true,
+        };
 
-      console.log("FINAL PAYLOAD:", payload);
+        switch (item.itemCategory) {
+          case "FINISHED_GOODS":
+            return {
+              ...base,
+              tp: Number(item.tp) || 0,
+              mrp: Number(item.mrp) || 0,
+              batches: item.batches || [],
+            };
 
+          case "RAW_MATERIAL":
+            return {
+              ...base,
+              reorderLevel: Number(item.reorderLevel) || 0,
+              reorderQty: Number(item.reorderQty) || 0,
+              leadTimeDays: Number(item.leadTimeDays) || 0,
+              batches: item.batches || [],
+            };
+
+          case "PACKAGING_MATERIAL":
+            return {
+              ...base,
+              reorderLevel: Number(item.reorderLevel) || 0,
+              reorderQty: Number(item.reorderQty) || 0,
+              leadTimeDays: Number(item.leadTimeDays) || 0,
+              batches: item.batches || [],
+            };
+
+          case "WORK_IN_PROGRESS":
+            return {
+              ...base,
+              standardCost: Number(item.standardCost) || 0,
+            };
+
+          case "CONSUMABLE":
+            return {
+              ...base,
+              reorderLevel: Number(item.reorderLevel) || 0,
+              reorderQty: Number(item.reorderQty) || 0,
+              leadTimeDays: Number(item.leadTimeDays) || 0,
+              batches: item.batches || [],
+            };
+
+          case "SPARE_PART":
+            return {
+              ...base,
+              reorderLevel: Number(item.reorderLevel) || 0,
+              reorderQty: Number(item.reorderQty) || 0,
+              leadTimeDays: Number(item.leadTimeDays) || 0,
+              batches: item.batches || [],
+            };
+
+          default:
+            return base;
+        }
+      };
+      const payload = tableData.map((item) => buildPayloadItem(item));
       await addItems(payload);
-
       notifySuccess("Item Uploaded successfully");
-
       queryClient.invalidateQueries({ queryKey: ["getAllItems"] });
-
       localStorage.removeItem(STORAGE_KEY);
       setTableData([]);
     } catch (err: unknown) {
       const error = err as AxiosError<any>;
-
       console.log("ERROR RESPONSE:", error.response?.data);
-
       notifyError(error.response?.data?.message || "Upload failed");
     } finally {
       setLoading(false);
@@ -151,51 +343,33 @@ export default function DataUpload() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setFileLoading(true);
     setFileName(file.name);
-
     const reader = new FileReader();
-
     reader.onload = (event) => {
       try {
         const data = event.target?.result;
         const workbook = XLSX.read(data, { type: "binary" });
-
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
-
         const jsonData: any[] = XLSX.utils.sheet_to_json(sheet);
-
-        console.log("RAW EXCEL DATA:", jsonData);
-
-        const formatExcelDate = (val: any) => {
-          if (!val) return "";
-
-          if (typeof val === "string" && val.includes("/")) {
-            const [m, d, y] = val.split("/");
-            return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
-          }
-          if (typeof val === "number") {
-            const excelEpoch = new Date(1899, 11, 30);
-            const jsDate = new Date(excelEpoch.getTime() + val * 86400000);
-            return jsDate.toISOString().split("T")[0];
-          }
-          const d = new Date(val);
-          return isNaN(d.getTime()) ? "" : d.toISOString().split("T")[0];
-        };
-
         const formatted = jsonData.map((row: any) => ({
-          itemName:
-            row["Item Name"] || row["itemName"] || row["ItemName"] || "",
-          itemCategory: row["Item Category"] || row["itemCategory"] || "",
-          uom: row["Units"] || row["uom"] || "",
-          tp: row["tp"] || "",
-          mrp: row["mrp"] || "",
-          expiryDate: formatExcelDate(row["Expiry Date"] || row["expiryDate"]),
+          itemName: row["Item Name"] || "",
+          itemCategory: row["Item Category"] || "",
+          uom: row["Units"] || "",
+          tp: row["tp"] || 0,
+          mrp: row["mrp"] || 0,
+          standardCost: row["Standard Cost"] || 0,
+          reorderLevel: row["Reorder Level"] || 0,
+          reorderQty: row["Reorder Qty"] || 0,
+          leadTimeDays: row["Lead Time Days"] || 0,
+          shelfLifeDays: row["Shelf Life Days"] || 0,
+          storageConditions: row["Storage Conditions"] || "",
+          hazardous: row["Hazardous"] === "true" || false,
+          inspectionRequired: row["Inspection Required"] === "true" || false,
+          isActive: true,
           selected: false,
         }));
-
         setTableData([...formatted]);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
 
@@ -370,41 +544,49 @@ export default function DataUpload() {
               "Edit",
               "Select",
               "Product Name",
-              "Item Category",
-              "Expiry Date",
+              "Category",
               "Units",
-              ...(tableData.some((item) => item.itemCategory !== "RAW_MATERIAL")
-                ? ["TP", "MRP"]
-                : []),
+              "TP",
+              "MRP",
+              "Standard Cost",
+              "Reorder Level",
+              "Reorder Qty",
+              "Lead Time",
+              "Shelf Life",
+              "Storage",
+              "Hazardous",
+              "Inspection",
             ]}
             data={tableData.map((item, index) => {
-              const baseRow = [
+              return [
                 <Icon
                   icon="basil:edit-outline"
                   className="text-xl cursor-pointer text-primary"
                   onClick={() => {
-                    setForm(tableData[index]);
+                    setForm(item);
                     setEditIndex(index);
                     setAddItem(true);
                   }}
                 />,
+
                 <CustomCheckbox
                   checked={item.selected}
                   onChange={(v) => toggleSelect(index, v)}
                 />,
-                item.itemName,
-                item.itemCategory,
-                dayjs(item.expiryDate).isValid()
-                  ? dayjs(item.expiryDate).format("DD-MMM-YYYY")
-                  : "-",
-                item.uom,
+                item.itemName || "-",
+                item.itemCategory || "-",
+                item.uom || "-",
+                item.tp ?? "-",
+                item.mrp ?? "-",
+                item.standardCost ?? "-",
+                item.reorderLevel ?? "-",
+                item.reorderQty ?? "-",
+                item.leadTimeDays ?? "-",
+                item.shelfLifeDays ?? "-",
+                item.storageConditions || "-",
+                item.hazardous ? "Yes" : "No",
+                item.inspectionRequired ? "Yes" : "No",
               ];
-
-              if (item.itemCategory !== "RAW_MATERIAL") {
-                baseRow.push(item.tp, item.mrp);
-              }
-
-              return baseRow;
             })}
           />
         </div>
@@ -470,12 +652,7 @@ export default function DataUpload() {
                 value={form.itemName}
                 onChange={handleChange}
               />
-              <CustomDatePicker
-                label="Expiry Date"
-                name="expiryDate"
-                value={form.expiryDate}
-                onChange={(v) => setForm({ ...form, expiryDate: v })}
-              />
+
               <CustomSelect
                 label="Item Category"
                 options={[
@@ -494,14 +671,7 @@ export default function DataUpload() {
                   }))
                 }
               />
-              {form.itemCategory !== "RAW_MATERIAL" && (
-                <CustomInput
-                  label="TP"
-                  name="tp"
-                  value={form.tp}
-                  onChange={handleChange}
-                />
-              )}{" "}
+
               <CustomSelect
                 label="Units"
                 options={[
@@ -519,7 +689,17 @@ export default function DataUpload() {
                 value={form.uom}
                 onChange={(v) => setForm({ ...form, uom: v })}
               />
-              {form.itemCategory !== "RAW_MATERIAL" && (
+
+              {isFieldAllowed(form.itemCategory, "tp") && (
+                <CustomInput
+                  label="TP"
+                  name="tp"
+                  value={form.tp}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "mrp") && (
                 <CustomInput
                   label="MRP"
                   name="mrp"
@@ -527,8 +707,116 @@ export default function DataUpload() {
                   onChange={handleChange}
                 />
               )}
+
+              {isFieldAllowed(form.itemCategory, "standardCost") && (
+                <CustomInput
+                  label="Standard Cost"
+                  name="standardCost"
+                  value={form.standardCost}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "reorderLevel") && (
+                <CustomInput
+                  label="Reorder Level"
+                  name="reorderLevel"
+                  value={form.reorderLevel}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "reorderQty") && (
+                <CustomInput
+                  label="Reorder Quantity"
+                  name="reorderQty"
+                  value={form.reorderQty}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "leadTimeDays") && (
+                <CustomInput
+                  label="Lead Time (Days)"
+                  name="leadTimeDays"
+                  value={form.leadTimeDays}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "shelfLifeDays") && (
+                <CustomInput
+                  label="Shelf Life (Days)"
+                  name="shelfLifeDays"
+                  value={form.shelfLifeDays}
+                  onChange={handleChange}
+                />
+              )}
+
+              {isFieldAllowed(form.itemCategory, "storageConditions") && (
+                <CustomInput
+                  label="Storage Conditions"
+                  name="storageConditions"
+                  value={form.storageConditions}
+                  onChange={handleChange}
+                />
+              )}
             </div>
 
+            {(isFieldAllowed(form.itemCategory, "hazardous") ||
+              isFieldAllowed(form.itemCategory, "inspectionRequired")) && (
+              <div className="p-5 grid grid-cols-1 md:grid-cols-3 pt-0">
+                {isFieldAllowed(form.itemCategory, "hazardous") && (
+                  <div className="flex items-center gap-2">
+                    <CustomCheckbox
+                      checked={form.hazardous}
+                      onChange={(v) =>
+                        setForm((prev: any) => ({ ...prev, hazardous: v }))
+                      }
+                    />
+                    <span>Hazardous</span>
+                  </div>
+                )}
+
+                {isFieldAllowed(form.itemCategory, "inspectionRequired") && (
+                  <div className="flex items-center gap-2">
+                    <CustomCheckbox
+                      checked={form.inspectionRequired}
+                      onChange={(v) =>
+                        setForm((prev: any) => ({
+                          ...prev,
+                          inspectionRequired: v,
+                        }))
+                      }
+                    />
+                    <span>Inspection Required</span>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2">
+                  <CustomCheckbox
+                    checked={form.isActive}
+                    onChange={(v) =>
+                      setForm((prev: any) => ({ ...prev, isActive: v }))
+                    }
+                  />
+                  <span>Active</span>
+                </div>
+              </div>
+            )}
+
+            <div className=" p-4 pt-0">
+              <BatchManager
+                value={form.batches || []}
+                onChange={(batches) =>
+                  setForm((prev: any) => ({
+                    ...prev,
+                    batches,
+                  }))
+                }
+                shouldShow={shouldHaveBatches(form.itemCategory)}
+              />
+            </div>
             <div className="flex justify-end p-4 pt-0 ">
               <button
                 onClick={handleSave}

@@ -17,10 +17,7 @@ export default function EmployeePerformanceCriteria() {
   });
   const ALLgetEmployeePerformanceEvaluation: any[] =
     getEmployeePerformanceEvaluation?.data?.data || [];
-  console.log(
-    "🚀 ~ ALLgetEmployeePerformanceEvaluation:",
-    ALLgetEmployeePerformanceEvaluation,
-  );
+
   return (
     <>
       <div className="mt-8">

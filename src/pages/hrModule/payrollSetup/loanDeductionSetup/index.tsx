@@ -31,7 +31,6 @@ export default function LoanDeductionSetup() {
   });
 
   const tableData = data?.data?.data;
-  console.log("🚀 ~ tableData:", tableData);
 
   const handleEdit = (item: any) => {
     setForm({

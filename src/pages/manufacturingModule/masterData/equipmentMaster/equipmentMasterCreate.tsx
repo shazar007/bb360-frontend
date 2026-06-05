@@ -27,12 +27,12 @@ const CLEANING_OPTIONS = [
 ];
 
 const validationSchema = Yup.object({
-  equipmentName:     Yup.string().required("Equipment Name is required"),
+  equipmentName: Yup.string().required("Equipment Name is required"),
   equipmentLocation: Yup.string().required("Equipment Location is required"),
-  nextDueDate:       Yup.string().required("Next Due Date is required"),
-  workflowState:     Yup.string().required("Workflow State is required"),
-  lastCalibration:   Yup.string().required("Last Calibration is required"),
-  cleaningStatus:    Yup.string().required("Cleaning Status is required"),
+  nextDueDate: Yup.string().required("Next Due Date is required"),
+  workflowState: Yup.string().required("Workflow State is required"),
+  lastCalibration: Yup.string().required("Last Calibration is required"),
+  cleaningStatus: Yup.string().required("Cleaning Status is required"),
 });
 
 export default function EquipmentMasterCreate() {
@@ -55,9 +55,13 @@ export default function EquipmentMasterCreate() {
   ========================= */
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: any) =>
-      isEdit ? updateEquipmentMaster(itemData?._id, payload) : addEquipmentMaster(payload),
+      isEdit
+        ? updateEquipmentMaster(itemData?._id, payload)
+        : addEquipmentMaster(payload),
     onSuccess: async () => {
-      notifySuccess(isEdit ? "Equipment Master Updated" : "Equipment Master Created");
+      notifySuccess(
+        isEdit ? "Equipment Master Updated" : "Equipment Master Created",
+      );
       await refetch();
       goBack();
     },
@@ -70,12 +74,12 @@ export default function EquipmentMasterCreate() {
   ========================= */
   const formik = useFormik({
     initialValues: {
-      equipmentName:     itemData?.equipmentName     || "",
+      equipmentName: itemData?.equipmentName || "",
       equipmentLocation: itemData?.equipmentLocation || "",
-      nextDueDate:       itemData?.nextDueDate       || "",
-      workflowState:     itemData?.workflowState     || "",
-      lastCalibration:   itemData?.lastCalibration   || "",
-      cleaningStatus:    itemData?.cleaningStatus    || "",
+      nextDueDate: itemData?.nextDueDate || "",
+      workflowState: itemData?.workflowState || "",
+      lastCalibration: itemData?.lastCalibration || "",
+      cleaningStatus: itemData?.cleaningStatus || "",
     },
     validationSchema,
     onSubmit: (values) => mutate(values),
@@ -100,7 +104,7 @@ export default function EquipmentMasterCreate() {
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:w-auto">
           <button
             onClick={goBack}
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
           >
             <Icon icon="ion:play-back-outline" /> Back
           </button>
@@ -108,7 +112,7 @@ export default function EquipmentMasterCreate() {
           <button
             onClick={() => formik.handleSubmit()}
             disabled={isPending}
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
           >
             <Icon icon="mynaui:save" />
             {isEdit ? "Update" : "Save"}
@@ -126,7 +130,6 @@ export default function EquipmentMasterCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
             <CustomInput
               disabled
               label="Asset ID"
@@ -138,10 +141,16 @@ export default function EquipmentMasterCreate() {
               <CustomInput
                 label="Equipment Location"
                 value={formik.values.equipmentLocation}
-                onChange={(e: any) => formik.setFieldValue("equipmentLocation", e.target.value)}
+                onChange={(e: any) =>
+                  formik.setFieldValue("equipmentLocation", e.target.value)
+                }
                 placeholder="Line 2, Hall 3"
               />
-              {err("equipmentLocation") && <p className="text-[11px] text-red-500">{err("equipmentLocation")}</p>}
+              {err("equipmentLocation") && (
+                <p className="text-[11px] text-red-500">
+                  {err("equipmentLocation")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -150,7 +159,9 @@ export default function EquipmentMasterCreate() {
                 value={formik.values.nextDueDate}
                 onChange={(val) => formik.setFieldValue("nextDueDate", val)}
               />
-              {err("nextDueDate") && <p className="text-[11px] text-red-500">{err("nextDueDate")}</p>}
+              {err("nextDueDate") && (
+                <p className="text-[11px] text-red-500">{err("nextDueDate")}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -160,17 +171,27 @@ export default function EquipmentMasterCreate() {
                 options={WORKFLOW_OPTIONS}
                 onChange={(val) => formik.setFieldValue("workflowState", val)}
               />
-              {err("workflowState") && <p className="text-[11px] text-red-500">{err("workflowState")}</p>}
+              {err("workflowState") && (
+                <p className="text-[11px] text-red-500">
+                  {err("workflowState")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <CustomInput
                 label="Equipment Name"
                 value={formik.values.equipmentName}
-                onChange={(e: any) => formik.setFieldValue("equipmentName", e.target.value)}
+                onChange={(e: any) =>
+                  formik.setFieldValue("equipmentName", e.target.value)
+                }
                 placeholder="High Shear Granular Mixer"
               />
-              {err("equipmentName") && <p className="text-[11px] text-red-500">{err("equipmentName")}</p>}
+              {err("equipmentName") && (
+                <p className="text-[11px] text-red-500">
+                  {err("equipmentName")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -179,7 +200,11 @@ export default function EquipmentMasterCreate() {
                 value={formik.values.lastCalibration}
                 onChange={(val) => formik.setFieldValue("lastCalibration", val)}
               />
-              {err("lastCalibration") && <p className="text-[11px] text-red-500">{err("lastCalibration")}</p>}
+              {err("lastCalibration") && (
+                <p className="text-[11px] text-red-500">
+                  {err("lastCalibration")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -189,9 +214,12 @@ export default function EquipmentMasterCreate() {
                 options={CLEANING_OPTIONS}
                 onChange={(val) => formik.setFieldValue("cleaningStatus", val)}
               />
-              {err("cleaningStatus") && <p className="text-[11px] text-red-500">{err("cleaningStatus")}</p>}
+              {err("cleaningStatus") && (
+                <p className="text-[11px] text-red-500">
+                  {err("cleaningStatus")}
+                </p>
+              )}
             </div>
-
           </div>
         </div>
       </div>

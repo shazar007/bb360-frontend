@@ -150,7 +150,6 @@ export default function SopMaster() {
             <span className="block w-full text-center">Attachment</span>,
           ]}
           data={filteredList?.map((item: any) => {
-            console.log("🚀 ~ SopMaster ~ item:...", item);
             return [
               <Icon
                 icon="basil:edit-outline"
@@ -183,7 +182,7 @@ export default function SopMaster() {
                 <div className="flex items-center justify-end w-full gap-3">
                   {/* File Name Badge */}
                   <div
-                    className="max-w-[140px] truncate text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700"
+                    className="max-w-35 truncate text-xs px-2 py-1 rounded-md bg-gray-100 text-gray-700"
                     title={getFileName(item.attachment)}
                   >
                     {getFileName(item.attachment)}

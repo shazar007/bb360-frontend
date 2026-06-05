@@ -485,7 +485,7 @@ export default function CreateSalesInvoice() {
               <CustomInput label="Item Code" value={form.itemCode} disabled />
               <CustomInput
                 label="Item Balance"
-                value={form.itemBalance}
+                value={form.itemBalance || 0}
                 disabled
                 onChange={(e) =>
                   setForm((p) => ({ ...p, itemBalance: e.target.value }))

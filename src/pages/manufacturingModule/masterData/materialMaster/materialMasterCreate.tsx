@@ -18,13 +18,6 @@ import {
 import { getAllItems } from "../../../../api/itemServices";
 import { getAllVendors } from "../../../../api/vendorServices";
 
-const MATERIAL_TYPE_OPTIONS = [
-  { label: "Raw Material", value: "raw_material" },
-  { label: "Finished Goods", value: "finished_goods" },
-  { label: "Packaging", value: "packaging" },
-  { label: "Semi-Finished Goods", value: "semi_finished" },
-];
-
 const QC_OPTIONS = [
   { label: "Quarantine", value: "quarantine" },
   { label: "Approved", value: "approved" },
@@ -102,18 +95,16 @@ export default function MaterialMasterCreate() {
       notifyError(err?.response?.data?.message || "Something went wrong"),
   });
 
-  /* =========================
-     Formik
-  ========================= */
   const formik = useFormik({
     initialValues: {
-      item: itemData?.item?._id || itemData?.item || "", // ✅ edit me ID set karo
+      item: itemData?.item?._id || "",
       materialName: itemData?.materialName || "",
-      materialType: itemData?.materialType || "",
+      itemCategory: itemData?.itemCategory || "",
       shelfLife: itemData?.shelfLife || "",
       qcDisposition: itemData?.qcDisposition || "",
       uom: itemData?.uom || "",
-      vendor: itemData?.vendor?._id || itemData?.vendor || "",
+      vendor: itemData?.vendor?._id || "",
+      materialCode: itemData?.materialCode || "", // ✅ ADD THIS
     },
     validationSchema,
     onSubmit: (values) => mutate(values),
@@ -127,7 +118,6 @@ export default function MaterialMasterCreate() {
 
   return (
     <div className="mt-2">
-      {/* HEADER */}
       <div className="flex flex-wrap items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon icon="solar:menu-dots-square-linear" className="text-lg" />
@@ -139,7 +129,7 @@ export default function MaterialMasterCreate() {
         <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
           <button
             onClick={goBack}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-secondary px-6 text-white md:w-auto"
+            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-secondary px-6 text-white md:w-auto"
           >
             <Icon icon="ion:play-back-outline" className="h-5 w-5" />
             Back
@@ -148,7 +138,7 @@ export default function MaterialMasterCreate() {
           <button
             onClick={() => formik.handleSubmit()}
             disabled={isPending}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
+            className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
           >
             {isPending ? (
               <SyncLoader color="#fff" size={6} speedMultiplier={0.6} />
@@ -161,8 +151,6 @@ export default function MaterialMasterCreate() {
           </button>
         </div>
       </div>
-
-      {/* FORM */}
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 rounded-2xl bg-white">
           <div className="rounded-t-2xl bg-[#ECF0F4] p-4">
@@ -172,24 +160,52 @@ export default function MaterialMasterCreate() {
           </div>
 
           <div className="grid grid-cols-1 gap-5 p-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-col gap-1">
+              <CustomSelectSearch
+                label="Material Name"
+                options={itemOptions}
+                value={formik.values.item}
+                onChange={(val) => {
+                  const selected = items.find((i: any) => i._id === val);
+
+                  formik.setFieldValue("item", val);
+
+                  if (!selected) return;
+
+                  formik.setValues((prev) => ({
+                    ...prev,
+                    item: val,
+                    materialName: selected.itemName || "",
+                    uom: selected.uom || "",
+                    materialCode: selected.itemCode || "",
+                    itemCategory: selected.itemCategory || "",
+                    shelfLife: selected.shelfLifeDays || 0,
+                    qcDisposition: selected.qcDisposition || "",
+                  }));
+                }}
+              />
+              {err("item") && (
+                <p className="text-[11px] text-red-500">{err("item")}</p>
+              )}
+            </div>
             <CustomInput
               disabled
               label="Material Code"
               placeholder="TO BE GENERATED"
-              value={itemData?.materialCode || ""}
+              value={formik.values.materialCode || ""}
             />
 
             <div className="flex flex-col gap-1">
-              <CustomSelect
+              <CustomInput
                 label="Material Type"
                 placeholder="Select Material Type"
-                options={MATERIAL_TYPE_OPTIONS}
-                value={formik.values.materialType}
-                onChange={(val) => formik.setFieldValue("materialType", val)}
+                value={formik.values.itemCategory}
+                onChange={(val) => formik.setFieldValue("itemCategory", val)}
+                disabled
               />
-              {err("materialType") && (
+              {err("itemCategory") && (
                 <p className="text-[11px] text-red-500">
-                  {err("materialType")}
+                  {err("itemCategory")}
                 </p>
               )}
             </div>
@@ -203,6 +219,7 @@ export default function MaterialMasterCreate() {
                 onChange={(e: any) =>
                   formik.setFieldValue("shelfLife", Number(e.target.value))
                 }
+                disabled
               />
               {err("shelfLife") && (
                 <p className="text-[11px] text-red-500">{err("shelfLife")}</p>
@@ -221,26 +238,6 @@ export default function MaterialMasterCreate() {
                 <p className="text-[11px] text-red-500">
                   {err("qcDisposition")}
                 </p>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <CustomSelectSearch
-                label="Material Name"
-                options={itemOptions}
-                value={formik.values.item}
-                onChange={(val) => {
-                  const selected = items.find((i: any) => i._id === val);
-                  formik.setFieldValue("item", val);
-                  formik.setFieldValue(
-                    "materialName",
-                    selected?.itemName || "",
-                  );
-                  formik.setFieldValue("uom", selected?.uom || "");
-                }}
-              />
-              {err("item") && (
-                <p className="text-[11px] text-red-500">{err("item")}</p>
               )}
             </div>
 

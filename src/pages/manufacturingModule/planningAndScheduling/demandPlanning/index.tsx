@@ -53,8 +53,6 @@ export default function DemandPlanning() {
   ========================= */
   const { mutate: updateRow, isPending } = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: any }) => {
-      console.log("🚀 ~ DemandPlanning ~ id:", id);
-      console.log("🚀 ~ DemandPlanning ~ payload:", payload);
       return updateDemandPlanning(id, payload);
     },
     onSuccess: async () => {
@@ -148,9 +146,9 @@ export default function DemandPlanning() {
             />
           </div>
           <button
-            onClick={handleSave} // ✅ row argument nahi chahiye ab
+            onClick={handleSave}
             disabled={isPending}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
+            className="flex h-10 cursor-pointer w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-white md:w-auto"
           >
             <Icon icon="mynaui:save" className="h-5 w-5" />
             {isPending ? "Saving..." : "Save"}

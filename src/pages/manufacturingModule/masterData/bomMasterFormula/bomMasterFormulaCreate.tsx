@@ -30,13 +30,13 @@ const YIELD_OPTIONS = Array.from({ length: 21 }, (_, i) => ({
 }));
 
 const validationSchema = Yup.object({
-  item:              Yup.string().required("Product Name is required"),
-  batchSize:         Yup.string().required("Batch Size is required"),
+  item: Yup.string().required("Product Name is required"),
+  batchSize: Yup.string().required("Batch Size is required"),
   totalProcessSteps: Yup.string().required("Total Process Steps is required"),
-  workflowState:     Yup.string().required("Workflow State is required"),
-  targetYield:       Yup.string().required("Target Yield is required"),
-  lastModified:      Yup.string().required("Last Modified is required"),
-  rawMaterials:      Yup.array().min(1, "At least one Raw Material is required"),
+  workflowState: Yup.string().required("Workflow State is required"),
+  targetYield: Yup.string().required("Target Yield is required"),
+  lastModified: Yup.string().required("Last Modified is required"),
+  rawMaterials: Yup.array().min(1, "At least one Raw Material is required"),
 });
 
 export default function BomMasterFormulaCreate() {
@@ -70,16 +70,24 @@ export default function BomMasterFormulaCreate() {
 
   const rawItemOptions = items
     .filter((i: any) => i.itemCategory === "RAW_MATERIAL")
-    .map((i: any) => ({ label: i.itemName || "", value: i._id || "", uom: i.uom || "" }));
+    .map((i: any) => ({
+      label: i.itemName || "",
+      value: i._id || "",
+      uom: i.uom || "",
+    }));
 
   /* =========================
      Mutation
   ========================= */
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: any) =>
-      isEdit ? updateBillOfMaterial(itemData?._id, payload) : addBillOfMaterial(payload),
+      isEdit
+        ? updateBillOfMaterial(itemData?._id, payload)
+        : addBillOfMaterial(payload),
     onSuccess: async () => {
-      notifySuccess(isEdit ? "BOM Updated Successfully" : "BOM Created Successfully");
+      notifySuccess(
+        isEdit ? "BOM Updated Successfully" : "BOM Created Successfully",
+      );
       await refetch();
       goBack();
     },
@@ -92,25 +100,28 @@ export default function BomMasterFormulaCreate() {
   ========================= */
   const formik = useFormik({
     initialValues: {
-      formulaId:         itemData?.formulaId         || "",
-      batchSize:         itemData?.batchSize          || "",
-      totalProcessSteps: itemData?.totalProcessSteps  || "",
-      workflowState:     itemData?.workflowState      || "",
-      productName:       itemData?.productName        || "",
-      targetYield:       String(itemData?.targetYield || ""),
-      lastModified:      itemData?.lastModified       || "",
-      item:              itemData?.item?._id          || "",
-      rawMaterials:      itemData?.rawMaterials?.map((r: any) => r.item) || [] as string[],
-      quantities:        itemData?.rawMaterials?.reduce(
-        (acc: any, r: any) => ({ ...acc, [r.item]: String(r.quantity) }), {}
-      ) || {} as Record<string, string>,
+      formulaId: itemData?.formulaId || "",
+      batchSize: itemData?.batchSize || "",
+      totalProcessSteps: itemData?.totalProcessSteps || "",
+      workflowState: itemData?.workflowState || "",
+      productName: itemData?.productName || "",
+      targetYield: String(itemData?.targetYield || ""),
+      lastModified: itemData?.lastModified || "",
+      item: itemData?.item?._id || "",
+      rawMaterials:
+        itemData?.rawMaterials?.map((r: any) => r.item) || ([] as string[]),
+      quantities:
+        itemData?.rawMaterials?.reduce(
+          (acc: any, r: any) => ({ ...acc, [r.item]: String(r.quantity) }),
+          {},
+        ) || ({} as Record<string, string>),
     },
     validationSchema,
     onSubmit: (values) => {
       const { quantities, ...rest } = values;
       mutate({
         ...rest,
-        rawMaterials: values.rawMaterials.map((id:any) => ({
+        rawMaterials: values.rawMaterials.map((id: any) => ({
           item: id,
           quantity: quantities[id] || "0",
         })),
@@ -136,14 +147,14 @@ export default function BomMasterFormulaCreate() {
         <div className="flex flex-col items-stretch w-full gap-2 md:flex-row md:w-auto">
           <button
             onClick={goBack}
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-secondary md:w-auto"
           >
             <Icon icon="ion:play-back-outline" /> Back
           </button>
           <button
             onClick={() => formik.handleSubmit()}
             disabled={isPending}
-            className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
+            className="flex items-center cursor-pointer justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary md:w-auto"
           >
             <Icon icon="mynaui:save" /> {isEdit ? "Update" : "Save"}
           </button>
@@ -160,7 +171,6 @@ export default function BomMasterFormulaCreate() {
           </div>
 
           <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
             <CustomInput
               disabled
               label="Formula ID"
@@ -172,20 +182,30 @@ export default function BomMasterFormulaCreate() {
               <CustomInput
                 label="Batch Size"
                 value={formik.values.batchSize}
-                onChange={(e: any) => formik.setFieldValue("batchSize", e.target.value)}
+                onChange={(e: any) =>
+                  formik.setFieldValue("batchSize", e.target.value)
+                }
                 placeholder="10,000 Tablets"
               />
-              {err("batchSize") && <p className="text-[11px] text-red-500">{err("batchSize")}</p>}
+              {err("batchSize") && (
+                <p className="text-[11px] text-red-500">{err("batchSize")}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <CustomInput
                 label="Total Process Steps"
                 value={formik.values.totalProcessSteps}
-                onChange={(e: any) => formik.setFieldValue("totalProcessSteps", e.target.value)}
+                onChange={(e: any) =>
+                  formik.setFieldValue("totalProcessSteps", e.target.value)
+                }
                 placeholder="8"
               />
-              {err("totalProcessSteps") && <p className="text-[11px] text-red-500">{err("totalProcessSteps")}</p>}
+              {err("totalProcessSteps") && (
+                <p className="text-[11px] text-red-500">
+                  {err("totalProcessSteps")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -195,7 +215,11 @@ export default function BomMasterFormulaCreate() {
                 options={WORKFLOW_OPTIONS}
                 onChange={(val) => formik.setFieldValue("workflowState", val)}
               />
-              {err("workflowState") && <p className="text-[11px] text-red-500">{err("workflowState")}</p>}
+              {err("workflowState") && (
+                <p className="text-[11px] text-red-500">
+                  {err("workflowState")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -209,7 +233,9 @@ export default function BomMasterFormulaCreate() {
                   formik.setFieldValue("productName", found?.itemName || "");
                 }}
               />
-              {err("item") && <p className="text-[11px] text-red-500">{err("item")}</p>}
+              {err("item") && (
+                <p className="text-[11px] text-red-500">{err("item")}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -219,7 +245,9 @@ export default function BomMasterFormulaCreate() {
                 options={YIELD_OPTIONS}
                 onChange={(val) => formik.setFieldValue("targetYield", val)}
               />
-              {err("targetYield") && <p className="text-[11px] text-red-500">{err("targetYield")}</p>}
+              {err("targetYield") && (
+                <p className="text-[11px] text-red-500">{err("targetYield")}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -228,7 +256,11 @@ export default function BomMasterFormulaCreate() {
                 value={formik.values.lastModified}
                 onChange={(val) => formik.setFieldValue("lastModified", val)}
               />
-              {err("lastModified") && <p className="text-[11px] text-red-500">{err("lastModified")}</p>}
+              {err("lastModified") && (
+                <p className="text-[11px] text-red-500">
+                  {err("lastModified")}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -240,13 +272,19 @@ export default function BomMasterFormulaCreate() {
                 onChange={(val) => formik.setFieldValue("rawMaterials", val)}
                 quantities={formik.values.quantities}
                 onQuantityChange={(id, qty) =>
-                  formik.setFieldValue("quantities", { ...formik.values.quantities, [id]: qty })
+                  formik.setFieldValue("quantities", {
+                    ...formik.values.quantities,
+                    [id]: qty,
+                  })
                 }
                 placeholder="Select Raw Material"
               />
-              {err("rawMaterials") && <p className="text-[11px] text-red-500">{err("rawMaterials")}</p>}
+              {err("rawMaterials") && (
+                <p className="text-[11px] text-red-500">
+                  {err("rawMaterials")}
+                </p>
+              )}
             </div>
-
           </div>
         </div>
       </div>

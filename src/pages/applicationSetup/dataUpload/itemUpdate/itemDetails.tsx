@@ -7,6 +7,7 @@ import { Icon } from "@iconify/react";
 export default function ItemDetails() {
   const location = useLocation();
   const { rowData } = (location.state as { rowData: any }) || {};
+
   return (
     <div className="mt-2">
       <div className="flex items-center gap-2">
