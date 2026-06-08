@@ -1,9 +1,9 @@
 // export const BASE_URL = "https://bb360-backend.vercel.app";
-export const BASE_URL = "http://35.222.147.10/api";
+// export const BASE_URL = "http://35.222.147.10/api";
 // export const BASE_URL = "http://localhost:5001";
 
 // Connect with Sufyan
-// export const BASE_URL = "http://192.168.18.121:5001";
+export const BASE_URL = "http://192.168.18.121:5001";
 
 export const ENDPOINTS = {
   // ------------Users-------------
@@ -144,7 +144,7 @@ export const ENDPOINTS = {
   SOP_MASTER: "/sop-master",
 
   // -------------- Demand Planning-------------
-  DEMAND_PLANNING: "/demand-planning",
+  DEMAND_PLANNING: "/demand-plans",
 
   // -------------- Payroll Process Run-------------
   PAYROLL_PROCESS: "/payroll/runs",

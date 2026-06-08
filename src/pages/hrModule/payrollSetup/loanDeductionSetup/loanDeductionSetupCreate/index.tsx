@@ -5,6 +5,7 @@ import CustomInput from "../../../../../components/customInput";
 import { useAppNavigate } from "../../../../../hooks/navigation";
 import { notifySuccess, notifyError } from "../../../../../components/toast";
 import { addLoanDeductions } from "../../../../../api/hrServices";
+import { SyncLoader } from "react-spinners";
 
 type LoanDeductionPayload = {
   payroll: string;
@@ -81,7 +82,11 @@ export default function LoanDeductionSetupCreate() {
             className="flex items-center justify-center w-full h-10 gap-2 px-6 text-white rounded-md bg-primary disabled:opacity-50"
           >
             <Icon icon="mynaui:save" className="w-5 h-5" />
-            {isPending ? "Saving..." : "Save"}
+            {isPending ? (
+              <SyncLoader color="#ffffff" size={6} speedMultiplier={0.6} />
+            ) : (
+              "Save"
+            )}
           </button>
         </div>
       </div>

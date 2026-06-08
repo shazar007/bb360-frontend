@@ -32,7 +32,7 @@ const validationSchema = Yup.object({
   effectiveDate: Yup.string().required("Effective Date is required"),
   currentVersion: Yup.string().required("Current Version is required"),
   reviewCycle: Yup.string().required("Review Cycle is required"),
-  attachment: Yup.string().required("Attachment is required"), // ✅
+  attachment: Yup.string().required("Attachment is required"),
 });
 
 export default function SopMasterCreate() {
@@ -41,9 +41,7 @@ export default function SopMasterCreate() {
   const itemData = state?.rowData;
   const { goBack } = useAppNavigate();
   const [uploading, setUploading] = useState(false);
-  /* =========================
-     Queries
-  ========================= */
+
   const { data: departmentsData } = useQuery({
     queryKey: ["getAllDepartments"],
     queryFn: getAllDepartments,
@@ -62,10 +60,6 @@ export default function SopMasterCreate() {
     queryFn: getAllSOPMaster,
     staleTime: Infinity,
   });
-
-  /* =========================
-     Mutation
-  ========================= */
   const { mutate, isPending } = useMutation({
     mutationFn: (payload: FormData) => {
       return isEdit
@@ -82,13 +76,10 @@ export default function SopMasterCreate() {
       notifyError(err?.response?.data?.message || "Something went wrong"),
   });
 
-  /* =========================
-     Formik
-  ========================= */
   const formik = useFormik({
     initialValues: {
       sopNumber: itemData?.sopNumber || "",
-      department: itemData?.department?._id || itemData?.department || "", // ✅ _id lo
+      department: itemData?.department?._id || itemData?.department || "",
       effectiveDate: itemData?.effectiveDate || "",
       attachment: itemData?.attachment || "",
       documentTitle: itemData?.documentTitle || "",
@@ -102,7 +93,6 @@ export default function SopMasterCreate() {
         payload.append(key, String(val));
       });
 
-      // ✅ Payload check karo
       for (const pair of payload.entries()) {
         console.log(pair[0], "=>", pair[1]);
       }
@@ -166,7 +156,6 @@ export default function SopMasterCreate() {
         </div>
       </div>
 
-      {/* FORM */}
       <div className="mt-3 rounded-2xl bg-bgprimary">
         <div className="mt-2 rounded-2xl bg-white">
           <div className="rounded-t-2xl bg-[#ECF0F4] p-4">
@@ -209,8 +198,6 @@ export default function SopMasterCreate() {
               )}
             </div>
 
-            {/* Attachment */}
-            {/* Attachment */}
             <div className="flex flex-col gap-1">
               <label className="text-xs text-heading1">Attachment</label>
               <div
@@ -267,7 +254,7 @@ export default function SopMasterCreate() {
                   <Icon
                     icon="mdi:close"
                     width="16"
-                    className="text-gray-400 cursor-pointer hover:text-red-500 flex-shrink-0"
+                    className="text-gray-400 cursor-pointer hover:text-red-500 shrink-0"
                     onClick={(e) => {
                       e.stopPropagation();
                       setAttachmentFile(null);
@@ -278,13 +265,11 @@ export default function SopMasterCreate() {
                 ) : !uploading ? (
                   <Icon
                     icon="mdi:paperclip"
-                    className="text-gray-400 flex-shrink-0"
+                    className="text-gray-400 shrink-0"
                     width="18"
                   />
                 ) : null}
               </div>
-
-              {/* ✅ Input element — yeh zaroori tha jo missing tha */}
               <input
                 ref={fileInputRef}
                 type="file"

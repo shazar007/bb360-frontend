@@ -950,6 +950,7 @@ export const navItems: NavItem[] = [
     children: [
       {
         name: "Manufacturing Setup",
+
         children: [
           {
             name: "Material Master",
